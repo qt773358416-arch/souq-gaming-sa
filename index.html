@@ -92,9 +92,39 @@ btn.classList.add("active");
 render();
 }
 function addProduct(){
-alert("سيتم تفعيل إضافة الإعلانات وربطها بقاعدة بيانات في الخطوة التالية.");
+  const name = prompt("أدخل اسم المنتج:");
+  if (!name || !name.trim()) return;
+
+  const price = Number(prompt("أدخل سعر البيع بالريال:"));
+  if (!Number.isFinite(price) || price <= 0) {
+    alert("أدخل سعرًا صحيحًا.");
+    return;
+  }
+
+  const seller = prompt("أدخل اسمك الكامل:");
+  if (!seller || !seller.trim()) return;
+
+  const phone = prompt("أدخل رقم جوالك:");
+  if (!phone || !phone.trim()) return;
+
+  const accepted = confirm(
+    "التعهد الإلزامي:\n\n" +
+    "أتعهد بصحة بيانات الإعلان وبالتعامل بأمانة مع المشتري.\n" +
+    "وأتعهد بتحويل 1% من قيمة البيع النهائية للمنتج إلى إدارة سوق القيمنق السعودي عند إتمام البيع.\n\n" +
+    "قيمة البيع: " + price + " ريال\n" +
+    "نسبة المنصة: " + (price * 0.01).toFixed(2) + " ريال\n\n" +
+    "هل توافق على التعهد؟"
+  );
+
+  if (!accepted) {
+    alert("لن تتم متابعة النشر دون الموافقة على التعهد.");
+    return;
+  }
+
+  alert("تمت الموافقة على التعهد في هذه الجلسة. النشر الدائم يحتاج إلى ربط قاعدة بيانات.");
 }
 render();
 </script>
 </body>
 </html>
+
