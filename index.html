@@ -31,7 +31,7 @@ button{cursor:pointer}
 .section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
 .section h2{font-size:25px;margin:0}
 .filters{display:grid;grid-template-columns:1fr 210px;gap:10px;margin:18px 0}
-.field{width:100%;background:#091525;color:var(--text);border:1px solid var(--line);border-radius:12px;padding:12px 14px;outline:none}
+.field{width:100%;background:#091525;color:var(--text);border:1px solid var(--line);border-radius:12px;padding:12px 14px;outline:none;margin:4px 0 10px}
 .field:focus{border-color:var(--mint)}
 textarea.field{min-height:100px;resize:vertical}
 .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
@@ -56,31 +56,76 @@ textarea.field{min-height:100px;resize:vertical}
 .footer{border-top:1px solid #ffffff12;padding:24px 0 36px;color:var(--muted);font-size:13px}
 .modal{position:fixed;inset:0;background:#000a;display:none;align-items:center;justify-content:center;padding:18px;z-index:20}
 .modal.open{display:flex}
-.modal-box{width:min(500px,100%);max-height:90vh;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:22px}
+.modal-box{width:min(600px,100%);max-height:90vh;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:22px}
 .modal-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
 .modal-head h2{margin:0}
 .close{font-size:24px;background:transparent;border:0;color:white}
 .divider{border:0;border-top:1px solid var(--line);margin:18px 0}
-@media(max-width:780px){.hero{grid-template-columns:1fr;padding-top:32px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.two-col{grid-template-columns:1fr}}
-@media(max-width:520px){.grid{grid-template-columns:1fr}.filters,.form-grid{grid-template-columns:1fr}.form-grid .full{grid-column:auto}.topbar{align-items:flex-start}.hero-card{padding:17px}}
+.drawer-backdrop{position:fixed;inset:0;background:#0009;z-index:40;display:none}
+.drawer-backdrop.open{display:block}
+.drawer{position:fixed;top:0;bottom:0;right:0;width:min(340px,88vw);background:#0d1828;border-left:1px solid var(--line);padding:22px;z-index:41;transform:translateX(105%);transition:transform .22s;overflow:auto}
+.drawer.open{transform:translateX(0)}
+.drawer-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.drawer-link{display:flex;align-items:center;gap:12px;width:100%;text-align:right;margin:7px 0;padding:13px 14px;border:1px solid transparent;border-radius:13px;background:#101f32;color:var(--text);font-weight:700}
+.drawer-link:hover{border-color:var(--mint)}
+.drawer-link .ico{width:26px;text-align:center;font-size:19px}
+.drawer-note{color:var(--muted);font-size:12px;margin-top:18px}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:30;background:#0a1423f5;border-top:1px solid var(--line);padding:8px max(8px,env(safe-area-inset-left)) calc(8px + env(safe-area-inset-bottom));display:none;grid-template-columns:repeat(5,1fr);gap:4px;backdrop-filter:blur(12px)}
+.nav-item{border:0;background:transparent;color:var(--muted);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:10px;padding:4px 1px}
+.nav-item b{font-size:20px;line-height:1.3}
+.nav-item.active{color:var(--mint)}
+.nav-item.add{color:#061a13}
+.nav-item.add b{background:var(--mint);border-radius:14px;width:44px;height:32px;display:grid;place-items:center;font-size:25px}
+.plan-box{border:1px solid var(--line);border-radius:14px;padding:12px;margin:8px 0;background:#091525}
+.plan-box:has(input:checked){border-color:var(--mint);background:#123128}
+.plan-row{display:flex;align-items:center;gap:10px}
+.plan-row input{accent-color:var(--mint)}
+.plan-row strong{margin-right:auto;color:var(--mint)}
+.badge-featured{background:#44351a;color:#ffda83}
+.promoted-note{color:#ffda83;font-size:12px}
+.preview-list{display:flex;flex-wrap:wrap;gap:10px;margin:8px 0}
+.preview-item{position:relative;width:100px}
+.preview-item img{width:100px;height:85px;object-fit:cover;border-radius:10px;border:1px solid var(--line)}
+.preview-item button{width:100%;margin-top:4px;padding:5px;font-size:12px}
+.pledge{display:flex;gap:10px;align-items:flex-start}
+.pledge input{margin-top:7px}
+@media(max-width:780px){
+ .hero{grid-template-columns:1fr;padding-top:32px}
+ .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .two-col{grid-template-columns:1fr}
+}
+@media(max-width:520px){
+ body{padding-bottom:82px}
+ .bottom-nav{display:grid}
+ .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ .ad img{height:135px}
+ .ad-body{padding:11px}
+ .ad h3{font-size:15px}
+ .price{font-size:18px}
+ .filters,.form-grid{grid-template-columns:1fr}
+ .form-grid .full{grid-column:auto}
+ .topbar{align-items:center}
+ .hero-card{padding:17px}
+ .topbar .actions #addBtn{display:none}
+}
 </style>
 </head>
 <body>
 <header class="wrap topbar">
   <div class="brand">🎮 <span>سوق</span> القيمنق السعودي</div>
   <div class="actions">
-    <button class="btn" id="accountBtn">دخول البائع</button>
-    <button class="btn primary" id="addBtn">＋ أضف إعلانك</button>
+    <button class="btn" id="menuBtn" aria-label="فتح القائمة">☰ القائمة</button>
+    <button class="btn" id="accountBtn">تسجيل الدخول</button>
+    <button class="btn primary" id="addBtn">＋ أضف منتج</button>
   </div>
 </header>
-
 <main class="wrap">
   <section class="hero">
     <div>
       <h1>بيع واشترِ أجهزة القيمنق <em>بكل سهولة</em></h1>
       <p>منصتك السعودية لبيع وشراء أجهزة الألعاب والكمبيوتر وملحقاتها. تواصل مع البائع مباشرة، وتصفّح الإعلانات المنشورة.</p>
       <div class="actions" style="margin-top:22px">
-        <button class="btn primary" onclick="document.getElementById('adsSection').scrollIntoView({behavior:'smooth'})">تصفّح الإعلانات</button>
+        <button class="btn primary" id="browseBtn">تصفّح الإعلانات</button>
         <button class="btn" id="myAdsBtn">إعلاناتي</button>
       </div>
     </div>
@@ -89,12 +134,14 @@ textarea.field{min-height:100px;resize:vertical}
       <strong>مجتمع القيمنق السعودي</strong>
       <small>أجهزة، كمبيوترات، قطع وإكسسوارات</small>
       <hr class="divider">
-      <small>عمولة المنصة المتفق عليها: 1% من قيمة البيع عند إتمامه. تسجيل التعهد وحده لا يعني تحصيل العمولة تلقائيًا.</small>
+      <small>عمولة المنصة المتفق عليها: 1% من قيمة البيع عند إتمامه. التعهد وحده لا يعني تحصيل العمولة تلقائيًا.</small>
     </div>
   </section>
-
   <section class="section" id="adsSection">
-    <div class="section-head"><h2>الإعلانات المنشورة</h2><span class="note" id="adsCount">جارٍ تحميل الإعلانات…</span></div>
+    <div class="section-head">
+      <h2>الإعلانات المنشورة</h2>
+      <span class="note" id="adsCount">جارٍ تحميل الإعلانات…</span>
+    </div>
     <div class="filters">
       <input class="field" id="searchInput" placeholder="ابحث عن جهاز أو لعبة أو قطعة…">
       <select class="field" id="categoryFilter">
@@ -104,43 +151,99 @@ textarea.field{min-height:100px;resize:vertical}
     </div>
     <div id="adsGrid" class="grid"></div>
   </section>
-
-  <section class="section two-col">
+  <section class="section" id="myAdsPanel">
     <div class="panel">
-      <h2>أضف إعلانك</h2>
-      <p class="note">يلزم تسجيل الدخول أولًا. الإعلانات الجديدة تُرسل للمراجعة قبل ظهورها للجميع.</p>
-      <button class="btn primary" id="addBtn2">ابدأ إضافة إعلان</button>
-    </div>
-    <div class="panel" id="myAdsPanel">
       <h2>إعلاناتي</h2>
       <p class="note" id="myAdsHint">سجّل الدخول لمشاهدة إعلاناتك وحالة المراجعة.</p>
       <div class="my-list" id="myAdsList"></div>
     </div>
   </section>
 </main>
-
 <footer class="wrap footer">© <span id="year"></span> سوق القيمنق السعودي — تعامل بأمان، وافحص المنتج قبل إتمام الشراء.</footer>
+
+<div class="drawer-backdrop" id="drawerBackdrop"></div>
+<aside class="drawer" id="accountDrawer" aria-label="قائمة الحساب">
+  <div class="drawer-head">
+    <div class="brand" style="font-size:20px">🎮 حسابي</div>
+    <button class="close" id="closeDrawer" aria-label="إغلاق">×</button>
+  </div>
+  <p class="note" id="drawerUser">مرحبًا بك في سوق القيمنق السعودي</p>
+  <button class="drawer-link" data-go="myAdsPanel"><span class="ico">📦</span> إعلاناتي وإدارة المنتجات</button>
+  <button class="drawer-link" data-go="promotionsPanel"><span class="ico">📣</span> أدوات الترويج</button>
+  <button class="drawer-link" data-go="messagesPanel"><span class="ico">💬</span> الرسائل</button>
+  <button class="drawer-link" data-go="notificationsPanel"><span class="ico">🔔</span> الإشعارات</button>
+  <button class="drawer-link" data-go="settingsPanel"><span class="ico">⚙️</span> إعدادات الحساب</button>
+  <button class="drawer-link" id="drawerAuth"><span class="ico">👤</span> تسجيل الدخول / إنشاء حساب</button>
+  <p class="drawer-note">تسجيل موحد للمشترين والبائعين. يمكنك إضافة منتج بعد تسجيل الدخول.</p>
+</aside>
+
+<nav class="bottom-nav" aria-label="التنقل الرئيسي">
+  <button class="nav-item active" id="bottomHome"><b>⌂</b>الرئيسية</button>
+  <button class="nav-item" id="bottomMessages"><b>✉</b>الرسائل</button>
+  <button class="nav-item add" id="bottomAdd"><b>＋</b>أضف منتج</button>
+  <button class="nav-item" id="bottomNotifications"><b>♧</b>الإشعارات</button>
+  <button class="nav-item" id="bottomAccount"><b>☻</b>حسابي</button>
+</nav>
+
+<section class="wrap section" id="promotionsPanel" hidden>
+  <div class="panel">
+    <h2>📣 أدوات الترويج</h2>
+    <p class="note">اختر باقة الترويج عند إضافة الإعلان. هذه الأسعار مبدئية، ولا يتم تفعيل الإعلان المروّج قبل التحقق من الدفع.</p>
+    <div class="plan-box"><b>ترويج سريع — 3 أيام</b><strong style="float:left;color:var(--mint)">5 ر.س</strong></div>
+    <div class="plan-box"><b>ترويج أسبوعي — 7 أيام</b><strong style="float:left;color:var(--mint)">12 ر.س</strong></div>
+    <div class="plan-box"><b>ترويج شهري — 30 يومًا</b><strong style="float:left;color:var(--mint)">29 ر.س</strong></div>
+    <button class="btn primary" id="promoteAddBtn">＋ أضف إعلانًا واختر الترويج</button>
+  </div>
+</section>
+<section class="wrap section" id="messagesPanel" hidden>
+  <div class="panel">
+    <h2>💬 الرسائل</h2>
+    <p class="note">مساحة المحادثات داخل الموقع. يلزم إعداد جدول الرسائل وسياسات الخصوصية في Supabase لتفعيل إرسال واستقبال الرسائل بين المستخدمين.</p>
+    <div class="empty">ستظهر محادثاتك هنا بعد تفعيل نظام الرسائل.</div>
+  </div>
+</section>
+<section class="wrap section" id="notificationsPanel" hidden>
+  <div class="panel">
+    <h2>🔔 الإشعارات</h2>
+    <p class="note">تنبيهات الرسائل وحالة الإعلانات والترويج.</p>
+    <div class="empty">ستظهر إشعارات حسابك هنا بعد ربط نظام الإشعارات.</div>
+  </div>
+</section>
+<section class="wrap section" id="settingsPanel" hidden>
+  <div class="panel">
+    <h2>⚙️ إعدادات الحساب</h2>
+    <p class="note" id="settingsStatus">سجّل الدخول لإدارة بيانات حسابك.</p>
+    <button class="btn" id="settingsAuthBtn">تسجيل الدخول</button>
+    <button class="btn" id="logoutBtn" hidden>تسجيل الخروج</button>
+  </div>
+</section>
 
 <div class="modal" id="authModal" role="dialog" aria-modal="true">
   <div class="modal-box">
-    <div class="modal-head"><h2 id="authTitle">دخول البائع</h2><button class="close" data-close="authModal">×</button></div>
+    <div class="modal-head">
+      <h2 id="authTitle">تسجيل الدخول</h2>
+      <button class="close" data-close="authModal" type="button">×</button>
+    </div>
     <div class="status" id="authStatus"></div>
     <form id="authForm">
       <label for="authEmail">البريد الإلكتروني</label>
       <input class="field" id="authEmail" type="email" autocomplete="email" required>
-      <label for="authPassword">كلمة المرور</label>
-      <input class="field" id="authPassword" type="password" autocomplete="current-password" minlength="6" required>
+      <label for="authPassword">كلمة المرور (11 حرفًا على الأقل)</label>
+      <input class="field" id="authPassword" type="password" autocomplete="current-password" minlength="11" required>
       <button class="btn primary" id="authSubmit" style="width:100%;margin-top:14px" type="submit">دخول</button>
     </form>
     <p class="note" id="authSwitchText">ليس لديك حساب؟ <button class="btn" id="switchAuth" type="button">إنشاء حساب</button></p>
-    <p class="note">قد يطلب منك تأكيد البريد الإلكتروني حسب إعدادات المشروع.</p>
+    <p class="note">قد يلزم تأكيد البريد الإلكتروني حسب إعدادات Supabase.</p>
   </div>
 </div>
 
 <div class="modal" id="adModal" role="dialog" aria-modal="true">
   <div class="modal-box">
-    <div class="modal-head"><h2>إضافة إعلان جديد</h2><button class="close" data-close="adModal">×</button></div>
-    <p class="note">ستظهر بيانات الإعلان للمراجعة، ولن يُنشر للعامة إلا بعد الموافقة.</p>
+    <div class="modal-head">
+      <h2>إضافة إعلان جديد</h2>
+      <button class="close" data-close="adModal" type="button">×</button>
+    </div>
+    <p class="note">لن يظهر الإعلان للعامة إلا بعد الموافقة عليه.</p>
     <div class="status" id="adStatus"></div>
     <form id="adForm">
       <div class="form-grid">
@@ -151,11 +254,23 @@ textarea.field{min-height:100px;resize:vertical}
         <div><label for="sellerName">اسم البائع *</label><input class="field" id="sellerName" maxlength="100" required></div>
         <div><label for="sellerPhone">رقم الجوال *</label><input class="field" id="sellerPhone" type="tel" maxlength="25" required placeholder="05xxxxxxxx"></div>
         <div class="full">
-          <label for="adImages">صور المنتج (حتى 5 صور)</label>
-          <input class="field" id="adImages" type="file" accept="image/*" multiple>
-          <p class="note">رفع الصور يحتاج مساحة تخزين باسم ad-images في Supabase مع سياسات الرفع المناسبة. يمكن تجربة الإعلان دون صور إذا لم تكن المساحة جاهزة.</p>
+          <label>هل تريد ترويج هذا الإعلان؟</label>
+          <p class="note">يمكنك النشر العادي مجانًا، أو اختيار باقة ترويج. الأسعار مبدئية ولا يتم تحصيل الدفع من هذه الصفحة.</p>
+          <label class="plan-box"><span class="plan-row"><input type="radio" name="promotionPlan" value="none" checked><span><b>نشر عادي</b><br><small class="note">بدون رسوم ترويج</small></span><strong>مجاني</strong></span></label>
+          <label class="plan-box"><span class="plan-row"><input type="radio" name="promotionPlan" value="3days"><span><b>ترويج سريع</b><br><small class="note">3 أيام</small></span><strong>5 ر.س</strong></span></label>
+          <label class="plan-box"><span class="plan-row"><input type="radio" name="promotionPlan" value="7days"><span><b>ترويج أسبوعي</b><br><small class="note">7 أيام</small></span><strong>12 ر.س</strong></span></label>
+          <label class="plan-box"><span class="plan-row"><input type="radio" name="promotionPlan" value="30days"><span><b>ترويج شهري</b><br><small class="note">30 يومًا</small></span><strong>29 ر.س</strong></span></label>
+          <div id="promotionStatus" class="note">اختر النشر العادي أو إحدى باقات الترويج.</div>
         </div>
-        <div class="full"><label style="display:flex;gap:10px;align-items:flex-start"><input id="pledge" type="checkbox" required style="margin-top:7px"> أتعهد بصحة بيانات الإعلان، وبالتعامل بأمانة مع المشتري، وبالعمولة المتفق عليها للمنصة بنسبة 1% من قيمة البيع عند إتمامه.</label></div>
+        <div class="full">
+          <label for="adImages">صور المنتج (حتى 5 صور، اختيارية)</label>
+          <input class="field" id="adImages" type="file" accept="image/*" multiple>
+          <div class="note" id="imageStatus">لم يتم اختيار صور.</div>
+          <div class="preview-list" id="imagePreview"></div>
+          <button class="btn" id="clearImagesBtn" type="button">إزالة جميع الصور المختارة</button>
+          <p class="note">يمكن إرسال الإعلان دون صور. إذا أضفت صورًا، يجب إعداد مساحة التخزين ad-images في Supabase.</p>
+        </div>
+        <div class="full"><label class="pledge"><input id="pledge" type="checkbox" required><span>أتعهد بصحة بيانات الإعلان وبالتعامل بأمانة مع المشتري، وبالعمولة المتفق عليها للمنصة بنسبة 1% من قيمة البيع عند إتمامه.</span></label></div>
       </div>
       <button class="btn primary" id="submitAdBtn" type="submit" style="width:100%;margin-top:16px">إرسال الإعلان للمراجعة</button>
     </form>
@@ -164,301 +279,219 @@ textarea.field{min-height:100px;resize:vertical}
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-/* استخدم رابط مشروع Supabase ومفتاح Publishable فقط. لا تضع Secret key في هذا الملف. */
+"use strict";
+/* ضع هنا رابط Supabase ومفتاح Publishable فقط. لا تضع مفتاح Secret في الواجهة. */
 const SUPABASE_URL = "https://hmcsgkavqdsfwqomxakw.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_I2FLI3drU7_xB8tWWGjnOg_b6Sm2j2m";
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
-
 const $ = id => document.getElementById(id);
-let currentUser = null;
-let authMode = "login";
-let allAds = [];
+let currentUser = null, authMode = "login", allAds = [], selectedImages = [];
+const promotionPlans = {none:{label:"عادي",price:0,days:0},"3days":{label:"ترويج سريع",price:5,days:3},"7days":{label:"ترويج أسبوعي",price:12,days:7},"30days":{label:"ترويج شهري",price:29,days:30}};
 
 $("year").textContent = new Date().getFullYear();
+function showStatus(id,message,type="ok"){const el=$(id);el.textContent=message;el.className="status show "+type}
+function clearStatus(id){const el=$(id);el.textContent="";el.className="status"}
+function openModal(id){$(id).classList.add("open")}
+function closeModal(id){$(id).classList.remove("open")}
+document.querySelectorAll("[data-close]").forEach(b=>b.addEventListener("click",()=>closeModal(b.dataset.close)));
+document.querySelectorAll(".modal").forEach(m=>m.addEventListener("click",e=>{if(e.target===m)m.classList.remove("open")}));
+function escapeHTML(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function formatPrice(v){return new Intl.NumberFormat("ar-SA",{style:"currency",currency:"SAR",maximumFractionDigits:2}).format(Number(v||0))}
+function imageFor(ad){return Array.isArray(ad.image_urls)&&ad.image_urls.length?ad.image_urls[0]:""}
 
-function showStatus(id, message, type = "ok") {
-  const el = $(id);
-  el.textContent = message;
-  el.className = "status show " + type;
-}
-function clearStatus(id) {
-  const el = $(id);
-  el.textContent = "";
-  el.className = "status";
-}
-function openModal(id) { $(id).classList.add("open"); }
-function closeModal(id) { $(id).classList.remove("open"); }
-
-document.querySelectorAll("[data-close]").forEach(btn => {
-  btn.addEventListener("click", () => closeModal(btn.dataset.close));
-});
-document.querySelectorAll(".modal").forEach(modal => {
-  modal.addEventListener("click", e => {
-    if (e.target === modal) modal.classList.remove("open");
-  });
-});
-
-function escapeHTML(value) {
-  return String(value ?? "").replace(/[&<>"']/g, ch => ({
-    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
-  }[ch]));
-}
-function formatPrice(value) {
-  return new Intl.NumberFormat("ar-SA", {
-    style:"currency", currency:"SAR", maximumFractionDigits:2
-  }).format(Number(value || 0));
-}
-function imageFor(ad) {
-  return Array.isArray(ad.image_urls) && ad.image_urls.length ? ad.image_urls[0] : "";
-}
-
-function renderAds() {
-  const q = $("searchInput").value.trim().toLowerCase();
-  const category = $("categoryFilter").value;
-  const filtered = allAds.filter(ad => {
-    const text = [ad.title, ad.description, ad.category].join(" ").toLowerCase();
-    return (!q || text.includes(q)) && (!category || ad.category === category);
-  });
-  $("adsCount").textContent = `${filtered.length} إعلان`;
-  const grid = $("adsGrid");
-  if (!filtered.length) {
-    grid.innerHTML = '<div class="empty" style="grid-column:1/-1">لا توجد إعلانات منشورة مطابقة حاليًا. كن أول من يضيف إعلانًا.</div>';
-    return;
-  }
-  grid.innerHTML = filtered.map(ad => {
-    const img = imageFor(ad);
-    const imageHTML = img
-      ? `<img src="${escapeHTML(img)}" alt="${escapeHTML(ad.title)}" loading="lazy">`
-      : `<div style="height:175px;display:grid;place-items:center;background:#091525;font-size:48px">🎮</div>`;
-    const phone = String(ad.seller_phone || "").replace(/[^\d+]/g, "");
-    const contact = phone
-      ? `<a class="btn" style="display:block;text-align:center;text-decoration:none;margin-top:10px" href="tel:${escapeHTML(phone)}">اتصل بالبائع</a>`
-      : "";
-    return `<article class="ad">${imageHTML}<div class="ad-body"><span class="tag">${escapeHTML(ad.category || "أخرى")}</span><h3>${escapeHTML(ad.title)}</h3><div class="price">${formatPrice(ad.price)}</div><p class="note">${escapeHTML(ad.description || "لا يوجد وصف مضاف.")}</p><div class="meta"><span>البائع: ${escapeHTML(ad.seller_name || "بائع")}</span><span>${ad.created_at ? new Date(ad.created_at).toLocaleDateString("ar-SA") : ""}</span></div>${contact}</div></article>`;
+function renderAds(){
+  const q=$("searchInput").value.trim().toLowerCase(), category=$("categoryFilter").value;
+  const filtered=allAds.filter(ad=>{const t=[ad.title,ad.description,ad.category].join(" ").toLowerCase();return(!q||t.includes(q))&&(!category||ad.category===category)});
+  $("adsCount").textContent=`${filtered.length} إعلان`;
+  if(!filtered.length){$("adsGrid").innerHTML='<div class="empty" style="grid-column:1/-1">لا توجد إعلانات منشورة مطابقة حاليًا.</div>';return}
+  $("adsGrid").innerHTML=filtered.map(ad=>{
+    const img=imageFor(ad), featureBadge=ad.promotion_status==="active"?'<span class="tag badge-featured">★ إعلان مروّج</span>':"", imageHTML=img?`<img src="${escapeHTML(img)}" alt="${escapeHTML(ad.title)}" loading="lazy">`:'<div style="height:175px;display:grid;place-items:center;background:#091525;font-size:48px">🎮</div>';
+    const phone=String(ad.seller_phone||"").replace(/[^\d+]/g,""), contact=phone?`<a class="btn" style="display:block;text-align:center;text-decoration:none;margin-top:10px" href="tel:${escapeHTML(phone)}">اتصل بالبائع</a>`:"";
+    return `<article class="ad">${imageHTML}<div class="ad-body">${featureBadge}<span class="tag">${escapeHTML(ad.category||"أخرى")}</span><h3>${escapeHTML(ad.title)}</h3><div class="price">${formatPrice(ad.price)}</div><p class="note">${escapeHTML(ad.description||"لا يوجد وصف مضاف.")}</p><div class="meta"><span>البائع: ${escapeHTML(ad.seller_name||"بائع")}</span><span>${ad.created_at?new Date(ad.created_at).toLocaleDateString("ar-SA"):""}</span></div>${contact}</div></article>`;
   }).join("");
 }
-
-async function loadAds() {
-  $("adsGrid").innerHTML = '<div class="empty" style="grid-column:1/-1">جارٍ تحميل الإعلانات…</div>';
-  const {data, error} = await supabaseClient.from("ads")
-    .select("id,title,description,price,category,image_urls,seller_name,seller_phone,created_at,status")
-    .eq("status", "published")
-    .order("created_at", {ascending:false});
-
-  if (error) {
-    $("adsGrid").innerHTML = '<div class="empty" style="grid-column:1/-1">تعذر تحميل الإعلانات من قاعدة البيانات. تحقق من سياسات القراءة في Supabase.</div>';
-    $("adsCount").textContent = "تعذر التحميل";
-    console.error("loadAds error:", error);
-    return;
-  }
-  allAds = data || [];
-  renderAds();
+async function loadAds(){
+  $("adsGrid").innerHTML='<div class="empty" style="grid-column:1/-1">جارٍ تحميل الإعلانات…</div>';
+  const {data,error}=await supabaseClient.from("ads").select("id,title,description,price,category,image_urls,seller_name,seller_phone,created_at,status,promotion_plan,promotion_price,promotion_days,promotion_status").eq("status","published").order("created_at",{ascending:false});
+  if(error){$("adsGrid").innerHTML='<div class="empty" style="grid-column:1/-1">تعذر تحميل الإعلانات. تحقق من صلاحيات القراءة في Supabase.</div>';$("adsCount").textContent="تعذر التحميل";console.error(error);return}
+  allAds=data||[];renderAds();
 }
-
-async function loadMyAds() {
-  if (!currentUser) {
-    $("myAdsHint").textContent = "سجّل الدخول لمشاهدة إعلاناتك وحالة المراجعة.";
-    $("myAdsList").innerHTML = "";
-    return;
-  }
-  $("myAdsHint").textContent = "إعلانات حسابك وحالة كل إعلان:";
-  const {data, error} = await supabaseClient.from("ads")
-    .select("id,title,price,status,created_at")
-    .eq("seller_id", currentUser.id)
-    .order("created_at", {ascending:false});
-
-  if (error) {
-    $("myAdsList").innerHTML = '<div class="note">تعذر تحميل إعلاناتك. تحقق من سياسة قراءة إعلانات المالك.</div>';
-    console.error("loadMyAds error:", error);
-    return;
-  }
-  if (!data || !data.length) {
-    $("myAdsList").innerHTML = '<div class="empty">لم تضف أي إعلان بعد.</div>';
-    return;
-  }
-  const labels = {pending:"بانتظار المراجعة",published:"منشور",rejected:"مرفوض",sold:"مباع"};
-  $("myAdsList").innerHTML = data.map(ad =>
-    `<div class="my-item"><div><b>${escapeHTML(ad.title)}</b><div class="note">${formatPrice(ad.price)}</div></div><span class="tag">${escapeHTML(labels[ad.status] || ad.status || "غير محدد")}</span></div>`
-  ).join("");
+async function loadMyAds(){
+  if(!currentUser){$("myAdsHint").textContent="سجّل الدخول لمشاهدة إعلاناتك وحالة المراجعة.";$("myAdsList").innerHTML="";return}
+  $("myAdsHint").textContent="إعلانات حسابك وحالة كل إعلان:";
+  const {data,error}=await supabaseClient.from("ads").select("id,title,price,status,promotion_plan,promotion_status").eq("seller_id",currentUser.id).order("created_at",{ascending:false});
+  if(error){$("myAdsList").innerHTML='<div class="note">تعذر تحميل إعلاناتك. تحقق من سياسات RLS في Supabase.</div>';console.error(error);return}
+  const labels={pending:"بانتظار المراجعة",published:"منشور",rejected:"مرفوض",sold:"تم البيع"};
+  $("myAdsList").innerHTML=(data||[]).map(ad=>`<div class="my-item"><div><b>${escapeHTML(ad.title)}</b><div class="note">${formatPrice(ad.price)} — ${labels[ad.status]||escapeHTML(ad.status||"غير محدد")}</div><div class="promoted-note">${ad.promotion_status==="active"?"ترويج نشط":ad.promotion_status==="pending_payment"?"الترويج بانتظار الدفع":"إعلان عادي"}</div></div></div>`).join("")||'<div class="empty">لا توجد إعلانات في حسابك حتى الآن.</div>';
 }
-
-function updateAccountButton() {
-  $("accountBtn").textContent = currentUser ? "خروج الحساب" : "دخول البائع";
+function updateAccountButton(){
+  $("accountBtn").textContent=currentUser?"حسابي":"تسجيل الدخول";
+  $("drawerUser").textContent=currentUser?(currentUser.email||"تم تسجيل الدخول"):"مرحبًا بك في سوق القيمنق السعودي";
+  $("drawerAuth").innerHTML=currentUser?'<span class="ico">👤</span> إدارة الحساب':'<span class="ico">👤</span> تسجيل الدخول / إنشاء حساب';
+  $("settingsStatus").textContent=currentUser?("تم تسجيل الدخول باسم "+(currentUser.email||"المستخدم")):"سجّل الدخول لإدارة بيانات حسابك.";
+  $("settingsAuthBtn").hidden=!!currentUser;
+  $("logoutBtn").hidden=!currentUser;
 }
-async function refreshSession() {
-  const {data, error} = await supabaseClient.auth.getUser();
-  currentUser = error ? null : data.user;
+async function refreshSession(){
+  const {data,error}=await supabaseClient.auth.getUser();
+  currentUser=error?null:data.user||null;
   updateAccountButton();
   await loadMyAds();
 }
-
-function setAuthMode(mode) {
-  authMode = mode;
-  $("authTitle").textContent = mode === "login" ? "دخول البائع" : "إنشاء حساب بائع";
-  $("authSubmit").textContent = mode === "login" ? "دخول" : "إنشاء الحساب";
-  $("authPassword").autocomplete = mode === "login" ? "current-password" : "new-password";
-  $("authSwitchText").innerHTML = mode === "login"
-    ? 'ليس لديك حساب؟ <button class="btn" id="switchAuth" type="button">إنشاء حساب</button>'
-    : 'لديك حساب بالفعل؟ <button class="btn" id="switchAuth" type="button">تسجيل الدخول</button>';
-  $("switchAuth").addEventListener("click", () => setAuthMode(authMode === "login" ? "signup" : "login"));
+function setAuthMode(mode){
+  authMode=mode;
+  $("authTitle").textContent=mode==="login"?"تسجيل الدخول":"إنشاء حساب";
+  $("authSubmit").textContent=mode==="login"?"دخول":"إنشاء الحساب";
+  $("authPassword").autocomplete=mode==="login"?"current-password":"new-password";
   clearStatus("authStatus");
+  $("authSwitchText").innerHTML=mode==="login"?'ليس لديك حساب؟ <button class="btn" id="switchAuth" type="button">إنشاء حساب</button>':'لديك حساب بالفعل؟ <button class="btn" id="switchAuth" type="button">تسجيل الدخول</button>';
+  $("switchAuth").addEventListener("click",()=>setAuthMode(authMode==="login"?"signup":"login"));
 }
-
-$("accountBtn").addEventListener("click", async () => {
-  if (currentUser) {
-    const {error} = await supabaseClient.auth.signOut();
-    if (error) alert("تعذر تسجيل الخروج: " + error.message);
-    await refreshSession();
-  } else {
-    setAuthMode("login");
-    openModal("authModal");
-  }
-});
-
-$("authForm").addEventListener("submit", async e => {
-  e.preventDefault();
-  clearStatus("authStatus");
-  $("authSubmit").disabled = true;
-  const email = $("authEmail").value.trim();
-  const password = $("authPassword").value;
-
-  try {
-    if (authMode === "signup") {
-      const {data, error} = await supabaseClient.auth.signUp({email, password});
-      if (error) throw error;
-      if (data.session) {
-        showStatus("authStatus", "تم إنشاء الحساب وتسجيل الدخول.", "ok");
-        await refreshSession();
-        setTimeout(() => closeModal("authModal"), 900);
-      } else {
-        showStatus("authStatus", "تم إنشاء الحساب. افتح بريدك الإلكتروني وأكّد الحساب، ثم سجّل الدخول.", "ok");
-      }
-    } else {
-      const {error} = await supabaseClient.auth.signInWithPassword({email, password});
-      if (error) throw error;
-      showStatus("authStatus", "تم تسجيل الدخول بنجاح.", "ok");
-      await refreshSession();
-      setTimeout(() => closeModal("authModal"), 700);
+$("authForm").addEventListener("submit",async e=>{
+  e.preventDefault();clearStatus("authStatus");$("authSubmit").disabled=true;
+  const email=$("authEmail").value.trim(),password=$("authPassword").value;
+  try{
+    if(authMode==="signup"){
+      const {data,error}=await supabaseClient.auth.signUp({email,password});
+      if(error)throw error;
+      if(data.session){showStatus("authStatus","تم إنشاء الحساب وتسجيل الدخول.","ok");await refreshSession();setTimeout(()=>closeModal("authModal"),800)}
+      else showStatus("authStatus","تم إنشاء الحساب. افتح بريدك الإلكتروني وأكّد الحساب، ثم سجّل الدخول.","ok");
+    }else{
+      const {error}=await supabaseClient.auth.signInWithPassword({email,password});
+      if(error)throw error;
+      showStatus("authStatus","تم تسجيل الدخول بنجاح.","ok");await refreshSession();setTimeout(()=>closeModal("authModal"),700);
     }
-  } catch (error) {
-    showStatus("authStatus", "تعذر إكمال العملية: " + (error.message || "خطأ غير معروف"), "err");
-  } finally {
-    $("authSubmit").disabled = false;
-  }
+  }catch(err){showStatus("authStatus","تعذر إكمال العملية: "+(err.message||"خطأ غير معروف"),"err")}
+  finally{$("authSubmit").disabled=false}
 });
-
-function openAdForm() {
+function openAdForm(){
   clearStatus("adStatus");
-  if (!currentUser) {
-    setAuthMode("login");
-    openModal("authModal");
-    showStatus("authStatus", "سجّل الدخول أولًا، وبعدها نكمل إضافة إعلانك.", "ok");
-    return;
-  }
-  openModal("adModal");
+  if(!currentUser){setAuthMode("login");openModal("authModal");showStatus("authStatus","سجّل الدخول أولًا، ثم أضف إعلانك.","ok");return}
+  resetImageSelection();openModal("adModal");
 }
-$("addBtn").addEventListener("click", openAdForm);
-$("addBtn2").addEventListener("click", openAdForm);
-
-$("myAdsBtn").addEventListener("click", async () => {
-  if (!currentUser) {
-    setAuthMode("login");
-    openModal("authModal");
-    showStatus("authStatus", "سجّل الدخول لمشاهدة إعلاناتك.", "ok");
-  } else {
-    await loadMyAds();
-    $("myAdsPanel").scrollIntoView({behavior:"smooth"});
-  }
+$("addBtn").addEventListener("click",openAdForm);
+$("myAdsBtn").addEventListener("click",async()=>{
+  if(!currentUser){setAuthMode("login");openModal("authModal");showStatus("authStatus","سجّل الدخول لمشاهدة إعلاناتك.","ok")}
+  else{await loadMyAds();$("myAdsPanel").scrollIntoView({behavior:"smooth"})}
 });
-$("searchInput").addEventListener("input", renderAds);
-$("categoryFilter").addEventListener("change", renderAds);
+$("browseBtn").addEventListener("click",()=>$("adsSection").scrollIntoView({behavior:"smooth"}));
+$("searchInput").addEventListener("input",renderAds);
+$("categoryFilter").addEventListener("change",renderAds);
 
-async function uploadImages(files) {
-  const urls = [];
-  const selected = Array.from(files || []).slice(0, 5);
-  for (const file of selected) {
-    if (!file.type.startsWith("image/")) throw new Error("اختر ملفات صور فقط.");
-    if (file.size > 5 * 1024 * 1024) throw new Error("حجم كل صورة يجب ألا يتجاوز 5 ميجابايت.");
-    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-    const path = `${currentUser.id}/${Date.now()}-${Math.random().toString(36).slice(2)}-${safeName}`;
-    const {error} = await supabaseClient.storage.from("ad-images").upload(path, file, {
-      upsert:false, contentType:file.type
-    });
-    if (error) {
-      throw new Error("تعذر رفع الصور. أنشئ مساحة Storage باسم ad-images واضبط سياسة الرفع في Supabase، أو أرسل الإعلان دون صور. التفاصيل: " + error.message);
-    }
-    const {data} = supabaseClient.storage.from("ad-images").getPublicUrl(path);
-    urls.push(data.publicUrl);
+function resetImageSelection(){
+  selectedImages=[];$("adImages").value="";$("imagePreview").innerHTML="";$("imageStatus").textContent="لم يتم اختيار صور.";
+}
+function renderImagePreviews(){
+  const holder=$("imagePreview");holder.innerHTML="";
+  $("imageStatus").textContent=selectedImages.length?`عدد الصور المختارة: ${selectedImages.length} من 5`:"لم يتم اختيار صور.";
+  selectedImages.forEach((file,index)=>{
+    const url=URL.createObjectURL(file),item=document.createElement("div");item.className="preview-item";
+    const img=document.createElement("img");img.src=url;img.alt=file.name;
+    const button=document.createElement("button");button.type="button";button.className="btn";button.textContent="إزالة";
+    button.addEventListener("click",()=>{URL.revokeObjectURL(url);selectedImages.splice(index,1);syncFileInput();renderImagePreviews()});
+    item.append(img,button);holder.append(item);
+  });
+}
+function syncFileInput(){
+  const dt=new DataTransfer();selectedImages.forEach(f=>dt.items.add(f));$("adImages").files=dt.files;
+}
+$("adImages").addEventListener("change",()=>{
+  const incoming=Array.from($("adImages").files||[]);
+  for(const file of incoming){
+    if(!file.type.startsWith("image/")){showStatus("adStatus","اختر ملفات صور فقط.","err");continue}
+    if(file.size>5*1024*1024){showStatus("adStatus","حجم كل صورة يجب ألا يتجاوز 5 ميجابايت.","err");continue}
+    if(selectedImages.length>=5){showStatus("adStatus","الحد الأعلى 5 صور.","err");break}
+    if(!selectedImages.some(f=>f.name===file.name&&f.size===file.size))selectedImages.push(file);
+  }
+  syncFileInput();renderImagePreviews();
+});
+$("clearImagesBtn").addEventListener("click",resetImageSelection);
+async function uploadImages(files){
+  const urls=[];
+  for(const file of Array.from(files||[]).slice(0,5)){
+    const safeName=file.name.replace(/[^a-zA-Z0-9._-]/g,"_");
+    const path=`${currentUser.id}/${Date.now()}-${Math.random().toString(36).slice(2)}-${safeName}`;
+    const {error}=await supabaseClient.storage.from("ad-images").upload(path,file,{upsert:false,contentType:file.type});
+    if(error)throw new Error("تعذر رفع الصور. تحقق من إنشاء مساحة ad-images وسياسات الرفع. أو أزل الصور وأرسل الإعلان دونها. التفاصيل: "+error.message);
+    const {data}=supabaseClient.storage.from("ad-images").getPublicUrl(path);urls.push(data.publicUrl);
   }
   return urls;
 }
-
-$("adForm").addEventListener("submit", async e => {
-  e.preventDefault();
-  clearStatus("adStatus");
-
-  if (!currentUser) {
-    closeModal("adModal");
-    setAuthMode("login");
-    openModal("authModal");
-    showStatus("authStatus", "انتهت الجلسة أو لم يتم تسجيل الدخول. سجّل الدخول مجددًا.", "err");
-    return;
-  }
-  if (!$("pledge").checked) {
-    showStatus("adStatus", "يجب الموافقة على التعهد قبل إرسال الإعلان.", "err");
-    return;
-  }
-
-  const price = Number($("adPrice").value);
-  if (!Number.isFinite(price) || price <= 0) {
-    showStatus("adStatus", "أدخل سعرًا صحيحًا أكبر من صفر.", "err");
-    return;
-  }
-
-  $("submitAdBtn").disabled = true;
-  $("submitAdBtn").textContent = "جارٍ حفظ الإعلان…";
-
-  try {
-    const imageUrls = await uploadImages($("adImages").files);
-    const row = {
-      seller_id: currentUser.id,
-      title: $("adTitle").value.trim(),
-      description: $("adDescription").value.trim(),
+$("adForm").addEventListener("submit",async e=>{
+  e.preventDefault();clearStatus("adStatus");
+  if(!currentUser){closeModal("adModal");setAuthMode("login");openModal("authModal");showStatus("authStatus","سجّل الدخول مجددًا قبل إرسال الإعلان.","err");return}
+  if(!$("pledge").checked){showStatus("adStatus","يجب الموافقة على التعهد قبل إرسال الإعلان.","err");return}
+  const price=Number($("adPrice").value);
+  if(!Number.isFinite(price)||price<=0){showStatus("adStatus","أدخل سعرًا صحيحًا أكبر من صفر.","err");return}
+  $("submitAdBtn").disabled=true;$("submitAdBtn").textContent="جارٍ حفظ الإعلان…";
+  try{
+    const imageUrls=selectedImages.length?await uploadImages(selectedImages):[];
+    const selectedPlan=promotionPlans[document.querySelector("input[name=promotionPlan]:checked")?.value||"none"];
+    if(selectedPlan.days){showStatus("adStatus","تم اختيار "+selectedPlan.label+" بقيمة "+selectedPlan.price+" ر.س. سيتم حفظ طلب الترويج بحالة بانتظار الدفع، ولن يُفعّل قبل ربط بوابة الدفع.","ok")}
+    const row={
+      seller_id:currentUser.id,
+      title:$("adTitle").value.trim(),
+      description:$("adDescription").value.trim(),
       price,
-      category: $("adCategory").value,
-      image_urls: imageUrls,
-      seller_name: $("sellerName").value.trim(),
-      seller_phone: $("sellerPhone").value.trim(),
-      commission_rate: 1,
-      pledge_accepted_at: new Date().toISOString(),
-      status: "pending"
+      category:$("adCategory").value,
+      image_urls:imageUrls,
+      seller_name:$("sellerName").value.trim(),
+      seller_phone:$("sellerPhone").value.trim(),
+      commission_rate:1,
+      pledge_accepted_at:new Date().toISOString(),
+      status:"pending",
+      promotion_plan:document.querySelector("input[name=promotionPlan]:checked")?.value||"none",
+      promotion_price:selectedPlan.price,
+      promotion_days:selectedPlan.days,
+      promotion_status:selectedPlan.days?"pending_payment":"none"
     };
-
-    const {error} = await supabaseClient.from("ads").insert(row);
-    if (error) throw error;
-
-    showStatus("adStatus", "تم حفظ الإعلان بنجاح وإرساله للمراجعة. سيظهر للعامة بعد الموافقة عليه.", "ok");
-    $("adForm").reset();
-    await loadMyAds();
-    await loadAds();
-    setTimeout(() => closeModal("adModal"), 1800);
-  } catch (error) {
-    console.error("Save ad error:", error);
-    showStatus("adStatus", "تعذر حفظ الإعلان: " + (error.message || "خطأ غير معروف") + " — إذا كان الخطأ متعلقًا بالصلاحيات، راجع سياسات RLS في Supabase.", "err");
-  } finally {
-    $("submitAdBtn").disabled = false;
-    $("submitAdBtn").textContent = "إرسال الإعلان للمراجعة";
-  }
+    const {error}=await supabaseClient.from("ads").insert(row);
+    if(error)throw error;
+    showStatus("adStatus","تم حفظ الإعلان وإرساله للمراجعة. سيظهر للعامة بعد الموافقة عليه.","ok");
+    $("adForm").reset();resetImageSelection();await loadMyAds();await loadAds();setTimeout(()=>closeModal("adModal"),1600);
+  }catch(err){console.error("Save ad error:",err);showStatus("adStatus","تعذر حفظ الإعلان: "+(err.message||"خطأ غير معروف"),"err")}
+  finally{$("submitAdBtn").disabled=false;$("submitAdBtn").textContent="إرسال الإعلان للمراجعة"}
 });
-
-supabaseClient.auth.onAuthStateChange(() => {
-  refreshSession();
+function openDrawer(){$("accountDrawer").classList.add("open");$("drawerBackdrop").classList.add("open")}
+function closeDrawer(){$("accountDrawer").classList.remove("open");$("drawerBackdrop").classList.remove("open")}
+$("menuBtn").addEventListener("click",openDrawer);
+$("closeDrawer").addEventListener("click",closeDrawer);
+$("drawerBackdrop").addEventListener("click",closeDrawer);
+$("bottomAccount").addEventListener("click",openDrawer);
+$("bottomHome").addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}));
+$("bottomMessages").addEventListener("click",()=>{$("messagesPanel").hidden=false;$("messagesPanel").scrollIntoView({behavior:"smooth"})});
+$("bottomNotifications").addEventListener("click",()=>{$("notificationsPanel").hidden=false;$("notificationsPanel").scrollIntoView({behavior:"smooth"})});
+$("drawerAuth").addEventListener("click",()=>{
+  closeDrawer();
+  if(currentUser){$("settingsPanel").hidden=false;$("settingsPanel").scrollIntoView({behavior:"smooth"})}
+  else{setAuthMode("login");openModal("authModal")}
 });
-
-(async function init() {
+$("settingsAuthBtn").addEventListener("click",()=>{setAuthMode("login");openModal("authModal")});
+$("logoutBtn").addEventListener("click",async()=>{
+  const {error}=await supabaseClient.auth.signOut();
+  if(error)alert("تعذر تسجيل الخروج: "+error.message);
   await refreshSession();
-  await loadAds();
-})();
+});
+$("accountBtn").addEventListener("click",()=>{if(currentUser)openDrawer();else{setAuthMode("login");openModal("authModal")}});
+$("bottomAdd").addEventListener("click",openAdForm);
+$("promoteAddBtn").addEventListener("click",()=>{closeDrawer();openAdForm()});
+document.querySelectorAll("[data-go]").forEach(btn=>btn.addEventListener("click",()=>{
+  const target=$(btn.dataset.go);closeDrawer();
+  document.querySelectorAll("main .section, #promotionsPanel, #messagesPanel, #notificationsPanel, #settingsPanel").forEach(el=>{
+    if(["promotionsPanel","messagesPanel","notificationsPanel","settingsPanel"].includes(el.id))el.hidden=el!==target
+  });
+  if(target){target.hidden=false;target.scrollIntoView({behavior:"smooth",block:"start"})}
+}));
+document.querySelectorAll('input[name="promotionPlan"]').forEach(r=>r.addEventListener("change",()=>{
+  const plan=promotionPlans[r.value];
+  $("promotionStatus").textContent=plan.days?`تم اختيار ${plan.label} بسعر ${plan.price} ر.س. الدفع والتفعيل غير متاحين حتى ربط بوابة الدفع.`:"تم اختيار النشر العادي المجاني."
+}));
+supabaseClient.auth.onAuthStateChange((event,session)=>{
+  currentUser=session?.user||null;
+  updateAccountButton();
+  loadMyAds();
+});
+(async function init(){await refreshSession();await loadAds()})();
 </script>
 </body>
 </html>
