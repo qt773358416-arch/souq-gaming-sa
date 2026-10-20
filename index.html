@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>سوق القيمنق السعودي</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#0b1020;color:white}
+header{padding:20px 6%;display:flex;justify-content:space-between;align-items:center;background:#111a30;gap:15px;flex-wrap:wrap}
+.logo{font-size:24px;font-weight:bold;color:#58f5b2}
+button{border:0;border-radius:9px;padding:12px 18px;cursor:pointer;font-weight:bold}
+.primary{background:#58f5b2;color:#09111d}
+.hero{padding:55px 6%;background:linear-gradient(135deg,#172b4b,#101326)}
+.hero h1{font-size:36px;margin:0 0 15px}
+.hero p{color:#c1cbe0;line-height:1.9}
+.search{display:flex;gap:10px;max-width:650px;margin-top:25px}
+input,select{padding:14px;border:1px solid #34415c;background:#172137;color:white;border-radius:9px;min-width:0}
+.search input{flex:1}
+section{padding:30px 6%}
+.categories{display:flex;gap:10px;flex-wrap:wrap}
+.categories button{background:#1b2740;color:white;border:1px solid #34415c}
+.categories button.active{background:#58f5b2;color:#09111d}
+.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:18px}
+.card{background:#151f35;border:1px solid #293752;border-radius:14px;padding:20px}
+.product-icon{font-size:48px;background:#202d47;border-radius:10px;text-align:center;padding:22px}
+.card h3{margin-bottom:8px}
+.price{color:#58f5b2;font-size:21px;font-weight:bold}
+.muted{color:#b5c1d7;font-size:14px}
+footer{text-align:center;padding:30px;color:#aab7cc;background:#111a30}
+@media(max-width:600px){.hero h1{font-size:28px}.search{flex-direction:column}header{padding:18px}}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">🎮 سوق القيمنق</div>
+<button class="primary" onclick="addProduct()">＋ أضف إعلانك</button>
+</header>
+
+<div class="hero">
+<h1>بيع واشتري أجهزة القيمنق بكل سهولة</h1>
+<p>منصتك السعودية لبيع وشراء الكمبيوترات، وأجهزة الألعاب، وقطع الكمبيوتر، والإكسسوارات.</p>
+<div class="search">
+<input id="search" placeholder="ابحث عن كمبيوتر، بلايستيشن، كرت شاشة..." oninput="render()">
+<button class="primary" onclick="render()">ابحث</button>
+</div>
+</div>
+
+<section>
+<h2>تصفح الأقسام</h2>
+<div class="categories">
+<button class="active" onclick="setCategory('الكل',this)">الكل</button>
+<button onclick="setCategory('كمبيوترات',this)">💻 كمبيوترات</button>
+<button onclick="setCategory('أجهزة ألعاب',this)">🎮 أجهزة ألعاب</button>
+<button onclick="setCategory('قطع كمبيوتر',this)">🧩 قطع كمبيوتر</button>
+<button onclick="setCategory('إكسسوارات',this)">🎧 إكسسوارات</button>
+</div>
+</section>
+
+<section>
+<h2>أحدث الإعلانات</h2>
+<p class="muted">هذه منتجات تجريبية لتجربة التصميم فقط.</p>
+<div id="products" class="products"></div>
+</section>
+
+<footer>سوق القيمنق السعودي © 2026</footer>
+
+<script>
+const products=[
+{name:"كمبيوتر قيمنق",category:"كمبيوترات",icon:"💻",price:3500},
+{name:"بلايستيشن 5",category:"أجهزة ألعاب",icon:"🎮",price:1800},
+{name:"كرت شاشة",category:"قطع كمبيوتر",icon:"🧩",price:2200},
+{name:"سماعة قيمنق",category:"إكسسوارات",icon:"🎧",price:250}
+];
+let category="الكل";
+function render(){
+const q=document.getElementById("search").value.trim().toLowerCase();
+const list=products.filter(p=>(category==="الكل"||p.category===category)&&p.name.toLowerCase().includes(q));
+document.getElementById("products").innerHTML=list.length?list.map(p=>`
+<div class="card">
+<div class="product-icon">${p.icon}</div>
+<h3>${p.name}</h3>
+<p class="muted">${p.category}</p>
+<div class="price">${p.price.toLocaleString("en-US")} ريال</div>
+<p class="muted">إعلان تجريبي</p>
+</div>`).join(""):"<p>لا توجد منتجات مطابقة لبحثك.</p>";
+}
+function setCategory(c,btn){
+category=c;
+document.querySelectorAll(".categories button").forEach(b=>b.classList.remove("active"));
+btn.classList.add("active");
+render();
+}
+function addProduct(){
+alert("سيتم تفعيل إضافة الإعلانات وربطها بقاعدة بيانات في الخطوة التالية.");
+}
+render();
+</script>
+</body>
+</html>
