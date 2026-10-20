@@ -91,8 +91,8 @@ document.querySelectorAll(".categories button").forEach(b=>b.classList.remove("a
 btn.classList.add("active");
 render();
 }
-function addProduct(){
-  const name = prompt("أدخل اسم المنتج:");
+async function addProduct() {
+  const name = prompt("أدخل اسم المنتج أو الإعلان:");
   if (!name || !name.trim()) return;
 
   const price = Number(prompt("أدخل سعر البيع بالريال:"));
@@ -108,11 +108,10 @@ function addProduct(){
   if (!phone || !phone.trim()) return;
 
   const accepted = confirm(
-    "التعهد الإلزامي:\n\n" +
-    "أتعهد بصحة بيانات الإعلان وبالتعامل بأمانة مع المشتري.\n" +
-    "وأتعهد بتحويل 1% من قيمة البيع النهائية للمنتج إلى إدارة سوق القيمنق السعودي عند إتمام البيع.\n\n" +
+    "أتعهد بصحة بيانات الإعلان والتعامل بأمانة مع المشتري، " +
+    "وأوافق على عمولة المنصة البالغة 1% من قيمة البيع النهائية عند إتمام البيع.\n\n" +
     "قيمة البيع: " + price + " ريال\n" +
-    "نسبة المنصة: " + (price * 0.01).toFixed(2) + " ريال\n\n" +
+    "عمولة المنصة: " + (price * 0.01).toFixed(2) + " ريال\n\n" +
     "هل توافق على التعهد؟"
   );
 
@@ -121,7 +120,38 @@ function addProduct(){
     return;
   }
 
-  alert("تمت الموافقة على التعهد في هذه الجلسة. النشر الدائم يحتاج إلى ربط قاعدة بيانات.");
+  try {
+    const { data: { user }, error: authError } =
+      await supabaseClient.auth.getUser();
+
+    if (authError) throw authError;
+
+    if (!user) {
+      alert("يجب تسجيل الدخول أولًا قبل إضافة إعلان.");
+      return;
+    }
+
+    const { error } = await supabaseClient
+      .from("ads")
+      .insert({
+        seller_id: user.id,
+        title: name.trim(),
+        price: price,
+        seller_name: seller.trim(),
+        seller_phone: phone.trim(),
+        commission_rate: 1,
+        pledge_accepted_at: new Date().toISOString(),
+        status: "pending"
+      });
+
+    if (error) throw error;
+
+    alert("تم حفظ الإعلان بنجاح، وهو بانتظار المراجعة.");
+    render();
+  } catch (error) {
+    console.error("خطأ حفظ الإعلان:", error);
+    alert("تعذر حفظ الإعلان: " + error.message);
+  }
 }
 render();
   
