@@ -124,7 +124,21 @@ function addProduct(){
   alert("تمت الموافقة على التعهد في هذه الجلسة. النشر الدائم يحتاج إلى ربط قاعدة بيانات.");
 }
 render();
+  
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = "https://hmcsgkavqdsfwqomxakw.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_I2FLI3drU7_xB8tWWGjnOg_b6Sm2j2m";
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
+
+console.log("Supabase client initialized");
 </script>
 </body>
 </html>
+
 
