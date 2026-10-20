@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>إدارة سوق القيمنق السعودي</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{color-scheme:dark;--bg:#171923;--panel:#222635;--line:#373d50;--text:#f4f5fb;--muted:#aeb6ca;--blue:#3888d8;--green:#35bd9a;--red:#df5265}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px system-ui,Tahoma,Arial,sans-serif}
+button,input,select{font:inherit}
+button{cursor:pointer;border:0;border-radius:10px;padding:10px 14px;font-weight:700}
+.primary{background:var(--blue);color:white}
+.secondary{background:#303648;color:white;border:1px solid var(--line)}
+.danger{background:#522532;color:#ffdce3;border:1px solid #7d3547}
+input,select{background:#151a27;color:white;border:1px solid var(--line);border-radius:10px;padding:12px;width:100%}
+.wrap{max-width:1200px;margin:auto;padding:18px}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+h1{font-size:24px;margin:0}
+h2{font-size:19px}
+.muted{color:var(--muted)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:18px;margin-bottom:16px}
+.stack{display:grid;gap:12px}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.stat{background:#191e2c;border:1px solid var(--line);border-radius:12px;padding:16px}
+.stat strong{display:block;font-size:27px;margin-top:8px}
+.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.row>*{min-width:0}
+.spread{justify-content:space-between}
+.hidden{display:none!important}
+.msg{padding:12px;border-radius:10px;background:#191e2c;white-space:pre-wrap;overflow-wrap:anywhere}
+table{width:100%;border-collapse:collapse;min-width:720px}
+th,td{text-align:right;padding:12px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--muted);font-size:13px}
+.tablewrap{overflow:auto}
+.actions{display:flex;gap:6px;flex-wrap:wrap}
+.actions button{font-size:12px;padding:8px 10px}
+.badge{display:inline-block;background:#293d35;color:#aaf0d4;border-radius:20px;padding:4px 8px;font-size:12px}
+label{display:block;color:var(--muted);font-size:13px;margin-bottom:6px}
+@media(max-width:800px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.wrap{padding:12px}}
+@media(max-width:450px){.grid{grid-template-columns:1fr 1fr}.stat{padding:11px}.stat strong{font-size:22px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div>
+    <h1>🎮 إدارة سوق القيمنق السعودي</h1>
+    <div class="muted">لوحة خاصة بالمالك والمشرفين المصرح لهم</div>
+  </div>
+  <div class="row">
+    <a href="/" style="color:#9fcaff">العودة للموقع</a>
+    <button id="logout" class="secondary hidden">تسجيل الخروج</button>
+  </div>
+</header>
+
+<section id="login" class="panel">
+  <h2>دخول الإدارة</h2>
+  <p class="muted">استخدم حسابك المسجل في المنصة. لا يكفي تسجيل الدخول وحده؛ يجب أن يكون الحساب مضافًا إلى صلاحيات الإدارة في Supabase.</p>
+  <form id="loginForm" class="stack">
+    <div>
+      <label for="email">البريد الإلكتروني</label>
+      <input id="email" type="email" autocomplete="username" required>
+    </div>
+    <div>
+      <label for="password">كلمة المرور</label>
+      <input id="password" type="password" autocomplete="current-password" required>
+    </div>
+    <button class="primary">تسجيل الدخول والتحقق من الصلاحية</button>
+  </form>
+  <div id="loginMsg" class="msg hidden" style="margin-top:12px"></div>
+</section>
+
+<section id="denied" class="panel hidden">
+  <h2>ليس لديك صلاحية الإدارة</h2>
+  <p class="muted">تم التحقق من الحساب، لكنه غير مسجل ضمن مديري المنصة. أضف المالك من SQL Editor باستخدام معرّف حسابه، ولا تمنح الصلاحية من المتصفح.</p>
+  <button id="deniedLogout" class="secondary">تسجيل الخروج</button>
+</section>
+
+<section id="dashboard" class="hidden">
+  <div class="panel">
+    <div class="row spread">
+      <div>
+        <h2>ملخص المنصة</h2>
+        <div id="who" class="muted"></div>
+      </div>
+      <button id="refresh" class="primary">تحديث البيانات</button>
+    </div>
+    <div id="dashMsg" class="msg" style="margin-top:12px">جارٍ تحميل الإحصائيات...</div>
+    <div class="grid" style="margin-top:14px">
+      <div class="stat">إجمالي الإعلانات<strong id="totalAds">—</strong></div>
+      <div class="stat">الإعلانات المنشورة<strong id="publishedAds">—</strong></div>
+      <div class="stat">الإعلانات المعلقة<strong id="pendingAds">—</strong></div>
+      <div class="stat">حسابات المستخدمين<strong id="totalUsers">—</strong></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>إدارة الإعلانات</h2>
+    <div class="row">
+      <input id="filter" placeholder="ابحث بعنوان الإعلان أو القسم أو البائع" style="flex:1">
+      <select id="statusFilter" style="width:auto">
+        <option value="">جميع الحالات</option>
+        <option value="published">منشور</option>
+        <option value="pending">معلق</option>
+      </select>
+      <button id="searchAds" class="primary">بحث</button>
+    </div>
+    <div class="tablewrap" style="margin-top:14px">
+      <table>
+        <thead><tr>
+          <th>الإعلان</th><th>السعر</th><th>البائع</th><th>الحالة</th><th>التاريخ</th><th>الإجراءات</th>
+        </tr></thead>
+        <tbody id="adsRows"><tr><td colspan="6">جارٍ التحميل...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>حسابات المستخدمين</h2>
+    <p class="muted">تعرض هذه القائمة الملفات الشخصية المتاحة في جدول profiles، وليست قائمة كاملة مضمونة لكل حسابات Auth.</p>
+    <button id="loadUsers" class="secondary">تحميل ملفات المستخدمين</button>
+    <div class="tablewrap" style="margin-top:12px">
+      <table>
+        <thead><tr><th>معرّف الحساب</th><th>الاسم</th><th>الجوال</th><th>المدينة</th></tr></thead>
+        <tbody id="usersRows"><tr><td colspan="4">اضغط تحميل ملفات المستخدمين.</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+</div>
+
+<script>
+const SUPABASE_URL="https://hmcsgkavqdsfwqomxakw.supabase.co";
+const SUPABASE_KEY="sb_publishable_I2FLI3drU7_xB8tWWGjnOg_b6Sm2j2m";
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({
+ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+}[c]));
+let user=null;
+let isAdmin=false;
+let adsCache=[];
+
+function show(id,on=true){$(id).classList.toggle("hidden",!on)}
+function note(id,text){$(id).textContent=text}
+
+async function verifyAdmin(){
+ const {data:{session}}=await db.auth.getSession();
+ user=session?.user||null;
+ isAdmin=false;
+ show("login",!user);
+ show("logout",!!user);
+ show("dashboard",false);
+ show("denied",false);
+
+ if(!user)return;
+
+ const {data,error}=await db
+  .from("admin_users")
+  .select("role")
+  .eq("user_id",user.id)
+  .maybeSingle();
+
+ if(error){
+  show("login",true);
+  note("loginMsg","تعذر التحقق من صلاحية الإدارة. تأكد من تطبيق SQL وسياسات admin_users.");
+  show("loginMsg",true);
+  return;
+ }
+
+ if(!data){
+  show("denied",true);
+  show("login",false);
+  return;
+ }
+
+ isAdmin=true;
+ show("login",false);
+ show("denied",false);
+ show("dashboard",true);
+ note("who","الحساب: "+user.email+" — الصلاحية: "+data.role);
+ await refreshDashboard();
+}
+
+async function refreshDashboard(){
+ if(!isAdmin)return;
+ note("dashMsg","جارٍ تحميل البيانات...");
+
+ const {data,error}=await db
+  .from("ads")
+  .select("id,status,title,price,category,seller_id,seller_name,seller_phone,created_at")
+  .order("created_at",{ascending:false})
+  .limit(500);
+
+ if(error){
+  note("dashMsg","تعذر قراءة الإعلانات: "+error.message);
+  return;
+ }
+
+ adsCache=data||[];
+ $("totalAds").textContent=adsCache.length;
+ $("publishedAds").textContent=adsCache.filter(a=>a.status==="published").length;
+ $("pendingAds").textContent=adsCache.filter(a=>a.status==="pending").length;
+ $("totalUsers").textContent="—";
+ note("dashMsg","تم تحميل الإعلانات الظاهرة. إذا تجاوز عددها 500، فهذا الملخص يقتصر على آخر 500 إعلان.");
+ renderAds();
+}
+
+function renderAds(){
+ const term=$("filter").value.trim().toLowerCase();
+ const status=$("statusFilter").value;
+
+ const rows=adsCache.filter(a=>{
+  const matchesStatus=!status||a.status===status;
+  const hay=[a.title,a.category,a.seller_name,a.seller_phone].join(" ").toLowerCase();
+  return matchesStatus&&(!term||hay.includes(term));
+ });
+
+ if(!rows.length){
+  $("adsRows").innerHTML='<tr><td colspan="6">لا توجد إعلانات مطابقة.</td></tr>';
+  return;
+ }
+
+ $("adsRows").innerHTML=rows.map(a=>`
+ <tr>
+  <td><strong>${esc(a.title)}</strong><div class="muted">${esc(a.category)}</div></td>
+  <td>${esc(a.price)} ر.س</td>
+  <td>${esc(a.seller_name)}<div class="muted">${esc(a.seller_phone)}</div></td>
+  <td><span class="badge">${esc(a.status)}</span></td>
+  <td>${a.created_at?esc(new Date(a.created_at).toLocaleDateString("ar-SA")):"—"}</td>
+  <td><div class="actions">
+   ${a.status!=="published"?`<button class="primary" data-action="publish" data-id="${esc(a.id)}">نشر</button>`:""}
+   ${a.status!=="pending"?`<button class="secondary" data-action="pending" data-id="${esc(a.id)}">تعليق</button>`:""}
+   <button class="danger" data-action="delete" data-id="${esc(a.id)}">حذف</button>
+  </div></td>
+ </tr>`).join("");
+}
+
+$("adsRows").addEventListener("click",async e=>{
+ const b=e.target.closest("button[data-action]");
+ if(!b||!isAdmin)return;
+
+ const ad=adsCache.find(x=>x.id===b.dataset.id);
+ if(!ad)return;
+
+ if(b.dataset.action==="delete"){
+  if(!confirm("هل تريد حذف الإعلان نهائيًا؟"))return;
+  const {error}=await db.from("ads").delete().eq("id",ad.id);
+  if(error){alert("تعذر الحذف: "+error.message);return;}
+ }else{
+  const status=b.dataset.action==="publish"?"published":"pending";
+  if(!confirm(status==="published"?"نشر هذا الإعلان؟":"تعليق هذا الإعلان؟"))return;
+  const {error}=await db.from("ads").update({status}).eq("id",ad.id);
+  if(error){alert("تعذر تغيير الحالة: "+error.message);return;}
+ }
+ await refreshDashboard();
+});
+
+$("searchAds").onclick=renderAds;
+$("filter").addEventListener("keydown",e=>{if(e.key==="Enter")renderAds()});
+$("statusFilter").onchange=renderAds;
+$("refresh").onclick=refreshDashboard;
+
+$("loadUsers").onclick=async()=>{
+ if(!isAdmin)return;
+ $("usersRows").innerHTML='<tr><td colspan="4">جارٍ التحميل...</td></tr>';
+ const {data,error}=await db.from("profiles")
+  .select("id,display_name,phone,city")
+  .order("display_name")
+  .limit(500);
+
+ if(error){
+  $("usersRows").innerHTML='<tr><td colspan="4">تعذر تحميل المستخدمين. تحقق من وجود profiles وسياسات القراءة.</td></tr>';
+  return;
+ }
+
+ $("usersRows").innerHTML=(data||[]).map(p=>`
+ <tr><td>${esc(p.id)}</td><td>${esc(p.display_name)}</td>
+ <td>${esc(p.phone)}</td><td>${esc(p.city)}</td></tr>`
+ ).join("")||'<tr><td colspan="4">لا توجد ملفات شخصية.</td></tr>';
+};
+
+async function signOut(){
+ await db.auth.signOut();
+ user=null;isAdmin=false;
+ show("dashboard",false);show("denied",false);show("logout",false);show("login",true);
+}
+
+$("logout").onclick=signOut;
+$("deniedLogout").onclick=signOut;
+
+$("loginForm").onsubmit=async e=>{
+ e.preventDefault();
+ note("loginMsg","جارٍ تسجيل الدخول...");
+ show("loginMsg",true);
+
+ const {error}=await db.auth.signInWithPassword({
+  email:$("email").value.trim(),
+  password:$("password").value
+ });
+
+ if(error){
+  note("loginMsg","تعذر تسجيل الدخول: "+error.message);
+  return;
+ }
+ await verifyAdmin();
+};
+
+db.auth.onAuthStateChange((_event,session)=>{
+ user=session?.user||null;
+ setTimeout(()=>verifyAdmin(),0);
+});
+
+verifyAdmin();
+</script>
+</body>
+</html>
