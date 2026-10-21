@@ -489,7 +489,21 @@ $('authForm').onsubmit=async e=>{
  e.preventDefault();
  msg('authMsg','جارٍ تسجيل الدخول...');
  const {data,error}=await sb.auth.signInWithPassword({email:$('authEmail').value.trim(),password:$('authPassword').value});
- if(error){msg('authMsg',error.message);return;}
+ if(error){
+  const e = error.message.toLowerCase();
+  let message = 'تعذر تسجيل الدخول. حاول مرة أخرى.';
+  if(e.includes('invalid login credentials')){
+    message = 'البريد الإلكتروني أو كلمة المرور غير صحيحة. تحقق منهما وحاول مجددًا.';
+  }else if(e.includes('email not confirmed')){
+    message = 'لم يتم تأكيد بريدك الإلكتروني. افتح رسالة التأكيد في بريدك أولًا.';
+  }else if(e.includes('too many requests')){
+    message = 'حاولت تسجيل الدخول مرات كثيرة. انتظر قليلًا ثم حاول مجددًا.';
+  }else if(e.includes('network') || e.includes('fetch')){
+    message = 'تعذر الاتصال بالخدمة. تحقق من الإنترنت وحاول مجددًا.';
+  }
+  msg('authMsg', message);
+  return;
+}
  currentUser=data.user;
  await loadProfile();
 };
