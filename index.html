@@ -502,6 +502,7 @@ window.contactCall=p=>{if(!p){alert('لم يضف البائع رقم اتصال.
 function showPage(page){
   document.querySelectorAll('main>section').forEach(s=>s.classList.add('hidden'));
   const el=$('page-'+page);if(el)el.classList.remove('hidden');
+  if(page==='more') window.scrollTo(0,0);
   globalClear();
   if(page==='home')loadAds();
   if(page==='myads')loadMyAds('myAdsPage');
