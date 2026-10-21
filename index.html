@@ -687,9 +687,30 @@ sb.auth.getSession().then(async({data})=>{
  }
 });
 
-sb.auth.onAuthStateChange(async(_event,session)=>{
- currentUser=session?.user||null;
- if(currentUser)await loadProfile();
+sb.auth.onAuthStateChange((event, session) => {
+  currentUser = session?.user || null;
+
+  if (event === 'PASSWORD_RECOVERY') {
+    const newPassword = prompt('أدخل كلمة المرور الجديدة (6 أحرف على الأقل):');
+
+    if (newPassword && newPassword.length >= 6) {
+      sb.auth.updateUser({ password: newPassword }).then(({ error }) => {
+        if (error) {
+          alert('تعذر تغيير كلمة المرور: ' + error.message);
+        } else {
+          alert('تم تغيير كلمة المرور بنجاح. يمكنك تسجيل الدخول الآن.');
+        }
+      });
+    } else if (newPassword !== null) {
+      alert('كلمة المرور يجب أن تكون 6 أحرف على الأقل.');
+    }
+
+    return;
+  }
+
+  if (currentUser) {
+    loadProfile();
+  }
 });
 $('forgotPasswordBtn').onclick = async () => {
   const email = $('authEmail').value.trim();
