@@ -691,6 +691,29 @@ sb.auth.onAuthStateChange(async(_event,session)=>{
  currentUser=session?.user||null;
  if(currentUser)await loadProfile();
 });
+$('forgotPasswordBtn').onclick = async () => {
+  const email = $('authEmail').value.trim();
+
+  if (!email) {
+    msg('authMsg', 'اكتب بريدك الإلكتروني أولاً.');
+    $('authEmail').focus();
+    return;
+  }
+
+  msg('authMsg', 'جارٍ إرسال رابط استعادة كلمة المرور...');
+
+  const { error } = await sb.auth.resetPasswordForEmail(email, {
+    redirectTo: window.location.origin
+  });
+
+  if (error) {
+    console.error('Password reset error:', error.message);
+    msg('authMsg', 'تعذر إرسال الرابط. تحقق من البريد والإعدادات ثم حاول مجددًا.');
+    return;
+  }
+
+  msg('authMsg', 'تم طلب إرسال رابط الاستعادة. تحقق من بريدك الوارد والبريد غير المرغوب فيه.');
+};
 </script>
 </body>
 </html>
