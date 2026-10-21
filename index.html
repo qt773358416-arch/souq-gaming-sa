@@ -511,7 +511,19 @@ $('authForm').onsubmit=async e=>{
  currentUser=data.user;
  await loadProfile();
 };
+$('googleLoginBtn').onclick = async () => {
+  msg('authMsg', 'جارٍ تسجيل الدخول عبر Google...');
+  const { error } = await sb.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: window.location.origin
+    }
+  });
 
+  if (error) {
+    msg('authMsg', 'تعذر تسجيل الدخول: ' + error.message);
+  }
+};
 $('signupBtn').onclick=async()=>{
  msg('authMsg','جارٍ إنشاء الحساب...');
  const {data,error}=await sb.auth.signUp({email:$('authEmail').value.trim(),password:$('authPassword').value});
