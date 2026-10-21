@@ -511,19 +511,33 @@ $('authForm').onsubmit=async e=>{
  currentUser=data.user;
  await loadProfile();
 };
-$('googleLoginBtn').onclick = async () => {
-  msg('authMsg', 'جارٍ تسجيل الدخول عبر Google...');
-  const { error } = await sb.auth.signInWithOAuth({
-    provider: 'google',
-    options: {
-      redirectTo: window.location.origin
-    }
-  });
+document.getElementById('googleLoginBtn').addEventListener('click', async () => {
+  const button = document.getElementById('googleLoginBtn');
+  button.disabled = true;
+  msg('authMsg', 'جارٍ فتح تسجيل الدخول عبر Google...');
 
-  if (error) {
-    msg('authMsg', 'تعذر تسجيل الدخول: ' + error.message);
+  try {
+    const { data, error } = await sb.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: 'https://souq-gaming-sa-82x4.vercel.app'
+      }
+    });
+
+    if (error) {
+      msg('authMsg', 'خطأ: ' + error.message);
+      button.disabled = false;
+      return;
+    }
+
+    if (data && data.url) {
+      window.location.href = data.url;
+    }
+  } catch (error) {
+    msg('authMsg', 'تعذر الاتصال: ' + error.message);
+    button.disabled = false;
   }
-};
+});
 $('signupBtn').onclick=async()=>{
  msg('authMsg','جارٍ إنشاء الحساب...');
  const {data,error}=await sb.auth.signUp({email:$('authEmail').value.trim(),password:$('authPassword').value});
