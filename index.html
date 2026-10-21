@@ -708,7 +708,7 @@ $('forgotPasswordBtn').onclick = async () => {
 
   if (error) {
     console.error('Password reset error:', error.message);
-    msg('authMsg', 'تعذر إرسال الرابط. تحقق من البريد والإعدادات ثم حاول مجددًا.');
+    msg('authMsg', 'تعذر إرسال رابط الاستعادة: ' + error.message);
     return;
   }
 
