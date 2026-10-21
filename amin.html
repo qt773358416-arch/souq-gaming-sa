@@ -6,67 +6,76 @@
 <title>إدارة سوق القيمنق السعودي</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{color-scheme:dark;--bg:#171923;--panel:#222635;--line:#373d50;--text:#f4f5fb;--muted:#aeb6ca;--blue:#3888d8;--green:#35bd9a;--red:#df5265}
+:root{color-scheme:dark;--bg:#111521;--panel:#1c2232;--panel2:#151b29;--line:#30394d;--text:#f4f6fc;--muted:#a9b4ca;--blue:#3989e3;--green:#26b88d;--red:#e25268;--amber:#e4a742}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font:15px system-ui,Tahoma,Arial,sans-serif}
-button,input,select{font:inherit}
-button{cursor:pointer;border:0;border-radius:10px;padding:10px 14px;font-weight:700}
-.primary{background:var(--blue);color:white}
-.secondary{background:#303648;color:white;border:1px solid var(--line)}
+body{margin:0;background:radial-gradient(ellipse at top,#202b42 0,#111521 55%);color:var(--text);font:15px system-ui,Tahoma,Arial,sans-serif}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer;border:0;border-radius:10px;padding:10px 13px;font-weight:700}
+button:disabled{opacity:.55;cursor:not-allowed}
+.primary{background:var(--blue);color:#fff}
+.secondary{background:#2a3348;color:#fff;border:1px solid var(--line)}
+.success{background:#174b40;color:#caffec;border:1px solid #247c68}
 .danger{background:#522532;color:#ffdce3;border:1px solid #7d3547}
-input,select{background:#151a27;color:white;border:1px solid var(--line);border-radius:10px;padding:12px;width:100%}
-.wrap{max-width:1200px;margin:auto;padding:18px}
-header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.warning{background:#4c3b1b;color:#ffe8b2;border:1px solid #80642b}
+input,select,textarea{background:#111725;color:white;border:1px solid var(--line);border-radius:10px;padding:11px;width:100%;min-width:0}
+textarea{min-height:90px;resize:vertical}
+a{color:#9fcaff}
+.wrap{max-width:1400px;margin:auto;padding:18px}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
 h1{font-size:24px;margin:0}
-h2{font-size:19px}
+h2{font-size:19px;margin:0 0 14px}
+h3{font-size:16px;margin:0 0 10px}
 .muted{color:var(--muted)}
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:18px;margin-bottom:16px}
+.panel{background:linear-gradient(145deg,#1e2536,#191f2e);border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:16px;box-shadow:0 8px 26px #00000012}
 .stack{display:grid;gap:12px}
 .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-.stat{background:#191e2c;border:1px solid var(--line);border-radius:12px;padding:16px}
-.stat strong{display:block;font-size:27px;margin-top:8px}
+.stat{background:var(--panel2);border:1px solid var(--line);border-radius:13px;padding:15px}
+.stat .label{color:var(--muted);font-size:13px}
+.stat strong{display:block;font-size:27px;margin-top:7px}
 .row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
 .row>*{min-width:0}
 .spread{justify-content:space-between}
 .hidden{display:none!important}
-.msg{padding:12px;border-radius:10px;background:#191e2c;white-space:pre-wrap;overflow-wrap:anywhere}
-table{width:100%;border-collapse:collapse;min-width:720px}
+.msg{padding:12px;border-radius:10px;background:#111725;border:1px solid var(--line);white-space:pre-wrap;overflow-wrap:anywhere}
+.nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.nav button{background:#252d40;color:#cbd5e8;border:1px solid var(--line)}
+.nav button.active{background:#2b5e98;color:#fff;border-color:#438bd8}
+.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:12px;margin-top:13px}
+table{width:100%;border-collapse:collapse;min-width:780px;background:#171d2b}
 th,td{text-align:right;padding:12px 10px;border-bottom:1px solid var(--line);vertical-align:top}
-th{color:var(--muted);font-size:13px}
-.tablewrap{overflow:auto}
+th{color:var(--muted);font-size:13px;background:#1b2333;position:sticky;top:0}
+tr:last-child td{border-bottom:0}
 .actions{display:flex;gap:6px;flex-wrap:wrap}
 .actions button{font-size:12px;padding:8px 10px}
-.badge{display:inline-block;background:#293d35;color:#aaf0d4;border-radius:20px;padding:4px 8px;font-size:12px}
+.badge{display:inline-block;border-radius:20px;padding:4px 9px;font-size:12px;background:#30394d;color:#e0e7f6}
+.badge.published{background:#174b40;color:#b8f7e4}
+.badge.pending{background:#4b3b1b;color:#ffe8b2}
+.badge.rejected{background:#522532;color:#ffdce3}
+.badge.other{background:#30394d;color:#e0e7f6}
 label{display:block;color:var(--muted);font-size:13px;margin-bottom:6px}
-@media(max-width:800px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.wrap{padding:12px}}
-@media(max-width:450px){.grid{grid-template-columns:1fr 1fr}.stat{padding:11px}.stat strong{font-size:22px}}
+.formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.empty{text-align:center;color:var(--muted);padding:22px}
+.small{font-size:12px}
+.pill{border:1px solid var(--line);border-radius:999px;padding:5px 9px;color:var(--muted);font-size:12px}
+.sectionhead{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.notice{border-right:3px solid var(--amber);padding:10px 12px;background:#2d281e;border-radius:8px;color:#f8e5b9;font-size:13px}
+@media(max-width:800px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.wrap{padding:12px}.panel{padding:14px}.formgrid{grid-template-columns:1fr}h1{font-size:20px}}
+@media(max-width:450px){.grid{gap:8px}.stat{padding:10px}.stat strong{font-size:22px}.row button{max-width:100%}}
 </style>
 </head>
 <body>
 <div class="wrap">
 <header>
-  <div>
-    <h1>🎮 إدارة سوق القيمنق السعودي</h1>
-    <div class="muted">لوحة خاصة بالمالك والمشرفين المصرح لهم</div>
-  </div>
-  <div class="row">
-    <a href="/" style="color:#9fcaff">العودة للموقع</a>
-    <button id="logout" class="secondary hidden">تسجيل الخروج</button>
-  </div>
+  <div><h1>🎮 إدارة سوق القيمنق السعودي</h1><div class="muted">لوحة المالك والمشرفين المصرّح لهم</div></div>
+  <div class="row"><a href="/">العودة للموقع</a><button id="logout" class="secondary hidden">تسجيل الخروج</button></div>
 </header>
 
 <section id="login" class="panel">
   <h2>دخول الإدارة</h2>
-  <p class="muted">استخدم حسابك المسجل في المنصة. لا يكفي تسجيل الدخول وحده؛ يجب أن يكون الحساب مضافًا إلى صلاحيات الإدارة في Supabase.</p>
+  <p class="muted">استخدم حسابك المسجل في المنصة. يجب أن يكون الحساب مضافًا إلى جدول صلاحيات الإدارة في Supabase.</p>
   <form id="loginForm" class="stack">
-    <div>
-      <label for="email">البريد الإلكتروني</label>
-      <input id="email" type="email" autocomplete="username" required>
-    </div>
-    <div>
-      <label for="password">كلمة المرور</label>
-      <input id="password" type="password" autocomplete="current-password" required>
-    </div>
+    <div><label for="email">البريد الإلكتروني</label><input id="email" type="email" autocomplete="username" required></div>
+    <div><label for="password">كلمة المرور</label><input id="password" type="password" autocomplete="current-password" required></div>
     <button class="primary">تسجيل الدخول والتحقق من الصلاحية</button>
   </form>
   <div id="loginMsg" class="msg hidden" style="margin-top:12px"></div>
@@ -74,60 +83,107 @@ label{display:block;color:var(--muted);font-size:13px;margin-bottom:6px}
 
 <section id="denied" class="panel hidden">
   <h2>ليس لديك صلاحية الإدارة</h2>
-  <p class="muted">تم التحقق من الحساب، لكنه غير مسجل ضمن مديري المنصة. أضف المالك من SQL Editor باستخدام معرّف حسابه، ولا تمنح الصلاحية من المتصفح.</p>
+  <p class="muted">الحساب غير مسجل ضمن مديري المنصة. أضف الصلاحية من SQL Editor بعد التحقق من معرّف الحساب.</p>
   <button id="deniedLogout" class="secondary">تسجيل الخروج</button>
 </section>
 
 <section id="dashboard" class="hidden">
-  <div class="panel">
-    <div class="row spread">
-      <div>
-        <h2>ملخص المنصة</h2>
-        <div id="who" class="muted"></div>
+  <div class="nav">
+    <button class="active" data-tab="overview">نظرة عامة</button>
+    <button data-tab="adsSection">إدارة الإعلانات</button>
+    <button data-tab="usersSection">المستخدمون</button>
+    <button data-tab="settingsSection">إعدادات اللوحة</button>
+  </div>
+
+  <section id="overview" class="tabcontent">
+    <div class="panel">
+      <div class="sectionhead">
+        <div><h2>ملخص المنصة</h2><div id="who" class="muted"></div></div>
+        <button id="refresh" class="primary">تحديث البيانات</button>
       </div>
-      <button id="refresh" class="primary">تحديث البيانات</button>
+      <div id="dashMsg" class="msg">جارٍ تحميل البيانات...</div>
+      <div class="grid" style="margin-top:14px">
+        <div class="stat"><div class="label">إجمالي الإعلانات المحمّلة</div><strong id="totalAds">—</strong></div>
+        <div class="stat"><div class="label">الإعلانات المنشورة</div><strong id="publishedAds">—</strong></div>
+        <div class="stat"><div class="label">الإعلانات المعلقة</div><strong id="pendingAds">—</strong></div>
+        <div class="stat"><div class="label">ملفات المستخدمين</div><strong id="totalUsers">—</strong></div>
+      </div>
+      <div class="grid" style="margin-top:12px">
+        <div class="stat"><div class="label">الإعلانات المرفوضة</div><strong id="rejectedAds">—</strong></div>
+        <div class="stat"><div class="label">إعلانات مروّجة</div><strong id="promotedAds">—</strong></div>
+        <div class="stat"><div class="label">إعلانات آخر 7 أيام</div><strong id="recentAds">—</strong></div>
+        <div class="stat"><div class="label">آخر تحديث</div><strong id="lastUpdated" style="font-size:17px">—</strong></div>
+      </div>
     </div>
-    <div id="dashMsg" class="msg" style="margin-top:12px">جارٍ تحميل الإحصائيات...</div>
-    <div class="grid" style="margin-top:14px">
-      <div class="stat">إجمالي الإعلانات<strong id="totalAds">—</strong></div>
-      <div class="stat">الإعلانات المنشورة<strong id="publishedAds">—</strong></div>
-      <div class="stat">الإعلانات المعلقة<strong id="pendingAds">—</strong></div>
-      <div class="stat">حسابات المستخدمين<strong id="totalUsers">—</strong></div>
+    <div class="panel">
+      <div class="sectionhead"><h2>أحدث الإعلانات</h2><button class="secondary" data-goto="adsSection">فتح إدارة الإعلانات</button></div>
+      <div id="recentList" class="stack"><div class="empty">جارٍ التحميل...</div></div>
     </div>
-  </div>
+  </section>
 
-  <div class="panel">
-    <h2>إدارة الإعلانات</h2>
-    <div class="row">
-      <input id="filter" placeholder="ابحث بعنوان الإعلان أو القسم أو البائع" style="flex:1">
-      <select id="statusFilter" style="width:auto">
-        <option value="">جميع الحالات</option>
-        <option value="published">منشور</option>
-        <option value="pending">معلق</option>
-      </select>
-      <button id="searchAds" class="primary">بحث</button>
+  <section id="adsSection" class="tabcontent hidden">
+    <div class="panel">
+      <div class="sectionhead"><h2>إدارة الإعلانات</h2><span class="pill">نشر · تعليق · رفض · حذف</span></div>
+      <div class="row">
+        <input id="filter" placeholder="ابحث بالعنوان أو القسم أو البائع أو المدينة" style="flex:1">
+        <select id="statusFilter" style="max-width:190px">
+          <option value="">جميع الحالات</option>
+          <option value="published">منشور</option>
+          <option value="pending">معلق</option>
+          <option value="rejected">مرفوض</option>
+        </select>
+        <button id="searchAds" class="primary">بحث</button>
+        <button id="clearSearch" class="secondary">مسح</button>
+      </div>
+      <div class="tablewrap">
+        <table><thead><tr><th>الإعلان</th><th>السعر</th><th>البائع</th><th>الحالة</th><th>الترويج</th><th>التاريخ</th><th>الإجراءات</th></tr></thead>
+        <tbody id="adsRows"><tr><td colspan="7" class="empty">جارٍ التحميل...</td></tr></tbody></table>
+      </div>
+      <p class="muted small">يعرض الجدول أحدث 500 إعلان كحد أقصى.</p>
     </div>
-    <div class="tablewrap" style="margin-top:14px">
-      <table>
-        <thead><tr>
-          <th>الإعلان</th><th>السعر</th><th>البائع</th><th>الحالة</th><th>التاريخ</th><th>الإجراءات</th>
-        </tr></thead>
-        <tbody id="adsRows"><tr><td colspan="6">جارٍ التحميل...</td></tr></tbody>
-      </table>
+    <div id="editPanel" class="panel hidden">
+      <div class="sectionhead"><h2>تعديل بيانات الإعلان</h2><button id="closeEdit" class="secondary">إغلاق</button></div>
+      <form id="editForm" class="stack">
+        <input id="editId" type="hidden">
+        <div class="formgrid">
+          <div><label for="editTitle">عنوان الإعلان</label><input id="editTitle" required maxlength="180"></div>
+          <div><label for="editPrice">السعر (ر.س)</label><input id="editPrice" type="number" min="0" step="0.01" required></div>
+          <div><label for="editCategory">القسم</label><input id="editCategory"></div>
+          <div><label for="editCity">المدينة</label><input id="editCity"></div>
+          <div><label for="editCondition">حالة المنتج</label><input id="editCondition"></div>
+          <div><label for="editStatus">حالة الإعلان</label><select id="editStatus"><option value="pending">معلق</option><option value="published">منشور</option><option value="rejected">مرفوض</option></select></div>
+        </div>
+        <div><label for="editDescription">الوصف</label><textarea id="editDescription"></textarea></div>
+        <div class="row"><button class="primary">حفظ التعديلات</button><span id="editMsg" class="muted"></span></div>
+      </form>
     </div>
-  </div>
+  </section>
 
-  <div class="panel">
-    <h2>حسابات المستخدمين</h2>
-    <p class="muted">تعرض هذه القائمة الملفات الشخصية المتاحة في جدول profiles، وليست قائمة كاملة مضمونة لكل حسابات Auth.</p>
-    <button id="loadUsers" class="secondary">تحميل ملفات المستخدمين</button>
-    <div class="tablewrap" style="margin-top:12px">
-      <table>
-        <thead><tr><th>معرّف الحساب</th><th>الاسم</th><th>الجوال</th><th>المدينة</th></tr></thead>
-        <tbody id="usersRows"><tr><td colspan="4">اضغط تحميل ملفات المستخدمين.</td></tr></tbody>
-      </table>
+  <section id="usersSection" class="tabcontent hidden">
+    <div class="panel">
+      <div class="sectionhead"><h2>حسابات المستخدمين</h2><button id="loadUsers" class="primary">تحميل / تحديث المستخدمين</button></div>
+      <p class="muted">تعرض هذه القائمة الملفات الشخصية الموجودة في جدول profiles، وليس بالضرورة كل حسابات Auth.</p>
+      <div class="row"><input id="userFilter" placeholder="ابحث بالاسم أو الجوال أو المدينة أو المعرّف" style="flex:1"><button id="searchUsers" class="secondary">بحث</button></div>
+      <div class="tablewrap">
+        <table><thead><tr><th>الاسم</th><th>الجوال</th><th>المدينة</th><th>تاريخ التسجيل</th><th>عدد الإعلانات</th><th>معرّف الحساب</th></tr></thead>
+        <tbody id="usersRows"><tr><td colspan="6" class="empty">اضغط تحميل المستخدمين.</td></tr></tbody></table>
+      </div>
     </div>
-  </div>
+  </section>
+
+  <section id="settingsSection" class="tabcontent hidden">
+    <div class="panel">
+      <h2>إعدادات مظهر لوحة الإدارة</h2>
+      <div class="notice">الإعدادات أدناه تُحفظ في هذا المتصفح فقط، ولا تغيّر مظهر الموقع العام.</div>
+      <form id="settingsForm" class="stack" style="margin-top:14px">
+        <div class="formgrid">
+          <div><label for="siteLabel">اسم اللوحة المعروض</label><input id="siteLabel" maxlength="100"></div>
+          <div><label for="accentColor">لون الأزرار</label><input id="accentColor" type="color" value="#3989e3" style="height:44px;padding:5px"></div>
+        </div>
+        <div class="row"><button class="primary">حفظ إعدادات هذا المتصفح</button><button type="button" id="resetSettings" class="secondary">إعادة الافتراضي</button><span id="settingsMsg" class="muted"></span></div>
+      </form>
+    </div>
+  </section>
 </section>
 </div>
 
@@ -135,185 +191,183 @@ label{display:block;color:var(--muted);font-size:13px;margin-bottom:6px}
 const SUPABASE_URL="https://hmcsgkavqdsfwqomxakw.supabase.co";
 const SUPABASE_KEY="sb_publishable_I2FLI3drU7_xB8tWWGjnOg_b6Sm2j2m";
 const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-
 const $=id=>document.getElementById(id);
-const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({
- "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-}[c]));
-let user=null;
-let isAdmin=false;
-let adsCache=[];
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+let user=null,isAdmin=false,adsCache=[],usersCache=[],userAdCounts={};
 
 function show(id,on=true){$(id).classList.toggle("hidden",!on)}
 function note(id,text){$(id).textContent=text}
+function dateText(v){if(!v)return "—";const d=new Date(v);return Number.isNaN(d.getTime())?"—":d.toLocaleDateString("ar-SA")}
+function statusLabel(s){return ({published:"منشور",pending:"معلق",rejected:"مرفوض"})[s]||s||"غير محدد"}
+function statusClass(s){return ["published","pending","rejected"].includes(s)?s:"other"}
+function activateTab(id){document.querySelectorAll(".tabcontent").forEach(x=>x.classList.toggle("hidden",x.id!==id));document.querySelectorAll("[data-tab]").forEach(x=>x.classList.toggle("active",x.dataset.tab===id))}
+document.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>activateTab(b.dataset.tab));
+document.querySelectorAll("[data-goto]").forEach(b=>b.onclick=()=>activateTab(b.dataset.goto));
 
 async function verifyAdmin(){
  const {data:{session}}=await db.auth.getSession();
- user=session?.user||null;
- isAdmin=false;
- show("login",!user);
- show("logout",!!user);
- show("dashboard",false);
- show("denied",false);
-
+ user=session?.user||null;isAdmin=false;
+ show("login",!user);show("logout",!!user);show("dashboard",false);show("denied",false);
  if(!user)return;
-
- const {data,error}=await db
-  .from("admin_users")
-  .select("role")
-  .eq("user_id",user.id)
-  .maybeSingle();
-
- if(error){
-  show("login",true);
-  note("loginMsg","تعذر التحقق من صلاحية الإدارة. تأكد من تطبيق SQL وسياسات admin_users.");
-  show("loginMsg",true);
-  return;
- }
-
- if(!data){
-  show("denied",true);
-  show("login",false);
-  return;
- }
-
- isAdmin=true;
- show("login",false);
- show("denied",false);
- show("dashboard",true);
- note("who","الحساب: "+user.email+" — الصلاحية: "+data.role);
+ const {data,error}=await db.from("admin_users").select("role").eq("user_id",user.id).maybeSingle();
+ if(error){show("login",true);note("loginMsg","تعذر التحقق من صلاحية الإدارة: "+error.message);show("loginMsg",true);return}
+ if(!data){show("denied",true);show("login",false);return}
+ isAdmin=true;show("login",false);show("denied",false);show("dashboard",true);
+ note("who","الحساب: "+user.email+" — الصلاحية: "+(data.role||"مشرف"));
  await refreshDashboard();
 }
 
 async function refreshDashboard(){
  if(!isAdmin)return;
  note("dashMsg","جارٍ تحميل البيانات...");
-
- const {data,error}=await db
-  .from("ads")
-  .select("id,status,title,price,category,seller_id,seller_name,seller_phone,created_at")
-  .order("created_at",{ascending:false})
-  .limit(500);
-
- if(error){
-  note("dashMsg","تعذر قراءة الإعلانات: "+error.message);
-  return;
- }
-
+ const {data,error}=await db.from("ads")
+  .select("id,status,title,description,price,category,seller_id,seller_name,seller_phone,created_at,updated_at,promotion_plan,promotion_price,promotion_days,promotion_status,item_condition,city,commission_rate,pledge_accepted_at,image_urls")
+  .order("created_at",{ascending:false}).limit(500);
+ if(error){note("dashMsg","تعذر قراءة الإعلانات: "+error.message);return}
  adsCache=data||[];
+ const {count:userCount,error:userError}=await db.from("profiles").select("id",{count:"exact",head:true});
  $("totalAds").textContent=adsCache.length;
  $("publishedAds").textContent=adsCache.filter(a=>a.status==="published").length;
  $("pendingAds").textContent=adsCache.filter(a=>a.status==="pending").length;
- $("totalUsers").textContent="—";
- note("dashMsg","تم تحميل الإعلانات الظاهرة. إذا تجاوز عددها 500، فهذا الملخص يقتصر على آخر 500 إعلان.");
- renderAds();
+ $("rejectedAds").textContent=adsCache.filter(a=>a.status==="rejected").length;
+ $("promotedAds").textContent=adsCache.filter(a=>a.promotion_status&&!["","none","inactive","rejected"].includes(String(a.promotion_status).toLowerCase())).length;
+ const since=Date.now()-7*24*60*60*1000;
+ $("recentAds").textContent=adsCache.filter(a=>a.created_at&&new Date(a.created_at).getTime()>=since).length;
+ $("totalUsers").textContent=userError?"—":(userCount??"—");
+ $("lastUpdated").textContent=new Date().toLocaleTimeString("ar-SA",{hour:"2-digit",minute:"2-digit"});
+ note("dashMsg","تم تحديث البيانات. الإعلانات المعروضة هنا هي أحدث 500 إعلان.");
+ renderAds();renderRecent();
 }
-
+function renderRecent(){
+ const list=adsCache.slice(0,5);
+ $("recentList").innerHTML=list.length?list.map(a=>`<div class="row spread" style="padding:11px;border:1px solid var(--line);border-radius:11px"><div><strong>${esc(a.title||"إعلان بدون عنوان")}</strong><div class="muted small">${esc(a.category||"بدون قسم")} · ${esc(a.city||"مدينة غير محددة")}</div></div><div class="row"><span class="badge ${statusClass(a.status)}">${esc(statusLabel(a.status))}</span><strong>${esc(a.price)} ر.س</strong></div></div>`).join(""):'<div class="empty">لا توجد إعلانات.</div>';
+}
 function renderAds(){
- const term=$("filter").value.trim().toLowerCase();
- const status=$("statusFilter").value;
-
+ const term=$("filter").value.trim().toLowerCase(),status=$("statusFilter").value;
  const rows=adsCache.filter(a=>{
   const matchesStatus=!status||a.status===status;
-  const hay=[a.title,a.category,a.seller_name,a.seller_phone].join(" ").toLowerCase();
+  const hay=[a.title,a.category,a.seller_name,a.seller_phone,a.city,a.description].join(" ").toLowerCase();
   return matchesStatus&&(!term||hay.includes(term));
  });
-
- if(!rows.length){
-  $("adsRows").innerHTML='<tr><td colspan="6">لا توجد إعلانات مطابقة.</td></tr>';
-  return;
- }
-
- $("adsRows").innerHTML=rows.map(a=>`
- <tr>
-  <td><strong>${esc(a.title)}</strong><div class="muted">${esc(a.category)}</div></td>
-  <td>${esc(a.price)} ر.س</td>
-  <td>${esc(a.seller_name)}<div class="muted">${esc(a.seller_phone)}</div></td>
-  <td><span class="badge">${esc(a.status)}</span></td>
-  <td>${a.created_at?esc(new Date(a.created_at).toLocaleDateString("ar-SA")):"—"}</td>
-  <td><div class="actions">
-   ${a.status!=="published"?`<button class="primary" data-action="publish" data-id="${esc(a.id)}">نشر</button>`:""}
-   ${a.status!=="pending"?`<button class="secondary" data-action="pending" data-id="${esc(a.id)}">تعليق</button>`:""}
-   <button class="danger" data-action="delete" data-id="${esc(a.id)}">حذف</button>
-  </div></td>
- </tr>`).join("");
+ if(!rows.length){$("adsRows").innerHTML='<tr><td colspan="7" class="empty">لا توجد إعلانات مطابقة.</td></tr>';return}
+ $("adsRows").innerHTML=rows.map(a=>`<tr>
+ <td><strong>${esc(a.title)}</strong><div class="muted small">${esc(a.category)} · ${esc(a.city)}</div></td>
+ <td>${esc(a.price)} ر.س</td>
+ <td>${esc(a.seller_name)}<div class="muted small">${esc(a.seller_phone)}</div></td>
+ <td><span class="badge ${statusClass(a.status)}">${esc(statusLabel(a.status))}</span></td>
+ <td>${esc(a.promotion_status||"—")}<div class="muted small">${a.promotion_price?esc(a.promotion_price)+" ر.س":""}</div></td>
+ <td>${dateText(a.created_at)}</td>
+ <td><div class="actions">
+ <button class="secondary" data-action="edit" data-id="${esc(a.id)}">تعديل</button>
+ ${a.status!=="published"?`<button class="success" data-action="publish" data-id="${esc(a.id)}">نشر</button>`:""}
+ ${a.status!=="pending"?`<button class="warning" data-action="pending" data-id="${esc(a.id)}">تعليق</button>`:""}
+ ${a.status!=="rejected"?`<button class="danger" data-action="reject" data-id="${esc(a.id)}">رفض</button>`:""}
+ <button class="danger" data-action="delete" data-id="${esc(a.id)}">حذف</button></div></td></tr>`).join("");
 }
-
+function openEdit(a){
+ $("editId").value=a.id;
+ $("editTitle").value=a.title||"";
+ $("editPrice").value=a.price??0;
+ $("editCategory").value=a.category||"";
+ $("editCity").value=a.city||"";
+ $("editCondition").value=a.item_condition||"";
+ $("editStatus").value=["pending","published","rejected"].includes(a.status)?a.status:"pending";
+ $("editDescription").value=a.description||"";
+ note("editMsg","");
+ show("editPanel",true);
+ $("editPanel").scrollIntoView({behavior:"smooth",block:"start"});
+}
 $("adsRows").addEventListener("click",async e=>{
- const b=e.target.closest("button[data-action]");
- if(!b||!isAdmin)return;
-
- const ad=adsCache.find(x=>x.id===b.dataset.id);
- if(!ad)return;
-
+ const b=e.target.closest("button[data-action]");if(!b||!isAdmin)return;
+ const ad=adsCache.find(x=>String(x.id)===b.dataset.id);if(!ad)return;
+ if(b.dataset.action==="edit"){openEdit(ad);return}
  if(b.dataset.action==="delete"){
-  if(!confirm("هل تريد حذف الإعلان نهائيًا؟"))return;
+  if(!confirm("تأكيد حذف الإعلان نهائيًا؟"))return;
   const {error}=await db.from("ads").delete().eq("id",ad.id);
-  if(error){alert("تعذر الحذف: "+error.message);return;}
+  if(error){alert("تعذر الحذف: "+error.message);return}
  }else{
-  const status=b.dataset.action==="publish"?"published":"pending";
-  if(!confirm(status==="published"?"نشر هذا الإعلان؟":"تعليق هذا الإعلان؟"))return;
-  const {error}=await db.from("ads").update({status}).eq("id",ad.id);
-  if(error){alert("تعذر تغيير الحالة: "+error.message);return;}
+  const status=({publish:"published",pending:"pending",reject:"rejected"})[b.dataset.action];
+  if(!status)return;
+  if(!confirm("تأكيد تغيير الحالة إلى: "+statusLabel(status)+"؟"))return;
+  const {error}=await db.from("ads").update({status,updated_at:new Date().toISOString()}).eq("id",ad.id);
+  if(error){alert("تعذر تغيير الحالة: "+error.message);return}
  }
  await refreshDashboard();
 });
-
+$("editForm").onsubmit=async e=>{
+ e.preventDefault();if(!isAdmin)return;note("editMsg","جارٍ الحفظ...");
+ const id=$("editId").value;
+ const changes={title:$("editTitle").value.trim(),price:Number($("editPrice").value),category:$("editCategory").value.trim()||null,city:$("editCity").value.trim()||null,item_condition:$("editCondition").value.trim()||null,status:$("editStatus").value,description:$("editDescription").value.trim()||null,updated_at:new Date().toISOString()};
+ if(!changes.title||!Number.isFinite(changes.price)||changes.price<0){note("editMsg","تحقق من العنوان والسعر.");return}
+ const {error}=await db.from("ads").update(changes).eq("id",id);
+ if(error){note("editMsg","تعذر الحفظ: "+error.message);return}
+ note("editMsg","تم الحفظ.");show("editPanel",false);await refreshDashboard();
+};
+$("closeEdit").onclick=()=>show("editPanel",false);
 $("searchAds").onclick=renderAds;
 $("filter").addEventListener("keydown",e=>{if(e.key==="Enter")renderAds()});
 $("statusFilter").onchange=renderAds;
+$("clearSearch").onclick=()=>{$("filter").value="";$("statusFilter").value="";renderAds()};
 $("refresh").onclick=refreshDashboard;
 
-$("loadUsers").onclick=async()=>{
+async function loadUsers(){
  if(!isAdmin)return;
- $("usersRows").innerHTML='<tr><td colspan="4">جارٍ التحميل...</td></tr>';
- const {data,error}=await db.from("profiles")
-  .select("id,display_name,phone,city")
-  .order("display_name")
-  .limit(500);
-
- if(error){
-  $("usersRows").innerHTML='<tr><td colspan="4">تعذر تحميل المستخدمين. تحقق من وجود profiles وسياسات القراءة.</td></tr>';
-  return;
+ $("usersRows").innerHTML='<tr><td colspan="6" class="empty">جارٍ تحميل المستخدمين...</td></tr>';
+ const {data,error}=await db.from("profiles").select("id,display_name,phone,city,created_at").order("created_at",{ascending:false}).limit(500);
+ if(error){$("usersRows").innerHTML=`<tr><td colspan="6" class="empty">تعذر تحميل المستخدمين: ${esc(error.message)}</td></tr>`;return}
+ usersCache=data||[];
+ const ids=usersCache.map(p=>p.id).filter(Boolean);let counts={};
+ if(ids.length){
+  const {data:adData,error:adError}=await db.from("ads").select("seller_id").in("seller_id",ids);
+  if(!adError)(adData||[]).forEach(a=>counts[a.seller_id]=(counts[a.seller_id]||0)+1);
  }
-
- $("usersRows").innerHTML=(data||[]).map(p=>`
- <tr><td>${esc(p.id)}</td><td>${esc(p.display_name)}</td>
- <td>${esc(p.phone)}</td><td>${esc(p.city)}</td></tr>`
- ).join("")||'<tr><td colspan="4">لا توجد ملفات شخصية.</td></tr>';
-};
-
-async function signOut(){
- await db.auth.signOut();
- user=null;isAdmin=false;
- show("dashboard",false);show("denied",false);show("logout",false);show("login",true);
+ renderUsers(counts);
 }
-
-$("logout").onclick=signOut;
-$("deniedLogout").onclick=signOut;
-
-$("loginForm").onsubmit=async e=>{
- e.preventDefault();
- note("loginMsg","جارٍ تسجيل الدخول...");
- show("loginMsg",true);
-
- const {error}=await db.auth.signInWithPassword({
-  email:$("email").value.trim(),
-  password:$("password").value
- });
-
- if(error){
-  note("loginMsg","تعذر تسجيل الدخول: "+error.message);
-  return;
- }
- await verifyAdmin();
-};
-
-db.auth.onAuthStateChange((_event,session)=>{
- user=session?.user||null;
- setTimeout(()=>verifyAdmin(),0);
+function renderUsers(counts=userAdCounts){
+ userAdCounts=counts;
+ const term=$("userFilter").value.trim().toLowerCase();
+ const rows=usersCache.filter(p=>[p.display_name,p.phone,p.city,p.id].join(" ").toLowerCase().includes(term));
+ $("usersRows").innerHTML=rows.length?rows.map(p=>`<tr><td>${esc(p.display_name||"—")}</td><td>${esc(p.phone||"—")}</td><td>${esc(p.city||"—")}</td><td>${dateText(p.created_at)}</td><td>${counts[p.id]||0}</td><td><span class="small">${esc(p.id)}</span><div class="actions"><button class="secondary" data-copy="${esc(p.id)}">نسخ المعرّف</button></div></td></tr>`).join(""):'<tr><td colspan="6" class="empty">لا توجد نتائج.</td></tr>';
+}
+$("loadUsers").onclick=loadUsers;
+$("searchUsers").onclick=()=>renderUsers();
+$("userFilter").addEventListener("keydown",e=>{if(e.key==="Enter")renderUsers()});
+$("usersRows").addEventListener("click",e=>{
+ const b=e.target.closest("button[data-copy]");if(!b)return;
+ const value=b.dataset.copy;
+ if(navigator.clipboard?.writeText){navigator.clipboard.writeText(value).then(()=>alert("تم نسخ المعرّف")).catch(()=>alert(value))}
+ else alert(value);
 });
 
+const defaultSettings={label:"إدارة سوق القيمنق السعودي",color:"#3989e3"};
+function applySettings(s){
+ document.documentElement.style.setProperty("--blue",s.color||defaultSettings.color);
+ if(s.label)document.querySelector("header h1").textContent="🎮 "+s.label;
+ $("siteLabel").value=s.label||defaultSettings.label;
+ $("accentColor").value=s.color||defaultSettings.color;
+}
+function readSettings(){try{return JSON.parse(localStorage.getItem("sgAdminAppearance")||"null")||defaultSettings}catch{return defaultSettings}}
+applySettings(readSettings());
+$("settingsForm").onsubmit=e=>{
+ e.preventDefault();
+ const s={label:$("siteLabel").value.trim()||defaultSettings.label,color:$("accentColor").value||defaultSettings.color};
+ localStorage.setItem("sgAdminAppearance",JSON.stringify(s));applySettings(s);note("settingsMsg","تم الحفظ في هذا المتصفح.");
+};
+$("resetSettings").onclick=()=>{localStorage.removeItem("sgAdminAppearance");applySettings(defaultSettings);note("settingsMsg","تمت إعادة الافتراضي.");};
+
+async function signOut(){
+ await db.auth.signOut();user=null;isAdmin=false;
+ show("dashboard",false);show("denied",false);show("logout",false);show("login",true);
+}
+$("logout").onclick=signOut;
+$("deniedLogout").onclick=signOut;
+$("loginForm").onsubmit=async e=>{
+ e.preventDefault();note("loginMsg","جارٍ تسجيل الدخول...");show("loginMsg",true);
+ const {error}=await db.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});
+ if(error){note("loginMsg","تعذر تسجيل الدخول: "+error.message);return}
+ await verifyAdmin();
+};
+db.auth.onAuthStateChange((_event,session)=>{user=session?.user||null;setTimeout(()=>verifyAdmin(),0)});
 verifyAdmin();
 </script>
 </body>
