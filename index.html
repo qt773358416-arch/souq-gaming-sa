@@ -148,6 +148,16 @@ body.theme-dark .secondary,body.theme-dark .fav-button,body.theme-dark .chip{bac
 .google-auth span{display:inline-grid;place-items:center;width:25px;height:25px;border-radius:50%;font-weight:900;color:#4285f4;background:white;border:1px solid #d8dee7}
 
 </style>
+
+
+/* NAVY + SKY BLUE FUNCTIONALITY FIXES */
+:root{--bg:#101820;--panel:#17232d;--panel2:#202f3a;--text:#eef7fa;--muted:#a4b5c0;--line:#30414d;--brand:#70d9f0;--green:#70d9f0;--danger:#ef476f;--header:#111c25;--accent-soft:#18343d;--shadow:0 8px 26px rgba(0,0,0,.22)}
+body,body.theme-dark{background:var(--bg)!important;color:var(--text)!important}
+.primary{background:#16c7d9!important;color:#071820!important;border-color:#16c7d9!important}
+.primary:hover{background:#70d9f0!important}
+.brand,.adbody h3,.price,#reviewsPanel .rating-number{color:#70d9f0!important}
+.notice,.page-note,.ad-tag,.condition-tag,.image-filter,.check-setting{background:#172b38!important;color:#dceff5!important;border-color:#2c4c5a!important}
+
 </head>
 <body class="theme-dark">
 <div class="wrap">
@@ -238,7 +248,6 @@ function showPage(page){
  if(page==='community')loadPublicPosts();
  if(page==='myads')loadMyAds('myAdsPage');
  if(page==='home')loadAds();
-const requestedAd=new URLSearchParams(location.search).get('ad');if(requestedAd)openAdDetail(requestedAd);
  if(page==='favorites')loadFavorites();
  if(page==='profile')loadProfilePage();
  if(page==='searchpage')$('searchPageInput').value=$('search').value||'';
@@ -353,6 +362,4 @@ $('clearFilters').addEventListener('click',()=>{selectedCategory='';searchTerm='
 function normalizePhone(p){let n=String(p||'').replace(/\D/g,'');if(n.startsWith('00'))n=n.slice(2);if(n.startsWith('0'))n='966'+n.slice(1);return n;}
 window.contactWhatsApp=(p,title)=>{const n=normalizePhone(p);if(!n){alert('البائع لم يضف رقم واتساب.');return;}window.open('https://wa.me/'+n+'?text='+encodeURIComponent('السلام عليكم، بخصوص إعلان: '+title),'_blank','noopener');};
 window.contactCall=p=>{if(!p){alert('البائع لم يضف رقم اتصال.');return;}location.href='tel:'+String(p).replace(/[^\d+]/g,'');};
-async function startConversation(adId,title,sellerId){if(!needAuth())return;if(!sellerId||sellerId===currentUser.id){alert('لا يمكنك مراسلة نفسك.');return;}const {data:existing}=await sb.from('conversations').select('id').eq('ad_id',adId).or(`buyer_id.eq.${currentUser.id},seller_id.eq.${currentUser.id}`).maybeSingle();let conv=existing;if(!conv){const {data,error}=await sb.from('conversations').insert({ad_id:adId,buyer_id:currentUser.id,seller_id:sellerId}).select('id').single();if(error){alert('تعذر بدء المحادثة. تأكد من تطبيق SQL وسياسات الأمان.');return;}conv=data;}activeConversation=conv.id;$('chatTitle').textContent=title;$('chatPanel').classList.remove('hidden');showPage('messages');await loadChat();}
-$('closeChat').onclick=()=>{$('chatPanel').classList.add('hidden');activeConversation=null;loadConversations()};
-async function loadConversations(){if(!currentUser){$('conversationList').innerHTML='<div class="empty">سجّل الدخول من صفحة ح
+async function startConversation(adId,title,sellerId){if(!needAuth())return;if(!sellerId||sellerId===currentUser.id){alert('لا يمكنك مراسلة نفسك.');return;}const {data:existing}=await sb.from('conversations').select('id').eq('ad_id',adId).or(`buyer_id.eq.${currentUser.id},seller_id.eq.${currentUser.id}`).maybeSingle();let conv=existing;
