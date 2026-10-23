@@ -230,6 +230,42 @@ body,body.theme-dark{background:var(--bg)!important;color:var(--text)!important}
  .bottom .bottom-add{background:#16c7d9!important;color:#071820!important;border:1px solid #16c7d9!important;border-radius:14px!important}
  .bottom .bottom-add span{font-size:29px!important;font-weight:900}
 }
+
+/* تحسينات واجهة متجر التصفح الداخلي فقط */
+.store-intro{padding:clamp(20px,4vw,32px);border:1px solid var(--line);border-radius:18px;background:linear-gradient(120deg,#173443,#17232d);margin:8px 0 14px;position:relative;overflow:hidden}
+.store-intro:after{content:"🎮";position:absolute;left:22px;top:50%;transform:translateY(-50%);font-size:clamp(70px,10vw,112px);opacity:.12;pointer-events:none}
+.store-kicker{font-size:11px;letter-spacing:1.2px;font-weight:900;color:var(--brand)}
+.store-intro h1{margin:4px 0 6px;color:var(--brand);font-size:clamp(24px,4vw,34px);position:relative;z-index:1}
+.store-intro p{margin:0;color:var(--muted);font-size:13px;max-width:720px;position:relative;z-index:1}
+.store-hero-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;position:relative;z-index:1}
+.store-hero-actions span{font-size:12px;background:#172b38;border:1px solid #2c4c5a;border-radius:999px;padding:7px 11px;color:#dceff5}
+.store-toolbar{display:grid;grid-template-columns:minmax(0,1fr) minmax(170px,220px);gap:10px;margin:12px 0}
+.store-search-wrap{display:flex;align-items:center;gap:6px;min-width:0;background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:5px 7px}
+.store-search-wrap>span{font-size:27px;line-height:1;color:var(--brand);padding:0 7px}
+.store-search-wrap .field{min-width:0;border:0!important;box-shadow:none!important;background:transparent!important}
+.store-search-wrap button{padding:8px 10px;font-size:12px;white-space:nowrap}
+.store-filter-panel{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:14px;margin:12px 0;box-shadow:var(--shadow)}
+.store-filter-heading{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
+.store-filter-heading .linkbtn{font-size:12px}
+.store-filters{display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) minmax(140px,.8fr);gap:10px;align-items:end}
+.store-filters>label{display:grid;gap:6px;margin:0;font-size:12px;color:var(--muted);min-width:0}
+.store-filters .field{padding:10px;min-width:0}
+.store-check-filter{display:flex!important;align-items:center;gap:8px;padding:11px 10px;border:1px solid var(--line);border-radius:11px;min-height:44px;color:var(--text)!important}
+.store-check-filter input{accent-color:var(--brand);width:17px;height:17px;flex:0 0 auto}
+.store-active-filters{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.store-filter-chip{border:1px solid #2c4c5a;background:#172b38;color:#dceff5;border-radius:999px;font-size:11px;padding:5px 9px}
+.store-results-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:20px 0 12px}
+.store-results-heading h2{margin:0;font-size:21px}
+.store-results-heading p{margin:3px 0 0;color:var(--muted);font-size:12px}
+.store-count-pill{background:var(--accent-soft);color:var(--brand);border:1px solid var(--line);border-radius:999px;padding:7px 12px;font-weight:800;font-size:12px;white-space:nowrap}
+.store-product-card .store-open{width:100%;margin-top:8px}
+.store-product-card .adimg{height:180px}
+.store-product-card .adbody h3{min-height:2.8em}
+.store-notice{margin-top:18px}
+@media(max-width:760px){.store-intro{padding:18px 15px}.store-intro:after{left:7px;font-size:66px}.store-intro h1{font-size:24px;max-width:85%}.store-intro p{font-size:13px;max-width:86%}.store-toolbar{grid-template-columns:1fr}.store-filters{grid-template-columns:1fr 1fr}.store-product-card .adimg{height:135px}.store-results-heading h2{font-size:18px}}
+@media(max-width:420px){.store-check-filter{font-size:11px}.store-search-wrap{gap:3px}.store-search-wrap>span{padding:0 4px}.store-search-wrap button{padding:8px}}
+body.theme-dark .store-hero-actions span{background:#172b38;color:#dceff5;border-color:#2c4c5a}
+
 </style>
 
 </head>
@@ -260,7 +296,32 @@ body,body.theme-dark{background:var(--bg)!important;color:var(--text)!important}
 <div class="listing-tools"><div class="listing-tools-title"><strong>تصفح الإعلانات</strong><span class="muted" id="activeFilterLabel">كل الأقسام</span></div><div class="listing-quick-actions"><button class="secondary" id="nearbySort" type="button">📍 الأقرب</button><button class="secondary" id="quickPriceLow" type="button">السعر الأقل</button><button class="secondary" id="quickPriceHigh" type="button">السعر الأعلى</button><button class="secondary" id="toggleListingFilters" type="button" aria-expanded="false">⚙️ الفلاتر والترتيب</button></div><div class="listing-advanced" id="listingAdvanced" hidden><div class="filters"><select id="adSort" class="field" aria-label="ترتيب الإعلانات"><option value="newest">الأحدث أولًا</option><option value="price_low">السعر: الأقل أولًا</option><option value="price_high">السعر: الأعلى أولًا</option><option value="nearby">الأقرب حسب المدينة</option></select><select id="cityFilter" class="field city-filter" aria-label="اختيار المدينة"><option value="">كل المدن السعودية</option><option value="الرياض">الرياض</option><option value="جدة">جدة</option><option value="مكة">مكة المكرمة</option><option value="المدينة">المدينة المنورة</option><option value="الدمام">الدمام</option><option value="الخبر">الخبر</option><option value="الظهران">الظهران</option><option value="الطائف">الطائف</option><option value="تبوك">تبوك</option><option value="أبها">أبها</option><option value="خميس مشيط">خميس مشيط</option><option value="جازان">جازان</option><option value="نجران">نجران</option><option value="حائل">حائل</option><option value="بريدة">بريدة</option><option value="عنيزة">عنيزة</option><option value="ينبع">ينبع</option><option value="الجبيل">الجبيل</option><option value="الأحساء">الأحساء</option><option value="حفر الباطن">حفر الباطن</option><option value="القطيف">القطيف</option><option value="عرعر">عرعر</option><option value="سكاكا">سكاكا</option><option value="القريات">القريات</option><option value="الباحة">الباحة</option><option value="بيشة">بيشة</option><option value="الرس">الرس</option><option value="المجمعة">المجمعة</option><option value="الخرج">الخرج</option><option value="الدوادمي">الدوادمي</option><option value="القنفذة">القنفذة</option><option value="شرورة">شرورة</option><option value="رفحاء">رفحاء</option><option value="طريف">طريف</option><option value="أخرى">مدينة أخرى</option></select><label class="image-filter"><input id="imagesOnly" type="checkbox"> بصور فقط</label><button class="secondary" id="clearFilters" type="button">مسح الفلاتر</button></div></div></div>
 <div class="row space"><h2>أحدث الإعلانات</h2><span class="muted" id="adCount"></span></div><div id="ads" class="grid"><div class="empty">جارٍ تحميل الإعلانات...</div></div>
 </section>
-<section id="page-store" class="hidden"><div class="store-intro"><h1>متجر سوق القيمنق</h1><p>تصفح المنتجات والإعلانات المنشورة، وافتح أي منتج لمعرفة التفاصيل والتواصل مع البائع.</p></div><div class="store-toolbar"><input id="storeSearch" class="field" placeholder="ابحث في منتجات المتجر..." aria-label="البحث في المتجر"><select id="storeSort" class="field" aria-label="ترتيب منتجات المتجر"><option value="newest">الأحدث أولًا</option><option value="price_low">السعر الأقل</option><option value="price_high">السعر الأعلى</option></select></div><div class="store-categories" id="storeCategories"><button class="chip selected" data-store-category="">كل المنتجات</button><button class="chip" data-store-category="كمبيوترات">كمبيوترات</button><button class="chip" data-store-category="قطع الكمبيوتر">قطع الكمبيوتر</button><button class="chip" data-store-category="أجهزة الألعاب">أجهزة الألعاب</button><button class="chip" data-store-category="شاشات وملحقات">شاشات وملحقات</button><button class="chip" data-store-category="جوالات وإلكترونيات">إلكترونيات</button><button class="chip" data-store-category="خدمات وصيانة">خدمات وصيانة</button></div><div class="row space"><h2>منتجات المتجر</h2><span class="muted" id="storeCount">0 منتج</span></div><div id="storeProducts" class="grid"><div class="empty">جارٍ تحميل المنتجات...</div></div><div class="notice">تُعرض هنا الإعلانات المنشورة في المنصة كمنتجات قابلة للتصفح. لا توجد عملية دفع إلكتروني مفعّلة في هذه النسخة.</div></section>
+<section id="page-store" class="hidden">
+<div class="store-intro">
+  <div class="store-kicker">SOUQ GAMING · STORE</div>
+  <h1>متجر سوق القيمنق</h1>
+  <p>اكتشف أجهزة الكمبيوتر والقيمنق والإلكترونيات وملحقاتها. ابحث، صفِّ النتائج، واحفظ المنتجات التي تهمك.</p>
+  <div class="store-hero-actions"><span>🎮 أجهزة وملحقات</span><span>🖥️ كمبيوتر وقطع PC</span><span>📱 إلكترونيات</span></div>
+</div>
+<div class="store-toolbar">
+  <div class="store-search-wrap"><span aria-hidden="true">⌕</span><input id="storeSearch" class="field" placeholder="ابحث باسم المنتج أو الوصف أو القسم..." aria-label="البحث في المتجر" autocomplete="off"><button id="storeSearchClear" class="secondary" type="button" aria-label="مسح البحث">مسح</button></div>
+  <select id="storeSort" class="field" aria-label="ترتيب منتجات المتجر"><option value="newest">الأحدث أولًا</option><option value="price_low">السعر الأقل</option><option value="price_high">السعر الأعلى</option><option value="title">الاسم أ إلى ي</option></select>
+</div>
+<div class="store-filter-panel">
+  <div class="store-filter-heading"><strong>تصفية المنتجات</strong><button id="storeClearFilters" class="linkbtn" type="button">مسح جميع الفلاتر</button></div>
+  <div class="store-filters">
+    <label>السعر من (ر.س)<input id="storeMinPrice" class="field" type="number" min="0" step="1" placeholder="0"></label>
+    <label>السعر إلى (ر.س)<input id="storeMaxPrice" class="field" type="number" min="0" step="1" placeholder="بدون حد"></label>
+    <label>حالة المنتج<select id="storeCondition" class="field"><option value="">كل الحالات</option><option value="جديد">جديد</option><option value="شبه جديد">شبه جديد</option><option value="مستعمل">مستعمل</option></select></label>
+    <label class="store-check-filter"><input id="storeImagesOnly" type="checkbox"> منتجات لها صور</label>
+  </div>
+  <div id="storeActiveFilters" class="store-active-filters" aria-live="polite"></div>
+</div>
+<div class="store-categories" id="storeCategories"><button class="chip selected" data-store-category="">كل المنتجات</button><button class="chip" data-store-category="كمبيوترات">كمبيوترات</button><button class="chip" data-store-category="قطع الكمبيوتر">قطع الكمبيوتر</button><button class="chip" data-store-category="أجهزة الألعاب">أجهزة الألعاب</button><button class="chip" data-store-category="شاشات وملحقات">شاشات وملحقات</button><button class="chip" data-store-category="جوالات وإلكترونيات">إلكترونيات</button><button class="chip" data-store-category="خدمات وصيانة">خدمات وصيانة</button></div>
+<div class="store-results-heading"><div><h2>منتجات المتجر</h2><p id="storeResultsSubtitle">تصفح المنتجات المتاحة</p></div><span class="store-count-pill" id="storeCount">0 منتج</span></div>
+<div id="storeProducts" class="grid"><div class="empty">جارٍ تحميل المنتجات...</div></div>
+<div class="notice store-notice">يعرض المتجر حاليًا الإعلانات المنشورة في المنصة. السلة والطلبات والدفع الفعلي تحتاج إلى ربط قاعدة بيانات المتجر والتحقق من إعداداتها قبل تفعيل الشراء.</div>
+</section>
 <section id="page-add" class="hidden"><div class="panel"><h2 id="adFormTitle">إضافة إعلان جديد</h2><p class="muted">سيظهر الإعلان فور الحفظ بعد التحقق من البيانات. أضف صورًا واضحة ووصفًا دقيقًا.</p>
 <form id="adForm" class="formgrid">
 <input type="hidden" id="editId">
@@ -466,20 +527,83 @@ async function loadAds(){
  }
 }
 let selectedStoreCategory='';
+function normalizeStoreText(value){
+ return String(value||'').toLocaleLowerCase('ar-SA').normalize('NFKC')
+  .replace(/[\u064B-\u065F\u0670]/g,'').replace(/[أإآ]/g,'ا').replace(/ى/g,'ي')
+  .replace(/ة/g,'ه').replace(/ـ/g,' ').replace(/[^\p{L}\p{N}\s]/gu,' ')
+  .replace(/\s+/g,' ').trim();
+}
+function clearStoreFilters(){
+ if($('storeSearch'))$('storeSearch').value='';
+ if($('storeMinPrice'))$('storeMinPrice').value='';
+ if($('storeMaxPrice'))$('storeMaxPrice').value='';
+ if($('storeCondition'))$('storeCondition').value='';
+ if($('storeImagesOnly'))$('storeImagesOnly').checked=false;
+ if($('storeSort'))$('storeSort').value='newest';
+ selectedStoreCategory='';
+ document.querySelectorAll('[data-store-category]').forEach(x=>x.classList.toggle('selected',!x.dataset.storeCategory));
+ renderStoreProducts();
+}
 function renderStoreProducts(){
  const box=$('storeProducts');if(!box)return;
  let rows=(adsCache||[]).filter(a=>a.status==='published');
- const term=($('storeSearch')?.value||'').trim().toLowerCase();
- if(term)rows=rows.filter(a=>[a.title,a.description,a.category,a.seller_name].join(' ').toLowerCase().includes(term));
+ const rawTerm=($('storeSearch')?.value||'').trim();
+ const term=normalizeStoreText(rawTerm);
+ if(term){
+  const words=term.split(' ').filter(Boolean);
+  rows=rows.filter(a=>{
+   const hay=normalizeStoreText([a.title,a.description,a.category,a.seller_name,a.condition,a.city,a.location].join(' '));
+   return hay.includes(term)||words.every(w=>hay.includes(w));
+  });
+ }
  if(selectedStoreCategory)rows=rows.filter(a=>a.category===selectedStoreCategory);
+ const minVal=$('storeMinPrice')?.value??'',maxVal=$('storeMaxPrice')?.value??'';
+ const condition=$('storeCondition')?.value||'',imagesOnly=!!$('storeImagesOnly')?.checked;
+ if(minVal!==''&&Number.isFinite(Number(minVal)))rows=rows.filter(a=>Number(a.price||0)>=Number(minVal));
+ if(maxVal!==''&&Number.isFinite(Number(maxVal)))rows=rows.filter(a=>Number(a.price||0)<=Number(maxVal));
+ if(condition)rows=rows.filter(a=>normalizeStoreText(a.condition)===normalizeStoreText(condition));
+ if(imagesOnly)rows=rows.filter(a=>Array.isArray(a.image_urls)&&a.image_urls.some(Boolean));
  const order=$('storeSort')?.value||'newest';
- rows.sort((a,b)=>order==='price_low'?Number(a.price||0)-Number(b.price||0):order==='price_high'?Number(b.price||0)-Number(a.price||0):new Date(b.created_at||0)-new Date(a.created_at||0));
- $('storeCount').textContent=rows.length.toLocaleString('ar-SA')+' منتج';
- if(!rows.length){box.innerHTML='<div class="empty">لا توجد منتجات مطابقة حاليًا. جرّب تغيير البحث أو القسم.</div>';return;}
- box.innerHTML=rows.map(a=>{const img=Array.isArray(a.image_urls)&&a.image_urls.length?a.image_urls[0]:'';return `<article class="card store-product-card"><div class="ad-image-wrap">${img?`<img class="adimg" src="${esc(img)}" alt="${esc(a.title)}" loading="lazy" onerror="this.style.display='none'">`:'<div class="adimg ad-placeholder" aria-label="لا توجد صورة">لا توجد صورة</div>'}</div><div class="adbody"><div class="ad-badges"><span class="ad-tag">${esc(a.category||'منتج')}</span><span class="ad-tag condition-tag">${esc(a.condition||'مستعمل')}</span></div><h3>${esc(a.title)}</h3><div class="price">${Number(a.price||0).toLocaleString('ar-SA')} <small>ر.س</small></div><p class="ad-description">${esc((a.description||'').slice(0,100))}${(a.description||'').length>100?'…':''}</p><div class="meta">📍 ${esc(a.city||a.location||'السعودية')}</div><button class="primary store-open" type="button" onclick="openAdDetail('${a.id}')">عرض المنتج والتواصل</button></div></article>`}).join('');
+ rows.sort((a,b)=>{
+  if(order==='price_low')return Number(a.price||0)-Number(b.price||0);
+  if(order==='price_high')return Number(b.price||0)-Number(a.price||0);
+  if(order==='title')return String(a.title||'').localeCompare(String(b.title||''),'ar');
+  return new Date(b.created_at||0)-new Date(a.created_at||0);
+ });
+ const count=$('storeCount');if(count)count.textContent=rows.length.toLocaleString('ar-SA')+' منتج';
+ const subtitle=$('storeResultsSubtitle');
+ if(subtitle)subtitle.textContent=rawTerm?'نتائج البحث عن «'+rawTerm.replace(/[<>]/g,'')+'»':'تصفح المنتجات المتاحة';
+ const active=$('storeActiveFilters');
+ if(active){
+  const tags=[];
+  if(selectedStoreCategory)tags.push('القسم: '+selectedStoreCategory);
+  if(minVal!=='')tags.push('من '+minVal+' ر.س');
+  if(maxVal!=='')tags.push('إلى '+maxVal+' ر.س');
+  if(condition)tags.push('الحالة: '+condition);
+  if(imagesOnly)tags.push('بصور فقط');
+  if(rawTerm)tags.push('بحث: '+rawTerm);
+  active.innerHTML=tags.map(t=>'<span class="store-filter-chip">'+esc(t)+'</span>').join('');
+ }
+ if(!rows.length){
+  box.innerHTML='<div class="empty" style="grid-column:1/-1"><div style="font-size:32px;margin-bottom:8px">⌕</div><strong>لم نعثر على منتجات مطابقة</strong><p>جرّب كلمة بحث مختلفة أو خفّف الفلاتر.</p><button class="secondary" type="button" onclick="clearStoreFilters()">مسح الفلاتر</button></div>';
+  return;
+ }
+ box.innerHTML=rows.map(a=>{
+  const img=Array.isArray(a.image_urls)&&a.image_urls.length?a.image_urls[0]:'';
+  const id=String(a.id||'').replace(/'/g,'');
+  return `<article class="card store-product-card"><div class="ad-image-wrap">${img?`<img class="adimg" src="${esc(img)}" alt="${esc(a.title)}" loading="lazy" onerror="this.style.display='none'">`:'<div class="adimg ad-placeholder" aria-label="لا توجد صورة">لا توجد صورة</div>'}</div><div class="adbody"><div class="ad-badges"><span class="ad-tag">${esc(a.category||'منتج')}</span><span class="ad-tag condition-tag">${esc(a.condition||'غير محدد')}</span></div><h3>${esc(a.title||'منتج')}</h3><div class="price">${Number(a.price||0).toLocaleString('ar-SA')} <small>ر.س</small></div><p class="ad-description">${esc((a.description||'').slice(0,100))}${(a.description||'').length>100?'…':''}</p><div class="meta">📍 ${esc(a.city||a.location||'السعودية')}</div><button class="primary store-open" type="button" onclick="openAdDetail('${id}')">عرض المنتج والتواصل</button></div></article>`;
+ }).join('');
 }
-document.querySelectorAll('[data-store-category]').forEach(b=>b.addEventListener('click',()=>{selectedStoreCategory=b.dataset.storeCategory;document.querySelectorAll('[data-store-category]').forEach(x=>x.classList.toggle('selected',x===b));renderStoreProducts();}));
-$('storeSearch').addEventListener('input',renderStoreProducts);$('storeSort').addEventListener('change',renderStoreProducts);
+document.querySelectorAll('[data-store-category]').forEach(button=>button.addEventListener('click',()=>{
+ selectedStoreCategory=button.dataset.storeCategory||'';
+ document.querySelectorAll('[data-store-category]').forEach(item=>item.classList.toggle('selected',item===button));
+ renderStoreProducts();
+}));
+['storeSearch','storeMinPrice','storeMaxPrice','storeCondition'].forEach(id=>$(id)?.addEventListener('input',renderStoreProducts));
+$('storeImagesOnly')?.addEventListener('change',renderStoreProducts);
+$('storeSort')?.addEventListener('change',renderStoreProducts);
+$('storeSearchClear')?.addEventListener('click',()=>{if($('storeSearch'))$('storeSearch').value='';renderStoreProducts();$('storeSearch')?.focus();});
+$('storeClearFilters')?.addEventListener('click',clearStoreFilters);
 $('toggleListingFilters').addEventListener('click',()=>{const panel=$('listingAdvanced'),open=panel.hidden;panel.hidden=!open;$('toggleListingFilters').setAttribute('aria-expanded',String(open));$('toggleListingFilters').textContent=open?'✕ إخفاء الفلاتر':'⚙️ الفلاتر والترتيب';});
 $('quickPriceLow').addEventListener('click',()=>{$('adSort').value='price_low';applyAdFilters();});
 $('quickPriceHigh').addEventListener('click',()=>{$('adSort').value='price_high';applyAdFilters();});
