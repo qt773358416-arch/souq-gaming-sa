@@ -71,6 +71,26 @@ button:focus-visible{outline:3px solid #55c9df!important;outline-offset:2px}
  .footer{padding-bottom:112px!important}
 }
 
+
+/* التعديلات المعتمدة على رأس الصفحة والتنقل */
+.top{justify-content:space-between}
+.top .brand{order:0!important;margin-right:auto!important;justify-content:flex-start!important;text-align:left}
+.top .searchrow{order:2;flex:1}
+.top .top-actions{order:3;flex:0 0 auto}
+.share-store-small{padding:5px 8px!important;min-height:28px!important;font-size:11px!important;border-radius:9px!important}
+.ad-placeholder{display:grid;place-items:center;font-size:14px!important;color:var(--muted)!important;background:#0e1a26!important}
+.detail-placeholder{font-size:14px!important;color:var(--muted)!important}
+@media(max-width:760px){
+ .top{align-items:center!important;flex-direction:row;flex-wrap:wrap;gap:9px}
+ .top .brand{order:0!important;flex:1 1 auto!important;justify-content:flex-start!important;margin:0!important;text-align:right}
+ .top .top-actions{order:1!important;margin-right:auto}
+ .top .searchrow{order:2!important;flex:1 0 100%!important;max-width:none!important}
+ .share-store-small{padding:5px 8px!important;min-height:28px!important;font-size:11px!important}
+ .bottom{gap:4px!important;padding:10px 7px calc(10px + env(safe-area-inset-bottom))!important;min-height:82px!important}
+ .bottom button{min-height:62px!important;padding:8px 3px!important;font-size:12px!important;font-weight:800!important;line-height:1.35!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:3px!important}
+ .bottom button span{font-size:25px!important;line-height:1.1!important;margin:0!important}
+ .footer{padding-bottom:112px!important}
+}
 </style>
 
 <style id="account-page-refresh">
@@ -164,7 +184,7 @@ body,body.theme-dark{background:var(--bg)!important;color:var(--text)!important}
 <header class="top">
   <div class="brand"><div class="logo">🎮</div><div>سوق القيمنق السعودي<div class="muted" style="font-size:11px;font-weight:500">إعلانات الكمبيوترات وأجهزة الألعاب في السعودية</div></div></div>
   <div class="searchrow"><input id="search" class="field" placeholder="ابحث عن كمبيوتر، كرت شاشة، بلايستيشن..."><button class="primary" id="searchBtn">بحث</button></div>
-  <div class="row"><button class="secondary" data-go="add">＋</button><button class="secondary" data-go="searchpage">⌕ البحث</button><button class="secondary" id="shareStoreBtn" type="button">↗ مشاركة المتجر</button><button class="secondary" id="topAccount">☰ المزيد</button></div>
+  <div class="row top-actions"><button class="secondary share-store-small" id="shareStoreBtn" type="button" aria-label="مشاركة المتجر" title="مشاركة المتجر">↗ مشاركة</button></div>
 </header>
 <nav class="tabs" id="desktopTabs">
 <button class="tab active" data-page="home">الرئيسية</button><button class="tab" data-page="add">＋ أضف إعلانًا</button><button class="tab" data-page="messages">المحادثات الخاصة</button><button class="tab" data-page="notifications">الإشعارات</button><button class="tab" data-page="account">المزيد / حسابي</button>
@@ -283,7 +303,7 @@ function needAuth(){if(currentUser)return true;$('authGate').classList.remove('h
 $('bottomMore').addEventListener('click',openDrawer);
 document.querySelectorAll('[data-page]').forEach(b=>b.addEventListener('click',()=>{if(['add','messages','community','myads'].includes(b.dataset.page)&&!currentUser){showPage('account');msg('authMsg','سجّل الدخول أو أنشئ حسابًا أولًا.');return;}showPage(b.dataset.page)}));
 document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>{const p=b.dataset.go;if(['add','messages','community','myads'].includes(p)&&!currentUser){showPage('account');msg('authMsg','سجّل الدخول أو أنشئ حسابًا أولًا.');return;}showPage(p)}));
-$('topAccount').onclick=()=>openDrawer();
+/* زر المزيد أزيل من الرأس؛ تبقى القائمة الجانبية متاحة من زر المزيد السفلي. */
 $('profilePageEdit').onclick=()=>showPage('account');
 function openDrawer(){$('sideDrawer').classList.remove('hidden');$('drawerBackdrop').classList.remove('hidden');$('drawerUser').textContent=currentUser?'مسجّل الدخول: '+(currentUser.email||'حسابك'):'مرحبًا بك — سجّل الدخول من صفحة الحساب';}
 function closeDrawer(){$('sideDrawer').classList.add('hidden');$('drawerBackdrop').classList.add('hidden');}
@@ -309,7 +329,7 @@ async function openAdDetail(id){
  const {data:a,error}=await sb.from('ads').select('*').eq('id',id).maybeSingle();
  if(error||!a){box.innerHTML='<div class="empty">تعذر تحميل الإعلان أو أنه لم يعد متاحًا.</div>';return;}
  const images=Array.isArray(a.image_urls)?a.image_urls:[];currentDetailAd=a;
- box.innerHTML=`<div class="ad-detail-grid"><div>${images.length?images.map(u=>`<img src="${esc(u)}" alt="صورة الإعلان" style="width:100%;max-height:300px;object-fit:contain;background:#0e172a;border-radius:12px;margin-bottom:8px">`).join(''):'<div class="detail-placeholder">🎮</div>'}</div><div><h2>${esc(a.title)}</h2><div class="price">${Number(a.price||0).toLocaleString('ar-SA')} ر.س</div><div class="meta">${esc(a.category||'')} · ${esc(a.condition||'')}</div><p style="white-space:pre-wrap">${esc(a.description||'لا يوجد وصف.')}</p><p class="muted">البائع: ${esc(a.seller_name||'')}</p><div class="actions"><button class="primary" onclick="openAdDetail('${a.id}')">التفاصيل</button><button class="primary" onclick="contactWhatsApp('${esc(a.seller_phone||'')}','${esc(a.title)}')">واتساب البائع</button><button class="secondary" onclick="contactCall('${esc(a.seller_phone||'')}')">اتصال</button><button class="secondary" onclick="startConversation('${a.id}','${esc(a.title)}','${a.seller_id||''}')">مراسلة خاصة</button><button class="fav-button" onclick="toggleFavorite('${a.id}')">♡ حفظ بالمفضلة</button><button class="secondary" onclick="shareAd('${a.id}','${esc(a.title)}')">↗ مشاركة الإعلان</button><button class="danger" onclick="openReport('${a.id}')">إبلاغ</button></div><section id="adCommentsPanel" class="panel" style="margin-top:18px"><h3>النقاش العام لهذا المنتج</h3><p class="muted">اكتب تعليقًا متعلقًا بالإعلان، ويمكن للبائع الرد تحته. المحادثات الخاصة لها صفحة مستقلة.</p><form id="adCommentForm" class="stack"><textarea id="adCommentText" class="field" rows="3" maxlength="1500" placeholder="اكتب سؤالًا أو تعليقًا عن المنتج..." required></textarea><button class="primary" type="submit">إرسال التعليق</button><div id="adCommentMsg" class="muted"></div></form><div id="adCommentsList" class="stack" style="margin-top:16px">جارٍ تحميل التعليقات...</div></section><section id="reviewsPanel"><h3>تقييمات البائع</h3><div class="empty">جارٍ تحميل التقييمات...</div></section></div></div>`;
+ box.innerHTML=`<div class="ad-detail-grid"><div>${images.length?images.map(u=>`<img src="${esc(u)}" alt="صورة الإعلان" style="width:100%;max-height:300px;object-fit:contain;background:#0e172a;border-radius:12px;margin-bottom:8px">`).join(''):'<div class="detail-placeholder" aria-label="لا توجد صورة">لا توجد صورة</div>'}</div><div><h2>${esc(a.title)}</h2><div class="price">${Number(a.price||0).toLocaleString('ar-SA')} ر.س</div><div class="meta">${esc(a.category||'')} · ${esc(a.condition||'')}</div><p style="white-space:pre-wrap">${esc(a.description||'لا يوجد وصف.')}</p><p class="muted">البائع: ${esc(a.seller_name||'')}</p><div class="actions"><button class="primary" onclick="openAdDetail('${a.id}')">التفاصيل</button><button class="primary" onclick="contactWhatsApp('${esc(a.seller_phone||'')}','${esc(a.title)}')">واتساب البائع</button><button class="secondary" onclick="contactCall('${esc(a.seller_phone||'')}')">اتصال</button><button class="secondary" onclick="startConversation('${a.id}','${esc(a.title)}','${a.seller_id||''}')">مراسلة خاصة</button><button class="fav-button" onclick="toggleFavorite('${a.id}')">♡ حفظ بالمفضلة</button><button class="secondary" onclick="shareAd('${a.id}','${esc(a.title)}')">↗ مشاركة الإعلان</button><button class="danger" onclick="openReport('${a.id}')">إبلاغ</button></div><section id="adCommentsPanel" class="panel" style="margin-top:18px"><h3>النقاش العام لهذا المنتج</h3><p class="muted">اكتب تعليقًا متعلقًا بالإعلان، ويمكن للبائع الرد تحته. المحادثات الخاصة لها صفحة مستقلة.</p><form id="adCommentForm" class="stack"><textarea id="adCommentText" class="field" rows="3" maxlength="1500" placeholder="اكتب سؤالًا أو تعليقًا عن المنتج..." required></textarea><button class="primary" type="submit">إرسال التعليق</button><div id="adCommentMsg" class="muted"></div></form><div id="adCommentsList" class="stack" style="margin-top:16px">جارٍ تحميل التعليقات...</div></section><section id="reviewsPanel"><h3>تقييمات البائع</h3><div class="empty">جارٍ تحميل التقييمات...</div></section></div></div>`;
  const commentForm=$('adCommentForm');if(commentForm)commentForm.onsubmit=async e=>{e.preventDefault();if(!needAuth())return;const body=$('adCommentText').value.trim();if(!body)return;const payload={ad_id:a.id,user_id:currentUser.id,author_name:profile?.display_name||currentUser.email,body,parent_id:null};const {error}=await sb.from('ad_comments').insert(payload);if(error){msg('adCommentMsg','تعذر إرسال التعليق. تحقق من تطبيق ملف SQL.');return;}$('adCommentText').value='';msg('adCommentMsg','تم نشر تعليقك.');await loadAdComments(a);};await loadAdComments(a);await loadReviews(a);
 }
 
@@ -370,7 +390,7 @@ function renderAdsFromCache(){
  $('activeFilterLabel').textContent=terms.join(' · ')||'كل الأقسام';
  if(!rows.length){box.innerHTML='<div class="empty">لا توجد إعلانات مطابقة للفلاتر الحالية. جرّب تغيير كلمات البحث أو مسح الفلاتر.</div>';return;}
  box.classList.toggle('list-view',document.body.dataset.viewMode==='list');
- box.innerHTML=rows.map(a=>{const img=Array.isArray(a.image_urls)&&a.image_urls.length?a.image_urls[0]:'';return `<article class="card"><div class="ad-image-wrap">${img?`<img class="adimg" src="${esc(img)}" alt="${esc(a.title)}" loading="lazy" onerror="this.style.display='none'">`:`<div class="adimg ad-placeholder" aria-label="لا توجد صورة">🎮</div>`}</div><div class="adbody"><div class="ad-badges"><span class="ad-tag">${esc(a.category||'إعلان')}</span><span class="ad-tag condition-tag">${esc(a.condition||'مستعمل')}</span></div><h3>${esc(a.title)}</h3><div class="price">${Number(a.price||0).toLocaleString('ar-SA')} <small>ر.س</small></div><p class="ad-description">${esc((a.description||'').slice(0,150))}${(a.description||'').length>150?'…':''}</p><div class="meta seller-meta"><span>👤 ${esc(a.seller_name||'بائع')}</span><span>📍 ${esc(a.city||a.location||'السعودية')}</span></div><div class="actions"><button class="primary" onclick="openAdDetail('${a.id}')">التفاصيل</button><button class="secondary" onclick="contactWhatsApp('${esc(a.seller_phone||'')}','${esc(a.title)}')">واتساب</button><button class="secondary" onclick="contactCall('${esc(a.seller_phone||'')}')">اتصال</button><button class="secondary" onclick="startConversation('${a.id}','${esc(a.title)}','${a.seller_id||''}')">مراسلة</button><button class="fav-button" onclick="toggleFavorite('${a.id}')">♡ حفظ</button></div></div></article>`}).join('');
+ box.innerHTML=rows.map(a=>{const img=Array.isArray(a.image_urls)&&a.image_urls.length?a.image_urls[0]:'';return `<article class="card"><div class="ad-image-wrap">${img?`<img class="adimg" src="${esc(img)}" alt="${esc(a.title)}" loading="lazy" onerror="this.style.display='none'">`:`<div class="adimg ad-placeholder" aria-label="لا توجد صورة">لا توجد صورة</div>`}</div><div class="adbody"><div class="ad-badges"><span class="ad-tag">${esc(a.category||'إعلان')}</span><span class="ad-tag condition-tag">${esc(a.condition||'مستعمل')}</span></div><h3>${esc(a.title)}</h3><div class="price">${Number(a.price||0).toLocaleString('ar-SA')} <small>ر.س</small></div><p class="ad-description">${esc((a.description||'').slice(0,150))}${(a.description||'').length>150?'…':''}</p><div class="meta seller-meta"><span>👤 ${esc(a.seller_name||'بائع')}</span><span>📍 ${esc(a.city||a.location||'السعودية')}</span></div><div class="actions"><button class="primary" onclick="openAdDetail('${a.id}')">التفاصيل</button><button class="secondary" onclick="contactWhatsApp('${esc(a.seller_phone||'')}','${esc(a.title)}')">واتساب</button><button class="secondary" onclick="contactCall('${esc(a.seller_phone||'')}')">اتصال</button><button class="secondary" onclick="startConversation('${a.id}','${esc(a.title)}','${a.seller_id||''}')">مراسلة</button><button class="fav-button" onclick="toggleFavorite('${a.id}')">♡ حفظ</button></div></div></article>`}).join('');
 }
 async function loadAds(){
  const box=$('ads');
