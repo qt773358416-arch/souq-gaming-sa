@@ -202,13 +202,43 @@ body,body.theme-dark{background:var(--bg)!important;color:var(--text)!important}
 .primary:hover{background:#70d9f0!important}
 .brand,.adbody h3,.price,#reviewsPanel .rating-number{color:#70d9f0!important}
 .notice,.page-note,.ad-tag,.condition-tag,.image-filter,.check-setting{background:#172b38!important;color:#dceff5!important;border-color:#2c4c5a!important}
-</style></head>
+</style>
+<style id="compact-mobile-navigation-and-city-filters">
+.top-actions{display:flex;align-items:center;gap:7px}
+.top-notifications{width:40px;height:40px;min-width:40px;padding:8px!important;display:grid;place-items:center;position:relative}
+.top-notifications svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.listing-tools{padding:8px!important;margin-bottom:8px!important;border-radius:12px!important}
+.listing-tools-title{min-height:28px!important}
+.listing-quick-actions{margin-top:5px!important;gap:5px!important}
+.listing-quick-actions button{padding:6px 8px!important;font-size:11px!important;min-height:32px}
+.listing-advanced{margin-top:7px!important}
+.listing-advanced .filters{gap:7px}
+.city-filter{min-width:0}
+@media(max-width:760px){
+ .top-notifications{width:36px;height:36px;min-width:36px}
+ .top-notifications svg{width:20px;height:20px}
+ .top-actions{gap:5px!important}
+ .share-store-small{padding:5px 7px!important;font-size:10px!important}
+ .listing-tools{padding:7px!important;margin:0 0 8px!important}
+ .listing-tools-title{min-height:25px!important}
+ .listing-tools-title strong{font-size:13px!important}
+ .listing-quick-actions{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px!important;margin-top:5px!important}
+ .listing-quick-actions button{padding:6px 3px!important;font-size:10px!important;min-width:0;white-space:normal;line-height:1.25;min-height:34px}
+ .listing-advanced .filters{grid-template-columns:1fr 1fr!important}
+ .listing-advanced .city-filter{grid-column:1/-1;grid-row:auto}
+ .bottom{grid-template-columns:repeat(5,minmax(0,1fr))!important}
+ .bottom .bottom-add{background:#16c7d9!important;color:#071820!important;border:1px solid #16c7d9!important;border-radius:14px!important}
+ .bottom .bottom-add span{font-size:29px!important;font-weight:900}
+}
+</style>
+
+</head>
 <body class="theme-dark">
 <div class="wrap">
 <header class="top">
   <div class="brand"><div class="logo">🎮</div><div>سوق القيمنق السعودي<div class="muted" style="font-size:11px;font-weight:500">إعلانات الكمبيوترات وأجهزة الألعاب في السعودية</div></div></div>
   <div class="searchrow"><input id="search" class="field" placeholder="ابحث عن كمبيوتر، كرت شاشة، بلايستيشن..."><button class="primary" id="searchBtn">بحث</button></div>
-  <div class="row top-actions"><button class="secondary share-store-small" id="shareStoreBtn" type="button" aria-label="مشاركة المتجر" title="مشاركة المتجر">↗ مشاركة</button></div>
+  <div class="row top-actions"><button class="secondary top-notifications" data-page="notifications" type="button" aria-label="الإشعارات" title="الإشعارات"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg></button><button class="secondary share-store-small" id="shareStoreBtn" type="button" aria-label="مشاركة المتجر" title="مشاركة المتجر">↗ مشاركة</button></div>
 </header>
 <nav class="tabs" id="desktopTabs">
 <button class="tab active" data-page="home">الرئيسية</button><button class="tab" data-page="add">＋ أضف إعلانًا</button><button class="tab" data-page="messages">المحادثات الخاصة</button><button class="tab" data-page="notifications">الإشعارات</button><button class="tab" data-page="account">المزيد / حسابي</button>
@@ -227,7 +257,7 @@ body,body.theme-dark{background:var(--bg)!important;color:var(--text)!important}
 <section id="page-home">
 <div class="hero"><h1>كل عالم القيمنق في مكان واحد</h1><p>اعرض جهازك للبيع، اكتشف العروض، وتواصل مباشرة مع البائع.</p></div><div class="home-actions"><button class="home-action add-action" type="button" data-go="add"><span class="home-action-icon">＋</span><span><strong>أضف إعلانك</strong><small>اعرض جهازك للبيع بسهولة</small></span></button><button class="home-action" type="button" data-go="store"><span class="home-action-icon">▣</span><span><strong>تصفح متجرنا</strong><small>اكتشف المنتجات المعروضة</small></span></button></div>
 <div class="categories" id="categories"><button class="chip selected" data-category="">الكل</button><button class="chip" data-category="كمبيوترات">كمبيوترات</button><button class="chip" data-category="قطع الكمبيوتر">قطع الكمبيوتر</button><button class="chip" data-category="أجهزة الألعاب">أجهزة الألعاب</button><button class="chip" data-category="شاشات وملحقات">شاشات وملحقات</button><button class="chip" data-category="جوالات وإلكترونيات">جوالات وإلكترونيات</button><button class="chip" data-category="خدمات وصيانة">خدمات وصيانة</button></div>
-<div class="listing-tools"><div class="listing-tools-title"><strong>تصفح الإعلانات</strong><span class="muted" id="activeFilterLabel">كل الأقسام</span></div><div class="listing-quick-actions"><button class="secondary" id="nearbySort" type="button">📍 الأقرب</button><button class="secondary" id="quickPriceLow" type="button">السعر الأقل</button><button class="secondary" id="quickPriceHigh" type="button">السعر الأعلى</button><button class="secondary" id="toggleListingFilters" type="button" aria-expanded="false">⚙️ الفلاتر والترتيب</button></div><div class="listing-advanced" id="listingAdvanced" hidden><div class="filters"><select id="adSort" class="field" aria-label="ترتيب الإعلانات"><option value="newest">الأحدث أولًا</option><option value="price_low">السعر: الأقل أولًا</option><option value="price_high">السعر: الأعلى أولًا</option><option value="nearby">الأقرب حسب المدينة</option></select><input id="cityFilter" class="field city-filter" placeholder="اكتب مدينتك (اختياري)" aria-label="تصفية حسب المدينة"><label class="image-filter"><input id="imagesOnly" type="checkbox"> بصور فقط</label><button class="secondary" id="clearFilters" type="button">مسح الفلاتر</button></div></div></div>
+<div class="listing-tools"><div class="listing-tools-title"><strong>تصفح الإعلانات</strong><span class="muted" id="activeFilterLabel">كل الأقسام</span></div><div class="listing-quick-actions"><button class="secondary" id="nearbySort" type="button">📍 الأقرب</button><button class="secondary" id="quickPriceLow" type="button">السعر الأقل</button><button class="secondary" id="quickPriceHigh" type="button">السعر الأعلى</button><button class="secondary" id="toggleListingFilters" type="button" aria-expanded="false">⚙️ الفلاتر والترتيب</button></div><div class="listing-advanced" id="listingAdvanced" hidden><div class="filters"><select id="adSort" class="field" aria-label="ترتيب الإعلانات"><option value="newest">الأحدث أولًا</option><option value="price_low">السعر: الأقل أولًا</option><option value="price_high">السعر: الأعلى أولًا</option><option value="nearby">الأقرب حسب المدينة</option></select><select id="cityFilter" class="field city-filter" aria-label="اختيار المدينة"><option value="">كل المدن السعودية</option><option value="الرياض">الرياض</option><option value="جدة">جدة</option><option value="مكة">مكة المكرمة</option><option value="المدينة">المدينة المنورة</option><option value="الدمام">الدمام</option><option value="الخبر">الخبر</option><option value="الظهران">الظهران</option><option value="الطائف">الطائف</option><option value="تبوك">تبوك</option><option value="أبها">أبها</option><option value="خميس مشيط">خميس مشيط</option><option value="جازان">جازان</option><option value="نجران">نجران</option><option value="حائل">حائل</option><option value="بريدة">بريدة</option><option value="عنيزة">عنيزة</option><option value="ينبع">ينبع</option><option value="الجبيل">الجبيل</option><option value="الأحساء">الأحساء</option><option value="حفر الباطن">حفر الباطن</option><option value="القطيف">القطيف</option><option value="عرعر">عرعر</option><option value="سكاكا">سكاكا</option><option value="القريات">القريات</option><option value="الباحة">الباحة</option><option value="بيشة">بيشة</option><option value="الرس">الرس</option><option value="المجمعة">المجمعة</option><option value="الخرج">الخرج</option><option value="الدوادمي">الدوادمي</option><option value="القنفذة">القنفذة</option><option value="شرورة">شرورة</option><option value="رفحاء">رفحاء</option><option value="طريف">طريف</option><option value="أخرى">مدينة أخرى</option></select><label class="image-filter"><input id="imagesOnly" type="checkbox"> بصور فقط</label><button class="secondary" id="clearFilters" type="button">مسح الفلاتر</button></div></div></div>
 <div class="row space"><h2>أحدث الإعلانات</h2><span class="muted" id="adCount"></span></div><div id="ads" class="grid"><div class="empty">جارٍ تحميل الإعلانات...</div></div>
 </section>
 <section id="page-store" class="hidden"><div class="store-intro"><h1>متجر سوق القيمنق</h1><p>تصفح المنتجات والإعلانات المنشورة، وافتح أي منتج لمعرفة التفاصيل والتواصل مع البائع.</p></div><div class="store-toolbar"><input id="storeSearch" class="field" placeholder="ابحث في منتجات المتجر..." aria-label="البحث في المتجر"><select id="storeSort" class="field" aria-label="ترتيب منتجات المتجر"><option value="newest">الأحدث أولًا</option><option value="price_low">السعر الأقل</option><option value="price_high">السعر الأعلى</option></select></div><div class="store-categories" id="storeCategories"><button class="chip selected" data-store-category="">كل المنتجات</button><button class="chip" data-store-category="كمبيوترات">كمبيوترات</button><button class="chip" data-store-category="قطع الكمبيوتر">قطع الكمبيوتر</button><button class="chip" data-store-category="أجهزة الألعاب">أجهزة الألعاب</button><button class="chip" data-store-category="شاشات وملحقات">شاشات وملحقات</button><button class="chip" data-store-category="جوالات وإلكترونيات">إلكترونيات</button><button class="chip" data-store-category="خدمات وصيانة">خدمات وصيانة</button></div><div class="row space"><h2>منتجات المتجر</h2><span class="muted" id="storeCount">0 منتج</span></div><div id="storeProducts" class="grid"><div class="empty">جارٍ تحميل المنتجات...</div></div><div class="notice">تُعرض هنا الإعلانات المنشورة في المنصة كمنتجات قابلة للتصفح. لا توجد عملية دفع إلكتروني مفعّلة في هذه النسخة.</div></section>
@@ -272,7 +302,7 @@ body,body.theme-dark{background:var(--bg)!important;color:var(--text)!important}
   <button class="drawer-link" data-drawer-page="settings"><span>⚙ الإعدادات<small>تفضيلات الموقع والخصوصية</small></span><span>‹</span></button>
 </aside>
 
-<nav class="bottom"><button data-page="home" class="active"><span>⌂</span>الرئيسية</button><button data-page="messages"><span>✉</span>محادثة</button><button data-page="searchpage"><span>⌕</span>ابحث</button><button data-page="notifications"><span>♟</span>الإشعارات</button><button id="bottomMore"><span>☰</span>المزيد</button></nav>
+<nav class="bottom"><button data-page="home" class="active"><span>⌂</span>الرئيسية</button><button data-page="messages"><span>✉</span>محادثة</button><button data-page="add" class="bottom-add"><span>＋</span>أضف إعلان</button><button data-page="store"><span>▣</span>المتجر</button><button id="bottomMore"><span>☰</span>المزيد</button></nav>
 <div id="authGate" class="modalback hidden"><div class="modal"><div class="row space"><h2>تسجيل الدخول مطلوب</h2><button id="closeGate" class="secondary">×</button></div><p class="muted">سجّل الدخول أو أنشئ حسابًا للمتابعة.</p><button class="primary" id="goAuth">الانتقال إلى صفحة الحساب</button></div></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -456,7 +486,7 @@ $('quickPriceHigh').addEventListener('click',()=>{$('adSort').value='price_high'
 $('nearbySort').addEventListener('click',()=>{const city=$('cityFilter').value.trim()||profile?.city||'';if(!city){$('listingAdvanced').hidden=false;$('toggleListingFilters').setAttribute('aria-expanded','true');$('toggleListingFilters').textContent='✕ إخفاء الفلاتر';$('cityFilter').focus();alert('اكتب مدينتك أولًا لعرض الإعلانات الأقرب حسب المدينة. لا نستخدم موقعك الدقيق دون إذنك.');return;}$('cityFilter').value=city;$('adSort').value='nearby';applyAdFilters();});
 function applyAdFilters(){adSortOrder=$('adSort').value;cityFilterValue=$('cityFilter').value.trim().toLowerCase();onlyAdsWithImages=$('imagesOnly').checked;renderAdsFromCache();}
 $('adSort').addEventListener('change',applyAdFilters);
-$('cityFilter').addEventListener('input',applyAdFilters);
+$('cityFilter').addEventListener('change',applyAdFilters);
 $('imagesOnly').addEventListener('change',applyAdFilters);
 $('clearFilters').addEventListener('click',()=>{selectedCategory='';searchTerm='';cityFilterValue='';onlyAdsWithImages=false;adSortOrder=readSettings().sort||'newest';$('search').value='';$('searchPageInput').value='';$('cityFilter').value='';$('imagesOnly').checked=false;$('adSort').value=adSortOrder;document.querySelectorAll('[data-category]').forEach(x=>x.classList.toggle('selected',!x.dataset.category));loadAds();});
 
