@@ -91,6 +91,30 @@ button:focus-visible{outline:3px solid #55c9df!important;outline-offset:2px}
  .bottom button span{font-size:25px!important;line-height:1.1!important;margin:0!important}
  .footer{padding-bottom:112px!important}
 }
+
+/* الصفحة الرئيسية المختصرة + متجر المنصة */
+.home-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0 18px}
+.home-action{display:flex;align-items:center;gap:12px;min-height:88px;padding:14px;border:1px solid var(--line);border-radius:15px;background:var(--panel);color:var(--text);text-align:right;box-shadow:var(--shadow)}
+.home-action .home-action-icon{display:grid;place-items:center;flex:0 0 42px;height:42px;border-radius:12px;background:#173744;color:#70d9f0;font-size:23px}
+.home-action strong{display:block;font-size:15px}.home-action small{display:block;color:var(--muted);font-size:11px;margin-top:3px;font-weight:500}
+.home-action.add-action{border-color:#23798a;background:linear-gradient(120deg,#142b38,#17232d)}
+.listing-tools{padding:11px!important;margin-bottom:12px!important}.listing-tools-title{margin:0!important;min-height:36px}.listing-tools-title strong{font-size:15px}
+.listing-quick-actions{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin-top:9px}
+.listing-quick-actions button{padding:7px 10px;font-size:12px;border-radius:10px}
+.listing-advanced{margin-top:10px}.listing-advanced[hidden]{display:none!important}
+.store-intro{padding:20px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(120deg,#173443,#17232d);margin:8px 0 14px}
+.store-intro h1{margin:0 0 5px;color:var(--brand);font-size:25px}.store-intro p{margin:0;color:var(--muted);font-size:13px}
+.store-toolbar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;margin:12px 0}
+.store-categories{display:flex;gap:7px;overflow:auto;padding:2px 0 9px;scrollbar-width:thin}
+.store-categories button{white-space:nowrap;padding:8px 11px;font-size:12px}
+.store-product-card{cursor:pointer}.store-product-card .adimg{height:160px}
+.store-product-card .store-open{width:100%;margin-top:8px}
+@media(max-width:600px){
+ .home-actions{gap:8px;margin:10px 0 14px}.home-action{min-height:76px;padding:10px;gap:8px}.home-action .home-action-icon{flex-basis:34px;height:34px;font-size:19px;border-radius:10px}.home-action strong{font-size:13px}.home-action small{font-size:10px}
+ .listing-tools{padding:9px!important}.listing-quick-actions{gap:6px}.listing-quick-actions button{padding:7px 8px;font-size:11px}
+ .store-intro{padding:15px}.store-intro h1{font-size:21px}.store-toolbar{grid-template-columns:1fr}.store-product-card .adimg{height:125px}
+}
+
 </style>
 
 <style id="account-page-refresh">
@@ -201,11 +225,12 @@ body,body.theme-dark{background:var(--bg)!important;color:var(--text)!important}
 <section id="page-profile" class="hidden"><div class="panel"><div class="pagehead"><div><h2>الملف الشخصي</h2><p>تعديل بيانات الملف من صفحة مستقلة.</p></div><button class="secondary" data-go="account">العودة للحساب</button></div><div id="profilePageContent" class="page-note">سجّل الدخول أولًا لعرض بياناتك.</div><button class="primary" id="profilePageEdit" type="button">فتح إعدادات الملف الشخصي</button></div></section>
 
 <section id="page-home">
-<div class="hero"><h1>كل عالم القيمنق في مكان واحد</h1><p>اعرض جهازك للبيع، اكتشف العروض، وتواصل مباشرة مع البائع.</p><div class="row"><button class="primary" data-go="add">＋ أضف إعلانك الآن</button></div></div>
+<div class="hero"><h1>كل عالم القيمنق في مكان واحد</h1><p>اعرض جهازك للبيع، اكتشف العروض، وتواصل مباشرة مع البائع.</p></div><div class="home-actions"><button class="home-action add-action" type="button" data-go="add"><span class="home-action-icon">＋</span><span><strong>أضف إعلانك</strong><small>اعرض جهازك للبيع بسهولة</small></span></button><button class="home-action" type="button" data-go="store"><span class="home-action-icon">▣</span><span><strong>تصفح متجرنا</strong><small>اكتشف المنتجات المعروضة</small></span></button></div>
 <div class="categories" id="categories"><button class="chip selected" data-category="">الكل</button><button class="chip" data-category="كمبيوترات">كمبيوترات</button><button class="chip" data-category="قطع الكمبيوتر">قطع الكمبيوتر</button><button class="chip" data-category="أجهزة الألعاب">أجهزة الألعاب</button><button class="chip" data-category="شاشات وملحقات">شاشات وملحقات</button><button class="chip" data-category="جوالات وإلكترونيات">جوالات وإلكترونيات</button><button class="chip" data-category="خدمات وصيانة">خدمات وصيانة</button></div>
-<div class="listing-tools"><div class="listing-tools-title"><strong>تصفح الإعلانات</strong><span class="muted" id="activeFilterLabel">كل الأقسام</span></div><div class="filters"><select id="adSort" class="field" aria-label="ترتيب الإعلانات"><option value="newest">الأحدث أولًا</option><option value="price_low">السعر: الأقل أولًا</option><option value="price_high">السعر: الأعلى أولًا</option></select><input id="cityFilter" class="field city-filter" placeholder="المدينة (اختياري)" aria-label="تصفية حسب المدينة"><label class="image-filter"><input id="imagesOnly" type="checkbox"> بصور فقط</label><button class="secondary" id="clearFilters" type="button">مسح الفلاتر</button></div></div>
+<div class="listing-tools"><div class="listing-tools-title"><strong>تصفح الإعلانات</strong><span class="muted" id="activeFilterLabel">كل الأقسام</span></div><div class="listing-quick-actions"><button class="secondary" id="nearbySort" type="button">📍 الأقرب</button><button class="secondary" id="quickPriceLow" type="button">السعر الأقل</button><button class="secondary" id="quickPriceHigh" type="button">السعر الأعلى</button><button class="secondary" id="toggleListingFilters" type="button" aria-expanded="false">⚙️ الفلاتر والترتيب</button></div><div class="listing-advanced" id="listingAdvanced" hidden><div class="filters"><select id="adSort" class="field" aria-label="ترتيب الإعلانات"><option value="newest">الأحدث أولًا</option><option value="price_low">السعر: الأقل أولًا</option><option value="price_high">السعر: الأعلى أولًا</option><option value="nearby">الأقرب حسب المدينة</option></select><input id="cityFilter" class="field city-filter" placeholder="اكتب مدينتك (اختياري)" aria-label="تصفية حسب المدينة"><label class="image-filter"><input id="imagesOnly" type="checkbox"> بصور فقط</label><button class="secondary" id="clearFilters" type="button">مسح الفلاتر</button></div></div></div>
 <div class="row space"><h2>أحدث الإعلانات</h2><span class="muted" id="adCount"></span></div><div id="ads" class="grid"><div class="empty">جارٍ تحميل الإعلانات...</div></div>
 </section>
+<section id="page-store" class="hidden"><div class="store-intro"><h1>متجر سوق القيمنق</h1><p>تصفح المنتجات والإعلانات المنشورة، وافتح أي منتج لمعرفة التفاصيل والتواصل مع البائع.</p></div><div class="store-toolbar"><input id="storeSearch" class="field" placeholder="ابحث في منتجات المتجر..." aria-label="البحث في المتجر"><select id="storeSort" class="field" aria-label="ترتيب منتجات المتجر"><option value="newest">الأحدث أولًا</option><option value="price_low">السعر الأقل</option><option value="price_high">السعر الأعلى</option></select></div><div class="store-categories" id="storeCategories"><button class="chip selected" data-store-category="">كل المنتجات</button><button class="chip" data-store-category="كمبيوترات">كمبيوترات</button><button class="chip" data-store-category="قطع الكمبيوتر">قطع الكمبيوتر</button><button class="chip" data-store-category="أجهزة الألعاب">أجهزة الألعاب</button><button class="chip" data-store-category="شاشات وملحقات">شاشات وملحقات</button><button class="chip" data-store-category="جوالات وإلكترونيات">إلكترونيات</button><button class="chip" data-store-category="خدمات وصيانة">خدمات وصيانة</button></div><div class="row space"><h2>منتجات المتجر</h2><span class="muted" id="storeCount">0 منتج</span></div><div id="storeProducts" class="grid"><div class="empty">جارٍ تحميل المنتجات...</div></div><div class="notice">تُعرض هنا الإعلانات المنشورة في المنصة كمنتجات قابلة للتصفح. لا توجد عملية دفع إلكتروني مفعّلة في هذه النسخة.</div></section>
 <section id="page-add" class="hidden"><div class="panel"><h2 id="adFormTitle">إضافة إعلان جديد</h2><p class="muted">سيظهر الإعلان فور الحفظ بعد التحقق من البيانات. أضف صورًا واضحة ووصفًا دقيقًا.</p>
 <form id="adForm" class="formgrid">
 <input type="hidden" id="editId">
@@ -294,6 +319,7 @@ function showPage(page){
  if(page==='community')loadPublicPosts();
  if(page==='myads')loadMyAds('myAdsPage');
  if(page==='home')loadAds();
+ if(page==='store'){if(!adsCache.length)loadAds().then(renderStoreProducts);else renderStoreProducts();}
  if(page==='favorites')loadFavorites();
  if(page==='profile')loadProfilePage();
  if(page==='searchpage')$('searchPageInput').value=$('search').value||'';
@@ -379,10 +405,11 @@ function renderAdsFromCache(){
  let rows=(adsCache||[]).filter(a=>!searchTerm||[a.title,a.description,a.category,a.seller_name].join(' ').toLowerCase().includes(searchTerm));
  if(selectedCategory) rows=rows.filter(a=>a.category===selectedCategory);
  if(onlyAdsWithImages) rows=rows.filter(a=>Array.isArray(a.image_urls)&&a.image_urls.length>0);
- if(cityFilterValue) rows=rows.filter(a=>getAdCity(a).includes(cityFilterValue));
+ if(cityFilterValue && adSortOrder!=='nearby') rows=rows.filter(a=>getAdCity(a).includes(cityFilterValue));
  rows.sort((a,b)=>{
   if(adSortOrder==='price_low') return Number(a.price||0)-Number(b.price||0);
   if(adSortOrder==='price_high') return Number(b.price||0)-Number(a.price||0);
+  if(adSortOrder==='nearby'){const city=cityFilterValue||String(profile?.city||'').trim().toLowerCase();const am=getAdCity(a),bm=getAdCity(b);const ah=city&&am.includes(city),bh=city&&bm.includes(city);if(ah!==bh)return ah?-1:1;}
   return new Date(b.created_at||0)-new Date(a.created_at||0);
  });
  $('adCount').textContent=rows.length.toLocaleString('ar-SA')+' إعلان';
@@ -402,11 +429,31 @@ async function loadAds(){
   if(error){console.error('Ads query error:',error);box.innerHTML='<div class="empty">تعذر تحميل الإعلانات. تحقق من اتصال Supabase وصلاحية قراءة الإعلانات.</div>';return;}
   adsCache=Array.isArray(data)?data:[];
   renderAdsFromCache();
+  if(!$('page-store').classList.contains('hidden'))renderStoreProducts();
  }catch(err){
   console.error('Ads loading failed:',err);
   box.innerHTML='<div class="empty">تعذر الاتصال بخدمة الإعلانات. تحقق من الإنترنت ثم أعد المحاولة.</div>';
  }
 }
+let selectedStoreCategory='';
+function renderStoreProducts(){
+ const box=$('storeProducts');if(!box)return;
+ let rows=(adsCache||[]).filter(a=>a.status==='published');
+ const term=($('storeSearch')?.value||'').trim().toLowerCase();
+ if(term)rows=rows.filter(a=>[a.title,a.description,a.category,a.seller_name].join(' ').toLowerCase().includes(term));
+ if(selectedStoreCategory)rows=rows.filter(a=>a.category===selectedStoreCategory);
+ const order=$('storeSort')?.value||'newest';
+ rows.sort((a,b)=>order==='price_low'?Number(a.price||0)-Number(b.price||0):order==='price_high'?Number(b.price||0)-Number(a.price||0):new Date(b.created_at||0)-new Date(a.created_at||0));
+ $('storeCount').textContent=rows.length.toLocaleString('ar-SA')+' منتج';
+ if(!rows.length){box.innerHTML='<div class="empty">لا توجد منتجات مطابقة حاليًا. جرّب تغيير البحث أو القسم.</div>';return;}
+ box.innerHTML=rows.map(a=>{const img=Array.isArray(a.image_urls)&&a.image_urls.length?a.image_urls[0]:'';return `<article class="card store-product-card"><div class="ad-image-wrap">${img?`<img class="adimg" src="${esc(img)}" alt="${esc(a.title)}" loading="lazy" onerror="this.style.display='none'">`:'<div class="adimg ad-placeholder" aria-label="لا توجد صورة">لا توجد صورة</div>'}</div><div class="adbody"><div class="ad-badges"><span class="ad-tag">${esc(a.category||'منتج')}</span><span class="ad-tag condition-tag">${esc(a.condition||'مستعمل')}</span></div><h3>${esc(a.title)}</h3><div class="price">${Number(a.price||0).toLocaleString('ar-SA')} <small>ر.س</small></div><p class="ad-description">${esc((a.description||'').slice(0,100))}${(a.description||'').length>100?'…':''}</p><div class="meta">📍 ${esc(a.city||a.location||'السعودية')}</div><button class="primary store-open" type="button" onclick="openAdDetail('${a.id}')">عرض المنتج والتواصل</button></div></article>`}).join('');
+}
+document.querySelectorAll('[data-store-category]').forEach(b=>b.addEventListener('click',()=>{selectedStoreCategory=b.dataset.storeCategory;document.querySelectorAll('[data-store-category]').forEach(x=>x.classList.toggle('selected',x===b));renderStoreProducts();}));
+$('storeSearch').addEventListener('input',renderStoreProducts);$('storeSort').addEventListener('change',renderStoreProducts);
+$('toggleListingFilters').addEventListener('click',()=>{const panel=$('listingAdvanced'),open=panel.hidden;panel.hidden=!open;$('toggleListingFilters').setAttribute('aria-expanded',String(open));$('toggleListingFilters').textContent=open?'✕ إخفاء الفلاتر':'⚙️ الفلاتر والترتيب';});
+$('quickPriceLow').addEventListener('click',()=>{$('adSort').value='price_low';applyAdFilters();});
+$('quickPriceHigh').addEventListener('click',()=>{$('adSort').value='price_high';applyAdFilters();});
+$('nearbySort').addEventListener('click',()=>{const city=$('cityFilter').value.trim()||profile?.city||'';if(!city){$('listingAdvanced').hidden=false;$('toggleListingFilters').setAttribute('aria-expanded','true');$('toggleListingFilters').textContent='✕ إخفاء الفلاتر';$('cityFilter').focus();alert('اكتب مدينتك أولًا لعرض الإعلانات الأقرب حسب المدينة. لا نستخدم موقعك الدقيق دون إذنك.');return;}$('cityFilter').value=city;$('adSort').value='nearby';applyAdFilters();});
 function applyAdFilters(){adSortOrder=$('adSort').value;cityFilterValue=$('cityFilter').value.trim().toLowerCase();onlyAdsWithImages=$('imagesOnly').checked;renderAdsFromCache();}
 $('adSort').addEventListener('change',applyAdFilters);
 $('cityFilter').addEventListener('input',applyAdFilters);
