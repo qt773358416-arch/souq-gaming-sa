@@ -268,6 +268,27 @@ body.theme-dark .store-hero-actions span{background:#172b38;color:#dceff5;border
 
 </style>
 
+
+<style id="store-square-ad-cards">
+#storeProducts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:stretch}
+#storeProducts .store-square-card{min-width:0;overflow:hidden;border:1px solid var(--line);border-radius:17px;background:var(--panel);display:flex;flex-direction:column;box-shadow:0 5px 18px rgba(0,0,0,.13)}
+#storeProducts .store-square-image{position:relative;width:100%;aspect-ratio:1/1;overflow:hidden;background:#101c26;display:grid;place-items:center}
+#storeProducts .store-square-image img{display:block;width:100%;height:100%;object-fit:cover}
+#storeProducts .store-square-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;width:100%;height:100%;color:var(--muted);font-size:28px;background:linear-gradient(145deg,#152632,#1b2b37)}
+#storeProducts .store-square-placeholder span{font-size:12px}
+#storeProducts .store-square-body{padding:10px;display:flex;flex-direction:column;gap:8px;flex:1;min-width:0}
+#storeProducts .store-square-tags{display:flex;gap:5px;flex-wrap:wrap}
+#storeProducts .store-square-tags .ad-tag{font-size:10px;padding:4px 7px;border-radius:20px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#storeProducts .store-square-body h3{font-size:14px;line-height:1.45;margin:0;min-height:2.8em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;color:var(--text)}
+#storeProducts .store-square-price{font-size:19px;font-weight:900;color:var(--brand);white-space:nowrap}
+#storeProducts .store-square-price small{font-size:11px;font-weight:700}
+#storeProducts .store-square-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:auto}
+#storeProducts .store-square-actions button{min-width:0;padding:8px 5px;font-size:12px;border-radius:10px;min-height:37px}
+#storeProducts .store-square-actions .secondary{background:var(--panel2);border:1px solid var(--line);color:var(--text)}
+@media(min-width:700px){#storeProducts{grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}#storeProducts .store-square-body{padding:12px}#storeProducts .store-square-body h3{font-size:15px}}
+@media(max-width:360px){#storeProducts{gap:8px}#storeProducts .store-square-body{padding:8px;gap:6px}#storeProducts .store-square-body h3{font-size:12px}#storeProducts .store-square-price{font-size:16px}#storeProducts .store-square-actions button{font-size:11px;padding:7px 3px}}
+</style>
+
 </head>
 <body class="theme-dark">
 <div class="wrap">
@@ -544,18 +565,12 @@ function clearStoreFilters(){
  document.querySelectorAll('[data-store-category]').forEach(x=>x.classList.toggle('selected',!x.dataset.storeCategory));
  renderStoreProducts();
 }
-function renderStoreProducts(){
+ function renderStoreProducts(){
  const box=$('storeProducts');if(!box)return;
  let rows=(adsCache||[]).filter(a=>a.status==='published');
  const rawTerm=($('storeSearch')?.value||'').trim();
  const term=normalizeStoreText(rawTerm);
- if(term){
-  const words=term.split(' ').filter(Boolean);
-  rows=rows.filter(a=>{
-   const hay=normalizeStoreText([a.title,a.description,a.category,a.seller_name,a.condition,a.city,a.location].join(' '));
-   return hay.includes(term)||words.every(w=>hay.includes(w));
-  });
- }
+ if(term){const words=term.split(' ').filter(Boolean);rows=rows.filter(a=>{const hay=normalizeStoreText([a.title,a.description,a.category,a.seller_name,a.condition,a.city,a.location].join(' '));return hay.includes(term)||words.every(w=>hay.includes(w));});}
  if(selectedStoreCategory)rows=rows.filter(a=>a.category===selectedStoreCategory);
  const minVal=$('storeMinPrice')?.value??'',maxVal=$('storeMaxPrice')?.value??'';
  const condition=$('storeCondition')?.value||'',imagesOnly=!!$('storeImagesOnly')?.checked;
@@ -564,34 +579,15 @@ function renderStoreProducts(){
  if(condition)rows=rows.filter(a=>normalizeStoreText(a.condition)===normalizeStoreText(condition));
  if(imagesOnly)rows=rows.filter(a=>Array.isArray(a.image_urls)&&a.image_urls.some(Boolean));
  const order=$('storeSort')?.value||'newest';
- rows.sort((a,b)=>{
-  if(order==='price_low')return Number(a.price||0)-Number(b.price||0);
-  if(order==='price_high')return Number(b.price||0)-Number(a.price||0);
-  if(order==='title')return String(a.title||'').localeCompare(String(b.title||''),'ar');
-  return new Date(b.created_at||0)-new Date(a.created_at||0);
- });
+ rows.sort((a,b)=>{if(order==='price_low')return Number(a.price||0)-Number(b.price||0);if(order==='price_high')return Number(b.price||0)-Number(a.price||0);if(order==='title')return String(a.title||'').localeCompare(String(b.title||''),'ar');return new Date(b.created_at||0)-new Date(a.created_at||0);});
  const count=$('storeCount');if(count)count.textContent=rows.length.toLocaleString('ar-SA')+' منتج';
- const subtitle=$('storeResultsSubtitle');
- if(subtitle)subtitle.textContent=rawTerm?'نتائج البحث عن «'+rawTerm.replace(/[<>]/g,'')+'»':'تصفح المنتجات المتاحة';
- const active=$('storeActiveFilters');
- if(active){
-  const tags=[];
-  if(selectedStoreCategory)tags.push('القسم: '+selectedStoreCategory);
-  if(minVal!=='')tags.push('من '+minVal+' ر.س');
-  if(maxVal!=='')tags.push('إلى '+maxVal+' ر.س');
-  if(condition)tags.push('الحالة: '+condition);
-  if(imagesOnly)tags.push('بصور فقط');
-  if(rawTerm)tags.push('بحث: '+rawTerm);
-  active.innerHTML=tags.map(t=>'<span class="store-filter-chip">'+esc(t)+'</span>').join('');
- }
- if(!rows.length){
-  box.innerHTML='<div class="empty" style="grid-column:1/-1"><div style="font-size:32px;margin-bottom:8px">⌕</div><strong>لم نعثر على منتجات مطابقة</strong><p>جرّب كلمة بحث مختلفة أو خفّف الفلاتر.</p><button class="secondary" type="button" onclick="clearStoreFilters()">مسح الفلاتر</button></div>';
-  return;
- }
+ const subtitle=$('storeResultsSubtitle');if(subtitle)subtitle.textContent=rawTerm?'نتائج البحث عن «'+rawTerm.replace(/[<>]/g,'')+'»':'تصفح المنتجات المتاحة';
+ const active=$('storeActiveFilters');if(active){const tags=[];if(selectedStoreCategory)tags.push('القسم: '+selectedStoreCategory);if(minVal!=='')tags.push('من '+minVal+' ر.س');if(maxVal!=='')tags.push('إلى '+maxVal+' ر.س');if(condition)tags.push('الحالة: '+condition);if(imagesOnly)tags.push('بصور فقط');if(rawTerm)tags.push('بحث: '+rawTerm);active.innerHTML=tags.map(t=>'<span class="store-filter-chip">'+esc(t)+'</span>').join('');}
+ if(!rows.length){box.innerHTML='<div class="empty" style="grid-column:1/-1"><div style="font-size:32px;margin-bottom:8px">⌕</div><strong>لم نعثر على منتجات مطابقة</strong><p>جرّب كلمة بحث مختلفة أو خفّف الفلاتر.</p><button class="secondary" type="button" onclick="clearStoreFilters()">مسح الفلاتر</button></div>';return;}
  box.innerHTML=rows.map(a=>{
   const img=Array.isArray(a.image_urls)&&a.image_urls.length?a.image_urls[0]:'';
   const id=String(a.id||'').replace(/'/g,'');
-  return `<article class="card store-product-card"><div class="ad-image-wrap">${img?`<img class="adimg" src="${esc(img)}" alt="${esc(a.title)}" loading="lazy" onerror="this.style.display='none'">`:'<div class="adimg ad-placeholder" aria-label="لا توجد صورة">لا توجد صورة</div>'}</div><div class="adbody"><div class="ad-badges"><span class="ad-tag">${esc(a.category||'منتج')}</span><span class="ad-tag condition-tag">${esc(a.condition||'غير محدد')}</span></div><h3>${esc(a.title||'منتج')}</h3><div class="price">${Number(a.price||0).toLocaleString('ar-SA')} <small>ر.س</small></div><p class="ad-description">${esc((a.description||'').slice(0,100))}${(a.description||'').length>100?'…':''}</p><div class="meta">📍 ${esc(a.city||a.location||'السعودية')}</div><button class="primary store-open" type="button" onclick="openAdDetail('${id}')">عرض المنتج والتواصل</button></div></article>`;
+  return `<article class="card store-product-card store-square-card"><div class="store-square-image">${img?`<img src="${esc(img)}" alt="${esc(a.title||'صورة المنتج')}" loading="lazy" onerror="this.style.display='none';this.parentElement.classList.add('no-image')">`:'<div class="store-square-placeholder">🎮<span>لا توجد صورة</span></div>'}</div><div class="store-square-body"><div class="store-square-tags"><span class="ad-tag">${esc(a.category||'منتج')}</span><span class="ad-tag condition-tag">${esc(a.condition||'مستعمل')}</span></div><h3 title="${esc(a.title||'منتج')}">${esc(a.title||'منتج')}</h3><div class="store-square-price">${Number(a.price||0).toLocaleString('ar-SA')} <small>ر.س</small></div><div class="store-square-actions"><button class="primary" type="button" onclick="openAdDetail('${id}')">التفاصيل</button><button class="secondary" type="button" onclick="openAdDetail('${id}')">تواصل</button></div></div></article>`;
  }).join('');
 }
 document.querySelectorAll('[data-store-category]').forEach(button=>button.addEventListener('click',()=>{
