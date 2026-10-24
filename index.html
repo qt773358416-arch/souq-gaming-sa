@@ -115,7 +115,7 @@ button:focus-visible{outline:3px solid #55c9df!important;outline-offset:2px}
  .store-intro{padding:15px}.store-intro h1{font-size:21px}.store-toolbar{grid-template-columns:1fr}.store-product-card .adimg{height:125px}
 }
 
-.listing-tools{padding:12px!important;margin:12px 0!important;border-radius:14px!important}.listing-quick-actions{display:flex;gap:7px;flex-wrap:wrap}.listing-quick-actions button{flex:1 1 120px;min-height:40px}.listing-advanced{margin-top:9px}.listing-advanced[hidden]{display:none!important}.listing-tools .filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.listing-tools .field,.listing-tools .image-filter,.listing-tools #clearFilters{min-width:0;min-height:40px;padding:9px 10px}.ad-description{display:none!important}.media-preview{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.media-item{position:relative;display:flex;flex-direction:column;gap:4px}.media-preview img{width:84px;height:84px;object-fit:cover;border-radius:10px;border:1px solid var(--line)}.media-remove{font-size:11px;padding:5px 8px;background:#4a2028;color:#fff;border:1px solid #7e3642;border-radius:8px}.media-preview video{width:min(260px,100%);max-height:180px;border-radius:10px;background:#000}.pledge-check{display:flex;align-items:center;gap:8px;color:var(--text);margin-top:8px}.pledge-check input{width:18px;height:18px;flex:0 0 auto}.media-editor .row{margin-top:8px}@media(max-width:480px){.listing-tools .filters{grid-template-columns:1fr 1fr}.listing-quick-actions button{flex:1 1 42%;font-size:12px;padding:9px}.media-preview img{width:70px;height:70px}}
+.listing-tools{padding:12px!important;margin:12px 0!important;border-radius:14px!important}.listing-quick-actions{display:flex;gap:7px;flex-wrap:wrap}.listing-quick-actions button{flex:1 1 120px;min-height:40px}.listing-advanced{margin-top:9px}.listing-advanced[hidden]{display:none!important}.listing-tools .filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.listing-tools .field,.listing-tools .image-filter,.listing-tools #clearFilters{min-width:0;min-height:40px;padding:9px 10px}.ad-description{display:none!important}.media-preview{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.media-preview img{width:84px;height:84px;object-fit:cover;border-radius:10px;border:1px solid var(--line)}.media-preview video{width:min(260px,100%);max-height:180px;border-radius:10px;background:#000}.pledge-check{display:flex;align-items:center;gap:8px;color:var(--text);margin-top:8px}.pledge-check input{width:18px;height:18px;flex:0 0 auto}.media-editor .row{margin-top:8px}@media(max-width:480px){.listing-tools .filters{grid-template-columns:1fr 1fr}.listing-quick-actions button{flex:1 1 42%;font-size:12px;padding:9px}.media-preview img{width:70px;height:70px}}
 </style>
 
 <style id="account-page-refresh">
@@ -347,12 +347,22 @@ body.theme-dark .store-hero-actions span{background:#172b38;color:#dceff5;border
 <div class="store-intro">
   <div class="store-kicker">SOUQ GAMING · STORE</div>
   <h1>متجر سوق القيمنق</h1>
-  <p>تسوّق أجهزة الكمبيوتر والقيمنق والإلكترونيات. اختر المنتج، ثم أرسل طلبك مع موقعك وعنوان التوصيل.</p>
+  <p>اكتشف أجهزة الكمبيوتر والقيمنق والإلكترونيات وملحقاتها. ابحث، صفِّ النتائج، واحفظ المنتجات التي تهمك.</p>
   <div class="store-hero-actions"><span>🎮 أجهزة وملحقات</span><span>🖥️ كمبيوتر وقطع PC</span><span>📱 إلكترونيات</span></div>
 </div>
 <div class="store-toolbar">
   <div class="store-search-wrap"><span aria-hidden="true">⌕</span><input id="storeSearch" class="field" placeholder="ابحث باسم المنتج أو الوصف أو القسم..." aria-label="البحث في المتجر" autocomplete="off"><button id="storeSearchClear" class="secondary" type="button" aria-label="مسح البحث">مسح</button></div>
   <select id="storeSort" class="field" aria-label="ترتيب منتجات المتجر"><option value="newest">الأحدث أولًا</option><option value="price_low">السعر الأقل</option><option value="price_high">السعر الأعلى</option><option value="title">الاسم أ إلى ي</option></select>
+</div>
+<div class="store-filter-panel">
+  <div class="store-filter-heading"><strong>تصفية المنتجات</strong><button id="storeClearFilters" class="linkbtn" type="button">مسح جميع الفلاتر</button></div>
+  <div class="store-filters">
+    <label>السعر من (ر.س)<input id="storeMinPrice" class="field" type="number" min="0" step="1" placeholder="0"></label>
+    <label>السعر إلى (ر.س)<input id="storeMaxPrice" class="field" type="number" min="0" step="1" placeholder="بدون حد"></label>
+    <label>حالة المنتج<select id="storeCondition" class="field"><option value="">كل الحالات</option><option value="جديد">جديد</option><option value="شبه جديد">شبه جديد</option><option value="مستعمل">مستعمل</option></select></label>
+    <label class="store-check-filter"><input id="storeImagesOnly" type="checkbox"> منتجات لها صور</label>
+  </div>
+  <div id="storeActiveFilters" class="store-active-filters" aria-live="polite"></div>
 </div>
 <div class="store-categories" id="storeCategories"><button class="chip selected" data-store-category="">كل المنتجات</button><button class="chip" data-store-category="كمبيوترات">كمبيوترات</button><button class="chip" data-store-category="قطع الكمبيوتر">قطع الكمبيوتر</button><button class="chip" data-store-category="أجهزة الألعاب">أجهزة الألعاب</button><button class="chip" data-store-category="شاشات وملحقات">شاشات وملحقات</button><button class="chip" data-store-category="جوالات وإلكترونيات">إلكترونيات</button><button class="chip" data-store-category="خدمات وصيانة">خدمات وصيانة</button></div>
 <div class="store-results-heading"><div><h2>منتجات المتجر</h2><p id="storeResultsSubtitle">تصفح المنتجات المتاحة</p></div><span class="store-count-pill" id="storeCount">0 منتج</span></div>
@@ -527,10 +537,9 @@ $('contactForm').onsubmit=async e=>{e.preventDefault();const submit=$('contactFo
 
 let adsCache=[];
 let removeExistingImages=false, removeExistingVideo=false;
-let removedExistingImageUrls=new Set();
 const COMMISSION_RATE=0.02;
-function renderMediaPreviews(){const imgBox=$('adImagePreview'),vidBox=$('adVideoPreview');if(imgBox){const urls=removeExistingImages?[]:(editingAd?.image_urls||[]).filter(u=>!removedExistingImageUrls.has(u));imgBox.innerHTML=urls.map((u,i)=>`<div class="media-item"><img src="${esc(u)}" alt="صورة حالية ${i+1}"><button type="button" class="media-remove" data-remove-image="${encodeURIComponent(u)}" aria-label="إزالة الصورة">إزالة</button></div>`).join('');imgBox.querySelectorAll('[data-remove-image]').forEach(btn=>btn.addEventListener('click',()=>{try{removedExistingImageUrls.add(decodeURIComponent(btn.dataset.removeImage));renderMediaPreviews();if($('imageStatus'))$('imageStatus').textContent='ستُزال الصورة المحددة عند حفظ التعديل.';}catch{}}));}if(vidBox){const url=removeExistingVideo?'':(editingAd?.video_url||'');vidBox.innerHTML=url?`<video controls src="${esc(url)}"></video>`:'';}}
-function resetMediaFlags(){removeExistingImages=false;removeExistingVideo=false;removedExistingImageUrls=new Set();if($('adImages'))$('adImages').value='';if($('adVideo'))$('adVideo').value='';if($('commissionAgree'))$('commissionAgree').checked=false;renderMediaPreviews();}
+function renderMediaPreviews(){const imgBox=$('adImagePreview'),vidBox=$('adVideoPreview');if(imgBox){const urls=removeExistingImages?[]:(editingAd?.image_urls||[]);imgBox.innerHTML=urls.map(u=>`<img src="${esc(u)}" alt="صورة حالية">`).join('');}if(vidBox){const url=removeExistingVideo?'':(editingAd?.video_url||'');vidBox.innerHTML=url?`<video controls src="${esc(url)}"></video>`:'';}}
+function resetMediaFlags(){removeExistingImages=false;removeExistingVideo=false;if($('adImages'))$('adImages').value='';if($('adVideo'))$('adVideo').value='';if($('commissionAgree'))$('commissionAgree').checked=false;renderMediaPreviews();}
 let adSortOrder='newest';
 let onlyAdsWithImages=false;
 let cityFilterValue='';
@@ -579,6 +588,10 @@ function normalizeStoreText(value){
 }
 function clearStoreFilters(){
  if($('storeSearch'))$('storeSearch').value='';
+ if($('storeMinPrice'))$('storeMinPrice').value='';
+ if($('storeMaxPrice'))$('storeMaxPrice').value='';
+ if($('storeCondition'))$('storeCondition').value='';
+ if($('storeImagesOnly'))$('storeImagesOnly').checked=false;
  if($('storeSort'))$('storeSort').value='newest';
  selectedStoreCategory='';
  document.querySelectorAll('[data-store-category]').forEach(x=>x.classList.toggle('selected',!x.dataset.storeCategory));
@@ -591,16 +604,22 @@ function clearStoreFilters(){
  const term=normalizeStoreText(rawTerm);
  if(term){const words=term.split(' ').filter(Boolean);rows=rows.filter(a=>{const hay=normalizeStoreText([a.title,a.description,a.category,a.seller_name,a.condition,a.city,a.location].join(' '));return hay.includes(term)||words.every(w=>hay.includes(w));});}
  if(selectedStoreCategory)rows=rows.filter(a=>a.category===selectedStoreCategory);
+ const minVal=$('storeMinPrice')?.value??'',maxVal=$('storeMaxPrice')?.value??'';
+ const condition=$('storeCondition')?.value||'',imagesOnly=!!$('storeImagesOnly')?.checked;
+ if(minVal!==''&&Number.isFinite(Number(minVal)))rows=rows.filter(a=>Number(a.price||0)>=Number(minVal));
+ if(maxVal!==''&&Number.isFinite(Number(maxVal)))rows=rows.filter(a=>Number(a.price||0)<=Number(maxVal));
+ if(condition)rows=rows.filter(a=>normalizeStoreText(a.condition)===normalizeStoreText(condition));
+ if(imagesOnly)rows=rows.filter(a=>Array.isArray(a.image_urls)&&a.image_urls.some(Boolean));
  const order=$('storeSort')?.value||'newest';
  rows.sort((a,b)=>{if(order==='price_low')return Number(a.price||0)-Number(b.price||0);if(order==='price_high')return Number(b.price||0)-Number(a.price||0);if(order==='title')return String(a.title||'').localeCompare(String(b.title||''),'ar');return new Date(b.created_at||0)-new Date(a.created_at||0);});
  const count=$('storeCount');if(count)count.textContent=rows.length.toLocaleString('ar-SA')+' منتج';
  const subtitle=$('storeResultsSubtitle');if(subtitle)subtitle.textContent=rawTerm?'نتائج البحث عن «'+rawTerm.replace(/[<>]/g,'')+'»':'تصفح المنتجات المتاحة';
  const active=$('storeActiveFilters');if(active){const tags=[];if(selectedStoreCategory)tags.push('القسم: '+selectedStoreCategory);if(minVal!=='')tags.push('من '+minVal+' ر.س');if(maxVal!=='')tags.push('إلى '+maxVal+' ر.س');if(condition)tags.push('الحالة: '+condition);if(imagesOnly)tags.push('بصور فقط');if(rawTerm)tags.push('بحث: '+rawTerm);active.innerHTML=tags.map(t=>'<span class="store-filter-chip">'+esc(t)+'</span>').join('');}
- if(!rows.length){box.innerHTML='<div class="empty" style="grid-column:1/-1"><div style="font-size:32px;margin-bottom:8px">⌕</div><strong>لم نعثر على منتجات مطابقة</strong><p>جرّب كلمة بحث مختلفة أو اختر قسمًا آخر.</p><button class="secondary" type="button" onclick="clearStoreFilters()">مسح الفلاتر</button></div>';return;}
+ if(!rows.length){box.innerHTML='<div class="empty" style="grid-column:1/-1"><div style="font-size:32px;margin-bottom:8px">⌕</div><strong>لم نعثر على منتجات مطابقة</strong><p>جرّب كلمة بحث مختلفة أو خفّف الفلاتر.</p><button class="secondary" type="button" onclick="clearStoreFilters()">مسح الفلاتر</button></div>';return;}
  box.innerHTML=rows.map(a=>{
   const img=Array.isArray(a.image_urls)&&a.image_urls.length?a.image_urls[0]:'';
   const id=String(a.id||'').replace(/'/g,'');
-  return `<article class="card store-product-card store-square-card"><div class="store-square-image">${img?`<img src="${esc(img)}" alt="${esc(a.title||'صورة المنتج')}" loading="lazy" onerror="this.style.display='none';this.parentElement.classList.add('no-image')">`:'<div class="store-square-placeholder">🎮<span>لا توجد صورة</span></div>'}</div><div class="store-square-body"><div class="store-square-tags"><span class="ad-tag">${esc(a.category||'منتج')}</span><span class="ad-tag condition-tag">${esc(a.condition||'مستعمل')}</span></div><h3 title="${esc(a.title||'منتج')}">${esc(a.title||'منتج')}</h3><div class="store-square-price">${Number(a.price||0).toLocaleString('ar-SA')} <small>ر.س</small></div><div class="store-square-actions"><button class="primary" type="button" onclick="openAdDetail('${id}')">التفاصيل</button><button class="secondary" type="button" onclick="openStoreOrder('${id}')">اطلب المنتج</button></div></div></article>`;
+  return `<article class="card store-product-card store-square-card"><div class="store-square-image">${img?`<img src="${esc(img)}" alt="${esc(a.title||'صورة المنتج')}" loading="lazy" onerror="this.style.display='none';this.parentElement.classList.add('no-image')">`:'<div class="store-square-placeholder">🎮<span>لا توجد صورة</span></div>'}</div><div class="store-square-body"><div class="store-square-tags"><span class="ad-tag">${esc(a.category||'منتج')}</span><span class="ad-tag condition-tag">${esc(a.condition||'مستعمل')}</span></div><h3 title="${esc(a.title||'منتج')}">${esc(a.title||'منتج')}</h3><div class="store-square-price">${Number(a.price||0).toLocaleString('ar-SA')} <small>ر.س</small></div><div class="store-square-actions"><button class="primary" type="button" onclick="openAdDetail('${id}')">التفاصيل</button><button class="secondary" type="button" onclick="openAdDetail('${id}')">تواصل</button></div></div></article>`;
  }).join('');
 }
 document.querySelectorAll('[data-store-category]').forEach(button=>button.addEventListener('click',()=>{
@@ -608,10 +627,11 @@ document.querySelectorAll('[data-store-category]').forEach(button=>button.addEve
  document.querySelectorAll('[data-store-category]').forEach(item=>item.classList.toggle('selected',item===button));
  renderStoreProducts();
 }));
-$('storeSearch')?.addEventListener('input',renderStoreProducts);
+['storeSearch','storeMinPrice','storeMaxPrice','storeCondition'].forEach(id=>$(id)?.addEventListener('input',renderStoreProducts));
+$('storeImagesOnly')?.addEventListener('change',renderStoreProducts);
 $('storeSort')?.addEventListener('change',renderStoreProducts);
 $('storeSearchClear')?.addEventListener('click',()=>{if($('storeSearch'))$('storeSearch').value='';renderStoreProducts();$('storeSearch')?.focus();});
-
+$('storeClearFilters')?.addEventListener('click',clearStoreFilters);
 $('toggleListingFilters').addEventListener('click',()=>{const panel=$('listingAdvanced'),open=panel.hidden;panel.hidden=!open;$('toggleListingFilters').setAttribute('aria-expanded',String(open));$('toggleListingFilters').textContent=open?'✕ إخفاء الفلاتر':'⚙️ الفلاتر والترتيب';});
 $('quickPriceLow').addEventListener('click',()=>{$('adSort').value='price_low';applyAdFilters();$('quickPriceLow').classList.add('active');$('quickPriceHigh').classList.remove('active');});
 $('quickPriceHigh').addEventListener('click',()=>{$('adSort').value='price_high';applyAdFilters();$('quickPriceHigh').classList.add('active');$('quickPriceLow').classList.remove('active');});
@@ -697,12 +717,12 @@ $('cancelEdit').onclick=()=>resetAdForm();renderMediaPreviews();
 function resetAdForm(){$('adForm').reset();$('editId').value='';editingAd=null;resetMediaFlags();$('adFormTitle').textContent='إضافة إعلان جديد';$('saveAd').textContent='نشر الإعلان';$('cancelEdit').classList.add('hidden');msg('adFormMsg','')}
 window.deleteAd=async id=>{if(!currentUser)return;const {data:ad,error:adErr}=await sb.from('ads').select('*').eq('id',id).eq('seller_id',currentUser.id).single();if(adErr||!ad){alert('تعذر العثور على الإعلان.');return;}const {data:sales,error:salesErr}=await sb.from('sales_ledger').select('id,sale_price,commission_rate,commission_amount,payment_status').eq('ad_id',id).limit(10);if(salesErr){alert('قبل الحذف، شغّل ملف SQL المرفق لإنشاء سجل المبيعات والعمولات. لم يتم حذف الإعلان.');return;}const sold=(sales||[]).filter(x=>Number(x.sale_price)>0);if(sold.length){const due=sold.reduce((sum,x)=>sum+(x.payment_status==='paid'?0:Number(x.commission_amount||Number(x.sale_price)*Number(x.commission_rate||COMMISSION_RATE))),0);const details=sold.map(x=>`بيع مسجل: ${Number(x.sale_price).toLocaleString('ar-SA')} ر.س — العمولة ${Number(x.commission_amount||Number(x.sale_price)*Number(x.commission_rate||COMMISSION_RATE)).toLocaleString('ar-SA')} ر.س`).join('\n');if(!confirm(`تنبيه: يوجد بيع مسجل لهذا المنتج.\n${details}\nإجمالي العمولة غير المسددة: ${due.toLocaleString('ar-SA')} ر.س.\nيجب تحويل المبلغ إلى حساب المنصة وإرسال إثبات التحويل.\nسيتم أرشفة الإعلان للحفاظ على السجل المالي. متابعة؟`))return;const {error:archErr}=await sb.from('ads').update({status:'archived'}).eq('id',id).eq('seller_id',currentUser.id);if(archErr){alert('تعذرت أرشفة الإعلان.');return;}alert(`المبلغ المستحق المسجل: ${due.toLocaleString('ar-SA')} ر.س. بيانات الحساب البنكي ستظهر بعد إضافتها في إعدادات المنصة. سجّل التحويل في سجل العمولات.`);}else{if(!confirm('لم يُعثر على بيع مسجل لهذا الإعلان. هل تريد أرشفته؟'))return;const {error:archErr}=await sb.from('ads').update({status:'archived'}).eq('id',id).eq('seller_id',currentUser.id);if(archErr){alert('تعذرت أرشفة الإعلان.');return;}}await loadMyAds('myAds');await loadMyAds('myAdsPage');await loadAds()};
 $('adForm').onsubmit=async e=>{e.preventDefault();if(!needAuth())return;if(!$('commissionAgree').checked){msg('adFormMsg','وافق على تعهد العمولة بنسبة 2% قبل الحفظ.');$('commissionAgree').focus();return;}const title=$('adTitle').value.trim(),price=Number($('adPrice').value),category=$('adCategory').value,description=$('adDesc').value.trim(),seller_name=$('sellerName').value.trim(),seller_phone=$('sellerPhone').value.trim();if(!title||!category||!description||!seller_name||!seller_phone||!Number.isFinite(price)||price<0){msg('adFormMsg','أكمل البيانات المطلوبة.');return;}msg('adFormMsg','جارٍ حفظ الإعلان والوسائط...');$('saveAd').disabled=true;
-let image_urls=(removeExistingImages?[]:(editingAd?.image_urls||[]).filter(u=>!removedExistingImageUrls.has(u)));const files=[...$('adImages').files].slice(0,5);if(files.length){let uploaded=[];for(const f of files){if(!f.type.startsWith('image/'))continue;if(f.size>5*1024*1024){msg('adFormMsg','حجم الصورة الواحدة يجب ألا يتجاوز 5 ميغابايت.');$('saveAd').disabled=false;return;}const path=`${currentUser.id}/${Date.now()}-${Math.random().toString(36).slice(2)}-${f.name.replace(/[^a-zA-Z0-9._-]/g,'_')}`;const {error:upErr}=await sb.storage.from('ad-images').upload(path,f,{upsert:false});if(upErr){msg('adFormMsg','تعذر رفع الصور. تأكد من إعداد bucket باسم ad-images وسياساته.');$('saveAd').disabled=false;return;}const {data:urlData}=sb.storage.from('ad-images').getPublicUrl(path);uploaded.push(urlData.publicUrl);}image_urls=[...image_urls,...uploaded];}if(image_urls.length>5){msg('adFormMsg','الحد الأقصى 5 صور. أزل بعض الصور الحالية أو اختر عددًا أقل.');$('saveAd').disabled=false;return;}
+let image_urls=(removeExistingImages?[]:(editingAd?.image_urls||[]));const files=[...$('adImages').files].slice(0,5);if(files.length){let uploaded=[];for(const f of files){if(!f.type.startsWith('image/'))continue;if(f.size>5*1024*1024){msg('adFormMsg','حجم الصورة الواحدة يجب ألا يتجاوز 5 ميغابايت.');$('saveAd').disabled=false;return;}const path=`${currentUser.id}/${Date.now()}-${Math.random().toString(36).slice(2)}-${f.name.replace(/[^a-zA-Z0-9._-]/g,'_')}`;const {error:upErr}=await sb.storage.from('ad-images').upload(path,f,{upsert:false});if(upErr){msg('adFormMsg','تعذر رفع الصور. تأكد من إعداد bucket باسم ad-images وسياساته.');$('saveAd').disabled=false;return;}const {data:urlData}=sb.storage.from('ad-images').getPublicUrl(path);uploaded.push(urlData.publicUrl);}image_urls=uploaded;}
 let video_url=removeExistingVideo?'':(editingAd?.video_url||'');const videoFile=$('adVideo').files?.[0];if(videoFile){if(!videoFile.type.startsWith('video/')){msg('adFormMsg','اختر ملف فيديو صحيحًا.');$('saveAd').disabled=false;return;}if(videoFile.size>50*1024*1024){msg('adFormMsg','حجم الفيديو يجب ألا يتجاوز 50 ميغابايت.');$('saveAd').disabled=false;return;}const path=`${currentUser.id}/${Date.now()}-${Math.random().toString(36).slice(2)}-${videoFile.name.replace(/[^a-zA-Z0-9._-]/g,'_')}`;const {error:upErr}=await sb.storage.from('ad-videos').upload(path,videoFile,{upsert:false});if(upErr){msg('adFormMsg','تعذر رفع الفيديو. أنشئ bucket باسم ad-videos واضبط سياساته في Supabase.');$('saveAd').disabled=false;return;}video_url=sb.storage.from('ad-videos').getPublicUrl(path).data.publicUrl;}
 const payload={title,price,category,description,seller_name,seller_phone,condition:$('adCondition').value,city:$('adCity').value.trim(),image_urls,video_url,status:editingAd?(editingAd.status||'pending'):'pending',seller_id:currentUser.id,commission_rate:COMMISSION_RATE,commission_terms_accepted:true,commission_terms_accepted_at:new Date().toISOString()};
 let result;if(editingAd){result=await sb.from('ads').update(payload).eq('id',editingAd.id).eq('seller_id',currentUser.id);}else{result=await sb.from('ads').insert(payload);}
 $('saveAd').disabled=false;if(result.error){msg('adFormMsg','تعذر الحفظ. تأكد من تشغيل ملف SQL المرفق: '+result.error.message);return;}msg('adFormMsg','تم الحفظ. الإعلان بانتظار المراجعة.');resetAdForm();await loadAds();await loadMyAds('myAds');await loadMyAds('myAdsPage');showPage('myads');};
-$('removeAdImages')?.addEventListener('click',()=>{removeExistingImages=true;removedExistingImageUrls=new Set();if($('adImages'))$('adImages').value='';renderMediaPreviews();$('imageStatus').textContent='ستُزال جميع الصور الحالية عند حفظ التعديل.';});
+$('removeAdImages')?.addEventListener('click',()=>{removeExistingImages=true;if($('adImages'))$('adImages').value='';renderMediaPreviews();$('imageStatus').textContent='ستُزال الصور الحالية عند حفظ التعديل.';});
 $('removeAdVideo')?.addEventListener('click',()=>{removeExistingVideo=true;if($('adVideo'))$('adVideo').value='';renderMediaPreviews();$('videoStatus').textContent='ستتم إزالة الفيديو الحالي عند الحفظ.';});
 $('adImages')?.addEventListener('change',()=>{const box=$('adImagePreview');if(box){box.innerHTML='';[...$('adImages').files].slice(0,5).forEach(file=>{const img=document.createElement('img');img.alt='معاينة صورة جديدة';img.src=URL.createObjectURL(file);box.appendChild(img);});}if($('adImages').files.length)removeExistingImages=false;});
 $('adVideo')?.addEventListener('change',()=>{const box=$('adVideoPreview');if(box){box.innerHTML='';const file=$('adVideo').files?.[0];if(file){const v=document.createElement('video');v.controls=true;v.src=URL.createObjectURL(file);box.appendChild(v);removeExistingVideo=false;}}});
@@ -743,37 +763,5 @@ sb.auth.onAuthStateChange((_event,session)=>{
  if(currentUser){void loadProfile().catch(err=>console.error('Profile refresh failed:',err));}
  else{profile=null;}
 });
-</script>
-
-<div id="storeOrderModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="storeOrderTitle" style="position:fixed;inset:0;z-index:10000;background:#000b;display:flex;align-items:center;justify-content:center;padding:14px;overflow:auto">
- <div class="panel" style="width:min(620px,100%);max-height:94vh;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px">
-  <div class="pagehead"><div><h2 id="storeOrderTitle">طلب المنتج</h2><p class="muted">أدخل موقع الاستلام والعنوان بالتفصيل.</p></div><button type="button" class="secondary" onclick="closeStoreOrder()">إغلاق ✕</button></div>
-  <div id="storeOrderProduct" class="page-note" style="margin-bottom:12px"></div>
-  <form id="storeOrderForm" class="formgrid">
-   <input type="hidden" id="storeOrderAdId">
-   <div><label for="orderName">اسم المستلم *</label><input class="field" id="orderName" required maxlength="100" autocomplete="name"></div>
-   <div><label for="orderPhone">رقم الجوال *</label><input class="field" id="orderPhone" required type="tel" inputmode="tel" autocomplete="tel" placeholder="05xxxxxxxx" pattern="05[0-9]{8}"></div>
-   <div><label for="orderCity">المدينة *</label><select class="field" id="orderCity" required autocomplete="address-level2"><option value="">اختر المدينة</option><option>جدة</option><option>مكة المكرمة</option><option>الرياض</option><option>المدينة المنورة</option><option>الدمام</option><option>الطائف</option><option>أبها</option><option>تبوك</option><option>مدينة أخرى</option></select></div>
-   <div><label for="orderDistrict">الحي *</label><input class="field" id="orderDistrict" required maxlength="100" autocomplete="address-level3"></div>
-   <div class="full"><label for="orderAddress">العنوان بالتفصيل *</label><textarea class="field" id="orderAddress" rows="3" required maxlength="600" autocomplete="street-address" placeholder="اسم الشارع، رقم المبنى، رقم الشقة، علامة مميزة"></textarea></div>
-   <div class="full"><button class="secondary" id="orderUseLocation" type="button">📍 تحديد موقعي الحالي</button><div id="orderLocationStatus" class="muted" role="status"></div><input type="hidden" id="orderLat"><input type="hidden" id="orderLon"></div>
-   <div class="full"><label for="orderNotes">ملاحظات للتوصيل (اختياري)</label><textarea class="field" id="orderNotes" rows="2" maxlength="500"></textarea></div>
-   <div class="full notice">هذا النموذج يجمع بيانات الطلب في الواجهة فقط. لن يُرسل الطلب للبائع أو يُحفظ في قاعدة البيانات حتى يتم ربط جدول الطلبات وسياسات Supabase وتحديد طريقة الدفع والتوصيل.</div>
-   <div class="full row"><button class="primary" type="submit">مراجعة بيانات الطلب</button><button class="secondary" type="button" onclick="closeStoreOrder()">إلغاء</button></div>
-   <div id="storeOrderMessage" class="full" role="status"></div>
-  </form>
- </div>
-</div>
-<style>#storeOrderModal.hidden{display:none!important}#storeOrderModal:not(.hidden){display:flex!important}#storeOrderModal .formgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}#storeOrderModal .formgrid .full{grid-column:1/-1}@media(max-width:520px){#storeOrderModal .formgrid{grid-template-columns:1fr}#storeOrderModal .formgrid .full{grid-column:auto}}</style>
-<script>
-function openStoreOrder(id){
- const ad=(adsCache||[]).find(x=>String(x.id)===String(id));if(!ad){alert('تعذر العثور على المنتج. حدّث قائمة المتجر وحاول مجددًا.');return;}
- if(ad.status!=='published'){alert('هذا المنتج غير متاح للطلب حاليًا.');return;}
- $('storeOrderAdId').value=String(ad.id);$('storeOrderProduct').innerHTML='<strong>'+esc(ad.title||'منتج')+'</strong><div class="price" style="margin-top:6px">'+Number(ad.price||0).toLocaleString('ar-SA')+' ر.س</div>';
- $('storeOrderMessage').textContent='';$('storeOrderModal').classList.remove('hidden');document.body.style.overflow='hidden';
-}
-function closeStoreOrder(){$('storeOrderModal').classList.add('hidden');document.body.style.overflow='';}
-$('orderUseLocation')?.addEventListener('click',()=>{const status=$('orderLocationStatus');if(!navigator.geolocation){status.textContent='المتصفح لا يدعم تحديد الموقع. اكتب العنوان يدويًا.';return;}status.textContent='جارٍ طلب إذن الموقع…';navigator.geolocation.getCurrentPosition(pos=>{$('orderLat').value=pos.coords.latitude;$('orderLon').value=pos.coords.longitude;status.textContent='تم تحديد الإحداثيات. أكمل الحي والعنوان بالتفصيل.';},{enableHighAccuracy:true,timeout:10000,maximumAge:60000});});
-$('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(adsCache||[]).find(x=>String(x.id)===$('storeOrderAdId').value);if(!ad){$('storeOrderMessage').textContent='المنتج لم يعد متاحًا. حدّث الصفحة.';return;}const order={ad_id:ad.id,product_title:ad.title,price:Number(ad.price||0),recipient:$('orderName').value.trim(),phone:$('orderPhone').value.trim(),city:$('orderCity').value,district:$('orderDistrict').value.trim(),address:$('orderAddress').value.trim(),latitude:$('orderLat').value?Number($('orderLat').value):null,longitude:$('orderLon').value?Number($('orderLon').value):null,notes:$('orderNotes').value.trim()};$('storeOrderMessage').textContent='تم التحقق من الحقول محليًا، لكن لم يتم إرسال الطلب أو حفظه. يلزم ربط جدول الطلبات في Supabase قبل اعتماد الطلب فعليًا.';console.info('Store order draft (not submitted):',order);});
 </script>
 </body></html>
