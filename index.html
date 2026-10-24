@@ -758,8 +758,8 @@ sb.auth.onAuthStateChange((_event,session)=>{
    <div class="full"><label for="orderAddress">العنوان بالتفصيل *</label><textarea class="field" id="orderAddress" rows="3" required maxlength="600" autocomplete="street-address" placeholder="اسم الشارع، رقم المبنى، رقم الشقة، علامة مميزة"></textarea></div>
    <div class="full"><button class="secondary" id="orderUseLocation" type="button">📍 تحديد موقعي الحالي</button><div id="orderLocationStatus" class="muted" role="status"></div><input type="hidden" id="orderLat"><input type="hidden" id="orderLon"></div>
    <div class="full"><label for="orderNotes">ملاحظات للتوصيل (اختياري)</label><textarea class="field" id="orderNotes" rows="2" maxlength="500"></textarea></div>
-   <div class="full notice">هذا النموذج يجمع بيانات الطلب في الواجهة فقط. لن يُرسل الطلب للبائع أو يُحفظ في قاعدة البيانات حتى يتم ربط جدول الطلبات وسياسات Supabase وتحديد طريقة الدفع والتوصيل.</div>
-   <div class="full row"><button class="primary" type="submit">مراجعة بيانات الطلب</button><button class="secondary" type="button" onclick="closeStoreOrder()">إلغاء</button></div>
+   <div class="full notice">راجع بياناتك ثم اضغط «تأكيد وإرسال الطلب» لحفظ الطلب في قاعدة البيانات. لا تدخل بيانات دفع أو معلومات حساسة هنا.</div>
+   <div class="full row"><button class="primary" id="storeOrderSubmit" type="submit">مراجعة بيانات الطلب</button><button class="secondary" type="button" onclick="closeStoreOrder()">إلغاء</button></div>
    <div id="storeOrderMessage" class="full" role="status"></div>
   </form>
  </div>
@@ -773,25 +773,31 @@ function openStoreOrder(id){
  $('storeOrderMessage').textContent='';$('storeOrderModal').classList.remove('hidden');document.body.style.overflow='hidden';
 }
 function closeStoreOrder(){$('storeOrderModal').classList.add('hidden');document.body.style.overflow='';}
-$('orderUseLocation')?.addEventListener('click',()=>{
- const status=$('orderLocationStatus');
- const button=$('orderUseLocation');
- if(!navigator.geolocation){status.textContent='تحديد الموقع غير مدعوم في هذا المتصفح. اكتب العنوان يدويًا.';return;}
- button.disabled=true;
- status.textContent='جارٍ طلب إذن الموقع… إذا لم تظهر نافذة الإذن، تحقق من إعدادات الموقع في الآيفون.';
- navigator.geolocation.getCurrentPosition(pos=>{
-  $('orderLat').value=String(pos.coords.latitude);
-  $('orderLon').value=String(pos.coords.longitude);
-  status.textContent='تم تحديد موقعك بنجاح. أكمل الحي والعنوان بالتفصيل.';
-  button.disabled=false;
- },err=>{
-  button.disabled=false;
-  if(err&&err.code===1){status.textContent='لم يُسمح بالوصول إلى الموقع. فعّل إذن الموقع لهذا الموقع من إعدادات الآيفون أو المتصفح، أو أدخل العنوان يدويًا.';}
-  else if(err&&err.code===2){status.textContent='تعذر تحديد الموقع الحالي. فعّل خدمات الموقع في الآيفون وتأكد من اتصال الإنترنت، أو أدخل العنوان يدويًا.';}
-  else if(err&&err.code===3){status.textContent='انتهت مهلة تحديد الموقع. جرّب مرة أخرى في مكان مفتوح، أو أدخل العنوان يدويًا.';}
-  else{status.textContent='تعذر تحديد الموقع. تحقق من إذن الموقع وإعدادات الجهاز، أو أدخل العنوان يدويًا.';}
- },{enableHighAccuracy:false,timeout:15000,maximumAge:60000});
+$('orderUseLocation')?.addEventListener('click',()=>{const status=$('orderLocationStatus');if(!navigator.geolocation){status.textContent='المتصفح لا يدعم تحديد الموقع. اكتب العنوان يدويًا.';return;}status.textContent='جارٍ طلب إذن الموقع…';navigator.geolocation.getCurrentPosition(pos=>{$('orderLat').value=pos.coords.latitude;$('orderLon').value=pos.coords.longitude;status.textContent='تم تحديد الإحداثيات. أكمل الحي والعنوان بالتفصيل.';},{enableHighAccuracy:true,timeout:12000,maximumAge:60000},err=>{status.textContent=err.code===1?'تم رفض إذن الموقع. يمكنك إدخال العنوان يدويًا أو تفعيل الموقع للمتصفح.':err.code===3?'انتهت مهلة تحديد الموقع. حاول مرة أخرى أو أدخل العنوان يدويًا.':'تعذر تحديد الموقع. تحقق من إعدادات الموقع وحاول مرة أخرى.';});});
+let storeOrderReviewReady=false;
+$('storeOrderForm')?.addEventListener('submit',async e=>{
+ e.preventDefault();
+ const message=$('storeOrderMessage'),button=$('storeOrderSubmit');
+ const ad=(adsCache||[]).find(x=>String(x.id)===$('storeOrderAdId').value);
+ if(!ad){message.textContent='المنتج لم يعد متاحًا. حدّث الصفحة.';return;}
+ const order={ad_id:String(ad.id),product_title:String(ad.title||'منتج'),price:Number(ad.price||0),recipient:$('orderName').value.trim(),phone:$('orderPhone').value.trim(),city:$('orderCity').value,district:$('orderDistrict').value.trim(),address:$('orderAddress').value.trim(),latitude:$('orderLat').value?Number($('orderLat').value):null,longitude:$('orderLon').value?Number($('orderLon').value):null,notes:$('orderNotes').value.trim(),status:'pending'};
+ if(!storeOrderReviewReady){
+  message.textContent='مراجعة الطلب: '+order.product_title+' — '+order.price.toLocaleString('ar-SA')+' ر.س. المستلم: '+order.recipient+'، الجوال: '+order.phone+'، المدينة: '+order.city+'، الحي: '+order.district+'. اضغط «تأكيد وإرسال الطلب» للحفظ.';
+  storeOrderReviewReady=true;button.textContent='تأكيد وإرسال الطلب';return;
+ }
+ button.disabled=true;button.textContent='جارٍ إرسال الطلب…';message.textContent='';
+ try{
+  const {error}=await sb.from('orders').insert(order);
+  if(error) throw error;
+  message.textContent='تم إرسال الطلب وحفظه بنجاح. يمكنك إغلاق النافذة الآن.';
+  button.textContent='تم إرسال الطلب';
+  $('storeOrderForm').querySelectorAll('input,select,textarea').forEach(el=>{if(el.type!=='hidden')el.disabled=true;});
+ }catch(err){
+  console.error('Order submit failed:',err);
+  message.textContent='تعذر حفظ الطلب. تأكد من تنفيذ ملف SQL المرفق وتحديث الصفحة. التفاصيل: '+(err?.message||'خطأ غير معروف');
+  button.disabled=false;button.textContent='إعادة المحاولة';
+ }
 });
-$('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(adsCache||[]).find(x=>String(x.id)===$('storeOrderAdId').value);if(!ad){$('storeOrderMessage').textContent='المنتج لم يعد متاحًا. حدّث الصفحة.';return;}const order={ad_id:ad.id,product_title:ad.title,price:Number(ad.price||0),recipient:$('orderName').value.trim(),phone:$('orderPhone').value.trim(),city:$('orderCity').value,district:$('orderDistrict').value.trim(),address:$('orderAddress').value.trim(),latitude:$('orderLat').value?Number($('orderLat').value):null,longitude:$('orderLon').value?Number($('orderLon').value):null,notes:$('orderNotes').value.trim()};$('storeOrderMessage').textContent='تم التحقق من الحقول محليًا، لكن لم يتم إرسال الطلب أو حفظه. يلزم ربط جدول الطلبات في Supabase قبل اعتماد الطلب فعليًا.';console.info('Store order draft (not submitted):',order);});
+$('storeOrderForm')?.querySelectorAll('input,select,textarea').forEach(el=>el.addEventListener('input',()=>{if(storeOrderReviewReady){storeOrderReviewReady=false;$('storeOrderSubmit').textContent='مراجعة بيانات الطلب';$('storeOrderMessage').textContent='تم تعديل البيانات؛ راجع الطلب من جديد قبل الإرسال.';}}));
 </script>
 </body></html>
