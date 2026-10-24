@@ -367,12 +367,18 @@ body.theme-dark .store-hero-actions span{background:#172b38;color:#dceff5;border
 <div><label for="adCategory">القسم *</label><select id="adCategory" class="field" required><option value="">اختر القسم</option><option>كمبيوترات</option><option>قطع الكمبيوتر</option><option>أجهزة الألعاب</option><option>شاشات وملحقات</option><option>جوالات وإلكترونيات</option><option>خدمات وصيانة</option></select></div>
 <div><label for="adCondition">الحالة</label><select id="adCondition" class="field"><option>مستعمل</option><option>جديد</option><option>شبه جديد</option></select></div>
 <div><label for="adCity">المدينة</label><input id="adCity" class="field" maxlength="80" placeholder="جدة، الرياض، مكة..."></div>
+<div class="full">
+  <button class="secondary" type="button" id="captureAdLocation">📍 تحديد موقع الإعلان (اختياري)</button>
+  <span class="muted" id="adLocationStatus" role="status">يساعد تحديد الموقع المشترين على ترتيب الإعلانات حسب الأقرب.</span>
+  <input type="hidden" id="adLatitude" value="">
+  <input type="hidden" id="adLongitude" value="">
+</div>
 <div class="full"><label for="adDesc">الوصف *</label><textarea id="adDesc" class="field" required rows="4" maxlength="5000" placeholder="اكتب المواصفات والحالة والمدينة..."></textarea></div>
 <div><label for="sellerName">اسم البائع *</label><input id="sellerName" class="field" required maxlength="80"></div>
 <div><label for="sellerPhone">رقم الجوال للتواصل *</label><input id="sellerPhone" class="field" required inputmode="tel" placeholder="05xxxxxxxx"></div>
 <div class="full media-editor"><label for="adImages">صور الإعلان (حتى 5 صور)</label><input id="adImages" class="field" type="file" accept="image/*" multiple><div class="row"><button class="secondary" type="button" id="removeAdImages">إزالة الصور الحالية</button><span class="muted" id="imageStatus">يمكنك اختيار صور جديدة لاستبدال الحالية.</span></div><div id="adImagePreview" class="media-preview"></div></div>
 <div class="full media-editor"><label for="adVideo">فيديو المنتج (اختياري، فيديو واحد)</label><input id="adVideo" class="field" type="file" accept="video/mp4,video/webm,video/quicktime"><div class="row"><button class="secondary" type="button" id="removeAdVideo">إزالة الفيديو</button><span class="muted" id="videoStatus">يمكنك إضافة فيديو أو استبداله.</span></div><div id="adVideoPreview" class="media-preview"></div></div>
-<div class="full notice"><strong>تعهد العمولة</strong><p>أتعهد بسداد عمولة المنصة بنسبة 2% من قيمة البيع إذا تمت الصفقة من خلال المنصة، وأوافق على تسجيل بيانات العملية للمراجعة.</p><label class="pledge-check"><input type="checkbox" id="commissionAgree" required> أوافق على التعهد وشروط العمولة بنسبة 2%.</label></div>
+<div class="full notice"><strong>تعهد العمولة</strong><p>أتعهد بسداد عمولة المنصة بنسبة 1% من قيمة البيع إذا تمت الصفقة من خلال المنصة، وأوافق على تسجيل بيانات العملية للمراجعة.</p><label class="pledge-check"><input type="checkbox" id="commissionAgree" required> أوافق على التعهد وشروط العمولة بنسبة 1%.</label></div>
 <div class="full row"><button class="primary" type="submit" id="saveAd">نشر الإعلان</button><button class="secondary hidden" type="button" id="cancelEdit">إلغاء التعديل</button><span class="muted" id="adFormMsg"></span></div>
 </form></div></section>
 <section id="page-messages" class="hidden"><div class="panel"><h2>المحادثات الخاصة</h2><p class="muted">محادثاتك مع البائعين والمشترين. يجب تسجيل الدخول لاستخدام الرسائل.</p><div id="conversationList" class="stack"><div class="empty">سجّل الدخول لعرض محادثاتك.</div></div><div id="chatPanel" class="hidden"><div class="row space"><h3 id="chatTitle">المحادثة</h3><button id="closeChat" class="secondary">رجوع</button></div><div id="chatMessages" class="chatbox"></div><form id="sendMessageForm" class="inline"><input id="messageText" class="field" maxlength="2000" placeholder="اكتب رسالتك..." required><button class="primary">إرسال</button></form></div></div></section>
@@ -528,13 +534,26 @@ $('contactForm').onsubmit=async e=>{e.preventDefault();const submit=$('contactFo
 let adsCache=[];
 let removeExistingImages=false, removeExistingVideo=false;
 let removedExistingImageUrls=new Set();
-const COMMISSION_RATE=0.02;
+const COMMISSION_RATE=0.01;
 function renderMediaPreviews(){const imgBox=$('adImagePreview'),vidBox=$('adVideoPreview');if(imgBox){const urls=removeExistingImages?[]:(editingAd?.image_urls||[]).filter(u=>!removedExistingImageUrls.has(u));imgBox.innerHTML=urls.map((u,i)=>`<div class="media-item"><img src="${esc(u)}" alt="صورة حالية ${i+1}"><button type="button" class="media-remove" data-remove-image="${encodeURIComponent(u)}" aria-label="إزالة الصورة">إزالة</button></div>`).join('');imgBox.querySelectorAll('[data-remove-image]').forEach(btn=>btn.addEventListener('click',()=>{try{removedExistingImageUrls.add(decodeURIComponent(btn.dataset.removeImage));renderMediaPreviews();if($('imageStatus'))$('imageStatus').textContent='ستُزال الصورة المحددة عند حفظ التعديل.';}catch{}}));}if(vidBox){const url=removeExistingVideo?'':(editingAd?.video_url||'');vidBox.innerHTML=url?`<video controls src="${esc(url)}"></video>`:'';}}
 function resetMediaFlags(){removeExistingImages=false;removeExistingVideo=false;removedExistingImageUrls=new Set();if($('adImages'))$('adImages').value='';if($('adVideo'))$('adVideo').value='';if($('commissionAgree'))$('commissionAgree').checked=false;renderMediaPreviews();}
 let adSortOrder='newest';
 let onlyAdsWithImages=false;
 let cityFilterValue='';
 function getAdCity(a){return String(a.city||a.location||'').trim().toLowerCase();}
+function getAdCoords(ad){
+ const lat=ad?.latitude ?? ad?.lat ?? ad?.location_lat ?? ad?.location_latitude;
+ const lon=ad?.longitude ?? ad?.lon ?? ad?.lng ?? ad?.location_lon ?? ad?.location_longitude;
+ if(lat===null||lat===undefined||lat===''||lon===null||lon===undefined||lon==='')return null;
+ const latitude=Number(lat),longitude=Number(lon);
+ if(!Number.isFinite(latitude)||!Number.isFinite(longitude)||Math.abs(latitude)>90||Math.abs(longitude)>180)return null;
+ return {lat:latitude,lon:longitude};
+}
+function distanceKm(from,to){
+ const rad=n=>n*Math.PI/180, dLat=rad(to.lat-from.lat),dLon=rad(to.lon-from.lon);
+ const a=Math.sin(dLat/2)**2+Math.cos(rad(from.lat))*Math.cos(rad(to.lat))*Math.sin(dLon/2)**2;
+ return 6371*2*Math.atan2(Math.sqrt(a),Math.sqrt(Math.max(0,1-a)));
+}
 function renderAdsFromCache(){
  const box=$('ads');
  let rows=(adsCache||[]).filter(a=>!searchTerm||[a.title,a.description,a.category,a.seller_name].join(' ').toLowerCase().includes(searchTerm));
@@ -544,7 +563,15 @@ function renderAdsFromCache(){
  rows.sort((a,b)=>{
   if(adSortOrder==='price_low') return Number(a.price||0)-Number(b.price||0);
   if(adSortOrder==='price_high') return Number(b.price||0)-Number(a.price||0);
-  if(adSortOrder==='nearby'){const city=cityFilterValue||String(profile?.city||'').trim().toLowerCase();const am=getAdCity(a),bm=getAdCity(b);const ah=city&&am.includes(city),bh=city&&bm.includes(city);if(ah!==bh)return ah?-1:1;}
+  if(adSortOrder==='nearby'){
+   const customer=window.__customerCoords,ac=getAdCoords(a),bc=getAdCoords(b);
+   if(customer&&ac&&bc){const da=distanceKm(customer,ac),db=distanceKm(customer,bc);if(Math.abs(da-db)>0.01)return da-db;}
+   if(customer&&ac&&!bc)return -1;
+   if(customer&&!ac&&bc)return 1;
+   const city=cityFilterValue||String(profile?.city||'').trim().toLowerCase();
+   const am=getAdCity(a),bm=getAdCity(b),ah=city&&am.includes(city),bh=city&&bm.includes(city);
+   if(ah!==bh)return ah?-1:1;
+  }
   return new Date(b.created_at||0)-new Date(a.created_at||0);
  });
  $('adCount').textContent=rows.length.toLocaleString('ar-SA')+' إعلان';
@@ -615,7 +642,34 @@ $('storeSearchClear')?.addEventListener('click',()=>{if($('storeSearch'))$('stor
 $('toggleListingFilters').addEventListener('click',()=>{const panel=$('listingAdvanced'),open=panel.hidden;panel.hidden=!open;$('toggleListingFilters').setAttribute('aria-expanded',String(open));$('toggleListingFilters').textContent=open?'✕ إخفاء الفلاتر':'⚙️ الفلاتر والترتيب';});
 $('quickPriceLow').addEventListener('click',()=>{$('adSort').value='price_low';applyAdFilters();$('quickPriceLow').classList.add('active');$('quickPriceHigh').classList.remove('active');});
 $('quickPriceHigh').addEventListener('click',()=>{$('adSort').value='price_high';applyAdFilters();$('quickPriceHigh').classList.add('active');$('quickPriceLow').classList.remove('active');});
-$('nearbySort').addEventListener('click',()=>{const city=$('cityFilter').value.trim()||profile?.city||'';if(city){$('cityFilter').value=city;$('adSort').value='nearby';applyAdFilters();return;}if(!navigator.geolocation){alert('الموقع غير مدعوم في هذا المتصفح. اختر مدينتك من الفلاتر.');$('listingAdvanced').hidden=false;return;}navigator.geolocation.getCurrentPosition(pos=>{window.__customerCoords={lat:pos.coords.latitude,lon:pos.coords.longitude};alert('تم تحديد موقعك. لفرز المسافات بدقة يلزم توفر إحداثيات مواقع الإعلانات في قاعدة البيانات؛ حاليًا اختر المدينة لعرض الأقرب حسب المدينة.');$('listingAdvanced').hidden=false;$('toggleListingFilters').setAttribute('aria-expanded','true');},()=>{alert('لم نتمكن من الوصول للموقع. يمكنك اختيار مدينتك يدويًا.');$('listingAdvanced').hidden=false;},{enableHighAccuracy:false,timeout:8000});});
+$('nearbySort').addEventListener('click',()=>{
+ if(!navigator.geolocation){alert('المتصفح لا يدعم تحديد الموقع. يمكنك اختيار المدينة يدويًا.');$('listingAdvanced').hidden=false;return;}
+ const btn=$('nearbySort');btn.disabled=true;btn.textContent='📍 جارٍ تحديد موقعك…';
+ navigator.geolocation.getCurrentPosition(pos=>{
+  window.__customerCoords={lat:pos.coords.latitude,lon:pos.coords.longitude};
+  $('cityFilter').value='';cityFilterValue='';$('adSort').value='nearby';adSortOrder='nearby';
+  $('listingAdvanced').hidden=false;$('toggleListingFilters').setAttribute('aria-expanded','true');
+  renderAdsFromCache();btn.disabled=false;btn.textContent='📍 الأقرب';
+  const hasCoords=(adsCache||[]).some(a=>getAdCoords(a));
+  if(!hasCoords)alert('تم تحديد موقعك، لكن الإعلانات الحالية لا تحتوي على إحداثيات محفوظة؛ سيظهر ترتيب تقريبي حسب المدينة ثم الأحدث. حدّد موقع الإعلان عند نشره لتفعيل المسافة بدقة.');
+ },err=>{
+  btn.disabled=false;btn.textContent='📍 الأقرب';
+  const message=err?.code===1?'رفضت إذن الموقع. اسمح للموقع من إعدادات المتصفح أو اختر المدينة يدويًا.':'تعذر تحديد موقعك الآن. تحقق من إعدادات الموقع وحاول مجددًا.';
+  alert(message);$('listingAdvanced').hidden=false;
+ },{enableHighAccuracy:true,timeout:12000,maximumAge:60000});
+});
+$('captureAdLocation')?.addEventListener('click',()=>{
+ const status=$('adLocationStatus'),btn=$('captureAdLocation');
+ if(!navigator.geolocation){status.textContent='المتصفح لا يدعم تحديد الموقع؛ يمكنك متابعة نشر الإعلان دون إحداثيات.';return;}
+ btn.disabled=true;status.textContent='جارٍ تحديد موقع الإعلان…';
+ navigator.geolocation.getCurrentPosition(pos=>{
+  $('adLatitude').value=String(pos.coords.latitude);$('adLongitude').value=String(pos.coords.longitude);
+  status.textContent='تم تحديد موقع الإعلان. ستُحفظ الإحداثيات مع الإعلان عند النشر.';btn.disabled=false;
+ },err=>{
+  status.textContent=err?.code===1?'لم يُسمح بالوصول للموقع. يمكنك السماح من إعدادات المتصفح.':'تعذر تحديد الموقع. يمكنك المحاولة مجددًا أو تركه فارغًا.';
+  btn.disabled=false;
+ },{enableHighAccuracy:true,timeout:12000,maximumAge:60000});
+});
 function applyAdFilters(){adSortOrder=$('adSort').value;cityFilterValue=$('cityFilter').value.trim().toLowerCase();onlyAdsWithImages=$('imagesOnly').checked;renderAdsFromCache();}
 $('adSort').addEventListener('change',applyAdFilters);
 $('cityFilter').addEventListener('change',applyAdFilters);
@@ -692,14 +746,14 @@ $('profileForm').onsubmit=async e=>{
 };
 $('signoutBtn').onclick=async()=>{await sb.auth.signOut();currentUser=null;profile=null;$('authBox').classList.remove('hidden');$('profileBox').classList.add('hidden');$('accountStatus').textContent='تم تسجيل الخروج.';showPage('home')};
 async function loadMyAds(targetId){if(!currentUser){$(targetId).innerHTML='<div class="empty">سجّل الدخول لعرض إعلاناتك.</div>';return;}const {data,error}=await sb.from('ads').select('*').eq('seller_id',currentUser.id).order('created_at',{ascending:false});if(error){$(targetId).innerHTML='<div class="empty">تعذر تحميل إعلاناتك.</div>';return;}$(targetId).innerHTML=(data||[]).map(a=>`<div class="listitem"><div class="row space"><div><strong>${esc(a.title)}</strong><div class="muted">${Number(a.price||0).toLocaleString('ar-SA')} ر.س · الحالة: ${esc(a.status)}</div></div><div class="actions"><button class="secondary" onclick="editAd('${a.id}')">تعديل</button><button class="danger" onclick="deleteAd('${a.id}')">حذف</button></div></div></div>`).join('')||'<div class="empty">لم تضف إعلانات بعد.</div>';}
-window.editAd=async id=>{const {data,error}=await sb.from('ads').select('*').eq('id',id).eq('seller_id',currentUser.id).single();if(error||!data){alert('تعذر فتح الإعلان أو لا تملك صلاحية تعديله.');return;}editingAd=data;$('editId').value=data.id;$('adTitle').value=data.title||'';$('adPrice').value=data.price||'';$('adCategory').value=data.category||'';$('adCondition').value=data.condition||'مستعمل';$('adCity').value=data.city||profile?.city||'';$('adDesc').value=data.description||'';$('sellerName').value=data.seller_name||profile?.display_name||'';$('sellerPhone').value=data.seller_phone||profile?.phone||'';resetMediaFlags();renderMediaPreviews();$('adFormTitle').textContent='تعديل الإعلان';$('saveAd').textContent='حفظ التعديلات';$('cancelEdit').classList.remove('hidden');showPage('add')};
+window.editAd=async id=>{const {data,error}=await sb.from('ads').select('*').eq('id',id).eq('seller_id',currentUser.id).single();if(error||!data){alert('تعذر فتح الإعلان أو لا تملك صلاحية تعديله.');return;}editingAd=data;$('editId').value=data.id;$('adTitle').value=data.title||'';$('adPrice').value=data.price||'';$('adCategory').value=data.category||'';$('adCondition').value=data.condition||'مستعمل';$('adCity').value=data.city||profile?.city||'';$('adLatitude').value=data.latitude??'';$('adLongitude').value=data.longitude??'';if($('adLocationStatus'))$('adLocationStatus').textContent=(data.latitude!=null&&data.longitude!=null)?'موقع الإعلان محفوظ ويمكن تحديثه.':'لم يتم حفظ إحداثيات لهذا الإعلان بعد.';$('adDesc').value=data.description||'';$('sellerName').value=data.seller_name||profile?.display_name||'';$('sellerPhone').value=data.seller_phone||profile?.phone||'';resetMediaFlags();renderMediaPreviews();$('adFormTitle').textContent='تعديل الإعلان';$('saveAd').textContent='حفظ التعديلات';$('cancelEdit').classList.remove('hidden');showPage('add')};
 $('cancelEdit').onclick=()=>resetAdForm();renderMediaPreviews();
-function resetAdForm(){$('adForm').reset();$('editId').value='';editingAd=null;resetMediaFlags();$('adFormTitle').textContent='إضافة إعلان جديد';$('saveAd').textContent='نشر الإعلان';$('cancelEdit').classList.add('hidden');msg('adFormMsg','')}
+function resetAdForm(){$('adForm').reset();$('adLatitude').value='';$('adLongitude').value='';if($('adLocationStatus'))$('adLocationStatus').textContent='يساعد تحديد الموقع المشترين على ترتيب الإعلانات حسب الأقرب.';$('editId').value='';editingAd=null;resetMediaFlags();$('adFormTitle').textContent='إضافة إعلان جديد';$('saveAd').textContent='نشر الإعلان';$('cancelEdit').classList.add('hidden');msg('adFormMsg','')}
 window.deleteAd=async id=>{if(!currentUser)return;const {data:ad,error:adErr}=await sb.from('ads').select('*').eq('id',id).eq('seller_id',currentUser.id).single();if(adErr||!ad){alert('تعذر العثور على الإعلان.');return;}const {data:sales,error:salesErr}=await sb.from('sales_ledger').select('id,sale_price,commission_rate,commission_amount,payment_status').eq('ad_id',id).limit(10);if(salesErr){alert('قبل الحذف، شغّل ملف SQL المرفق لإنشاء سجل المبيعات والعمولات. لم يتم حذف الإعلان.');return;}const sold=(sales||[]).filter(x=>Number(x.sale_price)>0);if(sold.length){const due=sold.reduce((sum,x)=>sum+(x.payment_status==='paid'?0:Number(x.commission_amount||Number(x.sale_price)*Number(x.commission_rate||COMMISSION_RATE))),0);const details=sold.map(x=>`بيع مسجل: ${Number(x.sale_price).toLocaleString('ar-SA')} ر.س — العمولة ${Number(x.commission_amount||Number(x.sale_price)*Number(x.commission_rate||COMMISSION_RATE)).toLocaleString('ar-SA')} ر.س`).join('\n');if(!confirm(`تنبيه: يوجد بيع مسجل لهذا المنتج.\n${details}\nإجمالي العمولة غير المسددة: ${due.toLocaleString('ar-SA')} ر.س.\nيجب تحويل المبلغ إلى حساب المنصة وإرسال إثبات التحويل.\nسيتم أرشفة الإعلان للحفاظ على السجل المالي. متابعة؟`))return;const {error:archErr}=await sb.from('ads').update({status:'archived'}).eq('id',id).eq('seller_id',currentUser.id);if(archErr){alert('تعذرت أرشفة الإعلان.');return;}alert(`المبلغ المستحق المسجل: ${due.toLocaleString('ar-SA')} ر.س. بيانات الحساب البنكي ستظهر بعد إضافتها في إعدادات المنصة. سجّل التحويل في سجل العمولات.`);}else{if(!confirm('لم يُعثر على بيع مسجل لهذا الإعلان. هل تريد أرشفته؟'))return;const {error:archErr}=await sb.from('ads').update({status:'archived'}).eq('id',id).eq('seller_id',currentUser.id);if(archErr){alert('تعذرت أرشفة الإعلان.');return;}}await loadMyAds('myAds');await loadMyAds('myAdsPage');await loadAds()};
-$('adForm').onsubmit=async e=>{e.preventDefault();if(!needAuth())return;if(!$('commissionAgree').checked){msg('adFormMsg','وافق على تعهد العمولة بنسبة 2% قبل الحفظ.');$('commissionAgree').focus();return;}const title=$('adTitle').value.trim(),price=Number($('adPrice').value),category=$('adCategory').value,description=$('adDesc').value.trim(),seller_name=$('sellerName').value.trim(),seller_phone=$('sellerPhone').value.trim();if(!title||!category||!description||!seller_name||!seller_phone||!Number.isFinite(price)||price<0){msg('adFormMsg','أكمل البيانات المطلوبة.');return;}msg('adFormMsg','جارٍ حفظ الإعلان والوسائط...');$('saveAd').disabled=true;
+$('adForm').onsubmit=async e=>{e.preventDefault();if(!needAuth())return;if(!$('commissionAgree').checked){msg('adFormMsg','وافق على تعهد العمولة بنسبة 1% قبل الحفظ.');$('commissionAgree').focus();return;}const title=$('adTitle').value.trim(),price=Number($('adPrice').value),category=$('adCategory').value,description=$('adDesc').value.trim(),seller_name=$('sellerName').value.trim(),seller_phone=$('sellerPhone').value.trim();if(!title||!category||!description||!seller_name||!seller_phone||!Number.isFinite(price)||price<0){msg('adFormMsg','أكمل البيانات المطلوبة.');return;}msg('adFormMsg','جارٍ حفظ الإعلان والوسائط...');$('saveAd').disabled=true;
 let image_urls=(removeExistingImages?[]:(editingAd?.image_urls||[]).filter(u=>!removedExistingImageUrls.has(u)));const files=[...$('adImages').files].slice(0,5);if(files.length){let uploaded=[];for(const f of files){if(!f.type.startsWith('image/'))continue;if(f.size>5*1024*1024){msg('adFormMsg','حجم الصورة الواحدة يجب ألا يتجاوز 5 ميغابايت.');$('saveAd').disabled=false;return;}const path=`${currentUser.id}/${Date.now()}-${Math.random().toString(36).slice(2)}-${f.name.replace(/[^a-zA-Z0-9._-]/g,'_')}`;const {error:upErr}=await sb.storage.from('ad-images').upload(path,f,{upsert:false});if(upErr){msg('adFormMsg','تعذر رفع الصور. تأكد من إعداد bucket باسم ad-images وسياساته.');$('saveAd').disabled=false;return;}const {data:urlData}=sb.storage.from('ad-images').getPublicUrl(path);uploaded.push(urlData.publicUrl);}image_urls=[...image_urls,...uploaded];}if(image_urls.length>5){msg('adFormMsg','الحد الأقصى 5 صور. أزل بعض الصور الحالية أو اختر عددًا أقل.');$('saveAd').disabled=false;return;}
 let video_url=removeExistingVideo?'':(editingAd?.video_url||'');const videoFile=$('adVideo').files?.[0];if(videoFile){if(!videoFile.type.startsWith('video/')){msg('adFormMsg','اختر ملف فيديو صحيحًا.');$('saveAd').disabled=false;return;}if(videoFile.size>50*1024*1024){msg('adFormMsg','حجم الفيديو يجب ألا يتجاوز 50 ميغابايت.');$('saveAd').disabled=false;return;}const path=`${currentUser.id}/${Date.now()}-${Math.random().toString(36).slice(2)}-${videoFile.name.replace(/[^a-zA-Z0-9._-]/g,'_')}`;const {error:upErr}=await sb.storage.from('ad-videos').upload(path,videoFile,{upsert:false});if(upErr){msg('adFormMsg','تعذر رفع الفيديو. أنشئ bucket باسم ad-videos واضبط سياساته في Supabase.');$('saveAd').disabled=false;return;}video_url=sb.storage.from('ad-videos').getPublicUrl(path).data.publicUrl;}
-const payload={title,price,category,description,seller_name,seller_phone,condition:$('adCondition').value,city:$('adCity').value.trim(),image_urls,video_url,status:editingAd?(editingAd.status||'pending'):'pending',seller_id:currentUser.id,commission_rate:COMMISSION_RATE,commission_terms_accepted:true,commission_terms_accepted_at:new Date().toISOString()};
+const payload={title,price,category,description,seller_name,seller_phone,condition:$('adCondition').value,city:$('adCity').value.trim(),latitude:$('adLatitude').value!==''?Number($('adLatitude').value):(editingAd?.latitude??null),longitude:$('adLongitude').value!==''?Number($('adLongitude').value):(editingAd?.longitude??null),image_urls,video_url,status:editingAd?(editingAd.status||'pending'):'pending',seller_id:currentUser.id,commission_rate:COMMISSION_RATE,commission_terms_accepted:true,commission_terms_accepted_at:new Date().toISOString()};
 let result;if(editingAd){result=await sb.from('ads').update(payload).eq('id',editingAd.id).eq('seller_id',currentUser.id);}else{result=await sb.from('ads').insert(payload);}
 $('saveAd').disabled=false;if(result.error){msg('adFormMsg','تعذر الحفظ. تأكد من تشغيل ملف SQL المرفق: '+result.error.message);return;}msg('adFormMsg','تم الحفظ. الإعلان بانتظار المراجعة.');resetAdForm();await loadAds();await loadMyAds('myAds');await loadMyAds('myAdsPage');showPage('myads');};
 $('removeAdImages')?.addEventListener('click',()=>{removeExistingImages=true;removedExistingImageUrls=new Set();if($('adImages'))$('adImages').value='';renderMediaPreviews();$('imageStatus').textContent='ستُزال جميع الصور الحالية عند حفظ التعديل.';});
