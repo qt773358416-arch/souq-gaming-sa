@@ -315,6 +315,10 @@ body.theme-dark .store-hero-actions span{background:#172b38;color:#dceff5;border
 @media(max-width:420px){#ads.grid>.card,#storeProducts>.store-square-card{grid-template-columns:minmax(94px,31%) minmax(0,1fr)!important}#ads .adbody,#storeProducts .store-square-body{padding:11px 10px 11px 9px;gap:6px}#ads .adbody h3,#storeProducts .store-square-body h3{font-size:14px}#ads .price,#storeProducts .store-square-price{font-size:17px}#ads .ad-description{font-size:11px}#ads .actions button,#storeProducts .store-square-actions button{font-size:11px;padding:6px 7px;min-height:31px}#ads .seller-meta{font-size:11px}}
 </style>
 
+
+<style id="independent-store-admin-styles">
+#storeAdminPanel .subnav{border-bottom:1px solid var(--line);padding-bottom:10px}#storeAdminPanel .listitem{border-bottom:1px solid var(--line)}#storeAdminPanel .danger{background:#49212b;color:#ffdce3;border:1px solid #813748}#storeAdminPanel .formgrid{margin-bottom:20px}#storeAdminPanel h3{margin:16px 0 10px}#storeProducts .store-square-card{border:1px solid var(--line)!important;border-radius:14px!important;background:var(--panel)!important;overflow:hidden!important}#storeProducts .store-square-image{margin:0!important;border-radius:0!important}#storeProducts .store-square-body{padding:12px!important}@media(max-width:600px){#storeAdminPanel .pagehead{align-items:flex-start}#storeAdminPanel .subnav button{flex:1 1 auto;padding:9px 8px;font-size:12px}}
+</style>
 </head>
 <body class="theme-dark">
 <div class="wrap">
@@ -354,10 +358,39 @@ body.theme-dark .store-hero-actions span{background:#172b38;color:#dceff5;border
   <div class="store-search-wrap"><span aria-hidden="true">⌕</span><input id="storeSearch" class="field" placeholder="ابحث باسم المنتج أو الوصف أو القسم..." aria-label="البحث في المتجر" autocomplete="off"><button id="storeSearchClear" class="secondary" type="button" aria-label="مسح البحث">مسح</button></div>
   <select id="storeSort" class="field" aria-label="ترتيب منتجات المتجر"><option value="newest">الأحدث أولًا</option><option value="price_low">السعر الأقل</option><option value="price_high">السعر الأعلى</option><option value="title">الاسم أ إلى ي</option></select>
 </div>
-<div class="store-categories" id="storeCategories"><button class="chip selected" data-store-category="">كل المنتجات</button><button class="chip" data-store-category="كمبيوترات">كمبيوترات</button><button class="chip" data-store-category="قطع الكمبيوتر">قطع الكمبيوتر</button><button class="chip" data-store-category="أجهزة الألعاب">أجهزة الألعاب</button><button class="chip" data-store-category="شاشات وملحقات">شاشات وملحقات</button><button class="chip" data-store-category="جوالات وإلكترونيات">إلكترونيات</button><button class="chip" data-store-category="خدمات وصيانة">خدمات وصيانة</button></div>
+<div class="store-categories" id="storeCategories"><button class="chip selected" data-store-category="">كل المنتجات</button><button class="chip" data-store-category="أجهزة الكمبيوتر">أجهزة الكمبيوتر والقيمنق</button><button class="chip" data-store-category="قطع الكمبيوتر">قطع الكمبيوتر</button><button class="chip" data-store-category="أجهزة الكونسول">أجهزة الكونسول</button><button class="chip" data-store-category="الملحقات">الملحقات</button><button class="chip" data-store-category="كروت الشحن">كروت الشحن</button><button class="chip" data-store-category="الألعاب الرقمية">الألعاب الرقمية</button><button class="chip" data-store-category="الاشتراكات">الاشتراكات</button></div>
 <div class="store-results-heading"><div><h2>منتجات المتجر</h2><p id="storeResultsSubtitle">تصفح المنتجات المتاحة</p></div><span class="store-count-pill" id="storeCount">0 منتج</span></div>
 <div id="storeProducts" class="grid"><div class="empty">جارٍ تحميل المنتجات...</div></div>
-<div class="notice store-notice">يعرض المتجر حاليًا الإعلانات المنشورة في المنصة. السلة والطلبات والدفع الفعلي تحتاج إلى ربط قاعدة بيانات المتجر والتحقق من إعداداتها قبل تفعيل الشراء.</div>
+<div class="notice store-notice">هذا متجر مستقل عن إعلانات الأعضاء. المنتجات المعروضة تُقرأ من قاعدة بيانات المتجر، ولا تُخلط بإعلانات المنصة.</div>
+<div id="storeAdminPanel" class="panel hidden" style="margin-top:22px">
+ <div class="pagehead"><div><h2>لوحة إدارة المتجر</h2><p>إدارة المنتجات والمخزون والأكواد والطلبات بشكل مستقل عن إعلانات المنصة.</p></div><span class="store-count-pill">مدير المتجر</span></div>
+ <div class="subnav"><button type="button" data-store-admin-tab="products">المنتجات</button><button type="button" data-store-admin-tab="codes">الأكواد الرقمية</button><button type="button" data-store-admin-tab="orders">الطلبات</button></div>
+ <section id="storeAdminProducts">
+  <h3 id="storeProductFormTitle">إضافة منتج جديد</h3>
+  <form id="storeProductForm" class="formgrid">
+   <input type="hidden" id="storeProductId">
+   <div><label for="storeProductTitle">اسم المنتج *</label><input class="field" id="storeProductTitle" required maxlength="150"></div>
+   <div><label for="storeProductCategory">القسم *</label><select class="field" id="storeProductCategory" required><option value="أجهزة الكمبيوتر">أجهزة الكمبيوتر</option><option value="قطع الكمبيوتر">قطع الكمبيوتر</option><option value="أجهزة الكونسول">أجهزة الكونسول</option><option value="الملحقات">الملحقات</option><option value="كروت الشحن">كروت الشحن</option><option value="الألعاب الرقمية">الألعاب الرقمية</option><option value="الاشتراكات">الاشتراكات</option></select></div>
+   <div><label for="storeProductType">نوع المنتج</label><select class="field" id="storeProductType"><option value="physical">مادي - شحن</option><option value="digital">رقمي - تسليم بكود</option><option value="hybrid">هجين</option></select></div>
+   <div><label for="storeProductPrice">سعر البيع (ر.س) *</label><input class="field" id="storeProductPrice" type="number" min="0" step="0.01" required></div>
+   <div><label for="storeProductCost">التكلفة (ر.س)</label><input class="field" id="storeProductCost" type="number" min="0" step="0.01"></div>
+   <div><label for="storeProductStock">الكمية المتوفرة</label><input class="field" id="storeProductStock" type="number" min="0" step="1" value="0" required></div>
+   <div class="full"><label for="storeProductImage">رابط صورة المنتج</label><input class="field" id="storeProductImage" type="url" placeholder="https://..."></div>
+   <div class="full"><label for="storeProductDescription">وصف المنتج</label><textarea class="field" id="storeProductDescription" rows="3" maxlength="3000"></textarea></div>
+   <div><label for="storeProductStatus">حالة المنتج</label><select class="field" id="storeProductStatus"><option value="draft">مسودة</option><option value="active">منشور</option><option value="out_of_stock">نفد المخزون</option></select></div>
+   <div class="row" style="align-items:end"><button class="primary" id="storeProductSave" type="submit">حفظ المنتج</button><button class="secondary" id="storeProductCancel" type="button">إلغاء التعديل</button></div>
+   <div class="full muted" id="storeProductMessage" role="status"></div>
+  </form>
+  <h3 style="margin-top:22px">قائمة المنتجات</h3><div id="storeAdminProductList"><div class="empty">جارٍ التحميل...</div></div>
+ </section>
+ <section id="storeAdminCodes" class="hidden">
+  <h3>إضافة أكواد إلى المخزون</h3><p class="muted">أدخل كل كود في سطر مستقل. الأكواد لا تظهر للعملاء، وتبقى محمية بسياسات قاعدة البيانات.</p>
+  <label for="digitalCodeProduct">المنتج الرقمي</label><select class="field" id="digitalCodeProduct"></select>
+  <label for="digitalCodesInput" style="margin-top:10px">الأكواد (كود واحد في كل سطر)</label><textarea class="field" id="digitalCodesInput" rows="7" placeholder="XXXX-XXXX-XXXX"></textarea>
+  <div class="row" style="margin-top:10px"><button class="primary" id="digitalCodesSave" type="button">إضافة الأكواد للمخزون</button><span id="digitalCodesMessage" class="muted" role="status"></span></div>
+ </section>
+ <section id="storeAdminOrders" class="hidden"><h3>طلبات المتجر</h3><div id="storeAdminOrderList"><div class="empty">جارٍ تحميل الطلبات...</div></div></section>
+</div>
 </section>
 <section id="page-add" class="hidden"><div class="panel"><h2 id="adFormTitle">إضافة إعلان جديد</h2><p class="muted">أضف تفاصيل المنتج ووسائطه، ثم وافق على تعهد العمولة قبل الحفظ.</p>
 <form id="adForm" class="formgrid">
@@ -449,7 +482,7 @@ function showPage(page){
  if(page==='community')loadPublicPosts();
  if(page==='myads')loadMyAds('myAdsPage');
  if(page==='home')loadAds();
- if(page==='store'){if(!adsCache.length)loadAds().then(renderStoreProducts);else renderStoreProducts();}
+ if(page==='store'){loadStoreProducts();}
  if(page==='favorites')loadFavorites();
  if(page==='profile')loadProfilePage();
  if(page==='searchpage')$('searchPageInput').value=$('search').value||'';
@@ -577,41 +610,44 @@ function normalizeStoreText(value){
   .replace(/ة/g,'ه').replace(/ـ/g,' ').replace(/[^\p{L}\p{N}\s]/gu,' ')
   .replace(/\s+/g,' ').trim();
 }
-function clearStoreFilters(){
- if($('storeSearch'))$('storeSearch').value='';
- if($('storeSort'))$('storeSort').value='newest';
- selectedStoreCategory='';
- document.querySelectorAll('[data-store-category]').forEach(x=>x.classList.toggle('selected',!x.dataset.storeCategory));
- renderStoreProducts();
+let storeProductsCache=[];
+let editingStoreProductId=null;
+function isStoreAdmin(){return !!(currentUser && currentUser.app_metadata && currentUser.app_metadata.store_admin===true);}
+async function loadStoreProducts(){
+ const box=$('storeProducts');if(box)box.innerHTML='<div class="empty">جارٍ تحميل منتجات المتجر...</div>';
+ try{
+  const {data,error}=await sb.from('store_products').select('id,title,description,category,product_type,price,stock_quantity,image_url,status,created_at').eq('status','active').order('created_at',{ascending:false});
+  if(error)throw error;storeProductsCache=data||[];renderStoreProducts();
+ }catch(err){console.error('Store products load failed:',err);if(box)box.innerHTML='<div class="empty">تعذر تحميل منتجات المتجر. تأكد من تشغيل SQL وسياسات قراءة المنتجات المنشورة.</div>';}
+ const admin=$('storeAdminPanel');if(admin)admin.classList.toggle('hidden',!isStoreAdmin());
+ if(isStoreAdmin())loadStoreAdminProducts();
 }
- function renderStoreProducts(){
- const box=$('storeProducts');if(!box)return;
- let rows=(adsCache||[]).filter(a=>a.status==='published');
- const rawTerm=($('storeSearch')?.value||'').trim();
- const term=normalizeStoreText(rawTerm);
- if(term){const words=term.split(' ').filter(Boolean);rows=rows.filter(a=>{const hay=normalizeStoreText([a.title,a.description,a.category,a.seller_name,a.condition,a.city,a.location].join(' '));return hay.includes(term)||words.every(w=>hay.includes(w));});}
- if(selectedStoreCategory)rows=rows.filter(a=>a.category===selectedStoreCategory);
- const order=$('storeSort')?.value||'newest';
- rows.sort((a,b)=>{if(order==='price_low')return Number(a.price||0)-Number(b.price||0);if(order==='price_high')return Number(b.price||0)-Number(a.price||0);if(order==='title')return String(a.title||'').localeCompare(String(b.title||''),'ar');return new Date(b.created_at||0)-new Date(a.created_at||0);});
- const count=$('storeCount');if(count)count.textContent=rows.length.toLocaleString('ar-SA')+' منتج';
- const subtitle=$('storeResultsSubtitle');if(subtitle)subtitle.textContent=rawTerm?'نتائج البحث عن «'+rawTerm.replace(/[<>]/g,'')+'»':'تصفح المنتجات المتاحة';
- const active=$('storeActiveFilters');if(active){const tags=[];if(selectedStoreCategory)tags.push('القسم: '+selectedStoreCategory);if(minVal!=='')tags.push('من '+minVal+' ر.س');if(maxVal!=='')tags.push('إلى '+maxVal+' ر.س');if(condition)tags.push('الحالة: '+condition);if(imagesOnly)tags.push('بصور فقط');if(rawTerm)tags.push('بحث: '+rawTerm);active.innerHTML=tags.map(t=>'<span class="store-filter-chip">'+esc(t)+'</span>').join('');}
- if(!rows.length){box.innerHTML='<div class="empty" style="grid-column:1/-1"><div style="font-size:32px;margin-bottom:8px">⌕</div><strong>لم نعثر على منتجات مطابقة</strong><p>جرّب كلمة بحث مختلفة أو اختر قسمًا آخر.</p><button class="secondary" type="button" onclick="clearStoreFilters()">مسح الفلاتر</button></div>';return;}
- box.innerHTML=rows.map(a=>{
-  const img=Array.isArray(a.image_urls)&&a.image_urls.length?a.image_urls[0]:'';
-  const id=String(a.id||'').replace(/'/g,'');
-  return `<article class="card store-product-card store-square-card"><div class="store-square-image">${img?`<img src="${esc(img)}" alt="${esc(a.title||'صورة المنتج')}" loading="lazy" onerror="this.style.display='none';this.parentElement.classList.add('no-image')">`:'<div class="store-square-placeholder">🎮<span>لا توجد صورة</span></div>'}</div><div class="store-square-body"><div class="store-square-tags"><span class="ad-tag">${esc(a.category||'منتج')}</span><span class="ad-tag condition-tag">${esc(a.condition||'مستعمل')}</span></div><h3 title="${esc(a.title||'منتج')}">${esc(a.title||'منتج')}</h3><div class="store-square-price">${Number(a.price||0).toLocaleString('ar-SA')} <small>ر.س</small></div><div class="store-square-actions"><button class="primary" type="button" onclick="openAdDetail('${id}')">التفاصيل</button><button class="secondary" type="button" onclick="openStoreOrder('${id}')">اطلب المنتج</button></div></div></article>`;
- }).join('');
+function clearStoreFilters(){if($('storeSearch'))$('storeSearch').value='';if($('storeSort'))$('storeSort').value='newest';selectedStoreCategory='';document.querySelectorAll('[data-store-category]').forEach(x=>x.classList.toggle('selected',!x.dataset.storeCategory));renderStoreProducts();}
+function renderStoreProducts(){
+ const box=$('storeProducts');if(!box)return;let rows=[...storeProductsCache];
+ const rawTerm=($('storeSearch')?.value||'').trim(),term=normalizeStoreText(rawTerm);
+ if(term)rows=rows.filter(p=>normalizeStoreText([p.title,p.description,p.category].join(' ')).includes(term));
+ if(selectedStoreCategory)rows=rows.filter(p=>p.category===selectedStoreCategory);
+ const order=$('storeSort')?.value||'newest';rows.sort((a,b)=>order==='price_low'?Number(a.price)-Number(b.price):order==='price_high'?Number(b.price)-Number(a.price):order==='title'?String(a.title).localeCompare(String(b.title),'ar'):new Date(b.created_at)-new Date(a.created_at));
+ $('storeCount').textContent=rows.length.toLocaleString('ar-SA')+' منتج';$('storeResultsSubtitle').textContent=rawTerm?'نتائج البحث عن «'+rawTerm.replace(/[<>]/g,'')+'»':'منتجات المتجر المستقلة';
+ if(!rows.length){box.innerHTML='<div class="empty" style="grid-column:1/-1">لا توجد منتجات منشورة حاليًا. ترقبوا المنتجات قريبًا.</div>';return;}
+ box.innerHTML=rows.map(p=>{const id=esc(p.id),image=p.image_url?`<img src="${esc(p.image_url)}" alt="${esc(p.title)}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=store-square-placeholder>🎮<span>الصورة غير متاحة</span></div>'">`:'<div class="store-square-placeholder">🎮<span>لا توجد صورة</span></div>';return `<article class="card store-product-card store-square-card"><div class="store-square-image">${image}</div><div class="store-square-body"><div class="store-square-tags"><span class="ad-tag">${esc(p.category)}</span><span class="ad-tag condition-tag">${p.product_type==='digital'?'رقمي':p.product_type==='hybrid'?'مادي ورقمي':'مادي'}</span></div><h3 title="${esc(p.title)}">${esc(p.title)}</h3><div class="store-square-price">${Number(p.price).toLocaleString('ar-SA')} <small>ر.س</small></div><div class="muted" style="font-size:11px">${p.stock_quantity>0?'متوفر':'غير متوفر حاليًا'}</div><div class="store-square-actions"><button class="primary" type="button" onclick="showStoreProduct('${id}')">التفاصيل</button><button class="secondary" type="button" onclick="requestStoreOrder('${id}')" ${p.stock_quantity<1?'disabled':''}>اطلب المنتج</button></div></div></article>`;}).join('');
 }
-document.querySelectorAll('[data-store-category]').forEach(button=>button.addEventListener('click',()=>{
- selectedStoreCategory=button.dataset.storeCategory||'';
- document.querySelectorAll('[data-store-category]').forEach(item=>item.classList.toggle('selected',item===button));
- renderStoreProducts();
-}));
-$('storeSearch')?.addEventListener('input',renderStoreProducts);
-$('storeSort')?.addEventListener('change',renderStoreProducts);
-$('storeSearchClear')?.addEventListener('click',()=>{if($('storeSearch'))$('storeSearch').value='';renderStoreProducts();$('storeSearch')?.focus();});
-
+function showStoreProduct(id){const p=storeProductsCache.find(x=>String(x.id)===String(id));if(!p)return;alert(p.title+'\n\n'+(p.description||'لا يوجد وصف')+'\n\nالسعر: '+Number(p.price).toLocaleString('ar-SA')+' ر.س');}
+function requestStoreOrder(id){const p=storeProductsCache.find(x=>String(x.id)===String(id));if(!p)return;alert('تم اختيار '+p.title+'. سيتم تفعيل إرسال الطلبات الآمن بعد تجهيز وظيفة الخادم. لم يتم إنشاء طلب أو خصم مخزون.');}
+document.querySelectorAll('[data-store-category]').forEach(button=>button.addEventListener('click',()=>{selectedStoreCategory=button.dataset.storeCategory||'';document.querySelectorAll('[data-store-category]').forEach(item=>item.classList.toggle('selected',item===button));renderStoreProducts();}));
+$('storeSearch')?.addEventListener('input',renderStoreProducts);$('storeSort')?.addEventListener('change',renderStoreProducts);$('storeSearchClear')?.addEventListener('click',()=>{if($('storeSearch'))$('storeSearch').value='';renderStoreProducts();$('storeSearch')?.focus();});
+async function loadStoreAdminProducts(){if(!isStoreAdmin())return;const box=$('storeAdminProductList');try{const {data,error}=await sb.from('store_products').select('*').order('created_at',{ascending:false});if(error)throw error;const rows=data||[];box.innerHTML=rows.length?rows.map(p=>`<div class="listitem"><div class="row space"><div><strong>${esc(p.title)}</strong><div class="muted" style="font-size:12px">${esc(p.category)} · ${Number(p.price).toLocaleString('ar-SA')} ر.س · المخزون ${p.stock_quantity} · ${esc(p.status)}</div></div><div class="row"><button class="secondary" type="button" onclick="editStoreProduct('${esc(p.id)}')">تعديل</button><button class="danger" type="button" onclick="deleteStoreProduct('${esc(p.id)}')">حذف</button></div></div></div>`).join(''):'<div class="empty">لا توجد منتجات بعد. أضف أول منتج من النموذج.</div>';
+ const digital=$('digitalCodeProduct');if(digital)digital.innerHTML=rows.filter(p=>p.product_type!=='physical').map(p=>`<option value="${esc(p.id)}">${esc(p.title)}</option>`).join('')||'<option value="">لا توجد منتجات رقمية أو هجينة</option>';
+ }catch(e){console.error(e);box.innerHTML='<div class="empty">تعذر قراءة المنتجات. تحقق من صلاحية مدير المتجر وسياسات RLS.</div>';}}
+function resetStoreProductForm(){editingStoreProductId=null;$('storeProductForm').reset();$('storeProductId').value='';$('storeProductStock').value='0';$('storeProductFormTitle').textContent='إضافة منتج جديد';$('storeProductMessage').textContent='';}
+window.editStoreProduct=async id=>{if(!isStoreAdmin())return;const {data,error}=await sb.from('store_products').select('*').eq('id',id).single();if(error){alert(error.message);return;}editingStoreProductId=id;$('storeProductTitle').value=data.title;$('storeProductCategory').value=data.category;$('storeProductType').value=data.product_type;$('storeProductPrice').value=data.price;$('storeProductCost').value=data.cost??'';$('storeProductStock').value=data.stock_quantity;$('storeProductImage').value=data.image_url||'';$('storeProductDescription').value=data.description||'';$('storeProductStatus').value=data.status;$('storeProductFormTitle').textContent='تعديل المنتج';window.scrollTo({top:$('storeAdminPanel').offsetTop,behavior:'smooth'});};
+window.deleteStoreProduct=async id=>{if(!isStoreAdmin()||!confirm('هل تريد حذف المنتج؟'))return;const {error}=await sb.from('store_products').delete().eq('id',id);if(error){alert('تعذر الحذف: '+error.message);return;}await loadStoreAdminProducts();await loadStoreProducts();};
+$('storeProductCancel')?.addEventListener('click',resetStoreProductForm);
+$('storeProductForm')?.addEventListener('submit',async e=>{e.preventDefault();if(!isStoreAdmin()){msg('storeProductMessage','حسابك لا يحمل صلاحية مدير المتجر.');return;}const payload={title:$('storeProductTitle').value.trim(),category:$('storeProductCategory').value,product_type:$('storeProductType').value,price:Number($('storeProductPrice').value),cost:$('storeProductCost').value===''?null:Number($('storeProductCost').value),stock_quantity:Number($('storeProductStock').value),image_url:$('storeProductImage').value.trim()||null,description:$('storeProductDescription').value.trim(),status:$('storeProductStatus').value,updated_at:new Date().toISOString()};const button=$('storeProductSave');button.disabled=true;try{let result;if(editingStoreProductId)result=await sb.from('store_products').update(payload).eq('id',editingStoreProductId);else result=await sb.from('store_products').insert({...payload,created_by:currentUser.id});if(result.error)throw result.error;msg('storeProductMessage','تم حفظ المنتج بنجاح.');resetStoreProductForm();await loadStoreAdminProducts();await loadStoreProducts();}catch(err){console.error(err);msg('storeProductMessage','فشل الحفظ: '+(err.message||'تحقق من الحقول وسياسات RLS.'));}finally{button.disabled=false;}});
+document.querySelectorAll('[data-store-admin-tab]').forEach(btn=>btn.addEventListener('click',()=>{['Products','Codes','Orders'].forEach(x=>$('storeAdmin'+x).classList.toggle('hidden',btn.dataset.storeAdminTab.toLowerCase()!==x.toLowerCase()));if(btn.dataset.storeAdminTab==='orders')loadStoreAdminOrders();}));
+$('digitalCodesSave')?.addEventListener('click',async()=>{if(!isStoreAdmin())return;const productId=$('digitalCodeProduct').value,codes=[...new Set($('digitalCodesInput').value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean))];if(!productId||!codes.length){msg('digitalCodesMessage','اختر منتجًا وأدخل كودًا واحدًا على الأقل.');return;}try{const {error}=await sb.from('store_digital_codes').insert(codes.map(code=>({product_id:productId,code})));if(error)throw error;$('digitalCodesInput').value='';msg('digitalCodesMessage','تمت إضافة '+codes.length+' كود إلى المخزون المحمي.');}catch(e){msg('digitalCodesMessage','تعذرت إضافة الأكواد: '+e.message);}});
+async function loadStoreAdminOrders(){if(!isStoreAdmin())return;const box=$('storeAdminOrderList');try{const {data,error}=await sb.from('store_orders').select('id,customer_name,phone,status,total_amount,created_at').order('created_at',{ascending:false}).limit(100);if(error)throw error;box.innerHTML=data?.length?data.map(o=>`<div class="listitem"><strong>طلب ${esc(o.id.slice(0,8))}</strong><div class="muted">${esc(o.customer_name)} · ${esc(o.phone)} · ${Number(o.total_amount).toLocaleString('ar-SA')} ر.س · ${esc(o.status)}</div></div>`).join(''):'<div class="empty">لا توجد طلبات حتى الآن.</div>';}catch(e){box.innerHTML='<div class="empty">تعذر تحميل الطلبات: '+esc(e.message)+'</div>';}}
 $('toggleListingFilters').addEventListener('click',()=>{const panel=$('listingAdvanced'),open=panel.hidden;panel.hidden=!open;$('toggleListingFilters').setAttribute('aria-expanded',String(open));$('toggleListingFilters').textContent=open?'✕ إخفاء الفلاتر':'⚙️ الفلاتر والترتيب';});
 $('quickPriceLow').addEventListener('click',()=>{$('adSort').value='price_low';applyAdFilters();$('quickPriceLow').classList.add('active');$('quickPriceHigh').classList.remove('active');});
 $('quickPriceHigh').addEventListener('click',()=>{$('adSort').value='price_high';applyAdFilters();$('quickPriceHigh').classList.add('active');$('quickPriceLow').classList.remove('active');});
@@ -740,7 +776,7 @@ sb.auth.getSession().then(async({data,error})=>{
 });
 sb.auth.onAuthStateChange((_event,session)=>{
  currentUser=session?.user||null;
- if(currentUser){void loadProfile().catch(err=>console.error('Profile refresh failed:',err));}
+ if(currentUser){void loadProfile().catch(err=>console.error('Profile refresh failed:',err));if(!$('page-store').classList.contains('hidden'))loadStoreProducts();}
  else{profile=null;}
 });
 </script>
@@ -767,6 +803,7 @@ sb.auth.onAuthStateChange((_event,session)=>{
 <style>#storeOrderModal.hidden{display:none!important}#storeOrderModal:not(.hidden){display:flex!important}#storeOrderModal .formgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}#storeOrderModal .formgrid .full{grid-column:1/-1}@media(max-width:520px){#storeOrderModal .formgrid{grid-template-columns:1fr}#storeOrderModal .formgrid .full{grid-column:auto}}</style>
 <script>
 function openStoreOrder(id){
+ alert('طلبات المتجر المستقل ستُفعّل بعد إعداد وظيفة الخادم الآمنة.');return;
  const ad=(adsCache||[]).find(x=>String(x.id)===String(id));if(!ad){alert('تعذر العثور على المنتج. حدّث قائمة المتجر وحاول مجددًا.');return;}
  if(ad.status!=='published'){alert('هذا المنتج غير متاح للطلب حاليًا.');return;}
  $('storeOrderAdId').value=String(ad.id);$('storeOrderProduct').innerHTML='<strong>'+esc(ad.title||'منتج')+'</strong><div class="price" style="margin-top:6px">'+Number(ad.price||0).toLocaleString('ar-SA')+' ر.س</div>';
