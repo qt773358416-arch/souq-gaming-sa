@@ -30,3 +30,23 @@ function renderAds(){let rows=[...allAds];const q=$('search').value.trim().toLow
 window.setAdStatus=async(id,status)=>{if(!allowed((await sb.auth.getUser()).data.user)){alert('انتهت جلسة المشرف.');return;}const a=allAds.find(x=>String(x.id)===String(id));if(!a)return;if(!confirm(`تأكيد تغيير حالة الإعلان إلى: ${statusName(status)}؟`))return;const {error}=await sb.from('ads').update({status}).eq('id',id);if(error){alert('تعذر تحديث الإعلان: '+error.message);return;}await loadAds();};
 $('refresh').onclick=loadAds;$('search').oninput=renderAds;$('statusFilter').onchange=renderAds;$('sort').onchange=renderAds;sb.auth.onAuthStateChange((_e,session)=>{if(session?.user&&allowed(session.user)&&$('dashboard').classList.contains('hidden'))showDash();});checkSession();
 </script></body></html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
