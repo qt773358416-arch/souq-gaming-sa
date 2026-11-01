@@ -332,6 +332,149 @@ body.theme-dark .store-hero-actions span{background:#172b38;color:#dceff5;border
 .listing-advanced .filters{grid-template-columns:repeat(2,minmax(0,1fr));}
 @media(max-width:600px){.listing-quick-actions #toggleListingFilters{font-size:13px;padding:10px 8px}.listing-advanced .filters{grid-template-columns:1fr 1fr!important}.listing-advanced .city-filter{grid-column:1/-1}}
 </style>
+
+<style id="marketplace-two-column-compact-cards">
+/* بطاقات الإعلانات: بطاقتان في الصف وإظهار المعلومات الأساسية فقط */
+#ads.grid,
+#ads.grid.list-view{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:12px!important;
+  align-items:stretch!important;
+}
+#ads.grid>.card,
+#ads.grid.list-view>.card{
+  display:flex!important;
+  flex-direction:column!important;
+  min-width:0!important;
+  width:auto!important;
+  margin:0!important;
+  padding:0!important;
+  border:1px solid var(--line)!important;
+  border-radius:16px!important;
+  overflow:hidden!important;
+  background:var(--panel)!important;
+  box-shadow:0 5px 18px rgba(0,0,0,.16)!important;
+}
+#ads .ad-image-wrap{
+  width:100%!important;
+  aspect-ratio:1/1!important;
+  height:auto!important;
+  min-height:0!important;
+  margin:0!important;
+  overflow:hidden!important;
+  background:#101c26!important;
+  border-radius:0!important;
+}
+#ads .ad-image-wrap .adimg,
+#ads .ad-image-wrap .ad-placeholder{
+  display:grid;
+  width:100%!important;
+  height:100%!important;
+  min-height:0!important;
+  aspect-ratio:1/1!important;
+  object-fit:cover!important;
+}
+#ads .adbody{
+  display:flex!important;
+  flex-direction:column!important;
+  gap:7px!important;
+  flex:1!important;
+  min-width:0!important;
+  padding:10px!important;
+  background:transparent!important;
+}
+#ads .ad-badges{
+  display:flex!important;
+  align-items:center!important;
+  gap:5px!important;
+  margin:0!important;
+}
+#ads .ad-badges .ad-tag,
+#ads .ad-badges .condition-tag{display:none!important}
+#ads .ad-badges .safety-verified{
+  display:inline-flex!important;
+  width:max-content!important;
+  max-width:100%!important;
+  padding:3px 7px!important;
+  font-size:10px!important;
+  white-space:nowrap!important;
+  background:#e7f1ff!important;
+  color:#0759c7!important;
+  border:1px solid #8bbcff!important;
+}
+#ads .adbody h3{
+  display:-webkit-box!important;
+  -webkit-line-clamp:2!important;
+  -webkit-box-orient:vertical!important;
+  overflow:hidden!important;
+  min-height:2.8em!important;
+  margin:0!important;
+  font-size:14px!important;
+  line-height:1.45!important;
+  color:var(--text)!important;
+  overflow-wrap:anywhere!important;
+}
+#ads .price{
+  display:block!important;
+  margin:0!important;
+  font-size:17px!important;
+  font-weight:900!important;
+  color:var(--brand)!important;
+}
+#ads .price:empty{display:none!important}
+#ads .ad-description,
+#ads .seller-meta,
+#ads .meta:not(.seller-meta){display:none!important}
+#ads .ad-card-actions{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  gap:0!important;
+  padding:0!important;
+  margin-top:auto!important;
+}
+#ads .ad-card-actions button{display:none!important}
+#ads .ad-card-actions .ad-open-button{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:43px!important;
+  height:43px!important;
+  min-height:43px!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:50%!important;
+  background:#16c7d9!important;
+  color:#071820!important;
+  box-shadow:none!important;
+}
+#ads .ad-card-actions .ad-open-button .ad-plus-icon{
+  display:inline-grid!important;
+  place-items:center!important;
+  width:100%!important;
+  height:100%!important;
+  border-radius:50%!important;
+  background:transparent!important;
+  font-size:29px!important;
+  line-height:1!important;
+}
+#ads .ad-card-actions .ad-open-button>span:not(.ad-plus-icon){display:none!important}
+@media(max-width:380px){
+  #ads.grid,#ads.grid.list-view{gap:8px!important}
+  #ads .adbody{padding:8px!important;gap:6px!important}
+  #ads .adbody h3{font-size:12px!important}
+  #ads .price{font-size:15px!important}
+  #ads .ad-card-actions .ad-open-button{width:38px!important;height:38px!important;min-height:38px!important}
+}
+@media(min-width:761px){
+  #ads.grid,#ads.grid.list-view{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:15px!important}
+  #ads .ad-image-wrap{aspect-ratio:1/1!important}
+  #ads .adbody{padding:12px!important}
+  #ads .adbody h3{font-size:16px!important}
+}
+</style>
+
 </head>
 <body class="theme-dark">
 <div class="wrap">
