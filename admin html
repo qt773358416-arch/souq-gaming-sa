@@ -1,0 +1,504 @@
+
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>إدارة متجر سوق القيمنق السعودي</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{color-scheme:dark;--bg:#101820;--panel:#17232d;--panel2:#202f3a;--text:#eef7fa;--muted:#a4b5c0;--line:#30414d;--brand:#70d9f0;--danger:#ef476f}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Tahoma,Arial,sans-serif;line-height:1.65}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer;border:0;border-radius:11px;padding:10px 14px;font-weight:800}
+.primary{background:#16c7d9;color:#071820}
+.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line)}
+.danger{background:#49212b;color:#ffdce3;border:1px solid #813748}
+.wrap{max-width:1100px;margin:auto;padding:18px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+.top h1{font-size:clamp(22px,4vw,32px);margin:0;color:var(--brand)}
+.muted{color:var(--muted)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;margin:14px 0}
+.field{width:100%;background:#0d1722;color:var(--text);border:1px solid var(--line);border-radius:11px;padding:11px;min-width:0}
+.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.formgrid .full{grid-column:1/-1}
+label{display:grid;gap:6px;color:var(--muted);font-size:13px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.tabs button.active{background:#173744;border:1px solid var(--brand);color:#fff}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.between{justify-content:space-between}
+.listitem{padding:13px 0;border-bottom:1px solid var(--line)}
+.listitem:last-child{border:0}
+.notice,.message{padding:12px;border-radius:11px;background:#172b38;border:1px solid #2c4c5a;color:#dceff5;margin:10px 0}
+.hidden{display:none!important}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.stat{background:var(--panel2);padding:14px;border:1px solid var(--line);border-radius:12px}
+.stat strong{display:block;font-size:24px;color:var(--brand)}
+@media(max-width:600px){
+.wrap{padding:12px}
+.formgrid,.stats{grid-template-columns:1fr}
+.formgrid .full{grid-column:auto}
+.panel{padding:14px}
+.top{align-items:flex-start}
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+<header class="top">
+  <div>
+    <h1>لوحة إدارة متجر سوق القيمنق</h1>
+    <div class="muted">لوحة مستقلة لإدارة المنتجات والمخزون والأكواد والطلبات</div>
+  </div>
+  <div class="row">
+    <a href="./" style="color:var(--brand)">العودة للمتجر</a>
+    <button id="signOut" class="secondary hidden">تسجيل الخروج</button>
+  </div>
+</header>
+
+<section id="loginPanel" class="panel">
+  <h2>دخول مدير المتجر</h2>
+  <p class="muted">استخدم نفس حسابك في منصة سوق القيمنق.</p>
+  <form id="loginForm" class="formgrid">
+    <label>البريد الإلكتروني
+      <input id="email" class="field" type="email" required autocomplete="username">
+    </label>
+    <label>كلمة المرور
+      <input id="password" class="field" type="password" required autocomplete="current-password">
+    </label>
+    <div class="full">
+      <button class="primary" type="submit">تسجيل الدخول</button>
+    </div>
+  </form>
+  <div id="loginMessage" class="message" role="status">جارٍ التحقق من الجلسة...</div>
+</section>
+
+<section id="dashboard" class="hidden">
+
+  <div class="stats">
+    <div class="stat">إجمالي المنتجات<strong id="productCount">—</strong></div>
+    <div class="stat">المنتجات المنشورة<strong id="activeCount">—</strong></div>
+    <div class="stat">الطلبات<strong id="orderCount">—</strong></div>
+  </div>
+
+  <nav class="tabs">
+    <button class="secondary active" data-tab="products">المنتجات</button>
+    <button class="secondary" data-tab="codes">الأكواد الرقمية</button>
+    <button class="secondary" data-tab="orders">الطلبات</button>
+  </nav>
+
+  <section id="tab-products" class="panel">
+    <div class="row between">
+      <h2 id="formTitle">إضافة منتج جديد</h2>
+      <button id="resetForm" class="secondary" type="button">منتج جديد</button>
+    </div>
+
+    <form id="productForm" class="formgrid">
+      <input type="hidden" id="productId">
+
+      <label>اسم المنتج *
+        <input id="title" class="field" required maxlength="150">
+      </label>
+
+      <label>القسم *
+        <select id="category" class="field" required>
+          <option>أجهزة الكمبيوتر</option>
+          <option>قطع الكمبيوتر</option>
+          <option>أجهزة الكونسول</option>
+          <option>الملحقات</option>
+          <option>كروت الشحن</option>
+          <option>الألعاب الرقمية</option>
+          <option>الاشتراكات</option>
+        </select>
+      </label>
+
+      <label>نوع المنتج
+        <select id="productType" class="field">
+          <option value="physical">مادي - شحن</option>
+          <option value="digital">رقمي - كود</option>
+          <option value="hybrid">هجين</option>
+        </select>
+      </label>
+
+      <label>سعر البيع (ر.س) *
+        <input id="price" class="field" type="number" min="0" step="0.01" required>
+      </label>
+
+      <label>التكلفة (ر.س)
+        <input id="cost" class="field" type="number" min="0" step="0.01">
+      </label>
+
+      <label>المخزون
+        <input id="stock" class="field" type="number" min="0" step="1" value="0" required>
+      </label>
+
+      <label class="full">رابط الصورة
+        <input id="image" class="field" type="url" placeholder="https://...">
+      </label>
+
+      <label class="full">الوصف
+        <textarea id="description" class="field" rows="3" maxlength="3000"></textarea>
+      </label>
+
+      <label>حالة المنتج
+        <select id="status" class="field">
+          <option value="draft">مسودة</option>
+          <option value="active">منشور</option>
+          <option value="out_of_stock">نفد المخزون</option>
+        </select>
+      </label>
+
+      <div class="row" style="align-items:end">
+        <button id="saveProduct" class="primary" type="submit">حفظ المنتج</button>
+        <button class="secondary" id="cancelEdit" type="button">إلغاء</button>
+      </div>
+
+      <div id="productMessage" class="full muted" role="status"></div>
+    </form>
+
+    <h3>قائمة المنتجات</h3>
+    <div id="productList" class="muted">جارٍ التحميل...</div>
+  </section>
+
+  <section id="tab-codes" class="panel hidden">
+    <h2>مخزون الأكواد الرقمية</h2>
+    <p class="muted">أدخل كل كود في سطر مستقل. لا تعرض الأكواد في المتجر العام.</p>
+
+    <label>المنتج الرقمي
+      <select id="codeProduct" class="field"></select>
+    </label>
+
+    <label style="margin-top:12px">الأكواد
+      <textarea id="codes" class="field" rows="8" placeholder="XXXX-XXXX-XXXX"></textarea>
+    </label>
+
+    <div class="row" style="margin-top:12px">
+      <button id="saveCodes" class="primary">إضافة الأكواد</button>
+      <span id="codeMessage" class="muted"></span>
+    </div>
+  </section>
+
+  <section id="tab-orders" class="panel hidden">
+    <h2>طلبات المتجر</h2>
+    <div id="orderList" class="muted">جارٍ التحميل...</div>
+  </section>
+
+</section>
+</main>
+
+<script>
+const SUPABASE_URL='https://hmcsgkavqdsfwqomxakw.supabase.co';
+const SUPABASE_ANON_KEY='sb_publishable_I2FLI3drU7_xB8tWWGjnOg_b6Sm2j2m';
+
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({
+'&':'&amp;',
+'<':'&lt;',
+'>':'&gt;',
+'"':'&quot;',
+"'":'&#39;'
+}[c]));
+
+let user=null;
+let editingId=null;
+
+function say(id,text){
+  $(id).textContent=text;
+}
+
+function adminAllowed(u){
+  return !!(u&&u.app_metadata&&u.app_metadata.store_admin===true);
+}
+
+async function verify(){
+  const {data:{session}}=await sb.auth.getSession();
+  user=session?.user||null;
+
+  if(user&&adminAllowed(user)){
+    showDashboard();
+  }else if(user){
+    say(
+      'loginMessage',
+      'هذا الحساب لا يملك صلاحية مدير المتجر. تأكد من app_metadata.store_admin ثم سجّل الخروج والدخول مجددًا.'
+    );
+    $('loginPanel').classList.remove('hidden');
+    $('dashboard').classList.add('hidden');
+  }else{
+    $('loginPanel').classList.remove('hidden');
+    $('dashboard').classList.add('hidden');
+    say('loginMessage','سجّل الدخول بحساب مدير المتجر.');
+  }
+}
+
+function showDashboard(){
+  $('loginPanel').classList.add('hidden');
+  $('dashboard').classList.remove('hidden');
+  $('signOut').classList.remove('hidden');
+  loadProducts();
+  loadOrders();
+}
+
+$('loginForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  say('loginMessage','جارٍ تسجيل الدخول...');
+
+  const {data,error}=await sb.auth.signInWithPassword({
+    email:$('email').value.trim(),
+    password:$('password').value
+  });
+
+  if(error){
+    say('loginMessage',error.message);
+    return;
+  }
+
+  user=data.user;
+
+  if(!adminAllowed(user)){
+    await sb.auth.signOut();
+    user=null;
+    say('loginMessage','تم الدخول لكن الحساب ليس مدير متجر.');
+    return;
+  }
+
+  showDashboard();
+});
+
+$('signOut').onclick=async()=>{
+  await sb.auth.signOut();
+  location.reload();
+};
+
+document.querySelectorAll('[data-tab]').forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll('[data-tab]').forEach(x=>{
+      x.classList.toggle('active',x===b);
+    });
+
+    ['products','codes','orders'].forEach(t=>{
+      $('tab-'+t).classList.toggle('hidden',b.dataset.tab!==t);
+    });
+
+    if(b.dataset.tab==='orders')loadOrders();
+  };
+});
+
+async function loadProducts(){
+  if(!adminAllowed(user))return;
+
+  const {data,error}=await sb
+    .from('store_products')
+    .select('*')
+    .order('created_at',{ascending:false});
+
+  if(error){
+    $('productList').textContent='تعذر تحميل المنتجات: '+error.message;
+    return;
+  }
+
+  const rows=data||[];
+
+  $('productCount').textContent=rows.length;
+  $('activeCount').textContent=rows.filter(p=>p.status==='active').length;
+
+  $('productList').innerHTML=rows.length
+    ?rows.map(p=>`
+      <div class="listitem">
+        <div class="row between">
+          <div>
+            <strong>${esc(p.title)}</strong>
+            <div class="muted">
+              ${esc(p.category)} ·
+              ${Number(p.price).toLocaleString('ar-SA')} ر.س ·
+              المخزون ${p.stock_quantity} ·
+              ${esc(p.status)}
+            </div>
+          </div>
+          <div class="row">
+            <button class="secondary" onclick="editProduct('${esc(p.id)}')">تعديل</button>
+            <button class="danger" onclick="removeProduct('${esc(p.id)}')">حذف</button>
+          </div>
+        </div>
+      </div>
+    `).join('')
+    :'<div class="notice">لا توجد منتجات بعد. أضف أول منتج من النموذج.</div>';
+
+  $('codeProduct').innerHTML=rows
+    .filter(p=>p.product_type!=='physical')
+    .map(p=>`<option value="${esc(p.id)}">${esc(p.title)}</option>`)
+    .join('')
+    ||'<option value="">لا توجد منتجات رقمية</option>';
+}
+
+function resetForm(){
+  editingId=null;
+  $('productForm').reset();
+  $('productId').value='';
+  $('stock').value='0';
+  $('formTitle').textContent='إضافة منتج جديد';
+  say('productMessage','');
+}
+
+window.editProduct=async id=>{
+  const {data,error}=await sb
+    .from('store_products')
+    .select('*')
+    .eq('id',id)
+    .single();
+
+  if(error){
+    alert(error.message);
+    return;
+  }
+
+  editingId=id;
+  $('productId').value=id;
+  $('title').value=data.title;
+  $('category').value=data.category;
+  $('productType').value=data.product_type;
+  $('price').value=data.price;
+  $('cost').value=data.cost??'';
+  $('stock').value=data.stock_quantity;
+  $('image').value=data.image_url||'';
+  $('description').value=data.description||'';
+  $('status').value=data.status;
+  $('formTitle').textContent='تعديل المنتج';
+
+  window.scrollTo({top:0,behavior:'smooth'});
+};
+
+window.removeProduct=async id=>{
+  if(!confirm('هل تريد حذف هذا المنتج؟'))return;
+
+  const {error}=await sb
+    .from('store_products')
+    .delete()
+    .eq('id',id);
+
+  if(error){
+    alert(error.message);
+    return;
+  }
+
+  loadProducts();
+};
+
+$('resetForm').onclick=$('cancelEdit').onclick=resetForm;
+
+$('productForm').onsubmit=async e=>{
+  e.preventDefault();
+  if(!adminAllowed(user))return;
+
+  const payload={
+    title:$('title').value.trim(),
+    category:$('category').value,
+    product_type:$('productType').value,
+    price:Number($('price').value),
+    cost:$('cost').value===''?null:Number($('cost').value),
+    stock_quantity:Number($('stock').value),
+    image_url:$('image').value.trim()||null,
+    description:$('description').value.trim(),
+    status:$('status').value,
+    updated_at:new Date().toISOString()
+  };
+
+  $('saveProduct').disabled=true;
+
+  try{
+    const result=editingId
+      ?await sb.from('store_products').update(payload).eq('id',editingId)
+      :await sb.from('store_products').insert({...payload,created_by:user.id});
+
+    if(result.error)throw result.error;
+
+    say('productMessage','تم حفظ المنتج.');
+    resetForm();
+    await loadProducts();
+
+  }catch(err){
+    say('productMessage','فشل الحفظ: '+err.message);
+
+  }finally{
+    $('saveProduct').disabled=false;
+  }
+};
+
+$('saveCodes').onclick=async()=>{
+  if(!adminAllowed(user))return;
+
+  const productId=$('codeProduct').value;
+
+  const codes=[
+    ...new Set(
+      $('codes').value
+        .split(/\r?\n/)
+        .map(x=>x.trim())
+        .filter(Boolean)
+    )
+  ];
+
+  if(!productId||!codes.length){
+    say('codeMessage','اختر منتجًا وأدخل كودًا واحدًا على الأقل.');
+    return;
+  }
+
+  const {error}=await sb
+    .from('store_digital_codes')
+    .insert(codes.map(code=>({product_id:productId,code})));
+
+  if(error){
+    say('codeMessage','تعذرت الإضافة: '+error.message);
+    return;
+  }
+
+  $('codes').value='';
+  say('codeMessage','تمت إضافة '+codes.length+' كود إلى المخزون المحمي.');
+};
+
+async function loadOrders(){
+  if(!adminAllowed(user))return;
+
+  const {data,error}=await sb
+    .from('store_orders')
+    .select('id,customer_name,phone,status,total_amount,created_at')
+    .order('created_at',{ascending:false})
+    .limit(100);
+
+  if(error){
+    $('orderList').textContent='تعذر تحميل الطلبات: '+error.message;
+    return;
+  }
+
+  const rows=data||[];
+  $('orderCount').textContent=rows.length;
+
+  $('orderList').innerHTML=rows.length
+    ?rows.map(o=>`
+      <div class="listitem">
+        <strong>طلب ${esc(String(o.id).slice(0,8))}</strong>
+        <div class="muted">
+          ${esc(o.customer_name)} ·
+          ${esc(o.phone)} ·
+          ${Number(o.total_amount).toLocaleString('ar-SA')} ر.س ·
+          ${esc(o.status)}
+        </div>
+      </div>
+    `).join('')
+    :'<div class="notice">لا توجد طلبات حتى الآن.</div>';
+}
+
+sb.auth.onAuthStateChange((_event,session)=>{
+  user=session?.user||null;
+
+  if(user&&adminAllowed(user)&&$('dashboard').classList.contains('hidden')){
+    showDashboard();
+  }
+});
+
+verify();
+</script>
+</body>
+</html>
