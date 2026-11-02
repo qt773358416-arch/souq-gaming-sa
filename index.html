@@ -575,7 +575,7 @@ body.theme-dark .store-hero-actions span{background:#172b38;color:#dceff5;border
 <button class="account-shortcut" data-go="myads" type="button"><span class="shortcut-icon">▣</span><span><strong>إعلاناتي</strong><small>إدارة إعلاناتك</small></span></button>
 <button class="account-shortcut" data-go="favorites" type="button"><span class="shortcut-icon">♡</span><span><strong>المفضلة</strong><small>إعلانات محفوظة</small></span></button>
 <button class="account-shortcut" data-go="messages" type="button"><span class="shortcut-icon">✉</span><span><strong>المحادثات</strong><small>رسائلك الخاصة</small></span></button>
-</div><div id="authBox"><h3>تسجيل الدخول أو إنشاء حساب</h3><p class="muted">التسجيل غير ظاهر في الصفحة الرئيسية؛ يظهر هنا أو عند تنفيذ إجراء يحتاج حسابًا.</p><form id="authForm" class="stack"><input id="authEmail" type="email" class="field" required placeholder="البريد الإلكتروني"><input id="authPassword" type="password" class="field" minlength="6" required placeholder="كلمة المرور (6 أحرف على الأقل)"><div class="row"><button class="primary" type="submit">تسجيل الدخول</button><button class="secondary" type="button" id="signupBtn">إنشاء حساب</button></div><button class="google-auth" type="button" id="googleAuthBtn"><span aria-hidden="true">G</span> المتابعة باستخدام Google</button><div id="authMsg" class="muted" role="status"></div></form></div><div id="profileBox" class="hidden"><h3>البيانات الشخصية</h3><p class="muted" style="margin-top:-8px">حدّث بياناتك ثم اضغط حفظ. ستبقى القيم ظاهرة بعد نجاح الحفظ.</p><form id="profileForm" class="stack"><label>الاسم الظاهر<input id="profileName" class="field" maxlength="80" required></label><label>رقم الجوال<input id="profilePhone" class="field" inputmode="tel" placeholder="05xxxxxxxx"></label><label>المدينة<input id="profileCity" class="field" maxlength="80" placeholder="جدة"></label><button class="primary">حفظ الإعدادات</button><div id="profileMsg" class="muted"></div></form><div class="account-actions"><button class="secondary" data-go="profile" type="button">الملف الشخصي</button><button class="secondary" data-go="settings" type="button">تفضيلات العرض</button><button class="secondary" id="signoutBtn" type="button">تسجيل الخروج</button></div><div id="myAds" style="margin-top:18px"></div></div></div></section>
+</div><div id="authBox"><h3>تسجيل الدخول أو إنشاء حساب</h3><p class="muted">التسجيل غير ظاهر في الصفحة الرئيسية؛ يظهر هنا أو عند تنفيذ إجراء يحتاج حسابًا.</p><form id="authForm" class="stack"><label>البريد الإلكتروني<input id="authEmail" type="email" class="field" required autocomplete="email" placeholder="أدخل بريدك الإلكتروني"></label><button class="primary" id="sendOtpBtn" type="submit">إرسال رمز التحقق</button><label id="authOtpWrap" class="hidden">رمز التحقق (6 أرقام)<input id="authOtp" type="text" class="field" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" placeholder="123456"></label><div id="authOtpActions" class="row hidden"><button class="primary" id="verifyOtpBtn" type="button">تأكيد الرمز والدخول</button><button class="secondary" id="resendOtpBtn" type="button">إعادة إرسال الرمز</button></div><button class="google-auth" type="button" id="googleAuthBtn"><span aria-hidden="true">G</span> المتابعة باستخدام Google</button><div id="authMsg" class="muted" role="status"></div></form></div><div id="profileBox" class="hidden"><h3>البيانات الشخصية</h3><p class="muted" style="margin-top:-8px">حدّث بياناتك ثم اضغط حفظ. ستبقى القيم ظاهرة بعد نجاح الحفظ.</p><form id="profileForm" class="stack"><label>الاسم الظاهر<input id="profileName" class="field" maxlength="80" required></label><label>رقم الجوال<input id="profilePhone" class="field" inputmode="tel" placeholder="05xxxxxxxx"></label><label>المدينة<input id="profileCity" class="field" maxlength="80" placeholder="جدة"></label><button class="primary">حفظ الإعدادات</button><div id="profileMsg" class="muted"></div></form><div class="account-actions"><button class="secondary" data-go="profile" type="button">الملف الشخصي</button><button class="secondary" data-go="settings" type="button">تفضيلات العرض</button><button class="secondary" id="signoutBtn" type="button">تسجيل الخروج</button></div><div id="myAds" style="margin-top:18px"></div></div></div></section>
 <section id="page-myads" class="hidden"><div class="panel"><div class="row space"><h2>إعلاناتي</h2><button class="secondary" data-go="add">＋ إعلان جديد</button></div><div id="myAdsPage"></div></div></section>
 </main>
 <div class="footer">سوق القيمنق السعودي · تعامل بأمان، وافحص المنتج قبل الدفع. لا توجد خدمة دفع أو ضمان وسيط مفعّلة في هذه النسخة.<div class="subnav" style="justify-content:center"><button data-go="help">مركز المساعدة</button><button data-go="contact">تواصل معنا</button><button data-go="policy">الشروط والسياسات</button><button data-go="favorites">المفضلة</button><button data-go="profile">الملف الشخصي</button></div></div>
@@ -838,8 +838,39 @@ async function loadPublicPosts(){
  }
 }
 $('publicPostForm').onsubmit=async e=>{e.preventDefault();if(!needAuth())return;const body=$('publicText').value.trim();if(!body)return;const {error}=await sb.from('public_posts').insert({user_id:currentUser.id,author_name:profile?.display_name||currentUser.email,body});if(error){msg('communityMsg','تعذر نشر المشاركة.');return;}$('publicText').value='';msg('communityMsg','تم نشر المشاركة.');loadPublicPosts()};
-$('authForm').onsubmit=async e=>{e.preventDefault();msg('authMsg','جارٍ تسجيل الدخول...');const {data,error}=await sb.auth.signInWithPassword({email:$('authEmail').value.trim(),password:$('authPassword').value});if(error){msg('authMsg',error.message);return;}currentUser=data.user;await loadProfile();};
-$('signupBtn').onclick=async()=>{msg('authMsg','جارٍ إنشاء الحساب...');const {data,error}=await sb.auth.signUp({email:$('authEmail').value.trim(),password:$('authPassword').value});if(error){msg('authMsg',error.message);return;}if(data.session){currentUser=data.user;await loadProfile();}else msg('authMsg','تم إنشاء الحساب. راجع بريدك الإلكتروني لتأكيده، ثم سجّل الدخول.')};
+let pendingOtpEmail='';
+async function sendUserOtp(){
+ const email=$('authEmail').value.trim().toLowerCase();
+ if(!email){msg('authMsg','أدخل بريدك الإلكتروني أولًا.');return;}
+ pendingOtpEmail=email;
+ $('sendOtpBtn').disabled=true;
+ msg('authMsg','جارٍ إرسال رمز التحقق إلى بريدك...');
+ try{
+  const {error}=await sb.auth.signInWithOtp({email,options:{shouldCreateUser:true}});
+  if(error)throw error;
+  $('authOtpWrap').classList.remove('hidden');
+  $('authOtpActions').classList.remove('hidden');
+  $('authOtp').focus();
+  msg('authMsg','تم طلب إرسال الرمز. افحص البريد الوارد والرسائل غير المرغوب فيها، ثم أدخل الرمز المكوّن من 6 أرقام.');
+ }catch(err){msg('authMsg','تعذر إرسال الرمز: '+(err?.message||'تحقق من إعدادات البريد في Supabase.'));}
+ finally{$('sendOtpBtn').disabled=false;}
+}
+$('authForm').onsubmit=async e=>{e.preventDefault();await sendUserOtp();};
+$('resendOtpBtn').onclick=sendUserOtp;
+$('verifyOtpBtn').onclick=async()=>{
+ const token=$('authOtp').value.trim();
+ if(!/^\d{6}$/.test(token)){msg('authMsg','أدخل رمزًا صحيحًا مكوّنًا من 6 أرقام.');return;}
+ $('verifyOtpBtn').disabled=true;
+ msg('authMsg','جارٍ التحقق من الرمز...');
+ try{
+  const {data,error}=await sb.auth.verifyOtp({email:pendingOtpEmail||$('authEmail').value.trim().toLowerCase(),token,type:'email'});
+  if(error)throw error;
+  currentUser=data.user;
+  await loadProfile();
+  msg('authMsg','تم تسجيل الدخول بنجاح.');
+ }catch(err){msg('authMsg','تعذر التحقق من الرمز: '+(err?.message||'تأكد من صحة الرمز وصلاحيته.'));}
+ finally{$('verifyOtpBtn').disabled=false;}
+};
 $('googleAuthBtn').onclick=async()=>{msg('authMsg','جارٍ فتح تسجيل الدخول باستخدام Google...');const {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.origin}});if(error)msg('authMsg','تعذر بدء تسجيل Google: '+error.message+' — تأكد من تفعيل Google في Supabase Auth وإعداد Client ID وSecret.');};
 async function loadProfile(){
  if(!currentUser)return;
