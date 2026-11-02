@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
@@ -62,14 +61,16 @@ label{display:grid;gap:6px;color:var(--muted);font-size:13px}
   <h2>دخول مدير المتجر</h2>
   <p class="muted">استخدم نفس حسابك في منصة سوق القيمنق.</p>
   <form id="loginForm" class="formgrid">
-    <label>البريد الإلكتروني
-      <input id="email" class="field" type="email" required autocomplete="username">
+    <label class="full">البريد الإلكتروني
+      <input id="email" class="field" type="email" required autocomplete="email">
     </label>
-    <label>كلمة المرور
-      <input id="password" class="field" type="password" required autocomplete="current-password">
+    <div class="full"><button id="sendCode" class="primary" type="submit">إرسال رمز التحقق</button></div>
+    <label id="otpWrap" class="full hidden">رمز التحقق (6 أرقام)
+      <input id="otp" class="field" type="text" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="123456">
     </label>
-    <div class="full">
-      <button class="primary" type="submit">تسجيل الدخول</button>
+    <div id="otpActions" class="full row hidden">
+      <button type="button" id="verifyCode" class="primary">تأكيد الدخول</button>
+      <button type="button" id="resend" class="secondary">إعادة إرسال الرمز</button>
     </div>
   </form>
   <div id="loginMessage" class="message" role="status">جارٍ التحقق من الجلسة...</div>
@@ -241,31 +242,43 @@ function showDashboard(){
   loadOrders();
 }
 
-$('loginForm').addEventListener('submit',async e=>{
-  e.preventDefault();
-  say('loginMessage','جارٍ تسجيل الدخول...');
-
-  const {data,error}=await sb.auth.signInWithPassword({
-    email:$('email').value.trim(),
-    password:$('password').value
-  });
-
-  if(error){
-    say('loginMessage',error.message);
-    return;
-  }
-
-  user=data.user;
-
-  if(!adminAllowed(user)){
-    await sb.auth.signOut();
-    user=null;
-    say('loginMessage','تم الدخول لكن الحساب ليس مدير متجر.');
-    return;
-  }
-
-  showDashboard();
-});
+let pendingAdminEmail='';
+async function sendStoreAdminOtp(){
+  const email=$('email').value.trim().toLowerCase();
+  if(!email){say('loginMessage','أدخل بريد مدير المتجر.');return;}
+  pendingAdminEmail=email;
+  $('sendCode').disabled=true;
+  say('loginMessage','جارٍ إرسال رمز التحقق...');
+  try{
+    const {error}=await sb.auth.signInWithOtp({email,options:{shouldCreateUser:false}});
+    if(error)throw error;
+    $('otpWrap').classList.remove('hidden');
+    $('otpActions').classList.remove('hidden');
+    $('otp').focus();
+    say('loginMessage','تم طلب إرسال الرمز. افحص البريد الوارد والرسائل غير المرغوب فيها.');
+  }catch(err){say('loginMessage','تعذر إرسال الرمز: '+(err?.message||'تحقق من إعدادات البريد في Supabase.'));}
+  finally{$('sendCode').disabled=false;}
+}
+$('loginForm').addEventListener('submit',async e=>{e.preventDefault();await sendStoreAdminOtp();});
+$('resend').onclick=sendStoreAdminOtp;
+$('verifyCode').onclick=async()=>{
+  const token=$('otp').value.trim();
+  if(!/^\d{6}$/.test(token)){say('loginMessage','أدخل رمزًا مكوّنًا من 6 أرقام.');return;}
+  $('verifyCode').disabled=true;
+  say('loginMessage','جارٍ التحقق من الرمز...');
+  try{
+    const {data,error}=await sb.auth.verifyOtp({email:pendingAdminEmail||$('email').value.trim().toLowerCase(),token,type:'email'});
+    if(error)throw error;
+    user=data.user;
+    if(!adminAllowed(user)){
+      await sb.auth.signOut();user=null;
+      say('loginMessage','تم التحقق من البريد، لكن هذا الحساب لا يملك صلاحية مدير المتجر. يجب تفعيل store_admin في app_metadata.');
+      return;
+    }
+    showDashboard();
+  }catch(err){say('loginMessage','تعذر التحقق من الرمز: '+(err?.message||'تأكد من صحة الرمز وصلاحيته.'));}
+  finally{$('verifyCode').disabled=false;}
+};
 
 $('signOut').onclick=async()=>{
   await sb.auth.signOut();
