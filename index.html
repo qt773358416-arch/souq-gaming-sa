@@ -331,6 +331,23 @@ body.store-view .top,body.store-view .searchrow{display:none!important}
 .ad-share-top{position:absolute;top:9px;left:9px;z-index:3;width:39px;height:39px;border-radius:50%;background:#fff;color:#17232d;border:1px solid #e5e7eb;display:grid;place-items:center;padding:0;font-size:19px;box-shadow:0 2px 8px #0002}
 @media(max-width:600px){.store-filter-panel{grid-template-columns:1fr 1fr}#storeProducts .store-square-card .adimg{height:105px!important}}
 </style>
+
+<style id="ad-square-minimal-cards">
+/* بطاقات إعلانات مربعة ومختصرة: الصورة والعنوان والسعر والموقع والتاريخ والمشاركة فقط */
+#ads.grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important;align-items:stretch!important}
+#ads.grid>.ad-square-card{display:flex!important;flex-direction:column!important;min-width:0!important;width:auto!important;margin:0!important;padding:0!important;border:1px solid var(--line)!important;border-radius:17px!important;overflow:hidden!important;background:var(--panel)!important;box-shadow:var(--shadow)!important}
+#ads .ad-square-card .ad-image-wrap{position:relative!important;width:100%!important;aspect-ratio:1/1!important;height:auto!important;margin:0!important;overflow:hidden!important;border-radius:0!important;background:var(--panel2)!important}
+#ads .ad-square-card .adimg{display:block!important;width:100%!important;height:100%!important;min-height:0!important;aspect-ratio:1/1!important;object-fit:cover!important}
+#ads .ad-square-card .adbody{display:flex!important;flex:1!important;flex-direction:column!important;gap:7px!important;min-width:0!important;padding:10px!important;background:transparent!important}
+#ads .ad-square-card .adbody h3{display:-webkit-box!important;-webkit-line-clamp:2!important;-webkit-box-orient:vertical!important;overflow:hidden!important;min-height:2.8em!important;margin:0!important;font-size:14px!important;line-height:1.4!important;color:var(--text)!important}
+#ads .ad-square-card .ad-square-price{margin:0!important;font-size:18px!important;font-weight:900!important;color:var(--brand)!important;white-space:nowrap}
+#ads .ad-square-meta{display:flex!important;flex-direction:column!important;gap:3px!important;margin-top:2px!important;color:var(--muted)!important;font-size:11px!important;line-height:1.45!important}
+#ads .ad-square-open{align-self:flex-start!important;display:grid!important;place-items:center!important;width:42px!important;height:42px!important;min-height:42px!important;margin-top:auto!important;padding:0!important;border-radius:50%!important;font-size:27px!important;line-height:1!important}
+#ads .ad-square-card .ad-share-top{position:absolute!important;top:9px!important;left:9px!important;z-index:4!important;width:39px!important;height:39px!important;border-radius:50%!important;background:#fff!important;color:#17232d!important;border:1px solid #e5e7eb!important;display:grid!important;place-items:center!important;padding:0!important;font-size:20px!important;box-shadow:0 2px 8px #0003!important}
+@media(max-width:360px){#ads.grid{gap:8px!important}#ads .ad-square-card .adbody{padding:8px!important}#ads .ad-square-card .adbody h3{font-size:12px!important}#ads .ad-square-card .ad-square-price{font-size:16px!important}#ads .ad-square-meta{font-size:10px!important}#ads .ad-square-open{width:38px!important;height:38px!important;min-height:38px!important}}
+@media(min-width:900px){#ads.grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:16px!important}#ads .ad-square-card .adbody{padding:13px!important}#ads .ad-square-card .adbody h3{font-size:16px!important}}
+</style>
+
 </head>
 <body class="theme-dark">
 <div class="wrap">
@@ -607,7 +624,7 @@ function renderAdsFromCache(){
  $('activeFilterLabel').textContent=terms.join(' · ')||'كل الأقسام';
  if(!rows.length){box.innerHTML='<div class="empty">لا توجد إعلانات مطابقة للفلاتر الحالية. جرّب تغيير كلمات البحث أو مسح الفلاتر.</div>';return;}
  box.classList.toggle('list-view',document.body.dataset.viewMode==='list');
- box.innerHTML=rows.map(a=>{const img=Array.isArray(a.image_urls)&&a.image_urls.length?a.image_urls[0]:'';return `<article class="card"><div class="ad-image-wrap"><button class="ad-share-top" type="button" aria-label="مشاركة الإعلان" onclick="shareAd('${a.id}','${esc(a.title)}')">↗</button>${img?`<img class="adimg" src="${esc(img)}" alt="${esc(a.title)}" loading="lazy" onerror="this.style.display='none'">`:`<div class="adimg ad-placeholder" aria-label="لا توجد صورة">لا توجد صورة</div>`}</div><div class="adbody"><div class="ad-badges"><span class="ad-tag">${esc(a.category||'إعلان')}</span><span class="ad-tag condition-tag">${esc(a.condition||'مستعمل')}</span></div><h3>${esc(a.title)}</h3><div class="price">${Number(a.price||0).toLocaleString('ar-SA')} <small>ر.س</small></div><p class="ad-description">${esc((a.description||'').slice(0,150))}${(a.description||'').length>150?'…':''}</p><div class="meta seller-meta"><span>👤 ${esc(a.seller_name||'بائع')}</span><span>📍 ${esc(a.city||a.location||'السعودية')}</span></div><div class="actions"><button class="primary" onclick="openAdDetail('${a.id}')">التفاصيل</button><button class="secondary" onclick="contactWhatsApp('${esc(a.seller_phone||'')}','${esc(a.title)}')">تواصل</button><button class="fav-button" onclick="toggleFavorite('${a.id}')">♡ حفظ</button></div></div></article>`}).join('');
+ box.innerHTML=rows.map(a=>{const img=Array.isArray(a.image_urls)&&a.image_urls.length?a.image_urls[0]:'';const added=a.created_at?new Date(a.created_at).toLocaleDateString('ar-SA'):'—';const city=a.city||a.location||'السعودية';return `<article class="card ad-square-card"><div class="ad-image-wrap"><button class="ad-share-top" type="button" aria-label="مشاركة الإعلان" title="مشاركة الإعلان" onclick="shareAd('${a.id}','${esc(a.title)}')">↗</button>${img?`<img class="adimg" src="${esc(img)}" alt="${esc(a.title)}" loading="lazy" onerror="this.style.display='none'">`:`<div class="adimg ad-placeholder" aria-label="لا توجد صورة">لا توجد صورة</div>`}</div><div class="adbody ad-square-body"><h3 title="${esc(a.title)}">${esc(a.title||'إعلان')}</h3><div class="price ad-square-price">${Number(a.price||0).toLocaleString('ar-SA')} <small>ر.س</small></div><div class="ad-square-meta"><span>📍 ${esc(city)}</span><span>🗓 ${esc(added)}</span></div><button class="primary ad-square-open" type="button" onclick="openAdDetail('${a.id}')" aria-label="عرض التفاصيل">＋</button></div></article>`}).join('');
 }
 async function loadAds(){
  const box=$('ads');
