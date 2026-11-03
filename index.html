@@ -116,15 +116,6 @@ button:focus-visible{outline:3px solid #55c9df!important;outline-offset:2px}
 }
 
 .listing-tools{padding:12px!important;margin:12px 0!important;border-radius:14px!important}.listing-quick-actions{display:flex;gap:7px;flex-wrap:wrap}.listing-quick-actions button{flex:1 1 120px;min-height:40px}.listing-advanced{margin-top:9px}.listing-advanced[hidden]{display:none!important}.listing-tools .filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.listing-tools .field,.listing-tools .image-filter,.listing-tools #clearFilters{min-width:0;min-height:40px;padding:9px 10px}.ad-description{display:none!important}.media-preview{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.media-item{position:relative;display:flex;flex-direction:column;gap:4px}.media-preview img{width:84px;height:84px;object-fit:cover;border-radius:10px;border:1px solid var(--line)}.media-remove{font-size:11px;padding:5px 8px;background:#4a2028;color:#fff;border:1px solid #7e3642;border-radius:8px}.media-preview video{width:min(260px,100%);max-height:180px;border-radius:10px;background:#000}.pledge-check{display:flex;align-items:center;gap:8px;color:var(--text);margin-top:8px}.pledge-check input{width:18px;height:18px;flex:0 0 auto}.media-editor .row{margin-top:8px}@media(max-width:480px){.listing-tools .filters{grid-template-columns:1fr 1fr}.listing-quick-actions button{flex:1 1 42%;font-size:12px;padding:9px}.media-preview img{width:70px;height:70px}}
-
-.safety-verified{display:inline-flex;align-items:center;gap:5px;background:#e7f1ff;color:#0759c7;border:1px solid #8bbcff;border-radius:999px;padding:4px 9px;font-size:11px;font-weight:800;white-space:nowrap}.safety-detail{margin:10px 0;padding:8px 12px;font-size:13px}.fault-notice{border-color:#e2a84b;background:rgba(226,168,75,.09);margin:12px 0}.fault-notice strong{color:#a66b12}
-
-/* أزرار بطاقات الإعلانات: تفاصيل (+) ومشاركة */
-.ad-card-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
-.ad-card-actions .ad-open-button{display:inline-flex;align-items:center;justify-content:center;gap:6px}
-.ad-plus-icon{display:inline-grid;place-items:center;width:23px;height:23px;border-radius:50%;background:#ffffff28;font-size:19px;font-weight:800;line-height:1}
-.ad-card-actions .ad-share-button{border-color:#c9dfd1;color:#16784f}
-@media(max-width:600px){.ad-card-actions{gap:6px}.ad-card-actions button{padding:8px 9px!important;font-size:11px!important}.ad-plus-icon{width:21px;height:21px}}
 </style>
 
 <style id="account-page-refresh">
@@ -324,188 +315,54 @@ body.theme-dark .store-hero-actions span{background:#172b38;color:#dceff5;border
 @media(max-width:420px){#ads.grid>.card,#storeProducts>.store-square-card{grid-template-columns:minmax(94px,31%) minmax(0,1fr)!important}#ads .adbody,#storeProducts .store-square-body{padding:11px 10px 11px 9px;gap:6px}#ads .adbody h3,#storeProducts .store-square-body h3{font-size:14px}#ads .price,#storeProducts .store-square-price{font-size:17px}#ads .ad-description{font-size:11px}#ads .actions button,#storeProducts .store-square-actions button{font-size:11px;padding:6px 7px;min-height:31px}#ads .seller-meta{font-size:11px}}
 </style>
 
-<style id="simplified-listing-filters">
-.listing-quick-actions{display:flex;gap:8px;}
-.listing-quick-actions #toggleListingFilters{width:100%;min-height:44px;font-weight:800;}
-.legacy-filter-control{display:none!important;}
-.listing-filter-hint{font-size:12px;margin:0 0 9px;}
-.listing-advanced .filters{grid-template-columns:repeat(2,minmax(0,1fr));}
-@media(max-width:600px){.listing-quick-actions #toggleListingFilters{font-size:13px;padding:10px 8px}.listing-advanced .filters{grid-template-columns:1fr 1fr!important}.listing-advanced .city-filter{grid-column:1/-1}}
+<style id="souq-requested-ui-v2">
+body.store-view .top,body.store-view .searchrow{display:none!important}
+.store-page-heading{padding:8px 2px 12px;text-align:right}.store-page-heading h1{margin:0;font-size:25px}.store-page-heading p{margin:2px 0;color:var(--muted)}
+.store-compact-toolbar{display:grid;grid-template-columns:1fr auto;gap:9px;align-items:center;margin:10px 0}
+.store-filter-button{background:#202f3a;color:var(--text);border:1px solid #30414d;border-radius:13px;padding:11px 20px;font-weight:900}
+.store-filter-panel{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:13px;margin:8px 0 14px;background:var(--panel);border:1px solid var(--line);border-radius:14px}
+.store-filter-panel label{display:grid;gap:5px}.store-filter-panel button{align-self:end}
+#storeProducts .store-square-card{border-radius:14px}
+#storeProducts .store-square-card .adimg{height:118px!important}
+#storeProducts .store-square-card .adbody{padding:10px!important}
+#storeProducts .store-square-card h3{font-size:14px!important;line-height:1.45}
+#storeProducts .store-square-card .price{font-size:17px!important}
+.card .ad-image-wrap{position:relative}
+.ad-share-top{position:absolute;top:9px;left:9px;z-index:3;width:39px;height:39px;border-radius:50%;background:#fff;color:#17232d;border:1px solid #e5e7eb;display:grid;place-items:center;padding:0;font-size:19px;box-shadow:0 2px 8px #0002}
+@media(max-width:600px){.store-filter-panel{grid-template-columns:1fr 1fr}#storeProducts .store-square-card .adimg{height:105px!important}}
 </style>
 
-<style id="marketplace-two-column-compact-cards">
-/* بطاقات الإعلانات: بطاقتان في الصف وإظهار المعلومات الأساسية فقط */
-#ads.grid,
-#ads.grid.list-view{
-  display:grid!important;
-  grid-template-columns:repeat(2,minmax(0,1fr))!important;
-  gap:12px!important;
-  align-items:stretch!important;
-}
-#ads.grid>.card,
-#ads.grid.list-view>.card{
-  display:flex!important;
-  flex-direction:column!important;
-  min-width:0!important;
-  width:auto!important;
-  margin:0!important;
-  padding:0!important;
-  border:1px solid var(--line)!important;
-  border-radius:16px!important;
-  overflow:hidden!important;
-  background:var(--panel)!important;
-  box-shadow:0 5px 18px rgba(0,0,0,.16)!important;
-}
-#ads .ad-image-wrap{
-  width:100%!important;
-  aspect-ratio:1/1!important;
-  height:auto!important;
-  min-height:0!important;
-  margin:0!important;
-  overflow:hidden!important;
-  background:#101c26!important;
-  border-radius:0!important;
-}
-#ads .ad-image-wrap .adimg,
-#ads .ad-image-wrap .ad-placeholder{
-  display:grid;
-  width:100%!important;
-  height:100%!important;
-  min-height:0!important;
-  aspect-ratio:1/1!important;
-  object-fit:cover!important;
-}
-#ads .adbody{
-  display:flex!important;
-  flex-direction:column!important;
-  gap:7px!important;
-  flex:1!important;
-  min-width:0!important;
-  padding:10px!important;
-  background:transparent!important;
-}
-#ads .ad-badges{
-  display:flex!important;
-  align-items:center!important;
-  gap:5px!important;
-  margin:0!important;
-}
-#ads .ad-badges .ad-tag,
-#ads .ad-badges .condition-tag{display:none!important}
-#ads .ad-badges .safety-verified{
-  display:inline-flex!important;
-  width:max-content!important;
-  max-width:100%!important;
-  padding:3px 7px!important;
-  font-size:10px!important;
-  white-space:nowrap!important;
-  background:#e7f1ff!important;
-  color:#0759c7!important;
-  border:1px solid #8bbcff!important;
-}
-#ads .adbody h3{
-  display:-webkit-box!important;
-  -webkit-line-clamp:2!important;
-  -webkit-box-orient:vertical!important;
-  overflow:hidden!important;
-  min-height:2.8em!important;
-  margin:0!important;
-  font-size:14px!important;
-  line-height:1.45!important;
-  color:var(--text)!important;
-  overflow-wrap:anywhere!important;
-}
-#ads .price{
-  display:block!important;
-  margin:0!important;
-  font-size:17px!important;
-  font-weight:900!important;
-  color:var(--brand)!important;
-}
-#ads .price:empty{display:none!important}
-#ads .ad-description,
-#ads .seller-meta,
-#ads .meta:not(.seller-meta){display:none!important}
-#ads .ad-card-actions{
-  display:flex!important;
-  align-items:center!important;
-  justify-content:flex-start!important;
-  gap:0!important;
-  padding:0!important;
-  margin-top:auto!important;
-}
-#ads .ad-card-actions button{display:none!important}
-#ads .ad-card-actions .ad-open-button{
-  display:inline-flex!important;
-  align-items:center!important;
-  justify-content:center!important;
-  width:43px!important;
-  height:43px!important;
-  min-height:43px!important;
-  padding:0!important;
-  border:0!important;
-  border-radius:50%!important;
-  background:#16c7d9!important;
-  color:#071820!important;
-  box-shadow:none!important;
-}
-#ads .ad-card-actions .ad-open-button .ad-plus-icon{
-  display:inline-grid!important;
-  place-items:center!important;
-  width:100%!important;
-  height:100%!important;
-  border-radius:50%!important;
-  background:transparent!important;
-  font-size:29px!important;
-  line-height:1!important;
-}
-#ads .ad-card-actions .ad-open-button>span:not(.ad-plus-icon){display:none!important}
-@media(max-width:380px){
-  #ads.grid,#ads.grid.list-view{gap:8px!important}
-  #ads .adbody{padding:8px!important;gap:6px!important}
-  #ads .adbody h3{font-size:12px!important}
-  #ads .price{font-size:15px!important}
-  #ads .ad-card-actions .ad-open-button{width:38px!important;height:38px!important;min-height:38px!important}
-}
-@media(min-width:761px){
-  #ads.grid,#ads.grid.list-view{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:15px!important}
-  #ads .ad-image-wrap{aspect-ratio:1/1!important}
-  #ads .adbody{padding:12px!important}
-  #ads .adbody h3{font-size:16px!important}
-}
+<style id="ad-square-minimal-cards">
+/* بطاقات إعلانات مربعة ومختصرة: الصورة والعنوان والسعر والموقع والتاريخ والمشاركة فقط */
+#ads.grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important;align-items:stretch!important}
+#ads.grid>.ad-square-card{display:flex!important;flex-direction:column!important;min-width:0!important;width:auto!important;margin:0!important;padding:0!important;border:1px solid var(--line)!important;border-radius:17px!important;overflow:hidden!important;background:var(--panel)!important;box-shadow:var(--shadow)!important}
+#ads .ad-square-card .ad-image-wrap{position:relative!important;width:100%!important;aspect-ratio:1/1!important;height:auto!important;margin:0!important;overflow:hidden!important;border-radius:0!important;background:var(--panel2)!important}
+#ads .ad-square-card .adimg{display:block!important;width:100%!important;height:100%!important;min-height:0!important;aspect-ratio:1/1!important;object-fit:cover!important}
+#ads .ad-square-card .adbody{display:flex!important;flex:1!important;flex-direction:column!important;gap:7px!important;min-width:0!important;padding:10px!important;background:transparent!important}
+#ads .ad-square-card .adbody h3{display:-webkit-box!important;-webkit-line-clamp:2!important;-webkit-box-orient:vertical!important;overflow:hidden!important;min-height:2.8em!important;margin:0!important;font-size:14px!important;line-height:1.4!important;color:var(--text)!important}
+#ads .ad-square-card .ad-square-price{margin:0!important;font-size:18px!important;font-weight:900!important;color:var(--brand)!important;white-space:nowrap}
+#ads .ad-square-meta{display:flex!important;flex-direction:column!important;gap:3px!important;margin-top:2px!important;color:var(--muted)!important;font-size:11px!important;line-height:1.45!important}
+#ads .ad-square-open{align-self:flex-start!important;display:grid!important;place-items:center!important;width:42px!important;height:42px!important;min-height:42px!important;margin-top:auto!important;padding:0!important;border-radius:50%!important;font-size:27px!important;line-height:1!important}
+#ads .ad-square-card .ad-share-top{position:absolute!important;top:9px!important;left:9px!important;z-index:4!important;width:39px!important;height:39px!important;border-radius:50%!important;background:#fff!important;color:#17232d!important;border:1px solid #e5e7eb!important;display:grid!important;place-items:center!important;padding:0!important;font-size:20px!important;box-shadow:0 2px 8px #0003!important}
+@media(max-width:360px){#ads.grid{gap:8px!important}#ads .ad-square-card .adbody{padding:8px!important}#ads .ad-square-card .adbody h3{font-size:12px!important}#ads .ad-square-card .ad-square-price{font-size:16px!important}#ads .ad-square-meta{font-size:10px!important}#ads .ad-square-open{width:38px!important;height:38px!important;min-height:38px!important}}
+@media(min-width:900px){#ads.grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:16px!important}#ads .ad-square-card .adbody{padding:13px!important}#ads .ad-square-card .adbody h3{font-size:16px!important}}
 </style>
 
 
-<style id="ad-square-cards-v2">
-#ads.grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important;align-items:stretch}
-#ads .ad-square-card{min-width:0;overflow:hidden;border-radius:18px;display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line)}
-#ads .ad-square-image{position:relative;width:100%;aspect-ratio:1/1;overflow:hidden;background:#101c26}
-#ads .ad-square-image .adimg{width:100%;height:100%;min-height:0;object-fit:cover;display:block}
-#ads .ad-square-share{position:absolute;top:10px;left:10px;width:42px;height:42px;padding:0;border-radius:50%;background:#fff;color:#15232d;font-size:25px;box-shadow:0 3px 10px #0003}
-#ads .ad-square-body{padding:10px;display:flex;flex-direction:column;gap:7px;flex:1;min-width:0}
-#ads .ad-square-body h3{font-size:15px;line-height:1.45;margin:0;min-height:2.8em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;color:var(--text)}
-#ads .ad-square-body .price{font-size:18px;margin:0;color:var(--brand)}
-#ads .ad-square-meta{font-size:11px;color:var(--muted);display:flex;flex-direction:column;gap:2px}
-#ads .ad-square-plus{align-self:flex-start;width:42px;height:42px;padding:0;border-radius:50%;font-size:28px;line-height:1;margin-top:2px}
-@media(max-width:380px){#ads.grid{gap:8px!important}#ads .ad-square-body{padding:8px}#ads .ad-square-body h3{font-size:13px}}
+<style id="listing-three-filter-buttons">
+.listing-three-actions{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px!important;margin-top:10px!important}
+.listing-three-actions .listing-mode-btn{min-width:0;min-height:43px;padding:9px 6px!important;border:1px solid var(--line)!important;background:var(--panel2)!important;color:var(--text)!important;border-radius:12px!important;font-weight:800}
+.listing-three-actions .listing-mode-btn.active{background:#16c7d9!important;color:#071820!important;border-color:#16c7d9!important;box-shadow:0 0 0 2px #16c7d933}
+.city-picker-panel{display:grid;gap:7px;margin-top:9px;padding:11px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+.city-picker-panel[hidden],.city-picker-panel.hidden{display:none!important}
+.city-picker-panel label{font-size:13px;font-weight:800;color:var(--text)}
+.city-picker-hint{font-size:12px;color:var(--muted)}
+@media(max-width:600px){.listing-three-actions{gap:6px!important}.listing-three-actions .listing-mode-btn{font-size:12px!important;min-height:40px;padding:8px 3px!important}}
 </style>
 
-
-<style id="navigation-and-adtype">
-.page-back-button{display:inline-flex;margin:8px 0 12px;align-items:center;gap:6px}
-.ad-type-choice{padding:12px;border:1px solid var(--line);border-radius:13px;background:var(--panel2)}
-.ad-type-choice label{display:flex;align-items:center;gap:8px;padding:10px 13px;margin:0;cursor:pointer}
-.ad-type-choice input{accent-color:var(--brand)}
-#externalAdFields{border:1px dashed var(--line);padding:12px;border-radius:12px}
+<style id="hide-home-shortcut-pair">
+.home-actions,.home-action,.home-store-shortcuts,.home-store-actions{display:none!important}
 </style>
-
-<style id="store-share-and-back-polish">
-.store-toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.store-toolbar .store-search-wrap{flex:1;min-width:220px}
-#storeShareBtn{white-space:nowrap}
-#storeProducts .store-share-button{position:absolute;top:9px;left:9px;z-index:2;width:40px;height:40px;border-radius:50%;padding:0;background:#fff;color:#14232d;font-size:23px;box-shadow:0 2px 9px #0004}
-</style>
-
 </head>
 <body class="theme-dark">
 <div class="wrap">
@@ -530,26 +387,42 @@ body.theme-dark .store-hero-actions span{background:#172b38;color:#dceff5;border
 
 <section id="page-home">
 <div class="store-ticker" id="homeStoreTicker" aria-label="منتجات المتجر المتحركة">
- <div class="store-ticker-head"><strong>🛍️ منتجات المتجر</strong><button class="secondary" type="button" data-go="store">تصفح متجرنا ←</button></div>
+ <div class="store-ticker-head"><strong>🛍️ منتجات المتجر</strong></div>
  <div class="store-ticker-viewport" id="storeTickerViewport"><div class="store-ticker-track" id="storeTickerTrack"><div class="store-ticker-empty">جارٍ تحميل منتجات المتجر...</div></div></div>
 </div>
-<div class="home-actions"><button class="home-action add-action" type="button" data-go="add"><span class="home-action-icon">＋</span><span><strong>أضف إعلانك</strong><small>اعرض جهازك للبيع بسهولة</small></span></button><button class="home-action" type="button" data-go="store"><span class="home-action-icon">▣</span><span><strong>تصفح المنتجات</strong><small>المنتجات المتاحة</small></span></button></div>
+
 <div class="categories" id="categories"><button class="chip selected" data-category="">الكل</button><button class="chip" data-category="كمبيوترات">كمبيوترات</button><button class="chip" data-category="قطع الكمبيوتر">قطع الكمبيوتر</button><button class="chip" data-category="أجهزة الألعاب">أجهزة الألعاب</button><button class="chip" data-category="شاشات وملحقات">شاشات وملحقات</button><button class="chip" data-category="جوالات وإلكترونيات">جوالات وإلكترونيات</button><button class="chip" data-category="خدمات وصيانة">خدمات وصيانة</button></div>
-<div class="listing-tools"><div class="listing-tools-title"><strong>تصفح الإعلانات</strong><span class="muted" id="activeFilterLabel">كل الأقسام</span></div><div class="listing-quick-actions"><button class="primary" id="toggleListingFilters" type="button" aria-expanded="false">⚙️ تصفية الإعلانات: المدينة والسعر والأحدث</button><button class="secondary legacy-filter-control" id="nearbySort" type="button" aria-hidden="true" tabindex="-1">الأقرب</button><button class="secondary legacy-filter-control" id="quickPriceLow" type="button" aria-hidden="true" tabindex="-1">السعر الأقل</button><button class="secondary legacy-filter-control" id="quickPriceHigh" type="button" aria-hidden="true" tabindex="-1">السعر الأعلى</button></div><div class="listing-advanced" id="listingAdvanced" hidden><p class="muted listing-filter-hint">اختر المدينة أولًا، ثم ترتيب السعر، أو اعرض الأحدث أولًا.</p><div class="filters"><select id="adSort" class="field" aria-label="ترتيب الإعلانات"><option value="newest">الأحدث أولًا</option><option value="price_low">السعر: الأقل أولًا</option><option value="price_high">السعر: الأعلى أولًا</option><option value="nearby">الأقرب حسب المدينة</option></select><select id="cityFilter" class="field city-filter" aria-label="اختيار المدينة"><option value="">كل المدن السعودية</option><option value="الرياض">الرياض</option><option value="جدة">جدة</option><option value="مكة">مكة المكرمة</option><option value="المدينة">المدينة المنورة</option><option value="الدمام">الدمام</option><option value="الخبر">الخبر</option><option value="الظهران">الظهران</option><option value="الطائف">الطائف</option><option value="تبوك">تبوك</option><option value="أبها">أبها</option><option value="خميس مشيط">خميس مشيط</option><option value="جازان">جازان</option><option value="نجران">نجران</option><option value="حائل">حائل</option><option value="بريدة">بريدة</option><option value="عنيزة">عنيزة</option><option value="ينبع">ينبع</option><option value="الجبيل">الجبيل</option><option value="الأحساء">الأحساء</option><option value="حفر الباطن">حفر الباطن</option><option value="القطيف">القطيف</option><option value="عرعر">عرعر</option><option value="سكاكا">سكاكا</option><option value="القريات">القريات</option><option value="الباحة">الباحة</option><option value="بيشة">بيشة</option><option value="الرس">الرس</option><option value="المجمعة">المجمعة</option><option value="الخرج">الخرج</option><option value="الدوادمي">الدوادمي</option><option value="القنفذة">القنفذة</option><option value="شرورة">شرورة</option><option value="رفحاء">رفحاء</option><option value="طريف">طريف</option><option value="أخرى">مدينة أخرى</option></select><label class="image-filter"><input id="imagesOnly" type="checkbox"> بصور فقط</label><button class="secondary" id="clearFilters" type="button">مسح الفلاتر</button></div></div></div>
+<div class="listing-tools"><div class="listing-tools-title"><strong>تصفح الإعلانات</strong><span class="muted" id="activeFilterLabel">كل الأقسام</span></div>
+<div class="listing-quick-actions listing-three-actions">
+ <button class="secondary listing-mode-btn" id="nearbySort" type="button" aria-pressed="false">📍 الأقرب</button>
+ <button class="secondary listing-mode-btn active" id="newestSort" type="button" aria-pressed="true">🕒 الأحدث</button>
+ <button class="secondary listing-mode-btn" id="cityPickerToggle" type="button" aria-expanded="false">🏙️ المدن</button>
+</div>
+<div class="city-picker-panel hidden" id="cityPickerPanel">
+ <label for="cityFilter">اختر المدينة أو المحافظة</label>
+ <select id="cityFilter" class="field city-filter" aria-label="اختيار المدينة"><option value="">كل مدن ومحافظات السعودية</option><option value="الرياض">الرياض</option><option value="جدة">جدة</option><option value="مكة المكرمة">مكة المكرمة</option><option value="المدينة المنورة">المدينة المنورة</option><option value="الدمام">الدمام</option><option value="الخبر">الخبر</option><option value="الظهران">الظهران</option><option value="الطائف">الطائف</option><option value="تبوك">تبوك</option><option value="أبها">أبها</option><option value="خميس مشيط">خميس مشيط</option><option value="جازان">جازان</option><option value="نجران">نجران</option><option value="حائل">حائل</option><option value="بريدة">بريدة</option><option value="عنيزة">عنيزة</option><option value="ينبع">ينبع</option><option value="الجبيل">الجبيل</option><option value="الأحساء">الأحساء</option><option value="حفر الباطن">حفر الباطن</option><option value="القطيف">القطيف</option><option value="عرعر">عرعر</option><option value="سكاكا">سكاكا</option><option value="القريات">القريات</option><option value="الباحة">الباحة</option><option value="بيشة">بيشة</option><option value="الرس">الرس</option><option value="المجمعة">المجمعة</option><option value="الخرج">الخرج</option><option value="الدوادمي">الدوادمي</option><option value="القنفذة">القنفذة</option><option value="شرورة">شرورة</option><option value="رفحاء">رفحاء</option><option value="طريف">طريف</option><option value="رابغ">رابغ</option><option value="الليث">الليث</option><option value="ثول">ثول</option><option value="ذهبان">ذهبان</option><option value="بحرة">بحرة</option><option value="الجموم">الجموم</option><option value="خليص">خليص</option><option value="الكامل">الكامل</option><option value="رنية">رنية</option><option value="تربة">تربة</option><option value="الخرمة">الخرمة</option><option value="ميسان">ميسان</option><option value="أضم">أضم</option><option value="العرضيات">العرضيات</option><option value="محايل عسير">محايل عسير</option><option value="النماص">النماص</option><option value="تنومة">تنومة</option><option value="سراة عبيدة">سراة عبيدة</option><option value="ظهران الجنوب">ظهران الجنوب</option><option value="أحد رفيدة">أحد رفيدة</option><option value="رجال ألمع">رجال ألمع</option><option value="بارق">بارق</option><option value="المجاردة">المجاردة</option><option value="بلقرن">بلقرن</option><option value="البرك">البرك</option><option value="الدرب">الدرب</option><option value="صبيا">صبيا</option><option value="أبو عريش">أبو عريش</option><option value="صامطة">صامطة</option><option value="بيش">بيش</option><option value="العارضة">العارضة</option><option value="الحرث">الحرث</option><option value="ضمد">ضمد</option><option value="فرسان">فرسان</option><option value="الدائر">الدائر</option><option value="فيفاء">فيفاء</option><option value="الريث">الريث</option><option value="العيدابي">العيدابي</option><option value="هروب">هروب</option><option value="الطوال">الطوال</option><option value="أحد المسارحة">أحد المسارحة</option><option value="الوجه">الوجه</option><option value="ضباء">ضباء</option><option value="أملج">أملج</option><option value="حقل">حقل</option><option value="تيماء">تيماء</option><option value="البدع">البدع</option><option value="دومة الجندل">دومة الجندل</option><option value="طبرجل">طبرجل</option><option value="العويقيلة">العويقيلة</option><option value="الخفجي">الخفجي</option><option value="النعيرية">النعيرية</option><option value="قرية العليا">قرية العليا</option><option value="رأس تنورة">رأس تنورة</option><option value="بقيق">بقيق</option><option value="العديد">العديد</option><option value="الزلفي">الزلفي</option><option value="شقراء">شقراء</option><option value="حوطة بني تميم">حوطة بني تميم</option><option value="الأفلاج">الأفلاج</option><option value="السليل">السليل</option><option value="وادي الدواسر">وادي الدواسر</option><option value="القويعية">القويعية</option><option value="عفيف">عفيف</option><option value="ثادق">ثادق</option><option value="حريملاء">حريملاء</option><option value="الغاط">الغاط</option><option value="رماح">رماح</option><option value="ضرما">ضرما</option><option value="مرات">مرات</option><option value="المزاحمية">المزاحمية</option><option value="الدلم">الدلم</option><option value="الدرعية">الدرعية</option><option value="العيينة">العيينة</option><option value="تمير">تمير</option><option value="حوطة سدير">حوطة سدير</option><option value="جلاجل">جلاجل</option><option value="الأرطاوية">الأرطاوية</option><option value="البكيرية">البكيرية</option><option value="البدائع">البدائع</option><option value="المذنب">المذنب</option><option value="رياض الخبراء">رياض الخبراء</option><option value="عيون الجواء">عيون الجواء</option><option value="الأسياح">الأسياح</option><option value="النبهانية">النبهانية</option><option value="الشماسية">الشماسية</option><option value="ضرية">ضرية</option><option value="عقلة الصقور">عقلة الصقور</option><option value="دخنة">دخنة</option><option value="ساجر">ساجر</option><option value="القيصومة">القيصومة</option><option value="أخرى">أخرى</option></select>
+ <div class="city-picker-hint" id="cityPickerHint" role="status">اختر مدينة لتصفية الإعلانات.</div>
+</div>
+<div class="listing-advanced" id="listingAdvanced" hidden><div class="filters">
+ <select id="adSort" class="field" aria-label="ترتيب الإعلانات"><option value="newest">الأحدث أولًا</option><option value="price_low">السعر: الأقل أولًا</option><option value="price_high">السعر: الأعلى أولًا</option><option value="nearby">الأقرب حسب المدينة</option></select>
+ <label class="image-filter"><input id="imagesOnly" type="checkbox"> بصور فقط</label>
+ <button class="secondary" id="clearFilters" type="button">مسح الفلاتر</button>
+</div></div></div>
 <div class="row space"><h2>أحدث الإعلانات</h2><span class="muted" id="adCount"></span></div><div id="ads" class="grid"><div class="empty">جارٍ تحميل الإعلانات...</div></div>
 </section>
 <section id="page-store" class="hidden">
-<div class="store-intro">
-  <div class="store-kicker">SOUQ GAMING · STORE</div>
-  <h1>متجر سوق القيمنق</h1>
-  <p>تسوّق أجهزة الكمبيوتر والقيمنق والإلكترونيات. اختر المنتج، ثم أرسل طلبك مع موقعك وعنوان التوصيل.</p>
-  <div class="store-hero-actions"><span>🎮 أجهزة وملحقات</span><span>🖥️ كمبيوتر وقطع PC</span><span>📱 إلكترونيات</span></div>
+<div class="store-page-heading"><h1>متجر سوق القيمنق</h1><p>منتجات المتجر الرسمية</p></div>
+<div class="store-compact-toolbar">
+ <select id="storeSort" class="field" aria-label="ترتيب منتجات المتجر"><option value="newest">الأحدث</option><option value="price_low">السعر الأقل</option><option value="price_high">السعر الأعلى</option></select>
+ <button id="storeFilterToggle" class="store-filter-button" type="button" aria-expanded="false">⚙️ الفلترة</button>
 </div>
-<div class="store-toolbar">
-  <div class="store-search-wrap"><span aria-hidden="true">⌕</span><input id="storeSearch" class="field" placeholder="ابحث باسم المنتج أو الوصف أو القسم..." aria-label="البحث في المتجر" autocomplete="off"><button id="storeSearchClear" class="secondary" type="button" aria-label="مسح البحث">مسح</button></div>
-  <button id="storeShareBtn" class="secondary" type="button">↗ مشاركة المتجر</button><select id="storeSort" class="field" aria-label="ترتيب منتجات المتجر"><option value="newest">الأحدث أولًا</option><option value="price_low">السعر الأقل</option><option value="price_high">السعر الأعلى</option><option value="title">الاسم أ إلى ي</option></select>
+<div id="storeFilterPanel" class="store-filter-panel hidden">
+ <label>التصنيف<select id="storeCategorySelect" class="field"><option value="">كل التصنيفات</option><option>كمبيوترات</option><option>قطع الكمبيوتر</option><option>أجهزة الألعاب</option><option>شاشات وملحقات</option><option>ملحقات القيمنق</option><option>كروت الشحن</option><option>الألعاب الرقمية</option><option>الاشتراكات</option><option>إلكترونيات</option></select></label>
+ <label>المدينة<select id="storeCitySelect" class="field"><option value="">كل المدن</option><option>جدة</option><option>الرياض</option><option>مكة المكرمة</option><option>المدينة المنورة</option><option>الدمام</option><option>الطائف</option><option>أبها</option><option>تبوك</option></select></label>
+ <label>السعر من<input id="storeMinPrice" class="field" type="number" min="0" placeholder="0"></label>
+ <label>السعر إلى<input id="storeMaxPrice" class="field" type="number" min="0" placeholder="بدون حد"></label>
+ <button id="storeFilterReset" class="secondary" type="button">مسح الفلاتر</button>
 </div>
-<div class="store-categories" id="storeCategories"><button class="chip selected" data-store-category="">كل المنتجات</button><button class="chip" data-store-category="كمبيوترات">كمبيوترات</button><button class="chip" data-store-category="قطع الكمبيوتر">قطع الكمبيوتر</button><button class="chip" data-store-category="أجهزة الألعاب">أجهزة الألعاب</button><button class="chip" data-store-category="شاشات وملحقات">شاشات وملحقات</button><button class="chip" data-store-category="جوالات وإلكترونيات">إلكترونيات</button><button class="chip" data-store-category="خدمات وصيانة">خدمات وصيانة</button></div>
 <div class="store-results-heading"><div><h2>منتجات المتجر</h2><p id="storeResultsSubtitle">تصفح المنتجات المتاحة</p></div><span class="store-count-pill" id="storeCount">0 منتج</span></div>
 <div id="storeProducts" class="grid"><div class="empty">جارٍ تحميل المنتجات...</div></div>
 <div class="notice store-notice">متجر مستقل لمنتجات سوق القيمنق. منتجات المتجر وطلباته ومخزونه منفصلة تمامًا عن إعلانات الأعضاء.</div>
@@ -583,16 +456,12 @@ body.theme-dark .store-hero-actions span{background:#172b38;color:#dceff5;border
 <section id="page-add" class="hidden"><div class="panel"><h2 id="adFormTitle">إضافة إعلان جديد</h2><p class="muted">أضف تفاصيل المنتج ووسائطه، ثم وافق على تعهد العمولة قبل الحفظ.</p>
 <form id="adForm" class="formgrid">
 <input type="hidden" id="editId">
-<div class="full ad-type-choice"><strong>نوع الإعلان</strong><div class="row"><label class="secondary"><input type="radio" name="adKind" value="normal" checked> إعلان عادي</label><label class="secondary"><input type="radio" name="adKind" value="external"> إعلان برابط خارجي</label></div></div>
-<div class="full hidden" id="externalAdFields"><label for="adExternalUrl">رابط المنتج في المنصة الأخرى *</label><input id="adExternalUrl" class="field" type="url" inputmode="url" placeholder="https://example.com/product"></div>
 <div><label for="adTitle">عنوان الإعلان *</label><input id="adTitle" class="field" required maxlength="100" placeholder="مثال: كمبيوتر قيمنق RTX 4070"></div>
 <div><label for="adPrice">السعر بالريال *</label><input id="adPrice" class="field" type="number" required min="0" step="0.01"></div>
 <div><label for="adCategory">القسم *</label><select id="adCategory" class="field" required><option value="">اختر القسم</option><option>كمبيوترات</option><option>قطع الكمبيوتر</option><option>أجهزة الألعاب</option><option>شاشات وملحقات</option><option>جوالات وإلكترونيات</option><option>خدمات وصيانة</option></select></div>
 <div><label for="adCondition">الحالة</label><select id="adCondition" class="field"><option>مستعمل</option><option>جديد</option><option>شبه جديد</option></select></div>
 <div><label for="adCity">المدينة</label><input id="adCity" class="field" maxlength="80" placeholder="جدة، الرياض، مكة..."></div>
-<div class="full"><input type="hidden" id="adLatitude"><input type="hidden" id="adLongitude"><button class="secondary" type="button" id="captureAdLocation">📍 حفظ موقع الإعلان الحالي</button><span id="adLocationStatus" class="muted">اختياري: يساعد المشترين على فرز الإعلانات حسب الأقرب.</span></div>
 <div class="full"><label for="adDesc">الوصف *</label><textarea id="adDesc" class="field" required rows="4" maxlength="5000" placeholder="اكتب المواصفات والحالة والمدينة..."></textarea></div>
-<div class="full notice" style="border:1px solid #3b82f6;background:rgba(59,130,246,.07)"><strong>حالة سلامة المنتج</strong><p class="muted">إذا كان المنتج سليمًا، يمكنك التعهد بذلك ليظهر للمشترين توثيق أزرق في الإعلان. إذا كان به خلل، اذكره بوضوح في خانة الخلل.</p><label class="pledge-check"><input type="checkbox" id="productSafetyPledge"> أتعهد بأن المنتج سليم ويطابق الوصف والصور.</label><label for="productFaultDetails" style="display:block;margin-top:10px">هل يوجد خلل أو عيب؟ اذكر التفاصيل (إن وجد)</label><textarea id="productFaultDetails" class="field" rows="2" maxlength="1500" placeholder="اذكر أي عيب أو نقص أو مشكلة في المنتج، أو اكتب: لا يوجد"></textarea></div>
 <div><label for="sellerName">اسم البائع *</label><input id="sellerName" class="field" required maxlength="80"></div>
 <div><label for="sellerPhone">رقم الجوال للتواصل *</label><input id="sellerPhone" class="field" required inputmode="tel" placeholder="05xxxxxxxx"></div>
 <div class="full media-editor"><label for="adImages">صور الإعلان (حتى 5 صور)</label><input id="adImages" class="field" type="file" accept="image/*" multiple><div class="row"><button class="secondary" type="button" id="removeAdImages">إزالة الصور الحالية</button><span class="muted" id="imageStatus">يمكنك اختيار صور جديدة لاستبدال الحالية.</span></div><div id="adImagePreview" class="media-preview"></div></div>
@@ -609,7 +478,7 @@ body.theme-dark .store-hero-actions span{background:#172b38;color:#dceff5;border
 <button class="account-shortcut" data-go="myads" type="button"><span class="shortcut-icon">▣</span><span><strong>إعلاناتي</strong><small>إدارة إعلاناتك</small></span></button>
 <button class="account-shortcut" data-go="favorites" type="button"><span class="shortcut-icon">♡</span><span><strong>المفضلة</strong><small>إعلانات محفوظة</small></span></button>
 <button class="account-shortcut" data-go="messages" type="button"><span class="shortcut-icon">✉</span><span><strong>المحادثات</strong><small>رسائلك الخاصة</small></span></button>
-</div><div id="authBox"><h3>تسجيل الدخول أو إنشاء حساب</h3><p class="muted">التسجيل غير ظاهر في الصفحة الرئيسية؛ يظهر هنا أو عند تنفيذ إجراء يحتاج حسابًا.</p><form id="authForm" class="stack"><input id="authEmail" type="email" class="field" required autocomplete="email" placeholder="البريد الإلكتروني"><div class="row"><button class="primary" type="submit">إرسال رمز الدخول</button><button class="secondary" type="button" id="signupBtn">إنشاء حساب برمز</button></div><div id="otpVerifyBox" class="stack hidden"><label for="authOtp">رمز التحقق المرسل إلى بريدك</label><input id="authOtp" class="field" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" placeholder="أدخل الرمز المكوّن من 6 أرقام"><button class="primary" type="button" id="verifyOtpBtn">تأكيد الرمز والدخول</button><button class="secondary" type="button" id="resendOtpBtn">إعادة إرسال الرمز</button></div><button class="google-auth" type="button" id="googleAuthBtn"><span aria-hidden="true">G</span> المتابعة باستخدام Google</button><button class="google-auth" type="button" id="appleAuthBtn"><span aria-hidden="true"></span> المتابعة باستخدام Apple</button><div id="authMsg" class="muted" role="status"></div></form></div><div id="profileBox" class="hidden"><h3>البيانات الشخصية</h3><p class="muted" style="margin-top:-8px">حدّث بياناتك ثم اضغط حفظ. ستبقى القيم ظاهرة بعد نجاح الحفظ.</p><form id="profileForm" class="stack"><label>الاسم الظاهر<input id="profileName" class="field" maxlength="80" required></label><label>رقم الجوال<input id="profilePhone" class="field" inputmode="tel" placeholder="05xxxxxxxx"></label><label>المدينة<input id="profileCity" class="field" maxlength="80" placeholder="جدة"></label><button class="primary">حفظ الإعدادات</button><div id="profileMsg" class="muted"></div></form><div class="account-actions"><button class="secondary" data-go="profile" type="button">الملف الشخصي</button><button class="secondary" data-go="settings" type="button">تفضيلات العرض</button><button class="secondary" id="signoutBtn" type="button">تسجيل الخروج</button></div><div id="myAds" style="margin-top:18px"></div></div></div></section>
+</div><div id="authBox"><h3>تسجيل الدخول أو إنشاء حساب</h3><p class="muted">التسجيل غير ظاهر في الصفحة الرئيسية؛ يظهر هنا أو عند تنفيذ إجراء يحتاج حسابًا.</p><form id="authForm" class="stack"><input id="authEmail" type="email" class="field" required placeholder="البريد الإلكتروني"><input id="authPassword" type="password" class="field" minlength="6" required placeholder="كلمة المرور (6 أحرف على الأقل)"><div class="row"><button class="primary" type="submit">تسجيل الدخول</button><button class="secondary" type="button" id="signupBtn">إنشاء حساب</button></div><button class="google-auth" type="button" id="googleAuthBtn"><span aria-hidden="true">G</span> المتابعة باستخدام Google</button><div id="authMsg" class="muted" role="status"></div></form></div><div id="profileBox" class="hidden"><h3>البيانات الشخصية</h3><p class="muted" style="margin-top:-8px">حدّث بياناتك ثم اضغط حفظ. ستبقى القيم ظاهرة بعد نجاح الحفظ.</p><form id="profileForm" class="stack"><label>الاسم الظاهر<input id="profileName" class="field" maxlength="80" required></label><label>رقم الجوال<input id="profilePhone" class="field" inputmode="tel" placeholder="05xxxxxxxx"></label><label>المدينة<input id="profileCity" class="field" maxlength="80" placeholder="جدة"></label><button class="primary">حفظ الإعدادات</button><div id="profileMsg" class="muted"></div></form><div class="account-actions"><button class="secondary" data-go="profile" type="button">الملف الشخصي</button><button class="secondary" data-go="settings" type="button">تفضيلات العرض</button><button class="secondary" id="signoutBtn" type="button">تسجيل الخروج</button></div><div id="myAds" style="margin-top:18px"></div></div></div></section>
 <section id="page-myads" class="hidden"><div class="panel"><div class="row space"><h2>إعلاناتي</h2><button class="secondary" data-go="add">＋ إعلان جديد</button></div><div id="myAdsPage"></div></div></section>
 </main>
 <div class="footer">سوق القيمنق السعودي · تعامل بأمان، وافحص المنتج قبل الدفع. لا توجد خدمة دفع أو ضمان وسيط مفعّلة في هذه النسخة.<div class="subnav" style="justify-content:center"><button data-go="help">مركز المساعدة</button><button data-go="contact">تواصل معنا</button><button data-go="policy">الشروط والسياسات</button><button data-go="favorites">المفضلة</button><button data-go="profile">الملف الشخصي</button></div></div>
@@ -665,13 +534,10 @@ let currentUser=null, profile=null, selectedCategory="", searchTerm="", activeCo
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const msg=(id,t)=>$(id).textContent=t;
-let pageHistory=['home'];
 function showPage(page){
- const current=document.querySelector('main>section:not(.hidden)')?.id?.replace('page-','');
- if(current&&current!==page&&page!=='detail')pageHistory.push(current);
+ document.body.classList.toggle('store-view',page==='store');
  document.querySelectorAll('main>section').forEach(s=>s.classList.add('hidden'));
  const el=$('page-'+page); if(el)el.classList.remove('hidden');
- if(el&&page!=='home'&&!el.querySelector('.page-back-button')){const back=document.createElement('button');back.type='button';back.className='secondary page-back-button';back.textContent='← رجوع';back.addEventListener('click',()=>{const previous=pageHistory.pop()||'home';showPage(previous);});el.prepend(back);}
  document.querySelectorAll('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
  if(page==='messages')loadConversations();
  if(page==='notifications')loadNotifications();
@@ -714,7 +580,7 @@ async function openAdDetail(id){
  const {data:a,error}=await sb.from('ads').select('*').eq('id',id).maybeSingle();
  if(error||!a){box.innerHTML='<div class="empty">تعذر تحميل الإعلان أو أنه لم يعد متاحًا.</div>';return;}
  const images=Array.isArray(a.image_urls)?a.image_urls:[];currentDetailAd=a;
- box.innerHTML=`<div class="ad-detail-grid"><div>${images.length?images.map(u=>`<img src="${esc(u)}" alt="صورة الإعلان" style="width:100%;max-height:300px;object-fit:contain;background:#0e172a;border-radius:12px;margin-bottom:8px">`).join(''):'<div class="detail-placeholder" aria-label="لا توجد صورة">لا توجد صورة</div>'}</div><div><h2>${esc(a.title)}</h2><div class="price">${Number(a.price||0).toLocaleString('ar-SA')} ر.س</div><div class="meta">${esc(a.category||'')} · ${esc(a.condition||'')}</div>${a.product_safety_pledged?'<div class="safety-verified safety-detail">✓ البائع متعهد بسلامة المنتج</div>':''}${a.product_fault_details?'<div class="notice fault-notice"><strong>الخلل أو العيوب المذكورة من البائع</strong><p style="white-space:pre-wrap">'+esc(a.product_fault_details)+'</p></div>':''}${a.external_product_url?'<div class="notice"><strong>رابط المنتج الأصلي</strong><p><a href="'+esc(a.external_product_url)+'" target="_blank" rel="noopener noreferrer">فتح المنتج في المنصة الخارجية ↗</a></p></div>':''}<p style="white-space:pre-wrap">${esc(a.description||'لا يوجد وصف.')}</p><p class="muted">البائع: ${esc(a.seller_name||'')}</p><div class="actions"><button class="primary" onclick="openAdDetail('${a.id}')">التفاصيل</button><button class="primary" onclick="contactWhatsApp('${esc(a.seller_phone||'')}','${esc(a.title)}')">واتساب البائع</button><button class="secondary" onclick="contactCall('${esc(a.seller_phone||'')}')">اتصال</button><button class="secondary" onclick="startConversation('${a.id}','${esc(a.title)}','${a.seller_id||''}')">مراسلة خاصة</button><button class="fav-button" onclick="toggleFavorite('${a.id}')">♡ حفظ بالمفضلة</button><button class="secondary" onclick="shareAd('${a.id}','${esc(a.title)}')">↗ مشاركة الإعلان</button><button class="danger" onclick="openReport('${a.id}')">إبلاغ</button></div><section id="adCommentsPanel" class="panel" style="margin-top:18px"><h3>النقاش العام لهذا المنتج</h3><p class="muted">اكتب تعليقًا متعلقًا بالإعلان، ويمكن للبائع الرد تحته. المحادثات الخاصة لها صفحة مستقلة.</p><form id="adCommentForm" class="stack"><textarea id="adCommentText" class="field" rows="3" maxlength="1500" placeholder="اكتب سؤالًا أو تعليقًا عن المنتج..." required></textarea><button class="primary" type="submit">إرسال التعليق</button><div id="adCommentMsg" class="muted"></div></form><div id="adCommentsList" class="stack" style="margin-top:16px">جارٍ تحميل التعليقات...</div></section><section id="reviewsPanel"><h3>تقييمات البائع</h3><div class="empty">جارٍ تحميل التقييمات...</div></section></div></div>`;
+ box.innerHTML=`<div class="ad-detail-grid"><div>${images.length?images.map(u=>`<img src="${esc(u)}" alt="صورة الإعلان" style="width:100%;max-height:300px;object-fit:contain;background:#0e172a;border-radius:12px;margin-bottom:8px">`).join(''):'<div class="detail-placeholder" aria-label="لا توجد صورة">لا توجد صورة</div>'}</div><div><h2>${esc(a.title)}</h2><div class="price">${Number(a.price||0).toLocaleString('ar-SA')} ر.س</div><div class="meta">${esc(a.category||'')} · ${esc(a.condition||'')}</div><p style="white-space:pre-wrap">${esc(a.description||'لا يوجد وصف.')}</p><p class="muted">البائع: ${esc(a.seller_name||'')}</p><div class="actions"><button class="primary" onclick="openAdDetail('${a.id}')">التفاصيل</button><button class="primary" onclick="contactWhatsApp('${esc(a.seller_phone||'')}','${esc(a.title)}')">واتساب البائع</button><button class="secondary" onclick="contactCall('${esc(a.seller_phone||'')}')">اتصال</button><button class="secondary" onclick="startConversation('${a.id}','${esc(a.title)}','${a.seller_id||''}')">مراسلة خاصة</button><button class="fav-button" onclick="toggleFavorite('${a.id}')">♡ حفظ بالمفضلة</button><button class="secondary" onclick="shareAd('${a.id}','${esc(a.title)}')">↗ مشاركة الإعلان</button><button class="danger" onclick="openReport('${a.id}')">إبلاغ</button></div><section id="adCommentsPanel" class="panel" style="margin-top:18px"><h3>النقاش العام لهذا المنتج</h3><p class="muted">اكتب تعليقًا متعلقًا بالإعلان، ويمكن للبائع الرد تحته. المحادثات الخاصة لها صفحة مستقلة.</p><form id="adCommentForm" class="stack"><textarea id="adCommentText" class="field" rows="3" maxlength="1500" placeholder="اكتب سؤالًا أو تعليقًا عن المنتج..." required></textarea><button class="primary" type="submit">إرسال التعليق</button><div id="adCommentMsg" class="muted"></div></form><div id="adCommentsList" class="stack" style="margin-top:16px">جارٍ تحميل التعليقات...</div></section><section id="reviewsPanel"><h3>تقييمات البائع</h3><div class="empty">جارٍ تحميل التقييمات...</div></section></div></div>`;
  const commentForm=$('adCommentForm');if(commentForm)commentForm.onsubmit=async e=>{e.preventDefault();if(!needAuth())return;const body=$('adCommentText').value.trim();if(!body)return;const payload={ad_id:a.id,user_id:currentUser.id,author_name:profile?.display_name||currentUser.email,body,parent_id:null};const {error}=await sb.from('ad_comments').insert(payload);if(error){msg('adCommentMsg','تعذر إرسال التعليق. تحقق من تطبيق ملف SQL.');return;}$('adCommentText').value='';msg('adCommentMsg','تم نشر تعليقك.');await loadAdComments(a);};await loadAdComments(a);await loadReviews(a);
 }
 
@@ -759,21 +625,28 @@ let removeExistingImages=false, removeExistingVideo=false;
 let removedExistingImageUrls=new Set();
 const COMMISSION_RATE=0.02;
 function renderMediaPreviews(){const imgBox=$('adImagePreview'),vidBox=$('adVideoPreview');if(imgBox){const urls=removeExistingImages?[]:(editingAd?.image_urls||[]).filter(u=>!removedExistingImageUrls.has(u));imgBox.innerHTML=urls.map((u,i)=>`<div class="media-item"><img src="${esc(u)}" alt="صورة حالية ${i+1}"><button type="button" class="media-remove" data-remove-image="${encodeURIComponent(u)}" aria-label="إزالة الصورة">إزالة</button></div>`).join('');imgBox.querySelectorAll('[data-remove-image]').forEach(btn=>btn.addEventListener('click',()=>{try{removedExistingImageUrls.add(decodeURIComponent(btn.dataset.removeImage));renderMediaPreviews();if($('imageStatus'))$('imageStatus').textContent='ستُزال الصورة المحددة عند حفظ التعديل.';}catch{}}));}if(vidBox){const url=removeExistingVideo?'':(editingAd?.video_url||'');vidBox.innerHTML=url?`<video controls src="${esc(url)}"></video>`:'';}}
-function resetMediaFlags(){removeExistingImages=false;removeExistingVideo=false;removedExistingImageUrls=new Set();if($('adImages'))$('adImages').value='';if($('adVideo'))$('adVideo').value='';if($('commissionAgree'))$('commissionAgree').checked=false;if($('productSafetyPledge'))$('productSafetyPledge').checked=false;if($('productFaultDetails'))$('productFaultDetails').value='';renderMediaPreviews();}
+function resetMediaFlags(){removeExistingImages=false;removeExistingVideo=false;removedExistingImageUrls=new Set();if($('adImages'))$('adImages').value='';if($('adVideo'))$('adVideo').value='';if($('commissionAgree'))$('commissionAgree').checked=false;renderMediaPreviews();}
 let adSortOrder='newest';
 let onlyAdsWithImages=false;
 let cityFilterValue='';
 function getAdCity(a){return String(a.city||a.location||'').trim().toLowerCase();}
+async function shareAd(id,title){
+ const url=location.origin+location.pathname+'?ad='+encodeURIComponent(id);
+ try{if(navigator.share){await navigator.share({title:title||'إعلان من سوق القيمنق',url});}
+ else if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(url);alert('تم نسخ رابط الإعلان');}
+ else{prompt('انسخ رابط الإعلان',url);}}
+ catch(e){if(e?.name!=='AbortError')console.error(e);}
+}
 function renderAdsFromCache(){
  const box=$('ads');
  let rows=(adsCache||[]).filter(a=>!searchTerm||[a.title,a.description,a.category,a.seller_name].join(' ').toLowerCase().includes(searchTerm));
  if(selectedCategory) rows=rows.filter(a=>a.category===selectedCategory);
  if(onlyAdsWithImages) rows=rows.filter(a=>Array.isArray(a.image_urls)&&a.image_urls.length>0);
- if(cityFilterValue && adSortOrder!=='nearby') rows=rows.filter(a=>getAdCity(a).includes(cityFilterValue));
+ if(cityFilterValue) rows=rows.filter(a=>getAdCity(a).includes(cityFilterValue));
  rows.sort((a,b)=>{
   if(adSortOrder==='price_low') return Number(a.price||0)-Number(b.price||0);
   if(adSortOrder==='price_high') return Number(b.price||0)-Number(a.price||0);
-  if(adSortOrder==='nearby'){const here=window.__customerCoords;const valid=x=>x.latitude!==null&&x.latitude!==undefined&&x.longitude!==null&&x.longitude!==undefined&&x.latitude!==''&&x.longitude!=='';if(here&&valid(a)&&valid(b)){const rad=v=>v*Math.PI/180;const dist=x=>{const dLat=rad(Number(x.latitude)-here.lat),dLon=rad(Number(x.longitude)-here.lon),q=Math.sin(dLat/2)**2+Math.cos(rad(here.lat))*Math.cos(rad(Number(x.latitude)))*Math.sin(dLon/2)**2;return 6371*2*Math.atan2(Math.sqrt(q),Math.sqrt(1-q));};return dist(a)-dist(b);}const city=cityFilterValue||String(profile?.city||'').trim().toLowerCase();const am=getAdCity(a),bm=getAdCity(b);const ah=city&&am.includes(city),bh=city&&bm.includes(city);if(ah!==bh)return ah?-1:1;}
+  if(adSortOrder==='nearby'){const city=cityFilterValue||String(profile?.city||'').trim().toLowerCase();const am=getAdCity(a),bm=getAdCity(b);const ah=city&&am.includes(city),bh=city&&bm.includes(city);if(ah!==bh)return ah?-1:1;}
   return new Date(b.created_at||0)-new Date(a.created_at||0);
  });
  $('adCount').textContent=rows.length.toLocaleString('ar-SA')+' إعلان';
@@ -781,7 +654,7 @@ function renderAdsFromCache(){
  $('activeFilterLabel').textContent=terms.join(' · ')||'كل الأقسام';
  if(!rows.length){box.innerHTML='<div class="empty">لا توجد إعلانات مطابقة للفلاتر الحالية. جرّب تغيير كلمات البحث أو مسح الفلاتر.</div>';return;}
  box.classList.toggle('list-view',document.body.dataset.viewMode==='list');
- box.innerHTML=rows.map(a=>{const img=Array.isArray(a.image_urls)&&a.image_urls.length?a.image_urls[0]:'';const created=a.created_at?new Date(a.created_at):null;const dateLabel=created&&!isNaN(created)?created.toLocaleDateString('en-GB',{year:'numeric',month:'2-digit',day:'2-digit'}):'—';const timeLabel=created&&!isNaN(created)?created.toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit',hour12:true}):'';const id=String(a.id||'').replace(/'/g,'');return `<article class="card ad-square-card"><div class="ad-square-image">${img?`<img class="adimg" src="${esc(img)}" alt="${esc(a.title)}" loading="lazy" onerror="this.style.display='none'">`:`<div class="adimg ad-placeholder">لا توجد صورة</div>`}<button class="ad-square-share" type="button" onclick="shareAd('${id}','${esc(a.title)}')" aria-label="مشاركة الإعلان">↗</button></div><div class="ad-square-body"><h3>${esc(a.title||'إعلان')}</h3><div class="price">${Number(a.price||0).toLocaleString('ar-SA')} <small>ر.س</small></div><div class="ad-square-meta"><span>📍 ${esc(a.city||a.location||'السعودية')}</span><span>📅 ${dateLabel} ${timeLabel?'· '+timeLabel:''}</span></div><button class="primary ad-square-plus" type="button" aria-label="عرض التفاصيل" onclick="openAdDetail('${id}')">＋</button></div></article>`}).join('');
+ box.innerHTML=rows.map(a=>{const img=Array.isArray(a.image_urls)&&a.image_urls.length?a.image_urls[0]:'';const added=a.created_at?new Date(a.created_at).toLocaleDateString('ar-SA'):'—';const city=a.city||a.location||'السعودية';return `<article class="card ad-square-card"><div class="ad-image-wrap"><button class="ad-share-top" type="button" aria-label="مشاركة الإعلان" title="مشاركة الإعلان" onclick="shareAd('${a.id}','${esc(a.title)}')">↗</button>${img?`<img class="adimg" src="${esc(img)}" alt="${esc(a.title)}" loading="lazy" onerror="this.style.display='none'">`:`<div class="adimg ad-placeholder" aria-label="لا توجد صورة">لا توجد صورة</div>`}</div><div class="adbody ad-square-body"><h3 title="${esc(a.title)}">${esc(a.title||'إعلان')}</h3><div class="price ad-square-price">${Number(a.price||0).toLocaleString('ar-SA')} <small>ر.س</small></div><div class="ad-square-meta"><span>📍 ${esc(city)}</span><span>🗓 ${esc(added)}</span></div><button class="primary ad-square-open" type="button" onclick="openAdDetail('${a.id}')" aria-label="عرض التفاصيل">＋</button></div></article>`}).join('');
 }
 async function loadAds(){
  const box=$('ads');
@@ -820,6 +693,8 @@ function clearStoreFilters(){
  const term=normalizeStoreText(rawTerm);
  if(term){const words=term.split(' ').filter(Boolean);rows=rows.filter(a=>{const hay=normalizeStoreText([a.title,a.description,a.category,a.seller_name,a.condition,a.city,a.location].join(' '));return hay.includes(term)||words.every(w=>hay.includes(w));});}
  if(selectedStoreCategory)rows=rows.filter(a=>a.category===selectedStoreCategory);
+ const cityPick=$('storeCitySelect')?.value||'';if(cityPick)rows=rows.filter(a=>String(a.city||a.location||'').includes(cityPick));
+ const minP=$('storeMinPrice')?.value;const maxP=$('storeMaxPrice')?.value;if(minP!=='')rows=rows.filter(a=>Number(a.price||0)>=Number(minP));if(maxP!=='')rows=rows.filter(a=>Number(a.price||0)<=Number(maxP));
  const order=$('storeSort')?.value||'newest';
  rows.sort((a,b)=>{if(order==='price_low')return Number(a.price||0)-Number(b.price||0);if(order==='price_high')return Number(b.price||0)-Number(a.price||0);if(order==='title')return String(a.title||'').localeCompare(String(b.title||''),'ar');return new Date(b.created_at||0)-new Date(a.created_at||0);});
  const count=$('storeCount');if(count)count.textContent=rows.length.toLocaleString('ar-SA')+' منتج';
@@ -829,7 +704,7 @@ function clearStoreFilters(){
  box.innerHTML=rows.map(a=>{
   const img=Array.isArray(a.image_urls)&&a.image_urls.length?a.image_urls[0]:'';
   const id=String(a.id||'').replace(/'/g,'');
-  return `<article class="card store-product-card store-square-card"><div class="store-square-image">${img?`<img src="${esc(img)}" alt="${esc(a.title||'صورة المنتج')}" loading="lazy" onerror="this.style.display='none';this.parentElement.classList.add('no-image')">`:'<div class="store-square-placeholder">🎮<span>لا توجد صورة</span></div>'}<button class="ad-square-share store-share-button" type="button" onclick="shareAd('${id}','${esc(a.title||'منتج المتجر')}')" aria-label="مشاركة منتج المتجر">↗</button></div><div class="store-square-body"><div class="store-square-tags"><span class="ad-tag">${esc(a.category||'منتج')}</span><span class="ad-tag condition-tag">${esc(a.condition||'مستعمل')}</span></div><h3 title="${esc(a.title||'منتج')}">${esc(a.title||'منتج')}</h3><div class="store-square-price">${Number(a.price||0).toLocaleString('ar-SA')} <small>ر.س</small></div><div class="store-square-actions"><button class="primary" type="button" onclick="openAdDetail('${id}')">التفاصيل</button><button class="secondary" type="button" onclick="openStoreOrder('${id}')">اطلب المنتج</button></div></div></article>`;
+  return `<article class="card store-product-card store-square-card"><div class="store-square-image">${img?`<img src="${esc(img)}" alt="${esc(a.title||'صورة المنتج')}" loading="lazy" onerror="this.style.display='none';this.parentElement.classList.add('no-image')">`:'<div class="store-square-placeholder">🎮<span>لا توجد صورة</span></div>'}</div><div class="store-square-body"><div class="store-square-tags"><span class="ad-tag">${esc(a.category||'منتج')}</span><span class="ad-tag condition-tag">${esc(a.condition||'مستعمل')}</span></div><h3 title="${esc(a.title||'منتج')}">${esc(a.title||'منتج')}</h3><div class="store-square-price">${Number(a.price||0).toLocaleString('ar-SA')} <small>ر.س</small></div><div class="store-square-actions"><button class="primary" type="button" onclick="openAdDetail('${id}')">التفاصيل</button><button class="secondary" type="button" onclick="openStoreOrder('${id}')">اطلب المنتج</button></div></div></article>`;
  }).join('');
 }
 document.querySelectorAll('[data-store-category]').forEach(button=>button.addEventListener('click',()=>{
@@ -837,20 +712,46 @@ document.querySelectorAll('[data-store-category]').forEach(button=>button.addEve
  document.querySelectorAll('[data-store-category]').forEach(item=>item.classList.toggle('selected',item===button));
  renderStoreProducts();
 }));
-$('storeShareBtn')?.addEventListener('click',async()=>{const url=location.origin+location.pathname+'#store';if(navigator.share){try{await navigator.share({title:'متجر سوق القيمنق السعودي',text:'تصفح منتجات متجر سوق القيمنق السعودي',url});}catch(e){if(e.name!=='AbortError')console.warn(e);}}else if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(url);alert('تم نسخ رابط المتجر.');}else{prompt('انسخ رابط المتجر:',url);}});
 $('storeSearch')?.addEventListener('input',renderStoreProducts);
 $('storeSort')?.addEventListener('change',renderStoreProducts);
+$('storeFilterToggle')?.addEventListener('click',()=>{const panel=$('storeFilterPanel');if(!panel)return;panel.classList.toggle('hidden');$('storeFilterToggle').setAttribute('aria-expanded',String(!panel.classList.contains('hidden')));});
+$('storeCategorySelect')?.addEventListener('change',e=>{selectedStoreCategory=e.target.value||'';renderStoreProducts();});
+['storeCitySelect','storeMinPrice','storeMaxPrice'].forEach(id=>$(id)?.addEventListener('input',renderStoreProducts));
+$('storeFilterReset')?.addEventListener('click',()=>{['storeCategorySelect','storeCitySelect','storeMinPrice','storeMaxPrice'].forEach(id=>{if($(id))$(id).value='';});selectedStoreCategory='';renderStoreProducts();});
+
 $('storeSearchClear')?.addEventListener('click',()=>{if($('storeSearch'))$('storeSearch').value='';renderStoreProducts();$('storeSearch')?.focus();});
 
-$('toggleListingFilters').addEventListener('click',()=>{const panel=$('listingAdvanced'),open=panel.hidden;panel.hidden=!open;$('toggleListingFilters').setAttribute('aria-expanded',String(open));$('toggleListingFilters').textContent=open?'✕ إخفاء الفلاتر':'⚙️ الفلاتر والترتيب';});
+function setListingMode(mode){
+ adSortOrder=mode;$('adSort').value=mode;
+ ['nearbySort','newestSort'].forEach(id=>{const b=$(id);const on=(id==='nearbySort'&&mode==='nearby')||(id==='newestSort'&&mode==='newest');b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on));});
+ applyAdFilters();
+}
+$('nearbySort').addEventListener('click',()=>{
+ const city=$('cityFilter').value.trim()||String(profile?.city||'').trim();
+ if(!city){$('cityPickerPanel').classList.remove('hidden');$('cityPickerToggle').setAttribute('aria-expanded','true');$('cityPickerHint').textContent='اختر مدينتك أولًا؛ سيعرض الزر الإعلانات المسجلة في مدينتك. الفرز بالكيلومترات يحتاج إحداثيات محفوظة لكل إعلان.';return;}
+ if(!$('cityFilter').value)$('cityFilter').value=city;
+ setListingMode('nearby');
+});
+$('newestSort').addEventListener('click',()=>setListingMode('newest'));
+$('cityPickerToggle').addEventListener('click',()=>{const panel=$('cityPickerPanel');const open=panel.classList.contains('hidden');panel.classList.toggle('hidden',!open);$('cityPickerToggle').setAttribute('aria-expanded',String(open));});
+function applyAdFilters(){
+ cityFilterValue=$('cityFilter').value.trim().toLowerCase();
+ onlyAdsWithImages=$('imagesOnly').checked;
+ if(adSortOrder==='nearby'&&!cityFilterValue&&profile?.city)cityFilterValue=String(profile.city).trim().toLowerCase();
+ renderAdsFromCache();
+}
+$('cityFilter').addEventListener('change',()=>{const city=$('cityFilter').value.trim();$('cityPickerHint').textContent=city?'تم اختيار '+city+'.':'اختر مدينة لتصفية الإعلانات.';if(adSortOrder==='nearby'&&!city){setListingMode('newest');return;}applyAdFilters();});
+$('adSort').addEventListener('change',()=>setListingMode($('adSort').value));
+$('imagesOnly').addEventListener('change',applyAdFilters);
+$('clearFilters').addEventListener('click',()=>{selectedCategory='';searchTerm='';cityFilterValue='';onlyAdsWithImages=false;adSortOrder='newest';$('search').value='';$('searchPageInput').value='';$('cityFilter').value='';$('imagesOnly').checked=false;$('adSort').value='newest';$('cityPickerPanel').classList.add('hidden');$('cityPickerToggle').setAttribute('aria-expanded','false');setListingMode('newest');document.querySelectorAll('[data-category]').forEach(x=>x.classList.toggle('selected',!x.dataset.category));loadAds();});
 $('quickPriceLow').addEventListener('click',()=>{$('adSort').value='price_low';applyAdFilters();$('quickPriceLow').classList.add('active');$('quickPriceHigh').classList.remove('active');});
 $('quickPriceHigh').addEventListener('click',()=>{$('adSort').value='price_high';applyAdFilters();$('quickPriceHigh').classList.add('active');$('quickPriceLow').classList.remove('active');});
-$('nearbySort').addEventListener('click',()=>{const city=$('cityFilter').value.trim()||profile?.city||'';const reveal=()=>{$('listingAdvanced').hidden=false;$('toggleListingFilters').setAttribute('aria-expanded','true');};if(!navigator.geolocation){reveal();msg('activeFilterLabel','الموقع غير متاح؛ اختر المدينة من الفلاتر لعرض الإعلانات القريبة.');return;}navigator.geolocation.getCurrentPosition(pos=>{window.__customerCoords={lat:pos.coords.latitude,lon:pos.coords.longitude};const hasGeo=(adsCache||[]).some(a=>a.latitude!==null&&a.latitude!==undefined&&a.longitude!==null&&a.longitude!==undefined&&a.latitude!==''&&a.longitude!=='');if(hasGeo){$('adSort').value='nearby';cityFilterValue='';adSortOrder='nearby';renderAdsFromCache();msg('activeFilterLabel','تم تحديد موقعك وترتيب الإعلانات حسب المسافة.');}else if(city){$('cityFilter').value=city;$('adSort').value='nearby';applyAdFilters();msg('activeFilterLabel','يعرض الأقرب حسب المدينة؛ أضف إحداثيات الإعلانات لتفعيل المسافة الدقيقة.');}else{reveal();msg('activeFilterLabel','تم تحديد موقعك. اختر مدينتك لأن إعلانات البائعين لا تحتوي على إحداثيات كافية لحساب المسافة الدقيقة.');}},()=>{reveal();msg('activeFilterLabel','لم يُسمح بالوصول للموقع. اختر مدينتك يدويًا من الفلاتر.');},{enableHighAccuracy:true,timeout:12000,maximumAge:60000});});
+$('nearbySort').addEventListener('click',()=>{const city=$('cityFilter').value.trim()||profile?.city||'';if(city){$('cityFilter').value=city;$('adSort').value='nearby';applyAdFilters();return;}if(!navigator.geolocation){alert('الموقع غير مدعوم في هذا المتصفح. اختر مدينتك من الفلاتر.');$('listingAdvanced').hidden=false;return;}navigator.geolocation.getCurrentPosition(pos=>{window.__customerCoords={lat:pos.coords.latitude,lon:pos.coords.longitude};alert('تم تحديد موقعك. لفرز المسافات بدقة يلزم توفر إحداثيات مواقع الإعلانات في قاعدة البيانات؛ حاليًا اختر المدينة لعرض الأقرب حسب المدينة.');$('listingAdvanced').hidden=false;$('toggleListingFilters').setAttribute('aria-expanded','true');},()=>{alert('لم نتمكن من الوصول للموقع. يمكنك اختيار مدينتك يدويًا.');$('listingAdvanced').hidden=false;},{enableHighAccuracy:false,timeout:8000});});
 function applyAdFilters(){adSortOrder=$('adSort').value;cityFilterValue=$('cityFilter').value.trim().toLowerCase();onlyAdsWithImages=$('imagesOnly').checked;renderAdsFromCache();}
 $('adSort').addEventListener('change',applyAdFilters);
 $('cityFilter').addEventListener('change',applyAdFilters);
 $('imagesOnly').addEventListener('change',applyAdFilters);
-$('clearFilters').addEventListener('click',()=>{selectedCategory='';searchTerm='';cityFilterValue='';onlyAdsWithImages=false;adSortOrder=readSettings().sort||'newest';$('search').value='';$('searchPageInput').value='';$('cityFilter').value='';$('imagesOnly').checked=false;$('adSort').value=adSortOrder;document.querySelectorAll('[data-category]').forEach(x=>x.classList.toggle('selected',!x.dataset.category));loadAds();});
+
 
 function normalizePhone(p){let n=String(p||'').replace(/\D/g,'');if(n.startsWith('00'))n=n.slice(2);if(n.startsWith('0'))n='966'+n.slice(1);return n;}
 window.contactWhatsApp=(p,title)=>{const n=normalizePhone(p);if(!n){alert('البائع لم يضف رقم واتساب.');return;}window.open('https://wa.me/'+n+'?text='+encodeURIComponent('السلام عليكم، بخصوص إعلان: '+title),'_blank','noopener');};
@@ -877,14 +778,9 @@ async function loadPublicPosts(){
  }
 }
 $('publicPostForm').onsubmit=async e=>{e.preventDefault();if(!needAuth())return;const body=$('publicText').value.trim();if(!body)return;const {error}=await sb.from('public_posts').insert({user_id:currentUser.id,author_name:profile?.display_name||currentUser.email,body});if(error){msg('communityMsg','تعذر نشر المشاركة.');return;}$('publicText').value='';msg('communityMsg','تم نشر المشاركة.');loadPublicPosts()};
-async function sendEmailOtp(){const email=$('authEmail').value.trim().toLowerCase();if(!email){msg('authMsg','أدخل بريدك الإلكتروني أولًا.');$('authEmail').focus();return;}msg('authMsg','جارٍ إرسال رمز التحقق...');const {error}=await sb.auth.signInWithOtp({email,options:{shouldCreateUser:true,emailRedirectTo:window.location.origin+window.location.pathname}});if(error){msg('authMsg','تعذر إرسال الرمز: '+error.message);return;}$('otpVerifyBox').classList.remove('hidden');msg('authMsg','تم إرسال رمز من 6 أرقام إلى بريدك. أدخله خلال مدة صلاحيته.');}
-$('authForm').onsubmit=async e=>{e.preventDefault();await sendEmailOtp();};
-$('signupBtn').onclick=sendEmailOtp;
-$('resendOtpBtn')?.addEventListener('click',sendEmailOtp);
-$('verifyOtpBtn')?.addEventListener('click',async()=>{const email=$('authEmail').value.trim().toLowerCase(),token=$('authOtp').value.trim();if(!/^\d{6}$/.test(token)){msg('authMsg','أدخل رمزًا صحيحًا من 6 أرقام.');return;}msg('authMsg','جارٍ التحقق من الرمز...');const {data,error}=await sb.auth.verifyOtp({email,token,type:'email'});if(error){msg('authMsg','تعذر التحقق: '+error.message);return;}currentUser=data.user;await loadProfile();});
-async function startSocialAuth(provider){msg('authMsg','جارٍ تحويلك لتسجيل الدخول...');const {error}=await sb.auth.signInWithOAuth({provider,options:{redirectTo:window.location.origin+window.location.pathname,queryParams:provider==='google'?{access_type:'offline',prompt:'select_account'}:undefined}});if(error)msg('authMsg','تعذر تسجيل الدخول: '+error.message+' — تحقق من إعداد المزوّد وروابط إعادة التوجيه في Supabase.');}
-$('googleAuthBtn').onclick=()=>startSocialAuth('google');
-$('appleAuthBtn').onclick=()=>startSocialAuth('apple');
+$('authForm').onsubmit=async e=>{e.preventDefault();msg('authMsg','جارٍ تسجيل الدخول...');const {data,error}=await sb.auth.signInWithPassword({email:$('authEmail').value.trim(),password:$('authPassword').value});if(error){msg('authMsg',error.message);return;}currentUser=data.user;await loadProfile();};
+$('signupBtn').onclick=async()=>{msg('authMsg','جارٍ إنشاء الحساب...');const {data,error}=await sb.auth.signUp({email:$('authEmail').value.trim(),password:$('authPassword').value});if(error){msg('authMsg',error.message);return;}if(data.session){currentUser=data.user;await loadProfile();}else msg('authMsg','تم إنشاء الحساب. راجع بريدك الإلكتروني لتأكيده، ثم سجّل الدخول.')};
+$('googleAuthBtn').onclick=async()=>{msg('authMsg','جارٍ فتح تسجيل الدخول باستخدام Google...');const {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.origin}});if(error)msg('authMsg','تعذر بدء تسجيل Google: '+error.message+' — تأكد من تفعيل Google في Supabase Auth وإعداد Client ID وSecret.');};
 async function loadProfile(){
  if(!currentUser)return;
  const {data,error}=await sb.from('profiles').select('*').eq('id',currentUser.id).maybeSingle();
@@ -927,16 +823,14 @@ $('profileForm').onsubmit=async e=>{
 };
 $('signoutBtn').onclick=async()=>{await sb.auth.signOut();currentUser=null;profile=null;$('authBox').classList.remove('hidden');$('profileBox').classList.add('hidden');$('accountStatus').textContent='تم تسجيل الخروج.';showPage('home')};
 async function loadMyAds(targetId){if(!currentUser){$(targetId).innerHTML='<div class="empty">سجّل الدخول لعرض إعلاناتك.</div>';return;}const {data,error}=await sb.from('ads').select('*').eq('seller_id',currentUser.id).order('created_at',{ascending:false});if(error){$(targetId).innerHTML='<div class="empty">تعذر تحميل إعلاناتك.</div>';return;}$(targetId).innerHTML=(data||[]).map(a=>`<div class="listitem"><div class="row space"><div><strong>${esc(a.title)}</strong><div class="muted">${Number(a.price||0).toLocaleString('ar-SA')} ر.س · الحالة: ${esc(a.status)}</div></div><div class="actions"><button class="secondary" onclick="editAd('${a.id}')">تعديل</button><button class="danger" onclick="deleteAd('${a.id}')">حذف</button></div></div></div>`).join('')||'<div class="empty">لم تضف إعلانات بعد.</div>';}
-window.editAd=async id=>{const {data,error}=await sb.from('ads').select('*').eq('id',id).eq('seller_id',currentUser.id).single();if(error||!data){alert('تعذر فتح الإعلان أو لا تملك صلاحية تعديله.');return;}editingAd=data;$('editId').value=data.id;$('adTitle').value=data.title||'';$('adPrice').value=data.price||'';$('adCategory').value=data.category||'';$('adCondition').value=data.condition||'مستعمل';$('adCity').value=data.city||profile?.city||'';$('adLatitude').value=data.latitude??'';$('adLongitude').value=data.longitude??'';$('adLocationStatus').textContent=(data.latitude!=null&&data.longitude!=null)?'تم تحميل إحداثيات موقع الإعلان.':'اختياري: يساعد المشترين على فرز الإعلانات حسب الأقرب.';document.querySelector(`input[name="adKind"][value="${data.ad_type==='external'?'external':'normal'}"]`).checked=true;$('adExternalUrl').value=data.external_product_url||'';$('externalAdFields').classList.toggle('hidden',data.ad_type!=='external');$('adDesc').value=data.description||'';$('productSafetyPledge').checked=!!data.product_safety_pledged;$('productFaultDetails').value=data.product_fault_details||'';$('sellerName').value=data.seller_name||profile?.display_name||'';$('sellerPhone').value=data.seller_phone||profile?.phone||'';resetMediaFlags();renderMediaPreviews();$('adFormTitle').textContent='تعديل الإعلان';$('saveAd').textContent='حفظ التعديلات';$('cancelEdit').classList.remove('hidden');showPage('add')};
+window.editAd=async id=>{const {data,error}=await sb.from('ads').select('*').eq('id',id).eq('seller_id',currentUser.id).single();if(error||!data){alert('تعذر فتح الإعلان أو لا تملك صلاحية تعديله.');return;}editingAd=data;$('editId').value=data.id;$('adTitle').value=data.title||'';$('adPrice').value=data.price||'';$('adCategory').value=data.category||'';$('adCondition').value=data.condition||'مستعمل';$('adCity').value=data.city||profile?.city||'';$('adDesc').value=data.description||'';$('sellerName').value=data.seller_name||profile?.display_name||'';$('sellerPhone').value=data.seller_phone||profile?.phone||'';resetMediaFlags();renderMediaPreviews();$('adFormTitle').textContent='تعديل الإعلان';$('saveAd').textContent='حفظ التعديلات';$('cancelEdit').classList.remove('hidden');showPage('add')};
 $('cancelEdit').onclick=()=>resetAdForm();renderMediaPreviews();
 function resetAdForm(){$('adForm').reset();$('editId').value='';editingAd=null;resetMediaFlags();$('adFormTitle').textContent='إضافة إعلان جديد';$('saveAd').textContent='نشر الإعلان';$('cancelEdit').classList.add('hidden');msg('adFormMsg','')}
 window.deleteAd=async id=>{if(!currentUser)return;const {data:ad,error:adErr}=await sb.from('ads').select('*').eq('id',id).eq('seller_id',currentUser.id).single();if(adErr||!ad){alert('تعذر العثور على الإعلان.');return;}const {data:sales,error:salesErr}=await sb.from('sales_ledger').select('id,sale_price,commission_rate,commission_amount,payment_status').eq('ad_id',id).limit(10);if(salesErr){alert('قبل الحذف، شغّل ملف SQL المرفق لإنشاء سجل المبيعات والعمولات. لم يتم حذف الإعلان.');return;}const sold=(sales||[]).filter(x=>Number(x.sale_price)>0);if(sold.length){const due=sold.reduce((sum,x)=>sum+(x.payment_status==='paid'?0:Number(x.commission_amount||Number(x.sale_price)*Number(x.commission_rate||COMMISSION_RATE))),0);const details=sold.map(x=>`بيع مسجل: ${Number(x.sale_price).toLocaleString('ar-SA')} ر.س — العمولة ${Number(x.commission_amount||Number(x.sale_price)*Number(x.commission_rate||COMMISSION_RATE)).toLocaleString('ar-SA')} ر.س`).join('\n');if(!confirm(`تنبيه: يوجد بيع مسجل لهذا المنتج.\n${details}\nإجمالي العمولة غير المسددة: ${due.toLocaleString('ar-SA')} ر.س.\nيجب تحويل المبلغ إلى حساب المنصة وإرسال إثبات التحويل.\nسيتم أرشفة الإعلان للحفاظ على السجل المالي. متابعة؟`))return;const {error:archErr}=await sb.from('ads').update({status:'archived'}).eq('id',id).eq('seller_id',currentUser.id);if(archErr){alert('تعذرت أرشفة الإعلان.');return;}alert(`المبلغ المستحق المسجل: ${due.toLocaleString('ar-SA')} ر.س. بيانات الحساب البنكي ستظهر بعد إضافتها في إعدادات المنصة. سجّل التحويل في سجل العمولات.`);}else{if(!confirm('لم يُعثر على بيع مسجل لهذا الإعلان. هل تريد أرشفته؟'))return;const {error:archErr}=await sb.from('ads').update({status:'archived'}).eq('id',id).eq('seller_id',currentUser.id);if(archErr){alert('تعذرت أرشفة الإعلان.');return;}}await loadMyAds('myAds');await loadMyAds('myAdsPage');await loadAds()};
-$('captureAdLocation')?.addEventListener('click',()=>{const status=$('adLocationStatus');if(!navigator.geolocation){status.textContent='المتصفح لا يدعم تحديد الموقع؛ يمكنك إدخال المدينة يدويًا.';return;}status.textContent='بانتظار السماح بالوصول إلى الموقع...';navigator.geolocation.getCurrentPosition(pos=>{$('adLatitude').value=String(pos.coords.latitude);$('adLongitude').value=String(pos.coords.longitude);status.textContent='تم حفظ إحداثيات موقع الإعلان.';},err=>{status.textContent=err.code===1?'لم تسمح بالوصول للموقع. يمكنك المتابعة دون إحداثيات.':'تعذر تحديد الموقع الآن. حاول مرة أخرى أو أدخل المدينة يدويًا.';},{enableHighAccuracy:true,timeout:12000,maximumAge:60000});});
-document.querySelectorAll('input[name="adKind"]').forEach(r=>r.addEventListener('change',()=>{$('externalAdFields').classList.toggle('hidden',document.querySelector('input[name="adKind"]:checked')?.value!=='external');$('adImages').required=false;}));
-$('adForm').onsubmit=async e=>{e.preventDefault();if(!needAuth())return;if(!$('commissionAgree').checked){msg('adFormMsg','وافق على تعهد العمولة بنسبة 2% قبل الحفظ.');$('commissionAgree').focus();return;}const title=$('adTitle').value.trim(),price=Number($('adPrice').value),category=$('adCategory').value,description=$('adDesc').value.trim(),seller_name=$('sellerName').value.trim(),seller_phone=$('sellerPhone').value.trim();const adKind=document.querySelector('input[name="adKind"]:checked')?.value||'normal';const externalUrl=$('adExternalUrl')?.value.trim()||'';if(adKind==='external'){try{const u=new URL(externalUrl);if(!['http:','https:'].includes(u.protocol))throw new Error();}catch{msg('adFormMsg','أدخل رابطًا صحيحًا يبدأ بـ https:// أو http://');$('adExternalUrl').focus();return;}}if(!title||!category||!description||!seller_name||!seller_phone||!Number.isFinite(price)||price<0){msg('adFormMsg','أكمل البيانات المطلوبة.');return;}msg('adFormMsg','جارٍ حفظ الإعلان والوسائط...');$('saveAd').disabled=true;
+$('adForm').onsubmit=async e=>{e.preventDefault();if(!needAuth())return;if(!$('commissionAgree').checked){msg('adFormMsg','وافق على تعهد العمولة بنسبة 2% قبل الحفظ.');$('commissionAgree').focus();return;}const title=$('adTitle').value.trim(),price=Number($('adPrice').value),category=$('adCategory').value,description=$('adDesc').value.trim(),seller_name=$('sellerName').value.trim(),seller_phone=$('sellerPhone').value.trim();if(!title||!category||!description||!seller_name||!seller_phone||!Number.isFinite(price)||price<0){msg('adFormMsg','أكمل البيانات المطلوبة.');return;}msg('adFormMsg','جارٍ حفظ الإعلان والوسائط...');$('saveAd').disabled=true;
 let image_urls=(removeExistingImages?[]:(editingAd?.image_urls||[]).filter(u=>!removedExistingImageUrls.has(u)));const files=[...$('adImages').files].slice(0,5);if(files.length){let uploaded=[];for(const f of files){if(!f.type.startsWith('image/'))continue;if(f.size>5*1024*1024){msg('adFormMsg','حجم الصورة الواحدة يجب ألا يتجاوز 5 ميغابايت.');$('saveAd').disabled=false;return;}const path=`${currentUser.id}/${Date.now()}-${Math.random().toString(36).slice(2)}-${f.name.replace(/[^a-zA-Z0-9._-]/g,'_')}`;const {error:upErr}=await sb.storage.from('ad-images').upload(path,f,{upsert:false});if(upErr){msg('adFormMsg','تعذر رفع الصور. تأكد من إعداد bucket باسم ad-images وسياساته.');$('saveAd').disabled=false;return;}const {data:urlData}=sb.storage.from('ad-images').getPublicUrl(path);uploaded.push(urlData.publicUrl);}image_urls=[...image_urls,...uploaded];}if(image_urls.length>5){msg('adFormMsg','الحد الأقصى 5 صور. أزل بعض الصور الحالية أو اختر عددًا أقل.');$('saveAd').disabled=false;return;}
 let video_url=removeExistingVideo?'':(editingAd?.video_url||'');const videoFile=$('adVideo').files?.[0];if(videoFile){if(!videoFile.type.startsWith('video/')){msg('adFormMsg','اختر ملف فيديو صحيحًا.');$('saveAd').disabled=false;return;}if(videoFile.size>50*1024*1024){msg('adFormMsg','حجم الفيديو يجب ألا يتجاوز 50 ميغابايت.');$('saveAd').disabled=false;return;}const path=`${currentUser.id}/${Date.now()}-${Math.random().toString(36).slice(2)}-${videoFile.name.replace(/[^a-zA-Z0-9._-]/g,'_')}`;const {error:upErr}=await sb.storage.from('ad-videos').upload(path,videoFile,{upsert:false});if(upErr){msg('adFormMsg','تعذر رفع الفيديو. أنشئ bucket باسم ad-videos واضبط سياساته في Supabase.');$('saveAd').disabled=false;return;}video_url=sb.storage.from('ad-videos').getPublicUrl(path).data.publicUrl;}
-const payload={title,price,category,description,seller_name,seller_phone,ad_type:adKind,external_product_url:adKind==='external'?externalUrl:null,condition:$('adCondition').value,city:$('adCity').value.trim(),latitude:$('adLatitude').value?Number($('adLatitude').value):null,longitude:$('adLongitude').value?Number($('adLongitude').value):null,image_urls,video_url,product_safety_pledged:$('productSafetyPledge').checked,product_fault_details:$('productFaultDetails').value.trim(),status:editingAd?(editingAd.status||'pending'):'pending',seller_id:currentUser.id,commission_rate:COMMISSION_RATE,commission_terms_accepted:true,commission_terms_accepted_at:new Date().toISOString()};
+const payload={title,price,category,description,seller_name,seller_phone,condition:$('adCondition').value,city:$('adCity').value.trim(),image_urls,video_url,status:editingAd?(editingAd.status||'pending'):'pending',seller_id:currentUser.id,commission_rate:COMMISSION_RATE,commission_terms_accepted:true,commission_terms_accepted_at:new Date().toISOString()};
 let result;if(editingAd){result=await sb.from('ads').update(payload).eq('id',editingAd.id).eq('seller_id',currentUser.id);}else{result=await sb.from('ads').insert(payload);}
 $('saveAd').disabled=false;if(result.error){msg('adFormMsg','تعذر الحفظ. تأكد من تشغيل ملف SQL المرفق: '+result.error.message);return;}msg('adFormMsg','تم الحفظ. الإعلان بانتظار المراجعة.');resetAdForm();await loadAds();await loadMyAds('myAds');await loadMyAds('myAdsPage');showPage('myads');};
 $('removeAdImages')?.addEventListener('click',()=>{removeExistingImages=true;removedExistingImageUrls=new Set();if($('adImages'))$('adImages').value='';renderMediaPreviews();$('imageStatus').textContent='ستُزال جميع الصور الحالية عند حفظ التعديل.';});
@@ -1077,8 +971,13 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   if(error){console.error('Store products:',error);byId('storeProducts').innerHTML='<div class="empty">تعذر تحميل منتجات المتجر. نفّذ ملف SQL الخاص بالمتجر في Supabase ثم أعد المحاولة.</div>';return;}
   storeState.products=data||[];renderCommerceProducts();renderHomeStoreTicker();
  }
- function renderHomeStoreTicker(){
+ async function renderHomeStoreTicker(){
   const track=byId('storeTickerTrack');if(!track)return;
+  const ticker=byId('homeStoreTicker');
+  const {data:setting}=await sb.from('site_settings').select('value').eq('key','home_ticker').maybeSingle();
+  const config=setting?.value||{};
+  if(ticker)ticker.classList.toggle('hidden',config.enabled===false);
+  const heading=ticker?.querySelector('.store-ticker-head strong');if(heading&&config.title)heading.textContent='🛍️ '+config.title;
   const rows=storeState.products.filter(p=>p&&p.status!=='hidden'&&Number(p.stock_quantity??0)>=0);
   if(!rows.length){track.innerHTML='<div class="store-ticker-empty">لا توجد منتجات منشورة في المتجر حاليًا.</div>';return;}
   const cards=rows.slice(0,16).map(p=>{
