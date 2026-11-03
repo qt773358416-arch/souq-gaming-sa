@@ -268,6 +268,23 @@ body,body.theme-dark{background:var(--bg)!important;color:var(--text)!important}
 body.theme-dark .store-hero-actions span{background:#172b38;color:#dceff5;border-color:#2c4c5a}
 
 </style>
+<style id="store-final-mobile-layout">
+/* المتجر: بطاقات مربعة فعلية مع عمودين على الجوال */
+.store-search-row{display:grid;grid-template-columns:minmax(0,1fr) 44px;gap:8px;margin:10px 0}
+.store-search-row button{padding:8px}
+#storeProducts{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important;align-items:stretch!important}
+#storeProducts>.store-square-card{display:flex!important;flex-direction:column!important;grid-column:auto!important;grid-row:auto!important;width:auto!important;min-width:0!important;margin:0!important;padding:0!important;border:1px solid var(--line)!important;border-radius:16px!important;box-shadow:var(--shadow)!important;background:var(--panel)!important;overflow:hidden!important}
+#storeProducts .store-square-image{position:relative!important;display:block!important;grid-column:auto!important;grid-row:auto!important;width:100%!important;height:auto!important;min-height:0!important;aspect-ratio:1/1!important;margin:0!important;border-radius:0!important;overflow:hidden!important;background:#eef2ef!important}
+#storeProducts .store-square-image img{display:block;width:100%!important;height:100%!important;aspect-ratio:1/1;object-fit:cover}
+#storeProducts .store-square-body{display:flex!important;flex-direction:column!important;grid-column:auto!important;grid-row:auto!important;min-width:0;padding:10px!important;gap:7px!important;flex:1;background:var(--panel)!important}
+#storeProducts .store-square-body h3{font-size:14px!important;line-height:1.45!important;min-height:2.8em!important;margin:0!important;color:var(--text)!important;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+#storeProducts .store-square-price{font-size:18px!important;font-weight:900;color:var(--brand)!important;white-space:nowrap}
+#storeProducts .store-square-actions{display:flex!important;gap:6px!important;flex-wrap:wrap!important;margin-top:auto!important;padding-top:5px!important}
+#storeProducts .store-square-actions button{flex:1 1 70px!important;min-width:0;padding:8px 5px!important;font-size:12px!important;min-height:36px}
+.store-image-share{position:absolute;top:9px;left:9px;z-index:4;width:38px;height:38px;padding:0!important;border-radius:50%!important;display:grid;place-items:center;background:#fff!important;color:#173b2b!important;border:1px solid #e2e8e3!important;box-shadow:0 2px 9px #0003;font-size:23px;line-height:1}
+@media(min-width:700px){#storeProducts{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:16px!important}#storeProducts .store-square-body{padding:13px!important}#storeProducts .store-square-body h3{font-size:15px!important}}
+@media(max-width:380px){#storeProducts{gap:8px!important}#storeProducts .store-square-body{padding:8px!important;gap:5px!important}#storeProducts .store-square-body h3{font-size:12px!important}#storeProducts .store-square-price{font-size:16px!important}#storeProducts .store-square-actions button{font-size:11px!important;padding:7px 3px!important}}
+</style>
 
 
 <style id="store-square-ad-cards">
@@ -412,8 +429,12 @@ body.store-view .top,body.store-view .searchrow{display:none!important}
 </section>
 <section id="page-store" class="hidden">
 <div class="store-page-heading"><h1>متجر سوق القيمنق</h1><p>منتجات المتجر الرسمية</p></div>
+<div class="store-search-row">
+ <input id="storeSearch" class="field" type="search" placeholder="ابحث عن منتج أو قسم..." aria-label="البحث في منتجات المتجر">
+ <button id="storeSearchClear" class="secondary" type="button" aria-label="مسح البحث">✕</button>
+</div>
 <div class="store-compact-toolbar">
- <select id="storeSort" class="field" aria-label="ترتيب منتجات المتجر"><option value="newest">الأحدث</option><option value="price_low">السعر الأقل</option><option value="price_high">السعر الأعلى</option></select>
+ <select id="storeSort" class="field" aria-label="ترتيب منتجات المتجر"><option value="newest">الأحدث</option><option value="price_low">السعر الأقل</option><option value="price_high">السعر الأعلى</option><option value="title">الاسم أ إلى ي</option></select>
  <button id="storeFilterToggle" class="store-filter-button" type="button" aria-expanded="false">⚙️ الفلترة</button>
 </div>
 <div id="storeFilterPanel" class="store-filter-panel hidden">
@@ -996,13 +1017,24 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   let rows=[...storeState.products],term=normalizeStoreText(byId('storeSearch')?.value||'');
   if(term)rows=rows.filter(p=>normalizeStoreText([p.title,p.description,p.category].join(' ')).includes(term));
   if(selectedStoreCategory)rows=rows.filter(p=>p.category===selectedStoreCategory);
+  const city=byId('storeCitySelect')?.value||'';if(city)rows=rows.filter(p=>String(p.city||'').includes(city));
+  const min=byId('storeMinPrice')?.value,max=byId('storeMaxPrice')?.value;
+  if(min!=='')rows=rows.filter(p=>Number(p.price||0)>=Number(min));
+  if(max!=='')rows=rows.filter(p=>Number(p.price||0)<=Number(max));
   const sort=byId('storeSort')?.value||'newest';
   rows.sort((a,b)=>sort==='price_low'?a.price-b.price:sort==='price_high'?b.price-a.price:sort==='title'?a.title.localeCompare(b.title,'ar'):new Date(b.created_at)-new Date(a.created_at));
   byId('storeCount').textContent=rows.length.toLocaleString('ar-SA')+' منتج';
   byId('storeResultsSubtitle').textContent=term?'نتائج البحث':'منتجات المتجر الرسمية';
   if(!rows.length){box.innerHTML='<div class="empty" style="grid-column:1/-1">لا توجد منتجات منشورة حاليًا في هذا القسم.</div>';return;}
-  box.innerHTML=rows.map(p=>`<article class="card store-product-card store-square-card" data-store-product-id="${esc(p.id)}"><div class="store-square-image">${p.image_url?`<img src="${esc(p.image_url)}" alt="${esc(p.title)}" loading="lazy">`:'<div class="store-square-placeholder">🎮<span>صورة المنتج</span></div>'}</div><div class="store-square-body"><div class="store-square-tags"><span class="store-badge">${esc(p.category)}</span><span class="store-badge">${p.product_type==='digital'?'رقمي':'مادي'}</span></div><h3>${esc(p.title)}</h3><div class="store-square-price">${money(p.price)} <small>ر.س</small></div><div class="muted">${p.stock_quantity>0?'متوفر':'غير متوفر'}</div><div class="store-square-actions"><button class="primary" type="button" onclick="openCommerceCheckout('${p.id}')">اطلب الآن</button></div></div></article>`).join('');
+  box.innerHTML=rows.map(p=>`<article class="card store-product-card store-square-card" data-store-product-id="${esc(p.id)}"><div class="store-square-image">${p.image_url?`<img src="${esc(p.image_url)}" alt="${esc(p.title)}" loading="lazy">`:'<div class="store-square-placeholder">🎮<span>صورة المنتج</span></div>'}<button class="store-image-share" type="button" onclick="shareStoreProduct('${String(p.id).replace(/'/g,'')}')" aria-label="مشاركة المنتج" title="مشاركة المنتج">↗</button></div><div class="store-square-body"><div class="store-square-tags"><span class="store-badge">${esc(p.category)}</span><span class="store-badge">${p.product_type==='digital'?'رقمي':'مادي'}</span></div><h3>${esc(p.title)}</h3><div class="store-square-price">${money(p.price)} <small>ر.س</small></div><div class="muted">${p.stock_quantity>0?'متوفر':'غير متوفر'}</div><div class="store-square-actions"><button class="primary" type="button" onclick="openCommerceCheckout('${p.id}')">اطلب الآن</button></div></div></article>`).join('');
  }
+ window.shareStoreProduct=async id=>{
+  const p=storeState.products.find(x=>String(x.id)===String(id));if(!p)return;
+  const url=location.origin+location.pathname+'#store-product-'+encodeURIComponent(p.id);
+  const shareData={title:p.title||'منتج من سوق القيمنق السعودي',text:`${p.title||'منتج'} - ${money(p.price)} ر.س`,url};
+  try{if(navigator.share){await navigator.share(shareData);}else if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(url);alert('تم نسخ رابط المنتج للمشاركة.');}else{prompt('انسخ رابط المنتج:',url);}}
+  catch(err){if(err?.name!=='AbortError')alert('تعذرت المشاركة من هذا الجهاز.');}
+ };
  window.openCommerceCheckout=id=>{
   const p=storeState.products.find(x=>x.id===id);if(!p||p.stock_quantity<1){alert('المنتج غير متوفر حاليًا.');return;}
   storeState.selected=p;byId('checkoutProductId').value=p.id;byId('storeCheckoutProduct').innerHTML=`<strong>${esc(p.title)}</strong><div>${money(p.price)} ر.س</div>`;
@@ -1072,6 +1104,10 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
  });
  byId('storeSearch')?.addEventListener('input',renderCommerceProducts);
  byId('storeSort')?.addEventListener('change',renderCommerceProducts);
+ ['storeCitySelect','storeMinPrice','storeMaxPrice'].forEach(id=>byId(id)?.addEventListener('input',renderCommerceProducts));
+ byId('storeFilterReset')?.addEventListener('click',()=>{['storeCategorySelect','storeCitySelect','storeMinPrice','storeMaxPrice'].forEach(id=>{if(byId(id))byId(id).value='';});selectedStoreCategory='';renderCommerceProducts();});
+ byId('storeCategorySelect')?.addEventListener('change',e=>{selectedStoreCategory=e.target.value||'';renderCommerceProducts();});
+ byId('storeFilterToggle')?.addEventListener('click',()=>{const panel=byId('storeFilterPanel');if(!panel)return;panel.classList.toggle('hidden');byId('storeFilterToggle').setAttribute('aria-expanded',String(!panel.classList.contains('hidden')));});
  byId('storeSearchClear')?.addEventListener('click',()=>{byId('storeSearch').value='';renderCommerceProducts();});
  categoryButtons().forEach(b=>b.addEventListener('click',()=>{selectedStoreCategory=b.dataset.storeCategory||'';categoryButtons().forEach(x=>x.classList.toggle('selected',x===b));renderCommerceProducts();}));
  // Override the legacy listing-based renderer: official store inventory is now isolated from member ads.
