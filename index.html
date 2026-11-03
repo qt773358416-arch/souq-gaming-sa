@@ -646,7 +646,7 @@ body.store-view .top,body.store-view .searchrow{display:none!important}
  <button id="storeFilterToggle" class="store-filter-button" type="button" aria-expanded="false">⚙️ الفلترة</button>
 </div>
 <div id="storeFilterPanel" class="store-filter-panel hidden">
- <label>التصنيف<select id="storeCategorySelect" class="field"><option value="">كل التصنيفات</option><option>كمبيوترات</option><option>قطع الكمبيوتر</option><option>أجهزة الألعاب</option><option>شاشات وملحقات</option><option>ملحقات القيمنق</option><option>كروت الشحن</option><option>الألعاب الرقمية</option><option>الاشتراكات</option><option>إلكترونيات</option></select></label>
+ <label>التصنيف<select id="storeCategorySelect" class="field"><option value="">كل التصنيفات</option></select></label>
  <label>المدينة<select id="storeCitySelect" class="field"><option value="">كل المدن</option><option>جدة</option><option>الرياض</option><option>مكة المكرمة</option><option>المدينة المنورة</option><option>الدمام</option><option>الطائف</option><option>أبها</option><option>تبوك</option></select></label>
  <label>السعر من<input id="storeMinPrice" class="field" type="number" min="0" placeholder="0"></label>
  <label>السعر إلى<input id="storeMaxPrice" class="field" type="number" min="0" placeholder="بدون حد"></label>
@@ -658,13 +658,25 @@ body.store-view .top,body.store-view .searchrow{display:none!important}
 <div id="storeAdminEntry" class="panel hidden">
  <div class="pagehead"><div><h2>إدارة متجر سوق القيمنق</h2><p>إدارة المنتجات والطلبات والمخزون من لوحة مستقلة.</p></div><button class="primary" id="storeAdminToggle" type="button">فتح لوحة التحكم</button></div>
  <div id="storeAdminPanel" class="hidden">
-  <div class="subnav"><button type="button" data-store-admin-tab="products">المنتجات</button><button type="button" data-store-admin-tab="orders">الطلبات</button><button type="button" data-store-admin-tab="codes">الأكواد الرقمية</button></div>
+  <div class="subnav"><button type="button" data-store-admin-tab="products">المنتجات</button><button type="button" data-store-admin-tab="categories">التصنيفات</button><button type="button" data-store-admin-tab="orders">الطلبات</button><button type="button" data-store-admin-tab="codes">الأكواد الرقمية</button></div>
+  <section id="storeAdminCategories" class="hidden">
+   <h3>إدارة تصنيفات المتجر</h3>
+   <form id="storeCategoryForm" class="formgrid">
+    <input id="storeCategoryId" type="hidden">
+    <div><label>اسم التصنيف *</label><input id="storeCategoryName" class="field" required maxlength="80"></div>
+    <div><label>رمز تعبيري اختياري</label><input id="storeCategoryIcon" class="field" maxlength="8" placeholder="🎮"></div>
+    <div class="full"><label>وصف التصنيف</label><input id="storeCategoryDescription" class="field" maxlength="250"></div>
+    <div class="full"><label class="check-setting"><input id="storeCategoryActive" type="checkbox" checked> تصنيف نشط</label></div>
+    <div class="full row"><button class="primary" type="submit">حفظ التصنيف</button><button class="secondary" type="button" id="storeCategoryReset">تصنيف جديد</button><span id="storeCategoryMsg" class="muted"></span></div>
+   </form>
+   <div id="storeCategoryAdminList"></div>
+  </section>
   <div id="storeAdminProducts">
    <h3>إضافة / تعديل منتج</h3>
    <form id="storeProductForm" class="formgrid">
     <input type="hidden" id="spId">
     <div><label>اسم المنتج *</label><input id="spTitle" class="field" required maxlength="160"></div>
-    <div><label>القسم *</label><select id="spCategory" class="field" required><option>كمبيوترات</option><option>قطع الكمبيوتر</option><option>أجهزة الألعاب</option><option>شاشات وملحقات</option><option>ملحقات القيمنق</option><option>كروت الشحن</option><option>الألعاب الرقمية</option><option>الاشتراكات</option><option>إلكترونيات</option></select></div>
+    <div><label>القسم *</label><select id="spCategory" class="field" required><option value="">اختر التصنيف</option></select></div>
     <div><label>السعر (ر.س) *</label><input id="spPrice" class="field" type="number" min="0.01" step="0.01" required></div>
     <div><label>سعر التكلفة (اختياري)</label><input id="spCost" class="field" type="number" min="0" step="0.01"></div>
     <div><label>الكمية المتاحة</label><input id="spStock" class="field" type="number" min="0" step="1" value="0"></div>
@@ -1230,6 +1242,22 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
 @media(prefers-reduced-motion:reduce){.store-ticker-track{animation:none}}
 @media(max-width:600px){.store-ticker{margin:9px 0 14px}.store-ticker-item{width:116px;flex-basis:116px}.store-ticker-item img,.store-ticker-placeholder{height:72px}}
 </style>
+
+<button id="storeCartLaunch" class="store-cart-launch" type="button">🛒 السلة <span id="storeCartCount" class="store-cart-count">0</span></button>
+<div id="storeCartOverlay" class="store-overlay" role="dialog" aria-modal="true" aria-label="سلة الطلبات">
+ <div class="store-dialog">
+  <div class="store-dialog-head"><h2>سلة الطلبات</h2><button class="secondary" id="storeCartClose" type="button">إغلاق ✕</button></div>
+  <div id="storeCartLines"></div>
+  <div class="store-total"><span>المجموع الفرعي</span><strong id="storeCartSubtotal">0 ر.س</strong></div>
+  <button class="primary" id="storeCartCheckout" type="button" style="width:100%">متابعة بيانات التوصيل</button>
+ </div>
+</div>
+<div id="storeProductOverlay" class="store-overlay" role="dialog" aria-modal="true" aria-label="تفاصيل المنتج">
+ <div class="store-dialog">
+  <div class="store-dialog-head"><h2>تفاصيل المنتج</h2><button class="secondary" id="storeDetailClose" type="button">إغلاق ✕</button></div>
+  <div id="storeProductDetailContent"></div>
+ </div>
+</div>
 <div id="storeCheckoutModal" role="dialog" aria-modal="true">
  <div class="panel">
   <div class="pagehead"><div><h2>إتمام طلب المتجر</h2><p class="muted">بيانات التوصيل ثم إنشاء طلب بانتظار الدفع.</p></div><button class="secondary" type="button" id="closeStoreCheckout">إغلاق ✕</button></div>
@@ -1239,8 +1267,13 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
    <label>الاسم الكامل<input id="checkoutName" class="field" required maxlength="100"></label>
    <label>رقم الجوال<input id="checkoutPhone" class="field" required type="tel" pattern="05[0-9]{8}" placeholder="05xxxxxxxx"></label>
    <label>المدينة<input id="checkoutCity" class="field" required maxlength="80"></label>
-   <label>الحي والعنوان بالتفصيل<textarea id="checkoutAddress" class="field" required rows="3" maxlength="700"></textarea></label>
-   <label>ملاحظات<textarea id="checkoutNotes" class="field" rows="2" maxlength="500"></textarea></label>
+   <label>الحي والعنوان بالتفصيل<textarea id="checkoutAddress" class="field" required rows="3" maxlength="700" placeholder="اسم الحي والشارع ورقم المبنى وأقرب معلم"></textarea></label>
+   <label>رابط الموقع على الخريطة<input id="checkoutMapUrl" class="field" type="url" required placeholder="ألصق رابط موقعك من خرائط Google"></label>
+   <label>خط العرض<input id="checkoutLatitude" class="field" type="number" step="any" required placeholder="اضغط تحديد موقعي"></label>
+   <label>خط الطول<input id="checkoutLongitude" class="field" type="number" step="any" required placeholder="اضغط تحديد موقعي"></label>
+   <button class="secondary" type="button" id="checkoutLocate">📍 تحديد موقعي الحالي</button>
+   <div class="notice" id="checkoutDeliveryFee">رسوم التوصيل ستحسب حسب المدينة.</div>
+   <label>ملاحظات التوصيل<textarea id="checkoutNotes" class="field" rows="2" maxlength="500"></textarea></label>
    <div class="notice">سيتم إنشاء الطلب بحالة «بانتظار الدفع». لا تُدخل بيانات البطاقة هنا. تفعيل الدفع الإلكتروني يتطلب اختيار مزود دفع وربط مفاتيحه عبر خادم آمن.</div>
    <button class="primary" type="submit">إنشاء الطلب والمتابعة للدفع</button><div id="checkoutMsg" role="status" class="muted"></div>
   </form>
@@ -1292,7 +1325,7 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   byId('storeCount').textContent=rows.length.toLocaleString('ar-SA')+' منتج';
   byId('storeResultsSubtitle').textContent=term?'نتائج البحث':'منتجات المتجر الرسمية';
   if(!rows.length){box.innerHTML='<div class="empty" style="grid-column:1/-1">لا توجد منتجات منشورة حاليًا في هذا القسم.</div>';return;}
-  box.innerHTML=rows.map(p=>`<article class="card store-product-card store-square-card" data-store-product-id="${esc(p.id)}"><div class="store-square-image">${p.image_url?`<img src="${esc(p.image_url)}" alt="${esc(p.title)}" loading="lazy">`:'<div class="store-square-placeholder">🎮<span>صورة المنتج</span></div>'}<button class="store-image-share" type="button" onclick="shareStoreProduct('${String(p.id).replace(/'/g,'')}')" aria-label="مشاركة المنتج" title="مشاركة المنتج">↗</button></div><div class="store-square-body"><div class="store-square-tags"><span class="store-badge">${esc(p.category)}</span><span class="store-badge">${p.product_type==='digital'?'رقمي':'مادي'}</span></div><h3>${esc(p.title)}</h3><div class="store-square-price">${money(p.price)} <small>ر.س</small></div><div class="muted">${p.stock_quantity>0?'متوفر':'غير متوفر'}</div><div class="store-square-actions"><button class="primary" type="button" onclick="openCommerceCheckout('${p.id}')">اطلب الآن</button></div></div></article>`).join('');
+  box.innerHTML=rows.map(p=>`<article class="card store-product-card store-square-card" data-store-product-id="${esc(p.id)}"><div class="store-square-image">${p.image_url?`<img src="${esc(p.image_url)}" alt="${esc(p.title)}" loading="lazy">`:'<div class="store-square-placeholder">🎮<span>صورة المنتج</span></div>'}<button class="store-image-share" type="button" onclick="shareStoreProduct('${String(p.id).replace(/'/g,'')}')" aria-label="مشاركة المنتج" title="مشاركة المنتج">↗</button></div><div class="store-square-body"><div class="store-square-tags"><span class="store-badge">${esc(p.category)}</span><span class="store-badge">${p.product_type==='digital'?'رقمي':'مادي'}</span></div><h3>${esc(p.title)}</h3><div class="store-square-price">${money(p.price)} <small>ر.س</small></div><div class="muted">${p.stock_quantity>0?'متوفر':'غير متوفر'}</div><div class="store-square-actions"><button class="secondary" type="button" onclick="openStoreProductDetails('${p.id}')">التفاصيل +</button><button class="store-add-cart" type="button" onclick="addStoreCartItem('${p.id}')">أضف للسلة</button></div></div></article>`).join('');
  }
  window.shareStoreProduct=async id=>{
   const p=storeState.products.find(x=>String(x.id)===String(id));if(!p)return;
@@ -1327,8 +1360,8 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
  byId('storeAdminToggle').addEventListener('click',()=>byId('storeAdminPanel').classList.toggle('hidden'));
  document.querySelectorAll('[data-store-admin-tab]').forEach(b=>b.addEventListener('click',()=>{
   document.querySelectorAll('[data-store-admin-tab]').forEach(x=>x.classList.toggle('active',x===b));
-  ['products','orders','codes'].forEach(k=>byId('storeAdmin'+k[0].toUpperCase()+k.slice(1)).classList.toggle('hidden',k!==b.dataset.storeAdminTab));
-  if(b.dataset.storeAdminTab==='orders')loadAdminOrders();if(b.dataset.storeAdminTab==='codes')loadCodeInventory();
+  ['products','categories','orders','codes'].forEach(k=>byId('storeAdmin'+k[0].toUpperCase()+k.slice(1)).classList.toggle('hidden',k!==b.dataset.storeAdminTab));
+  if(b.dataset.storeAdminTab==='orders')loadAdminOrders();if(b.dataset.storeAdminTab==='codes')loadCodeInventory();if(b.dataset.storeAdminTab==='categories')loadStoreCategories();
  }));
  async function loadAdminProducts(){
   const {data,error}=await sb.from('store_products').select('*').order('created_at',{ascending:false});
@@ -1381,6 +1414,79 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
  renderCommerceProducts();
  fetchStoreProducts();
  checkStoreAdmin();
+
+ // متجر متعدد المنتجات: السلة والتفاصيل والتصنيفات ورسوم التوصيل والمنتجات المميزة.
+ const cart=new Map();
+ let storeCategories=[], deliveryFees=[];
+ const cartCount=()=>[...cart.values()].reduce((n,x)=>n+x.quantity,0);
+ const cartSubtotal=()=>[...cart.values()].reduce((n,x)=>n+x.quantity*Number(x.product.price),0);
+ function updateCartBadge(){byId('storeCartCount').textContent=cartCount().toLocaleString('ar-SA');}
+ window.addStoreCartItem=id=>{
+  const p=storeState.products.find(x=>String(x.id)===String(id));
+  if(!p||Number(p.stock_quantity)<=0){alert('المنتج غير متوفر حاليًا.');return;}
+  const old=cart.get(String(id));const next=(old?.quantity||0)+1;
+  if(next>Math.min(20,Number(p.stock_quantity))||cartCount()+1>20){alert('الكمية المطلوبة تتجاوز المخزون المتاح.');return;}
+  cart.set(String(id),{product:p,quantity:next});updateCartBadge();renderCart();byId('storeCartOverlay').classList.add('open');
+ };
+ function renderCart(){
+  const box=byId('storeCartLines');if(!box)return;
+  const rows=[...cart.entries()];
+  box.innerHTML=rows.length?rows.map(([id,x])=>`<div class="store-cart-line"><img src="${esc(x.product.image_url||'')}" alt=""><div><h4>${esc(x.product.title)}</h4><div>${money(x.product.price)} ر.س</div><button class="linkbtn" type="button" onclick="removeStoreCartItem('${id}')">حذف</button></div><div class="store-qty"><button class="secondary" type="button" onclick="changeStoreCartQty('${id}',-1)">−</button><strong>${x.quantity}</strong><button class="secondary" type="button" onclick="changeStoreCartQty('${id}',1)">+</button></div></div>`).join(''):'<div class="empty">السلة فارغة. أضف المنتجات التي ترغب بشرائها.</div>';
+  byId('storeCartSubtotal').textContent=money(cartSubtotal())+' ر.س';byId('storeCartCheckout').disabled=!rows.length;
+ }
+ window.removeStoreCartItem=id=>{cart.delete(String(id));updateCartBadge();renderCart();};
+ window.changeStoreCartQty=(id,delta)=>{const x=cart.get(String(id));if(!x)return;const n=x.quantity+delta;if(n<=0)cart.delete(String(id));else if(n>Math.min(20,Number(x.product.stock_quantity)))return alert('لا توجد كمية إضافية في المخزون.');else x.quantity=n;updateCartBadge();renderCart();};
+ byId('storeCartLaunch').addEventListener('click',()=>{renderCart();byId('storeCartOverlay').classList.add('open');});
+ byId('storeCartClose').addEventListener('click',()=>byId('storeCartOverlay').classList.remove('open'));
+ window.openStoreProductDetails=id=>{
+  const p=storeState.products.find(x=>String(x.id)===String(id));if(!p)return;
+  byId('storeProductDetailContent').innerHTML=`<div class="store-product-details"><div>${p.image_url?`<img src="${esc(p.image_url)}" alt="${esc(p.title)}">`:'<div class="detail-placeholder">🎮</div>'}</div><div><h2>${esc(p.title)}</h2><div class="store-detail-price">${money(p.price)} ر.س</div><p class="muted">${esc(p.category||'')}</p><p>${esc(p.description||'لا توجد تفاصيل إضافية.')}</p><p class="muted">المتوفر: ${Number(p.stock_quantity||0)}</p><button class="primary" type="button" onclick="addStoreCartItem('${p.id}')">إضافة إلى السلة</button></div></div>`;
+  byId('storeProductOverlay').classList.add('open');
+ };
+ byId('storeDetailClose').addEventListener('click',()=>byId('storeProductOverlay').classList.remove('open'));
+ async function loadStoreCategories(){
+  const {data,error}=await sb.from('store_categories').select('*').order('sort_order',{ascending:true});
+  if(error){storeMsg('storeCategoryMsg','تعذر تحميل التصنيفات: '+error.message);return;}
+  storeCategories=data||[];
+  const active=storeCategories.filter(c=>c.is_active);
+  const options='<option value="">كل التصنيفات</option>'+active.map(c=>`<option value="${esc(c.name)}">${esc(c.icon||'🎮')} ${esc(c.name)}</option>`).join('');
+  if(byId('storeCategorySelect'))byId('storeCategorySelect').innerHTML=options;
+  if(byId('spCategory'))byId('spCategory').innerHTML='<option value="">اختر التصنيف</option>'+active.map(c=>`<option value="${esc(c.name)}">${esc(c.name)}</option>`).join('');
+  byId('storeCategoryAdminList').innerHTML=storeCategories.map(c=>`<div class="store-category-admin"><div><strong>${esc(c.icon||'🎮')} ${esc(c.name)}</strong><div class="muted">${esc(c.description||'')} · ${c.is_active?'نشط':'موقوف'}</div></div><button class="secondary" type="button" onclick="editStoreCategory('${c.id}')">تعديل</button><button class="danger" type="button" onclick="deleteStoreCategory('${c.id}')">حذف</button></div>`).join('')||'<div class="empty">لا توجد تصنيفات. أضف تصنيفًا جديدًا.</div>';
+ }
+ function resetStoreCategory(){byId('storeCategoryId').value='';byId('storeCategoryName').value='';byId('storeCategoryIcon').value='🎮';byId('storeCategoryDescription').value='';byId('storeCategoryActive').checked=true;}
+ window.editStoreCategory=id=>{const c=storeCategories.find(x=>String(x.id)===String(id));if(!c)return;byId('storeCategoryId').value=c.id;byId('storeCategoryName').value=c.name;byId('storeCategoryIcon').value=c.icon||'🎮';byId('storeCategoryDescription').value=c.description||'';byId('storeCategoryActive').checked=!!c.is_active;};
+ window.deleteStoreCategory=async id=>{if(!confirm('حذف التصنيف؟ المنتجات المرتبطة به لن تحذف، لكن قد تحتاج إلى تعديل تصنيفها.'))return;const {error}=await sb.from('store_categories').delete().eq('id',id);storeMsg('storeCategoryMsg',error?'تعذر الحذف: '+error.message:'تم حذف التصنيف.');if(!error)loadStoreCategories();};
+ byId('storeCategoryForm').addEventListener('submit',async e=>{e.preventDefault();if(!storeState.admin)return;const row={name:byId('storeCategoryName').value.trim(),icon:byId('storeCategoryIcon').value.trim()||'🎮',description:byId('storeCategoryDescription').value.trim(),is_active:byId('storeCategoryActive').checked};const id=byId('storeCategoryId').value;const q=id?sb.from('store_categories').update(row).eq('id',id):sb.from('store_categories').insert(row);const {error}=await q;storeMsg('storeCategoryMsg',error?'تعذر الحفظ: '+error.message:'تم حفظ التصنيف.');if(!error){resetStoreCategory();loadStoreCategories();}});
+ byId('storeCategoryReset').addEventListener('click',resetStoreCategory);
+ async function loadDeliveryFees(){const {data,error}=await sb.from('store_delivery_fees').select('*').order('city');if(!error)deliveryFees=data||[];}
+ function deliveryFeeFor(city){const found=deliveryFees.find(x=>x.city===city);return Number(found?.fee??0);}
+ byId('checkoutCity').addEventListener('change',async()=>{await loadDeliveryFees();byId('checkoutDeliveryFee').textContent='رسوم التوصيل: '+money(deliveryFeeFor(byId('checkoutCity').value))+' ر.س';});
+ byId('checkoutLocate').addEventListener('click',()=>{if(!navigator.geolocation){alert('المتصفح لا يدعم تحديد الموقع.');return;}navigator.geolocation.getCurrentPosition(pos=>{byId('checkoutLatitude').value=pos.coords.latitude;byId('checkoutLongitude').value=pos.coords.longitude;},()=>alert('تعذر تحديد الموقع. تحقق من إذن الموقع وفعّل GPS.'),{enableHighAccuracy:true,timeout:15000});});
+ byId('storeCartCheckout').addEventListener('click',()=>{if(!cart.size)return;byId('storeCartOverlay').classList.remove('open');const lines=[...cart.values()];storeState.selected=lines[0].product;byId('checkoutProductId').value=lines[0].product.id;byId('storeCheckoutProduct').innerHTML=lines.map(x=>`<div>${esc(x.product.title)} × ${x.quantity} — ${money(x.product.price*x.quantity)} ر.س</div>`).join('')+`<hr><strong>المجموع الفرعي: ${money(cartSubtotal())} ر.س</strong>`;byId('checkoutMsg').textContent='';byId('storeCheckoutForm').dataset.cart='true';byId('storeCheckoutModal').classList.add('open');});
+ // استبدال إرسال الطلب القديم بإدخال رأس الطلب وعناصره في جدول مستقل.
+ const checkoutForm=byId('storeCheckoutForm');
+ checkoutForm.addEventListener('submit',async e=>{
+  if(checkoutForm.dataset.cart!=='true')return;
+  e.preventDefault();const btn=e.submitter||checkoutForm.querySelector('[type=submit]');btn.disabled=true;
+  try{
+   const items=[...cart.values()];if(!items.length)throw new Error('السلة فارغة.');
+   const city=byId('checkoutCity').value.trim();
+   const {data:orderId,error}=await sb.rpc('create_store_order_with_items',{
+    p_customer_name:byId('checkoutName').value.trim(),p_phone:byId('checkoutPhone').value.trim(),
+    p_city:city,p_address:byId('checkoutAddress').value.trim(),p_notes:byId('checkoutNotes').value.trim(),
+    p_latitude:Number(byId('checkoutLatitude').value),p_longitude:Number(byId('checkoutLongitude').value),
+    p_map_url:byId('checkoutMapUrl').value.trim(),
+    p_items:items.map(x=>({product_id:x.product.id,quantity:x.quantity}))
+   });
+   if(error)throw error;
+   cart.clear();updateCartBadge();renderCart();checkoutForm.dataset.cart='false';
+   storeMsg('checkoutMsg','تم تسجيل طلبك رقم '+orderId+' بنجاح. الحالة: بانتظار الدفع. لم يتم تحصيل أي مبلغ.');
+   btn.textContent='تم تسجيل الطلب';btn.disabled=true;
+  }catch(err){storeMsg('checkoutMsg','تعذر إنشاء الطلب: '+err.message);btn.disabled=false;}
+ },true);
+ loadStoreCategories();loadDeliveryFees();updateCartBadge();
+
  sb.auth.onAuthStateChange(()=>setTimeout(checkStoreAdmin,0));
 })();
 </script>
