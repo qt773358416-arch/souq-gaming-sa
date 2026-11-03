@@ -417,6 +417,158 @@ body.store-view .top,body.store-view .searchrow{display:none!important}
 .ad-external-link{display:inline-flex;align-items:center;gap:7px;margin:8px 0;padding:10px 13px;border:1px solid var(--line);border-radius:10px;background:var(--panel2);color:var(--text);text-decoration:none;font-weight:800}
 @media(max-width:600px){.ad-pledge-panel{padding:11px}.ad-pledge-badge{font-size:10px}}
 </style>
+
+<style id="souq-compact-product-cards-final">
+/* بطاقات إعلانات مضغوطة مستوحاة من بطاقات المتاجر: صورة عريضة ومعلومات قصيرة */
+#ads.grid,
+#ads.grid.list-view{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:11px!important;
+  align-items:stretch!important;
+}
+#ads.grid>.ad-square-card,
+#ads.grid.list-view>.ad-square-card{
+  display:flex!important;
+  flex-direction:column!important;
+  min-width:0!important;
+  width:auto!important;
+  min-height:0!important;
+  margin:0!important;
+  padding:0!important;
+  border:1px solid var(--line)!important;
+  border-radius:15px!important;
+  overflow:hidden!important;
+  background:var(--panel)!important;
+  box-shadow:var(--shadow)!important;
+}
+#ads .ad-square-card .ad-image-wrap{
+  position:relative!important;
+  display:block!important;
+  flex:0 0 auto!important;
+  width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  aspect-ratio:1.72/1!important;
+  margin:0!important;
+  overflow:hidden!important;
+  border-radius:0!important;
+  background:var(--panel2)!important;
+}
+#ads .ad-square-card .ad-image-wrap .adimg{
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  min-height:0!important;
+  aspect-ratio:auto!important;
+  object-fit:cover!important;
+}
+#ads .ad-square-card .ad-image-wrap .ad-placeholder{
+  width:100%!important;
+  height:100%!important;
+  min-height:0!important;
+  aspect-ratio:auto!important;
+  display:grid!important;
+  place-items:center!important;
+  font-size:12px!important;
+}
+#ads .ad-square-card .adbody{
+  position:relative!important;
+  display:flex!important;
+  flex:1 1 auto!important;
+  flex-direction:column!important;
+  align-items:stretch!important;
+  gap:5px!important;
+  min-width:0!important;
+  min-height:112px!important;
+  padding:9px 10px 48px!important;
+  background:var(--panel)!important;
+}
+#ads .ad-square-card .adbody h3{
+  display:-webkit-box!important;
+  -webkit-box-orient:vertical!important;
+  -webkit-line-clamp:2!important;
+  overflow:hidden!important;
+  min-height:0!important;
+  max-height:2.9em!important;
+  margin:0!important;
+  font-size:13px!important;
+  line-height:1.45!important;
+  overflow-wrap:anywhere!important;
+  color:var(--text)!important;
+}
+#ads .ad-square-card .ad-square-price{
+  display:block!important;
+  margin:0!important;
+  font-size:16px!important;
+  line-height:1.35!important;
+  font-weight:900!important;
+  color:var(--brand)!important;
+  white-space:nowrap!important;
+}
+#ads .ad-square-card .ad-pledge-badge{
+  align-self:flex-start!important;
+  max-width:100%!important;
+  margin:0!important;
+  padding:3px 6px!important;
+  font-size:10px!important;
+  line-height:1.35!important;
+}
+#ads .ad-square-card .ad-square-meta{
+  display:flex!important;
+  flex-direction:column!important;
+  gap:2px!important;
+  margin:0!important;
+  font-size:10px!important;
+  line-height:1.35!important;
+  color:var(--muted)!important;
+}
+#ads .ad-square-card .ad-square-meta span{
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+#ads .ad-square-card .ad-square-open{
+  position:absolute!important;
+  left:9px!important;
+  bottom:8px!important;
+  align-self:auto!important;
+  display:grid!important;
+  place-items:center!important;
+  width:36px!important;
+  height:36px!important;
+  min-width:36px!important;
+  min-height:36px!important;
+  margin:0!important;
+  padding:0!important;
+  border-radius:50%!important;
+  font-size:23px!important;
+  line-height:1!important;
+}
+#ads .ad-square-card .ad-share-top{
+  top:8px!important;
+  left:8px!important;
+  width:34px!important;
+  height:34px!important;
+  font-size:18px!important;
+}
+@media(min-width:760px){
+  #ads.grid,#ads.grid.list-view{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:14px!important}
+  #ads .ad-square-card .ad-image-wrap{aspect-ratio:1.72/1!important}
+  #ads .ad-square-card .adbody{min-height:120px!important;padding:11px 12px 50px!important}
+  #ads .ad-square-card .adbody h3{font-size:14px!important}
+  #ads .ad-square-card .ad-square-price{font-size:17px!important}
+}
+@media(max-width:380px){
+  #ads.grid,#ads.grid.list-view{gap:8px!important}
+  #ads .ad-square-card .adbody{min-height:106px!important;padding:8px 8px 45px!important;gap:4px!important}
+  #ads .ad-square-card .adbody h3{font-size:12px!important}
+  #ads .ad-square-card .ad-square-price{font-size:15px!important}
+  #ads .ad-square-card .ad-square-meta{font-size:9px!important}
+  #ads .ad-square-card .ad-square-open{left:7px!important;bottom:7px!important;width:33px!important;height:33px!important;min-width:33px!important;min-height:33px!important}
+}
+</style>
+
 </head>
 <body class="theme-dark">
 <div class="wrap">
