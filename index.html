@@ -583,6 +583,16 @@ body.store-view .top,body.store-view .searchrow{display:none!important}
 .product-pledge-notice{margin-top:2px}
 @media(max-width:520px){.ad-step-indicator{gap:4px}.ad-step-indicator span{font-size:10px;padding:9px 3px}.ad-wizard-step{padding:12px}.ad-step-actions button{flex:1}}
 </style>
+
+<style id="store-category-navigation">
+.store-category-strip{display:flex;gap:8px;overflow-x:auto;padding:5px 1px 12px;margin:8px 0 12px;scrollbar-width:thin;-webkit-overflow-scrolling:touch}
+.store-category-chip{display:inline-flex;align-items:center;justify-content:center;gap:7px;flex:0 0 auto;min-height:42px;padding:9px 13px;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--text);font-size:13px;font-weight:800;white-space:nowrap}
+.store-category-chip span{font-size:17px}
+.store-category-chip.selected{background:#173744;border-color:#16c7d9;color:#e9fbff;box-shadow:0 0 0 1px #16c7d933}
+.store-category-chip:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+@media(max-width:600px){.store-category-strip{gap:6px;margin:6px 0 9px}.store-category-chip{min-height:39px;padding:8px 10px;font-size:12px}}
+</style>
+
 </head>
 <body class="theme-dark">
 <div class="wrap">
@@ -645,8 +655,9 @@ body.store-view .top,body.store-view .searchrow{display:none!important}
  <select id="storeSort" class="field" aria-label="ترتيب منتجات المتجر"><option value="newest">الأحدث</option><option value="price_low">السعر الأقل</option><option value="price_high">السعر الأعلى</option><option value="title">الاسم أ إلى ي</option></select>
  <button id="storeFilterToggle" class="store-filter-button" type="button" aria-expanded="false">⚙️ الفلترة</button>
 </div>
+<div class="store-category-strip" id="storeCategories" aria-label="تصنيفات المتجر"><button class="store-category-chip selected" type="button" data-store-category="">كل المنتجات</button><button class="store-category-chip" type="button" data-store-category="أجهزة الكمبيوتر والقيمنق"><span>🖥️</span>أجهزة الكمبيوتر والقيمنق</button><button class="store-category-chip" type="button" data-store-category="قطع الكمبيوتر"><span>⚙️</span>قطع الكمبيوتر</button><button class="store-category-chip" type="button" data-store-category="أجهزة الكونسول"><span>🎮</span>أجهزة الكونسول</button><button class="store-category-chip" type="button" data-store-category="ملحقات القيمنق"><span>🎧</span>ملحقات القيمنق</button><button class="store-category-chip" type="button" data-store-category="كروت الشحن"><span>💳</span>كروت الشحن</button><button class="store-category-chip" type="button" data-store-category="شحن الألعاب"><span>🪙</span>شحن الألعاب</button><button class="store-category-chip" type="button" data-store-category="الألعاب الرقمية"><span>🕹️</span>الألعاب الرقمية</button><button class="store-category-chip" type="button" data-store-category="الاشتراكات"><span>⭐</span>الاشتراكات</button><button class="store-category-chip" type="button" data-store-category="بطاقات الهدايا"><span>🎁</span>بطاقات الهدايا</button><button class="store-category-chip" type="button" data-store-category="إلكترونيات أخرى"><span>📱</span>إلكترونيات أخرى</button><button class="store-category-chip" type="button" data-store-category="كمبيوترات"><span>💻</span>كمبيوترات</button><button class="store-category-chip" type="button" data-store-category="أجهزة الألعاب"><span>🎮</span>أجهزة الألعاب</button><button class="store-category-chip" type="button" data-store-category="شاشات وملحقات"><span>🖥️</span>شاشات وملحقات</button><button class="store-category-chip" type="button" data-store-category="إلكترونيات"><span>📱</span>إلكترونيات</button></div>
 <div id="storeFilterPanel" class="store-filter-panel hidden">
- <label>التصنيف<select id="storeCategorySelect" class="field"><option value="">كل التصنيفات</option><option>كمبيوترات</option><option>قطع الكمبيوتر</option><option>أجهزة الألعاب</option><option>شاشات وملحقات</option><option>ملحقات القيمنق</option><option>كروت الشحن</option><option>الألعاب الرقمية</option><option>الاشتراكات</option><option>إلكترونيات</option></select></label>
+ <label>التصنيف<select id="storeCategorySelect" class="field"><option value="">كل التصنيفات</option><option value="أجهزة الكمبيوتر والقيمنق">أجهزة الكمبيوتر والقيمنق</option><option value="قطع الكمبيوتر">قطع الكمبيوتر</option><option value="أجهزة الكونسول">أجهزة الكونسول</option><option value="ملحقات القيمنق">ملحقات القيمنق</option><option value="كروت الشحن">كروت الشحن</option><option value="شحن الألعاب">شحن الألعاب</option><option value="الألعاب الرقمية">الألعاب الرقمية</option><option value="الاشتراكات">الاشتراكات</option><option value="بطاقات الهدايا">بطاقات الهدايا</option><option value="إلكترونيات أخرى">إلكترونيات أخرى</option><option value="كمبيوترات">كمبيوترات</option><option value="أجهزة الألعاب">أجهزة الألعاب</option><option value="شاشات وملحقات">شاشات وملحقات</option><option value="إلكترونيات">إلكترونيات</option></select></label>
  <label>المدينة<select id="storeCitySelect" class="field"><option value="">كل المدن</option><option>جدة</option><option>الرياض</option><option>مكة المكرمة</option><option>المدينة المنورة</option><option>الدمام</option><option>الطائف</option><option>أبها</option><option>تبوك</option></select></label>
  <label>السعر من<input id="storeMinPrice" class="field" type="number" min="0" placeholder="0"></label>
  <label>السعر إلى<input id="storeMaxPrice" class="field" type="number" min="0" placeholder="بدون حد"></label>
@@ -664,7 +675,7 @@ body.store-view .top,body.store-view .searchrow{display:none!important}
    <form id="storeProductForm" class="formgrid">
     <input type="hidden" id="spId">
     <div><label>اسم المنتج *</label><input id="spTitle" class="field" required maxlength="160"></div>
-    <div><label>القسم *</label><select id="spCategory" class="field" required><option>كمبيوترات</option><option>قطع الكمبيوتر</option><option>أجهزة الألعاب</option><option>شاشات وملحقات</option><option>ملحقات القيمنق</option><option>كروت الشحن</option><option>الألعاب الرقمية</option><option>الاشتراكات</option><option>إلكترونيات</option></select></div>
+    <div><label>القسم *</label><select id="spCategory" class="field" required><option value="أجهزة الكمبيوتر والقيمنق">أجهزة الكمبيوتر والقيمنق</option><option value="قطع الكمبيوتر">قطع الكمبيوتر</option><option value="أجهزة الكونسول">أجهزة الكونسول</option><option value="ملحقات القيمنق">ملحقات القيمنق</option><option value="كروت الشحن">كروت الشحن</option><option value="شحن الألعاب">شحن الألعاب</option><option value="الألعاب الرقمية">الألعاب الرقمية</option><option value="الاشتراكات">الاشتراكات</option><option value="بطاقات الهدايا">بطاقات الهدايا</option><option value="إلكترونيات أخرى">إلكترونيات أخرى</option><option value="كمبيوترات">كمبيوترات</option><option value="أجهزة الألعاب">أجهزة الألعاب</option><option value="شاشات وملحقات">شاشات وملحقات</option><option value="إلكترونيات">إلكترونيات</option></select></div>
     <div><label>السعر (ر.س) *</label><input id="spPrice" class="field" type="number" min="0.01" step="0.01" required></div>
     <div><label>سعر التكلفة (اختياري)</label><input id="spCost" class="field" type="number" min="0" step="0.01"></div>
     <div><label>الكمية المتاحة</label><input id="spStock" class="field" type="number" min="0" step="1" value="0"></div>
@@ -1371,11 +1382,25 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
  byId('storeSearch')?.addEventListener('input',renderCommerceProducts);
  byId('storeSort')?.addEventListener('change',renderCommerceProducts);
  ['storeCitySelect','storeMinPrice','storeMaxPrice'].forEach(id=>byId(id)?.addEventListener('input',renderCommerceProducts));
- byId('storeFilterReset')?.addEventListener('click',()=>{['storeCategorySelect','storeCitySelect','storeMinPrice','storeMaxPrice'].forEach(id=>{if(byId(id))byId(id).value='';});selectedStoreCategory='';renderCommerceProducts();});
- byId('storeCategorySelect')?.addEventListener('change',e=>{selectedStoreCategory=e.target.value||'';renderCommerceProducts();});
+ byId('storeFilterReset')?.addEventListener('click',()=>{
+  ['storeCategorySelect','storeCitySelect','storeMinPrice','storeMaxPrice'].forEach(id=>{if(byId(id))byId(id).value='';});
+  selectedStoreCategory='';
+  categoryButtons().forEach(x=>x.classList.toggle('selected',!x.dataset.storeCategory));
+  renderCommerceProducts();
+ });
+ byId('storeCategorySelect')?.addEventListener('change',e=>{
+  selectedStoreCategory=e.target.value||'';
+  categoryButtons().forEach(x=>x.classList.toggle('selected',(x.dataset.storeCategory||'')===selectedStoreCategory));
+  renderCommerceProducts();
+ });
  byId('storeFilterToggle')?.addEventListener('click',()=>{const panel=byId('storeFilterPanel');if(!panel)return;panel.classList.toggle('hidden');byId('storeFilterToggle').setAttribute('aria-expanded',String(!panel.classList.contains('hidden')));});
  byId('storeSearchClear')?.addEventListener('click',()=>{byId('storeSearch').value='';renderCommerceProducts();});
- categoryButtons().forEach(b=>b.addEventListener('click',()=>{selectedStoreCategory=b.dataset.storeCategory||'';categoryButtons().forEach(x=>x.classList.toggle('selected',x===b));renderCommerceProducts();}));
+ categoryButtons().forEach(b=>b.addEventListener('click',()=>{
+  selectedStoreCategory=b.dataset.storeCategory||'';
+  categoryButtons().forEach(x=>x.classList.toggle('selected',x===b));
+  if(byId('storeCategorySelect'))byId('storeCategorySelect').value=selectedStoreCategory;
+  renderCommerceProducts();
+ }));
  // Override the legacy listing-based renderer: official store inventory is now isolated from member ads.
  window.renderStoreProducts=renderCommerceProducts;
  renderCommerceProducts();
