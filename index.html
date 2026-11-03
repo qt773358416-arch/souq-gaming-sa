@@ -380,6 +380,34 @@ body.store-view .top,body.store-view .searchrow{display:none!important}
 <style id="hide-home-shortcut-pair">
 .home-actions,.home-action,.home-store-shortcuts,.home-store-actions{display:none!important}
 </style>
+
+<style id="smart-single-filter-and-square-cards">
+.listing-tools{padding:10px!important;margin:10px 0 12px!important;border-radius:14px!important}
+.listing-tools-title{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:30px}
+.smart-filter-toggle{display:flex!important;align-items:center;justify-content:center;gap:9px;width:100%;min-height:43px;margin-top:7px;padding:9px 13px!important;background:var(--panel2)!important;color:var(--text)!important;border:1px solid var(--line)!important;border-radius:11px!important;font-weight:800}
+.smart-filter-toggle:hover,.smart-filter-toggle:focus-visible,.smart-filter-toggle.is-open{background:var(--panel2)!important;color:var(--text)!important;border-color:var(--line)!important;box-shadow:none!important}
+.smart-filter-chevron{margin-right:auto;font-size:18px;transition:transform .18s ease}
+.smart-filter-toggle.is-open .smart-filter-chevron{transform:rotate(180deg)}
+.listing-advanced{margin-top:9px!important;padding:11px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+.listing-advanced[hidden]{display:none!important}
+.listing-advanced .filters{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px!important;align-items:end}
+.smart-filter-field{display:grid!important;gap:5px!important;margin:0!important;color:var(--muted)!important;font-size:12px!important;font-weight:700}
+.smart-filter-field .field{width:100%;min-width:0}
+.listing-advanced .image-filter{min-height:42px;white-space:normal;font-size:12px}
+.listing-advanced #clearFilters{min-height:42px;background:var(--panel2)!important;color:var(--text)!important;border:1px solid var(--line)!important}
+.city-picker-hint{margin-top:8px;color:var(--muted);font-size:11px}
+#ads.grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:11px!important;align-items:stretch!important}
+#ads.grid>.ad-square-card{display:flex!important;flex-direction:column!important;min-width:0!important;width:auto!important;margin:0!important;padding:0!important;border:1px solid var(--line)!important;border-radius:15px!important;overflow:hidden!important;background:var(--panel)!important}
+#ads .ad-square-card .ad-image-wrap{width:100%!important;aspect-ratio:1/1!important;height:auto!important;margin:0!important;overflow:hidden!important}
+#ads .ad-square-card .adimg{width:100%!important;height:100%!important;aspect-ratio:1/1!important;object-fit:cover!important}
+#ads .ad-square-card .adbody{display:flex!important;flex:1!important;flex-direction:column!important;gap:7px!important;min-width:0!important;padding:10px!important}
+#ads .ad-square-card .adbody h3{display:block!important;white-space:normal!important;overflow:visible!important;min-height:0!important;font-size:14px!important;line-height:1.5!important;overflow-wrap:anywhere!important}
+#ads .ad-square-meta{display:flex!important;flex-direction:column!important;gap:4px!important;line-height:1.5!important;font-size:11px!important}
+#ads .ad-square-open{margin-top:auto!important}
+@media(min-width:900px){#ads.grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:15px!important}}
+@media(max-width:420px){.listing-advanced .filters{grid-template-columns:1fr 1fr!important}.smart-filter-toggle{min-height:41px}}
+</style>
+
 </head>
 <body class="theme-dark">
 <div class="wrap">
@@ -409,22 +437,27 @@ body.store-view .top,body.store-view .searchrow{display:none!important}
 </div>
 
 <div class="categories" id="categories"><button class="chip selected" data-category="">الكل</button><button class="chip" data-category="كمبيوترات">كمبيوترات</button><button class="chip" data-category="قطع الكمبيوتر">قطع الكمبيوتر</button><button class="chip" data-category="أجهزة الألعاب">أجهزة الألعاب</button><button class="chip" data-category="شاشات وملحقات">شاشات وملحقات</button><button class="chip" data-category="جوالات وإلكترونيات">جوالات وإلكترونيات</button><button class="chip" data-category="خدمات وصيانة">خدمات وصيانة</button></div>
-<div class="listing-tools"><div class="listing-tools-title"><strong>تصفح الإعلانات</strong><span class="muted" id="activeFilterLabel">كل الأقسام</span></div>
-<div class="listing-quick-actions listing-three-actions">
- <button class="secondary listing-mode-btn" id="nearbySort" type="button" aria-pressed="false">📍 الأقرب</button>
- <button class="secondary listing-mode-btn active" id="newestSort" type="button" aria-pressed="true">🕒 الأحدث</button>
- <button class="secondary listing-mode-btn" id="cityPickerToggle" type="button" aria-expanded="false">🏙️ المدن</button>
+<div class="listing-tools">
+ <div class="listing-tools-title"><strong>تصفح الإعلانات</strong><span class="muted" id="activeFilterLabel">كل الأقسام</span></div>
+ <button class="secondary smart-filter-toggle" id="toggleListingFilters" type="button" aria-expanded="false" aria-controls="listingAdvanced">
+  <span>⚙️</span> الفلترة الذكية <span class="smart-filter-chevron">⌄</span>
+ </button>
+ <div class="listing-advanced" id="listingAdvanced" hidden>
+  <div class="filters">
+   <label class="smart-filter-field">ترتيب حسب
+    <select id="adSort" class="field" aria-label="ترتيب الإعلانات">
+     <option value="newest">الأحدث</option><option value="price_low">السعر: الأقل أولًا</option><option value="price_high">السعر: الأعلى أولًا</option><option value="nearby">الأقرب حسب المدينة</option>
+    </select>
+   </label>
+   <label class="smart-filter-field">المدينة
+    <select id="cityFilter" class="field city-filter" aria-label="اختيار المدينة"><option value="">كل مدن ومحافظات السعودية</option><option value="الرياض">الرياض</option><option value="جدة">جدة</option><option value="مكة المكرمة">مكة المكرمة</option><option value="المدينة المنورة">المدينة المنورة</option><option value="الدمام">الدمام</option><option value="الخبر">الخبر</option><option value="الظهران">الظهران</option><option value="الطائف">الطائف</option><option value="تبوك">تبوك</option><option value="أبها">أبها</option><option value="خميس مشيط">خميس مشيط</option><option value="جازان">جازان</option><option value="نجران">نجران</option><option value="حائل">حائل</option><option value="بريدة">بريدة</option><option value="عنيزة">عنيزة</option><option value="ينبع">ينبع</option><option value="الجبيل">الجبيل</option><option value="الأحساء">الأحساء</option><option value="حفر الباطن">حفر الباطن</option><option value="القطيف">القطيف</option><option value="عرعر">عرعر</option><option value="سكاكا">سكاكا</option><option value="القريات">القريات</option><option value="الباحة">الباحة</option><option value="بيشة">بيشة</option><option value="الرس">الرس</option><option value="المجمعة">المجمعة</option><option value="الخرج">الخرج</option><option value="الدوادمي">الدوادمي</option><option value="القنفذة">القنفذة</option><option value="شرورة">شرورة</option><option value="رفحاء">رفحاء</option><option value="طريف">طريف</option><option value="رابغ">رابغ</option><option value="الليث">الليث</option><option value="ثول">ثول</option><option value="ذهبان">ذهبان</option><option value="بحرة">بحرة</option><option value="الجموم">الجموم</option><option value="خليص">خليص</option><option value="الكامل">الكامل</option><option value="رنية">رنية</option><option value="تربة">تربة</option><option value="الخرمة">الخرمة</option><option value="ميسان">ميسان</option><option value="أضم">أضم</option><option value="العرضيات">العرضيات</option><option value="محايل عسير">محايل عسير</option><option value="النماص">النماص</option><option value="تنومة">تنومة</option><option value="سراة عبيدة">سراة عبيدة</option><option value="ظهران الجنوب">ظهران الجنوب</option><option value="أحد رفيدة">أحد رفيدة</option><option value="رجال ألمع">رجال ألمع</option><option value="بارق">بارق</option><option value="المجاردة">المجاردة</option><option value="بلقرن">بلقرن</option><option value="البرك">البرك</option><option value="الدرب">الدرب</option><option value="صبيا">صبيا</option><option value="أبو عريش">أبو عريش</option><option value="صامطة">صامطة</option><option value="بيش">بيش</option><option value="العارضة">العارضة</option><option value="الحرث">الحرث</option><option value="ضمد">ضمد</option><option value="فرسان">فرسان</option><option value="الدائر">الدائر</option><option value="فيفاء">فيفاء</option><option value="الريث">الريث</option><option value="العيدابي">العيدابي</option><option value="هروب">هروب</option><option value="الطوال">الطوال</option><option value="أحد المسارحة">أحد المسارحة</option><option value="الوجه">الوجه</option><option value="ضباء">ضباء</option><option value="أملج">أملج</option><option value="حقل">حقل</option><option value="تيماء">تيماء</option><option value="البدع">البدع</option><option value="دومة الجندل">دومة الجندل</option><option value="طبرجل">طبرجل</option><option value="العويقيلة">العويقيلة</option><option value="الخفجي">الخفجي</option><option value="النعيرية">النعيرية</option><option value="قرية العليا">قرية العليا</option><option value="رأس تنورة">رأس تنورة</option><option value="بقيق">بقيق</option><option value="العديد">العديد</option><option value="الزلفي">الزلفي</option><option value="شقراء">شقراء</option><option value="حوطة بني تميم">حوطة بني تميم</option><option value="الأفلاج">الأفلاج</option><option value="السليل">السليل</option><option value="وادي الدواسر">وادي الدواسر</option><option value="القويعية">القويعية</option><option value="عفيف">عفيف</option><option value="ثادق">ثادق</option><option value="حريملاء">حريملاء</option><option value="الغاط">الغاط</option><option value="رماح">رماح</option><option value="ضرما">ضرما</option><option value="مرات">مرات</option><option value="المزاحمية">المزاحمية</option><option value="الدلم">الدلم</option><option value="الدرعية">الدرعية</option><option value="العيينة">العيينة</option><option value="تمير">تمير</option><option value="حوطة سدير">حوطة سدير</option><option value="جلاجل">جلاجل</option><option value="الأرطاوية">الأرطاوية</option><option value="البكيرية">البكيرية</option><option value="البدائع">البدائع</option><option value="المذنب">المذنب</option><option value="رياض الخبراء">رياض الخبراء</option><option value="عيون الجواء">عيون الجواء</option><option value="الأسياح">الأسياح</option><option value="النبهانية">النبهانية</option><option value="الشماسية">الشماسية</option><option value="ضرية">ضرية</option><option value="عقلة الصقور">عقلة الصقور</option><option value="دخنة">دخنة</option><option value="ساجر">ساجر</option><option value="القيصومة">القيصومة</option><option value="أخرى">أخرى</option></select>
+   </label>
+   <label class="image-filter"><input id="imagesOnly" type="checkbox"> الإعلانات التي تحتوي على صور فقط</label>
+   <button class="secondary" id="clearFilters" type="button">إعادة ضبط الفلاتر</button>
+  </div>
+  <div class="city-picker-hint" id="cityPickerHint" role="status">اختر الترتيب أو المدينة لتصفية الإعلانات.</div>
+ </div>
 </div>
-<div class="city-picker-panel hidden" id="cityPickerPanel">
- <label for="cityFilter">اختر المدينة أو المحافظة</label>
- <select id="cityFilter" class="field city-filter" aria-label="اختيار المدينة"><option value="">كل مدن ومحافظات السعودية</option><option value="الرياض">الرياض</option><option value="جدة">جدة</option><option value="مكة المكرمة">مكة المكرمة</option><option value="المدينة المنورة">المدينة المنورة</option><option value="الدمام">الدمام</option><option value="الخبر">الخبر</option><option value="الظهران">الظهران</option><option value="الطائف">الطائف</option><option value="تبوك">تبوك</option><option value="أبها">أبها</option><option value="خميس مشيط">خميس مشيط</option><option value="جازان">جازان</option><option value="نجران">نجران</option><option value="حائل">حائل</option><option value="بريدة">بريدة</option><option value="عنيزة">عنيزة</option><option value="ينبع">ينبع</option><option value="الجبيل">الجبيل</option><option value="الأحساء">الأحساء</option><option value="حفر الباطن">حفر الباطن</option><option value="القطيف">القطيف</option><option value="عرعر">عرعر</option><option value="سكاكا">سكاكا</option><option value="القريات">القريات</option><option value="الباحة">الباحة</option><option value="بيشة">بيشة</option><option value="الرس">الرس</option><option value="المجمعة">المجمعة</option><option value="الخرج">الخرج</option><option value="الدوادمي">الدوادمي</option><option value="القنفذة">القنفذة</option><option value="شرورة">شرورة</option><option value="رفحاء">رفحاء</option><option value="طريف">طريف</option><option value="رابغ">رابغ</option><option value="الليث">الليث</option><option value="ثول">ثول</option><option value="ذهبان">ذهبان</option><option value="بحرة">بحرة</option><option value="الجموم">الجموم</option><option value="خليص">خليص</option><option value="الكامل">الكامل</option><option value="رنية">رنية</option><option value="تربة">تربة</option><option value="الخرمة">الخرمة</option><option value="ميسان">ميسان</option><option value="أضم">أضم</option><option value="العرضيات">العرضيات</option><option value="محايل عسير">محايل عسير</option><option value="النماص">النماص</option><option value="تنومة">تنومة</option><option value="سراة عبيدة">سراة عبيدة</option><option value="ظهران الجنوب">ظهران الجنوب</option><option value="أحد رفيدة">أحد رفيدة</option><option value="رجال ألمع">رجال ألمع</option><option value="بارق">بارق</option><option value="المجاردة">المجاردة</option><option value="بلقرن">بلقرن</option><option value="البرك">البرك</option><option value="الدرب">الدرب</option><option value="صبيا">صبيا</option><option value="أبو عريش">أبو عريش</option><option value="صامطة">صامطة</option><option value="بيش">بيش</option><option value="العارضة">العارضة</option><option value="الحرث">الحرث</option><option value="ضمد">ضمد</option><option value="فرسان">فرسان</option><option value="الدائر">الدائر</option><option value="فيفاء">فيفاء</option><option value="الريث">الريث</option><option value="العيدابي">العيدابي</option><option value="هروب">هروب</option><option value="الطوال">الطوال</option><option value="أحد المسارحة">أحد المسارحة</option><option value="الوجه">الوجه</option><option value="ضباء">ضباء</option><option value="أملج">أملج</option><option value="حقل">حقل</option><option value="تيماء">تيماء</option><option value="البدع">البدع</option><option value="دومة الجندل">دومة الجندل</option><option value="طبرجل">طبرجل</option><option value="العويقيلة">العويقيلة</option><option value="الخفجي">الخفجي</option><option value="النعيرية">النعيرية</option><option value="قرية العليا">قرية العليا</option><option value="رأس تنورة">رأس تنورة</option><option value="بقيق">بقيق</option><option value="العديد">العديد</option><option value="الزلفي">الزلفي</option><option value="شقراء">شقراء</option><option value="حوطة بني تميم">حوطة بني تميم</option><option value="الأفلاج">الأفلاج</option><option value="السليل">السليل</option><option value="وادي الدواسر">وادي الدواسر</option><option value="القويعية">القويعية</option><option value="عفيف">عفيف</option><option value="ثادق">ثادق</option><option value="حريملاء">حريملاء</option><option value="الغاط">الغاط</option><option value="رماح">رماح</option><option value="ضرما">ضرما</option><option value="مرات">مرات</option><option value="المزاحمية">المزاحمية</option><option value="الدلم">الدلم</option><option value="الدرعية">الدرعية</option><option value="العيينة">العيينة</option><option value="تمير">تمير</option><option value="حوطة سدير">حوطة سدير</option><option value="جلاجل">جلاجل</option><option value="الأرطاوية">الأرطاوية</option><option value="البكيرية">البكيرية</option><option value="البدائع">البدائع</option><option value="المذنب">المذنب</option><option value="رياض الخبراء">رياض الخبراء</option><option value="عيون الجواء">عيون الجواء</option><option value="الأسياح">الأسياح</option><option value="النبهانية">النبهانية</option><option value="الشماسية">الشماسية</option><option value="ضرية">ضرية</option><option value="عقلة الصقور">عقلة الصقور</option><option value="دخنة">دخنة</option><option value="ساجر">ساجر</option><option value="القيصومة">القيصومة</option><option value="أخرى">أخرى</option></select>
- <div class="city-picker-hint" id="cityPickerHint" role="status">اختر مدينة لتصفية الإعلانات.</div>
-</div>
-<div class="listing-advanced" id="listingAdvanced" hidden><div class="filters">
- <select id="adSort" class="field" aria-label="ترتيب الإعلانات"><option value="newest">الأحدث أولًا</option><option value="price_low">السعر: الأقل أولًا</option><option value="price_high">السعر: الأعلى أولًا</option><option value="nearby">الأقرب حسب المدينة</option></select>
- <label class="image-filter"><input id="imagesOnly" type="checkbox"> بصور فقط</label>
- <button class="secondary" id="clearFilters" type="button">مسح الفلاتر</button>
-</div></div></div>
 <div class="row space"><h2>أحدث الإعلانات</h2><span class="muted" id="adCount"></span></div><div id="ads" class="grid"><div class="empty">جارٍ تحميل الإعلانات...</div></div>
 </section>
 <section id="page-store" class="hidden">
@@ -671,7 +704,7 @@ function renderAdsFromCache(){
   return new Date(b.created_at||0)-new Date(a.created_at||0);
  });
  $('adCount').textContent=rows.length.toLocaleString('ar-SA')+' إعلان';
- const terms=[]; if(selectedCategory)terms.push(selectedCategory);if(cityFilterValue)terms.push('المدينة: '+$('cityFilter').value.trim());if(onlyAdsWithImages)terms.push('بصور فقط');
+ const terms=[]; if(selectedCategory)terms.push(selectedCategory);if(cityFilterValue)terms.push('المدينة: '+$('cityFilter').value.trim());if(adSortOrder==='price_low')terms.push('السعر: الأقل');if(adSortOrder==='price_high')terms.push('السعر: الأعلى');if(adSortOrder==='nearby')terms.push('الأقرب حسب المدينة');if(onlyAdsWithImages)terms.push('بصور فقط');
  $('activeFilterLabel').textContent=terms.join(' · ')||'كل الأقسام';
  if(!rows.length){box.innerHTML='<div class="empty">لا توجد إعلانات مطابقة للفلاتر الحالية. جرّب تغيير كلمات البحث أو مسح الفلاتر.</div>';return;}
  box.classList.toggle('list-view',document.body.dataset.viewMode==='list');
@@ -743,35 +776,41 @@ $('storeFilterReset')?.addEventListener('click',()=>{['storeCategorySelect','sto
 $('storeSearchClear')?.addEventListener('click',()=>{if($('storeSearch'))$('storeSearch').value='';renderStoreProducts();$('storeSearch')?.focus();});
 
 function setListingMode(mode){
- adSortOrder=mode;$('adSort').value=mode;
- ['nearbySort','newestSort'].forEach(id=>{const b=$(id);const on=(id==='nearbySort'&&mode==='nearby')||(id==='newestSort'&&mode==='newest');b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on));});
+ adSortOrder=mode;
+ if($('adSort'))$('adSort').value=mode;
  applyAdFilters();
 }
-$('nearbySort').addEventListener('click',()=>{
- const city=$('cityFilter').value.trim()||String(profile?.city||'').trim();
- if(!city){$('cityPickerPanel').classList.remove('hidden');$('cityPickerToggle').setAttribute('aria-expanded','true');$('cityPickerHint').textContent='اختر مدينتك أولًا؛ سيعرض الزر الإعلانات المسجلة في مدينتك. الفرز بالكيلومترات يحتاج إحداثيات محفوظة لكل إعلان.';return;}
- if(!$('cityFilter').value)$('cityFilter').value=city;
- setListingMode('nearby');
+$('toggleListingFilters').addEventListener('click',()=>{
+ const panel=$('listingAdvanced'),open=panel.hidden;
+ panel.hidden=!open;
+ $('toggleListingFilters').setAttribute('aria-expanded',String(open));
+ $('toggleListingFilters').classList.toggle('is-open',open);
 });
-$('newestSort').addEventListener('click',()=>setListingMode('newest'));
-$('cityPickerToggle').addEventListener('click',()=>{const panel=$('cityPickerPanel');const open=panel.classList.contains('hidden');panel.classList.toggle('hidden',!open);$('cityPickerToggle').setAttribute('aria-expanded',String(open));});
 function applyAdFilters(){
+ adSortOrder=$('adSort').value;
  cityFilterValue=$('cityFilter').value.trim().toLowerCase();
  onlyAdsWithImages=$('imagesOnly').checked;
- if(adSortOrder==='nearby'&&!cityFilterValue&&profile?.city)cityFilterValue=String(profile.city).trim().toLowerCase();
+ if(adSortOrder==='nearby'&&!cityFilterValue&&profile?.city){
+  $('cityFilter').value=String(profile.city).trim();
+  cityFilterValue=String(profile.city).trim().toLowerCase();
+ }
+ const city=$('cityFilter').value.trim();
+ $('cityPickerHint').textContent=city?'تتم تصفية الإعلانات حسب '+city+'.':'يمكنك اختيار مدينة أو ترتيب الإعلانات حسب السعر أو الأحدث.';
  renderAdsFromCache();
 }
-$('cityFilter').addEventListener('change',()=>{const city=$('cityFilter').value.trim();$('cityPickerHint').textContent=city?'تم اختيار '+city+'.':'اختر مدينة لتصفية الإعلانات.';if(adSortOrder==='nearby'&&!city){setListingMode('newest');return;}applyAdFilters();});
-$('adSort').addEventListener('change',()=>setListingMode($('adSort').value));
-$('imagesOnly').addEventListener('change',applyAdFilters);
-$('clearFilters').addEventListener('click',()=>{selectedCategory='';searchTerm='';cityFilterValue='';onlyAdsWithImages=false;adSortOrder='newest';$('search').value='';$('searchPageInput').value='';$('cityFilter').value='';$('imagesOnly').checked=false;$('adSort').value='newest';$('cityPickerPanel').classList.add('hidden');$('cityPickerToggle').setAttribute('aria-expanded','false');setListingMode('newest');document.querySelectorAll('[data-category]').forEach(x=>x.classList.toggle('selected',!x.dataset.category));loadAds();});
-$('quickPriceLow').addEventListener('click',()=>{$('adSort').value='price_low';applyAdFilters();$('quickPriceLow').classList.add('active');$('quickPriceHigh').classList.remove('active');});
-$('quickPriceHigh').addEventListener('click',()=>{$('adSort').value='price_high';applyAdFilters();$('quickPriceHigh').classList.add('active');$('quickPriceLow').classList.remove('active');});
-$('nearbySort').addEventListener('click',()=>{const city=$('cityFilter').value.trim()||profile?.city||'';if(city){$('cityFilter').value=city;$('adSort').value='nearby';applyAdFilters();return;}if(!navigator.geolocation){alert('الموقع غير مدعوم في هذا المتصفح. اختر مدينتك من الفلاتر.');$('listingAdvanced').hidden=false;return;}navigator.geolocation.getCurrentPosition(pos=>{window.__customerCoords={lat:pos.coords.latitude,lon:pos.coords.longitude};alert('تم تحديد موقعك. لفرز المسافات بدقة يلزم توفر إحداثيات مواقع الإعلانات في قاعدة البيانات؛ حاليًا اختر المدينة لعرض الأقرب حسب المدينة.');$('listingAdvanced').hidden=false;$('toggleListingFilters').setAttribute('aria-expanded','true');},()=>{alert('لم نتمكن من الوصول للموقع. يمكنك اختيار مدينتك يدويًا.');$('listingAdvanced').hidden=false;},{enableHighAccuracy:false,timeout:8000});});
-function applyAdFilters(){adSortOrder=$('adSort').value;cityFilterValue=$('cityFilter').value.trim().toLowerCase();onlyAdsWithImages=$('imagesOnly').checked;renderAdsFromCache();}
 $('adSort').addEventListener('change',applyAdFilters);
 $('cityFilter').addEventListener('change',applyAdFilters);
 $('imagesOnly').addEventListener('change',applyAdFilters);
+$('clearFilters').addEventListener('click',()=>{
+ selectedCategory='';searchTerm='';cityFilterValue='';onlyAdsWithImages=false;adSortOrder='newest';
+ if($('search'))$('search').value='';
+ if($('searchPageInput'))$('searchPageInput').value='';
+ $('cityFilter').value='';$('imagesOnly').checked=false;$('adSort').value='newest';
+ document.querySelectorAll('[data-category]').forEach(x=>x.classList.toggle('selected',!x.dataset.category));
+ $('activeFilterLabel').textContent='كل الأقسام';
+ applyAdFilters();
+});
+
 
 
 function normalizePhone(p){let n=String(p||'').replace(/\D/g,'');if(n.startsWith('00'))n=n.slice(2);if(n.startsWith('0'))n='966'+n.slice(1);return n;}
