@@ -1,7 +1,7 @@
 <!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>إدارة المتجر | سوق القيمنق السعودي</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><style>
-:root{color-scheme:dark;--bg:#0d141b;--panel:#17232d;--panel2:#202f3a;--line:#30414d;--text:#eef7fa;--muted:#a4b5c0;--brand:#16c7d9;--red:#a93c52}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px Tahoma,Arial;line-height:1.6}button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:10px;padding:10px 13px;font-weight:bold}.primary{background:var(--brand);color:#071820}.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line)}.danger{background:#542333;color:#ffe8ed}.wrap{max-width:1250px;margin:auto;padding:16px}.panel,.stat{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:15px;margin:12px 0}.top,.row{display:flex;align-items:center;justify-content:space-between;gap:9px;flex-wrap:wrap}.top h1{color:var(--brand);font-size:25px}.muted,small{color:var(--muted)}.hidden{display:none!important}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.stat strong{display:block;font-size:23px;color:var(--brand)}.nav{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin:14px 0}.nav button{background:var(--panel2);color:var(--text);border:1px solid var(--line)}.nav button.active{background:var(--brand);color:#071820}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.field{width:100%;min-width:0;padding:10px;background:#0b151e;color:var(--text);border:1px solid var(--line);border-radius:9px}label{display:grid;gap:5px;color:var(--muted);font-size:13px}.form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.full{grid-column:1/-1}.list{display:grid;gap:8px;margin-top:12px}.item{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;background:#101b25;border:1px solid var(--line);border-radius:11px;padding:12px}.actions{display:flex;gap:6px;flex-wrap:wrap}.actions button{font-size:12px}.tablewrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:700px}td,th{text-align:right;padding:10px;border-bottom:1px solid var(--line);font-size:13px}th{color:var(--brand)}.msg{padding:10px;background:var(--panel2);border-radius:9px;margin:8px 0}.badge{background:var(--panel2);padding:3px 8px;border-radius:20px;font-size:12px}@media(max-width:700px){.wrap{padding:10px}.stats{grid-template-columns:1fr 1fr}.nav{grid-template-columns:repeat(2,1fr)}.form,.grid{grid-template-columns:1fr}.full{grid-column:auto}}
-</style></head><body><main class="wrap"><header class="top"><div><h1>لوحة إدارة المتجر</h1><div class="muted">سوق القيمنق السعودي — إدارة المنتجات والطلبات والمخزون</div></div><div class="row"><a href="./" style="color:var(--brand)">العودة للمتجر</a><button id="logout" class="secondary hidden">تسجيل الخروج</button></div></header>
-<section id="login" class="panel"><h2>دخول المشرف برمز البريد الإلكتروني</h2><p class="muted">أدخل بريد المشرف، وسنرسل لك رمز تحقق من 6 أرقام.</p><form id="loginForm" class="form"><label class="full">البريد الإلكتروني<input id="email" class="field" type="email" autocomplete="email" required></label><button id="sendOtpBtn" class="primary full">إرسال رمز التحقق</button></form><form id="otpForm" class="form hidden"><label class="full">رمز التحقق المرسل إلى بريدك<input id="otpCode" class="field" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" placeholder="000000" required></label><button class="primary full">تأكيد الرمز والدخول</button><button type="button" id="resendOtpBtn" class="secondary full">إعادة إرسال الرمز</button></form><div id="loginMsg" class="msg">يجب أن يكون البريد مسجلًا في Supabase ومضافًا إلى جدول store_admins.</div></section>
+:root{color-scheme:dark;--bg:#0d141b;--panel:#17232d;--panel2:#202f3a;--line:#30414d;--text:#eef7fa;--muted:#a4b5c0;--brand:#16c7d9;--red:#a93c52}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px Tahoma,Arial;line-height:1.6}button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:10px;padding:10px 13px;font-weight:bold}button:disabled{opacity:.55;cursor:not-allowed}.primary{background:var(--brand);color:#071820}.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line)}.danger{background:#542333;color:#ffe8ed}.wrap{max-width:1250px;margin:auto;padding:16px}.panel,.stat{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:15px;margin:12px 0}.top,.row{display:flex;align-items:center;justify-content:space-between;gap:9px;flex-wrap:wrap}.top h1{color:var(--brand);font-size:25px}.muted,small{color:var(--muted)}.hidden{display:none!important}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.stat strong{display:block;font-size:23px;color:var(--brand)}.nav{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin:14px 0}.nav button{background:var(--panel2);color:var(--text);border:1px solid var(--line)}.nav button.active{background:var(--brand);color:#071820}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.field{width:100%;min-width:0;padding:10px;background:#0b151e;color:var(--text);border:1px solid var(--line);border-radius:9px}label{display:grid;gap:5px;color:var(--muted);font-size:13px}.form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.full{grid-column:1/-1}.list{display:grid;gap:8px;margin-top:12px}.item{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;background:#101b25;border:1px solid var(--line);border-radius:11px;padding:12px}.actions{display:flex;gap:6px;flex-wrap:wrap}.actions button{font-size:12px}.tablewrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:700px}td,th{text-align:right;padding:10px;border-bottom:1px solid var(--line);font-size:13px}th{color:var(--brand)}.msg{padding:10px;background:var(--panel2);border-radius:9px;margin:8px 0;overflow-wrap:anywhere}.badge{background:var(--panel2);padding:3px 8px;border-radius:20px;font-size:12px}@media(max-width:700px){.wrap{padding:10px}.stats{grid-template-columns:1fr 1fr}.nav{grid-template-columns:repeat(2,1fr)}.form,.grid{grid-template-columns:1fr}.full{grid-column:auto}}
+</style></head><body><main class="wrap"><header class="top"><div><h1>لوحة إدارة المتجر</h1><div class="muted">سوق القيمنق السعودي — إدارة المنتجات والطلبات والمخزون</div></div><div class="row"><a href="./" style="color:var(--brand)">العودة للمتجر</a><button id="logout" class="secondary hidden" type="button">تسجيل الخروج</button></div></header>
+<section id="login" class="panel"><h2>دخول المشرف برمز البريد الإلكتروني</h2><p class="muted">أدخل بريد المشرف، وسنرسل لك رمز تحقق من 6 أرقام.</p><form id="loginForm" class="form"><label class="full">البريد الإلكتروني<input id="email" class="field" type="email" autocomplete="email" required></label><button id="sendOtpBtn" class="primary full">إرسال رمز التحقق</button></form><form id="otpForm" class="form hidden"><label class="full">رمز التحقق المرسل إلى بريدك<input id="otpCode" class="field" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" placeholder="000000" required></label><button id="verifyOtpBtn" class="primary full">تأكيد الرمز والدخول</button><button type="button" id="resendOtpBtn" class="secondary full">إعادة إرسال الرمز</button></form><div id="loginMsg" class="msg">يجب أن يكون البريد مسجلاً في Supabase ومضافاً إلى جدول store_admins.</div></section>
 <section id="app" class="hidden"><div class="stats"><div class="stat">المنتجات<strong id="sProducts">—</strong></div><div class="stat">الطلبات<strong id="sOrders">—</strong></div><div class="stat">الأكواد<strong id="sCodes">—</strong></div><div class="stat">الحزم الإعلانية<strong id="sPackages">—</strong></div></div>
 <nav class="nav"><button class="active" data-page="home">الرئيسية</button><button data-page="categories">التصنيفات</button><button data-page="products">المنتجات</button><button data-page="orders">الطلبات</button><button data-page="users">المستخدمون</button><button data-page="games">الألعاب</button><button data-page="codes">الأكواد الرقمية</button><button data-page="cards">كروت الشحن</button><button data-page="packages">الحزم الإعلانية</button></nav>
 <section id="home" class="page panel"><h2>ملخص المتجر</h2><p class="muted">اختر أحد الأقسام لإدارة بياناته. التعديلات تحفظ مباشرة في Supabase.</p><div id="homeMsg" class="msg">جاهز.</div></section>
@@ -14,30 +14,178 @@
 <section id="cards" class="page panel hidden"><h2>كروت الشحن</h2><form id="cardForm" class="form"><input type="hidden" id="cardId"><label>اسم البطاقة<input id="cardName" class="field" required placeholder="بطاقة PlayStation"></label><label>الفئة / القيمة<input id="cardValue" class="field" required placeholder="50 ريال"></label><label>سعر البيع<input id="cardPrice" class="field" type="number" min="0" step=".01" required></label><label>الكمية<input id="cardStock" class="field" type="number" min="0" value="0"></label><label>رابط الصورة<input id="cardImage" class="field" type="url"></label><label>الحالة<select id="cardActive" class="field"><option value="true">نشطة</option><option value="false">متوقفة</option></select></label><div class="full"><button class="primary">حفظ بطاقة الشحن</button></div></form><div id="cardList" class="list"></div></section>
 <section id="packages" class="page panel hidden"><h2>الحزم الإعلانية داخل المنصة</h2><form id="packageForm" class="form"><input type="hidden" id="pkgId"><label>اسم الحزمة<input id="pkgName" class="field" required></label><label>السعر<input id="pkgPrice" class="field" type="number" min="0" step=".01" required></label><label>المدة بالأيام<input id="pkgDays" class="field" type="number" min="1" value="7"></label><label>عدد الإعلانات<input id="pkgAds" class="field" type="number" min="1" value="1"></label><label class="full">المميزات<textarea id="pkgFeatures" class="field"></textarea></label><label><span><input id="pkgActive" type="checkbox" checked> مفعلة</span></label><div class="full"><button class="primary">حفظ الحزمة</button></div></form><div id="packageList" class="list"></div></section></section></main>
 <script>
-const SB_URL='https://hmcsgkavqdsfwqomxakw.supabase.co';const SB_KEY='sb_publishable_I2FLI3drU7_xB8tWWGjnOg_b6Sm2j2m';const sb=supabase.createClient(SB_URL,SB_KEY);const $=id=>document.getElementById(id);let user=null,products=[],categories=[],users=[];
-const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const money=v=>Number(v||0).toLocaleString('ar-SA',{maximumFractionDigits:2})+' ر.س';const msg=(id,s)=>$(id).textContent=s;
-async function isAdmin(){const {data,error}=await sb.from('store_admins').select('user_id').eq('user_id',user.id).maybeSingle();return !error&&!!data}
-async function sendAdminOtp(){const email=$('email').value.trim();if(!email){msg('loginMsg','أدخل البريد الإلكتروني أولاً.');return;}msg('loginMsg','جارٍ إرسال رمز التحقق...');$('sendOtpBtn').disabled=true;const {error}=await sb.auth.signInWithOtp({email,options:{shouldCreateUser:false}});$('sendOtpBtn').disabled=false;if(error){msg('loginMsg','تعذر إرسال الرمز: '+error.message);return;}$('otpForm').classList.remove('hidden');msg('loginMsg','تم إرسال رمز من 6 أرقام إلى بريدك. افحص الوارد والرسائل غير المرغوب فيها.');}
+const SB_URL='https://hmcsgkavqdsfwqomxakw.supabase.co';
+const SB_KEY='sb_publishable_I2FLI3drU7_xB8tWWGjnOg_b6Sm2j2m';
+const sb=supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+const $=id=>document.getElementById(id);
+let user=null,products=[],categories=[],users=[],codeRows=[],games=[],cards=[],packages=[];
+let otpEmail='',otpSending=false,otpVerifying=false;
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money=v=>Number(v||0).toLocaleString('ar-SA',{maximumFractionDigits:2})+' ر.س';
+const msg=(id,s)=>$(id).textContent=s;
+
+async function isAdmin(){
+  if(!user?.id)return false;
+  const {data,error}=await sb.from('store_admins').select('user_id').eq('user_id',user.id).maybeSingle();
+  if(error){console.error(error);msg('loginMsg','تعذر التحقق من صلاحية المشرف: '+error.message);return false;}
+  return !!data;
+}
+
+async function sendAdminOtp(){
+  if(otpSending)return;
+  const email=$('email').value.trim().toLowerCase();
+  if(!email){msg('loginMsg','أدخل البريد الإلكتروني أولاً.');return;}
+  otpSending=true;$('sendOtpBtn').disabled=true;$('resendOtpBtn').disabled=true;
+  msg('loginMsg','جارٍ إرسال رمز التحقق...');
+  try{
+    const {error}=await sb.auth.signInWithOtp({email,options:{shouldCreateUser:false}});
+    if(error)throw error;
+    otpEmail=email;$('email').value=email;$('otpCode').value='';
+    $('otpForm').classList.remove('hidden');
+    msg('loginMsg','تم إرسال رمز جديد. استخدم أحدث رمز وصلك فقط.');
+  }catch(error){msg('loginMsg','تعذر إرسال الرمز: '+error.message);}
+  finally{otpSending=false;$('sendOtpBtn').disabled=false;$('resendOtpBtn').disabled=false;}
+}
 $('loginForm').onsubmit=async e=>{e.preventDefault();await sendAdminOtp();};
-$('resendOtpBtn').onclick=sendAdminOtp;
-$('otpForm').onsubmit=async e=>{e.preventDefault();const email=$('email').value.trim(),token=$('otpCode').value.trim();msg('loginMsg','جارٍ التحقق من الرمز...');const {data,error}=await sb.auth.verifyOtp({email,token,type:'email'});if(error){msg('loginMsg','رمز التحقق غير صحيح أو انتهت صلاحيته: '+error.message);return;}user=data.user;if(!user||!await isAdmin()){await sb.auth.signOut();user=null;msg('loginMsg','تم التحقق من البريد، لكن هذا الحساب غير مضاف ضمن مشرفي المتجر في store_admins.');return;}showApp();};
+$('resendOtpBtn').onclick=async()=>{$('otpCode').value='';await sendAdminOtp();};
+
+$('otpForm').onsubmit=async e=>{
+  e.preventDefault();if(otpVerifying)return;
+  const email=otpEmail||$('email').value.trim().toLowerCase();
+  const token=$('otpCode').value.trim();
+  if(!email){msg('loginMsg','أرسل رمز التحقق أولاً.');return;}
+  if(!/^\d{6}$/.test(token)){msg('loginMsg','أدخل رمزاً مكوناً من 6 أرقام.');return;}
+  otpVerifying=true;$('verifyOtpBtn').disabled=true;msg('loginMsg','جارٍ التحقق من الرمز...');
+  try{
+    const {data,error}=await sb.auth.verifyOtp({email,token,type:'email'});
+    if(error)throw error;
+    user=data.user;
+    if(!user)throw new Error('لم يتم إرجاع بيانات المستخدم.');
+    if(!await isAdmin()){
+      await sb.auth.signOut();user=null;
+      throw new Error('هذا البريد غير مسجل كمشرف في store_admins.');
+    }
+    $('otpCode').value='';$('otpForm').classList.add('hidden');showApp();
+  }catch(error){msg('loginMsg','فشل التحقق: '+error.message+' — اطلب رمزاً جديداً واستخدم أحدث رسالة.');}
+  finally{otpVerifying=false;$('verifyOtpBtn').disabled=false;}
+};
+
 function showApp(){$('login').classList.add('hidden');$('app').classList.remove('hidden');$('logout').classList.remove('hidden');refreshAll();}
-$('logout').onclick=async()=>{await sb.auth.signOut();location.reload()};
-async function boot(){const {data}=await sb.auth.getSession();if(data.session){user=data.session.user;if(await isAdmin())showApp();}}boot();
-document.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-page]').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.page').forEach(x=>x.classList.toggle('hidden',x.id!==b.dataset.page));});
+$('logout').onclick=async()=>{await sb.auth.signOut();user=null;location.reload();};
+async function boot(){
+  const {data,error}=await sb.auth.getSession();
+  if(error){msg('loginMsg','تعذر استعادة الجلسة: '+error.message);return;}
+  if(data.session?.user){
+    user=data.session.user;
+    if(await isAdmin())showApp();
+    else{await sb.auth.signOut();user=null;msg('loginMsg','هذا الحساب ليس مشرفاً للمتجر.');}
+  }
+}
+boot();
+
+document.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('[data-page]').forEach(x=>x.classList.toggle('active',x===b));
+  document.querySelectorAll('.page').forEach(x=>x.classList.toggle('hidden',x.id!==b.dataset.page));
+});
 async function refreshAll(){await Promise.all([loadCategories(),loadProducts(),loadOrders(),loadCodes(),loadGames(),loadCards(),loadPackages(),loadUsers()]);}
-async function loadCategories(){let {data,error}=await sb.from('store_categories').select('*').order('sort_order');if(error){msg('catList','خطأ تحميل التصنيفات: '+error.message);return;}categories=data||[];$('catList').innerHTML=categories.map(c=>`<div class="item"><div><b>${esc(c.name)}</b><div class="muted">${esc(c.description||'')} · ${c.is_active?'نشط':'متوقف'}</div></div><div class="actions"><button class="secondary" onclick="editCat('${c.id}')">تعديل</button><button class="danger" onclick="delRow('store_categories','${c.id}','التصنيف')">حذف</button></div></div>`).join('')||'لا توجد تصنيفات';$('categoryOptions').innerHTML=categories.map(c=>`<option value="${esc(c.name)}">`).join('');}
-window.resetCat=()=>{$('categoryForm').reset();$('catId').value='';$('catActive').checked=true};window.editCat=id=>{let c=categories.find(x=>x.id===id);if(!c)return;$('catId').value=c.id;$('catName').value=c.name;$('catSort').value=c.sort_order||0;$('catDesc').value=c.description||'';$('catActive').checked=!!c.is_active};$('categoryForm').onsubmit=async e=>{e.preventDefault();let id=$('catId').value,row={name:$('catName').value.trim(),sort_order:+$('catSort').value,description:$('catDesc').value.trim()||null,is_active:$('catActive').checked};let q=id?sb.from('store_categories').update(row).eq('id',id):sb.from('store_categories').insert(row);let {error}=await q;if(error)alert(error.message);else{resetCat();loadCategories()}};
-async function loadProducts(){let {data,error}=await sb.from('store_products').select('*').order('created_at',{ascending:false});if(error){$('productList').textContent=error.message;return;}products=data||[];$('sProducts').textContent=products.length;$('codeProduct').innerHTML=products.filter(p=>p.product_type!=='physical').map(p=>`<option value="${p.id}">${esc(p.title)}</option>`).join('');$('productList').innerHTML=products.map(p=>`<div class="item"><div><b>${esc(p.title)}</b><div class="muted">${esc(p.category)} · ${money(p.price)} · مخزون ${p.stock_quantity} · ${p.is_active?'منشور':'مخفي'}</div></div><div class="actions"><button class="secondary" onclick="editProduct('${p.id}')">تعديل</button><button class="secondary" onclick="toggleProduct('${p.id}',${!p.is_active})">${p.is_active?'إخفاء':'نشر'}</button><button class="danger" onclick="delRow('store_products','${p.id}','المنتج')">حذف</button></div></div>`).join('')||'لا توجد منتجات';}
-window.resetProduct=()=>{$('productForm').reset();$('pId').value='';$('pActive').checked=true;$('pStock').value=0};window.editProduct=id=>{let p=products.find(x=>x.id===id);if(!p)return;$('pId').value=p.id;$('pTitle').value=p.title;$('pCategory').value=p.category;$('pPrice').value=p.price;$('pCost').value=p.cost_price??p.cost??'';$('pStock').value=p.stock_quantity;$('pType').value=p.product_type;$('pDelivery').value=p.delivery_method||'manual';$('pImage').value=p.image_url||'';$('pDesc').value=p.description||'';$('pActive').checked=p.is_active??p.status==='active';document.querySelector('[data-page="products"]').click()};window.toggleProduct=async(id,v)=>{let {error}=await sb.from('store_products').update({is_active:v}).eq('id',id);if(error)alert(error.message);loadProducts()};$('productForm').onsubmit=async e=>{e.preventDefault();let id=$('pId').value,row={title:$('pTitle').value.trim(),category:$('pCategory').value.trim(),price:+$('pPrice').value,cost_price:$('pCost').value===''?null:+$('pCost').value,stock_quantity:+$('pStock').value,product_type:$('pType').value,delivery_method:$('pDelivery').value,image_url:$('pImage').value.trim()||null,description:$('pDesc').value.trim(),is_active:$('pActive').checked};let q=id?sb.from('store_products').update(row).eq('id',id):sb.from('store_products').insert({...row,created_by:user.id});let {error}=await q;if(error)alert('تعذر حفظ المنتج: '+error.message);else{resetProduct();loadProducts()}};
-async function loadOrders(){let {data,error}=await sb.from('store_orders').select('*').order('created_at',{ascending:false}).limit(250);if(error){$('orderList').textContent='تعذر تحميل الطلبات: '+error.message;return;}let rows=data||[];$('sOrders').textContent=rows.length;$('orderList').innerHTML=rows.map(o=>`<div class="item"><div><b>طلب #${esc(o.id)}</b><div>${esc(o.customer_name||'')} · ${esc(o.phone||'')} · ${money(o.total_amount)}</div><small>${esc(o.city||o.shipping_city||'')} · ${new Date(o.created_at).toLocaleString('ar-SA')}</small><div class="muted">${esc(o.address||o.shipping_address||'')} ${o.map_url?`<a target="_blank" href="${esc(o.map_url)}">عرض الموقع</a>`:''}</div></div><div><select class="field" id="os${o.id}"><option value="awaiting_payment">بانتظار الدفع</option><option value="paid">مدفوع</option><option value="processing">قيد التجهيز</option><option value="shipped">تم الشحن</option><option value="delivered">تم التسليم</option><option value="cancelled">ملغي</option></select><button class="primary" onclick="saveOrder('${o.id}')">حفظ الحالة</button></div></div>`).join('')||'لا توجد طلبات';rows.forEach(o=>{let el=$('os'+o.id);if(el)el.value=o.order_status||o.status||'awaiting_payment'});}
-window.saveOrder=async id=>{let status=$('os'+id).value;let {error}=await sb.from('store_orders').update({order_status:status,status:status}).eq('id',id);if(error)alert(error.message);else loadOrders()};
-async function loadCodes(){let {data,error}=await sb.from('store_digital_codes').select('id,product_id,status,created_at,code_value').order('created_at',{ascending:false}).limit(200);if(error){$('codeList').textContent=error.message;return;}let rows=data||[];codeRows=rows;$('sCodes').textContent=rows.length;$('codeList').innerHTML=rows.map(c=>`<div class="item"><div>كود #${c.id.slice(0,8)} · ${esc(products.find(p=>p.id===c.product_id)?.title||c.product_id)} · <span class="badge">${esc(c.status)}</span></div><div class="actions"><button class="secondary" onclick="editCode('${c.id}')">تعديل</button><button class="danger" onclick="delRow('store_digital_codes','${c.id}','الكود')">حذف</button></div></div>`).join('')||'لا توجد أكواد';}
-window.editCode=id=>{let c=codeRows.find(x=>x.id===id);if(!c)return;$('codeProduct').value=c.product_id;$('codeValue').value=c.code_value||'';$('codeForm').dataset.editId=id};let codeRows=[];$('codeForm').onsubmit=async e=>{e.preventDefault();let id=e.currentTarget.dataset.editId;let payload={product_id:$('codeProduct').value,code_value:$('codeValue').value.trim()};let q=id?sb.from('store_digital_codes').update(payload).eq('id',id):sb.from('store_digital_codes').insert(payload);let {error}=await q;if(error)alert('تعذر حفظ الكود: '+error.message);else{delete e.currentTarget.dataset.editId;$('codeValue').value='';loadCodes()}};
-async function loadUsers(){let {data,error}=await sb.from('profiles').select('*').order('created_at',{ascending:false}).limit(500);if(error){msg('usersMsg','تعذر قراءة profiles: '+error.message);return;}users=data||[];renderUsers()};function renderUsers(){let q=$('userSearch').value.toLowerCase();$('userRows').innerHTML=users.filter(u=>[u.display_name,u.phone,u.city,u.id].join(' ').toLowerCase().includes(q)).map(u=>`<tr><td>${esc(u.display_name||u.full_name||'—')}</td><td>${esc(u.phone||'—')}</td><td>${esc(u.city||'—')}</td><td>${u.created_at?new Date(u.created_at).toLocaleDateString('ar-SA'):'—'}</td></tr>`).join('')||'<tr><td colspan="4">لا توجد بيانات</td></tr>'};$('userSearch').oninput=renderUsers;
-async function genericLoad(table,target,render){let {data,error}=await sb.from(table).select('*').order('created_at',{ascending:false});if(error){$(target).textContent='تعذر التحميل: '+error.message;return;}render(data||[])}
-let games=[];async function loadGames(){await genericLoad('store_games','gameList',rows=>{games=rows;$('gameList').innerHTML=rows.map(x=>`<div class="item"><div><b>${esc(x.name)}</b> · ${esc(x.category||'')} · ${x.is_active?'نشطة':'متوقفة'}</div><div class="actions"><button class="secondary" onclick="editGame('${x.id}')">تعديل</button><button class="danger" onclick="delRow('store_games','${x.id}','اللعبة')">حذف</button></div></div>`).join('')||'لا توجد ألعاب'})};window.resetGame=()=>{$('gameForm').reset();$('gId').value=''};window.editGame=id=>{let x=games.find(v=>v.id===id);if(!x)return;$('gId').value=x.id;$('gName').value=x.name;$('gCategory').value=x.category||'';$('gImage').value=x.image_url||'';$('gDesc').value=x.description||'';$('gActive').value=String(x.is_active)};$('gameForm').onsubmit=async e=>{e.preventDefault();let id=$('gId').value,row={name:$('gName').value.trim(),category:$('gCategory').value.trim(),image_url:$('gImage').value.trim()||null,description:$('gDesc').value.trim(),is_active:$('gActive').value==='true'};let q=id?sb.from('store_games').update(row).eq('id',id):sb.from('store_games').insert(row);let {error}=await q;if(error)alert(error.message);else{resetGame();loadGames()}};
-let cards=[];async function loadCards(){await genericLoad('store_recharge_cards','cardList',rows=>{cards=rows;$('cardList').innerHTML=rows.map(x=>`<div class="item"><div><b>${esc(x.name)}</b> · ${esc(x.denomination)} · ${money(x.price)} · مخزون ${x.stock_quantity}</div><div class="actions"><button class="secondary" onclick="editCard('${x.id}')">تعديل</button><button class="danger" onclick="delRow('store_recharge_cards','${x.id}','البطاقة')">حذف</button></div></div>`).join('')||'لا توجد بطاقات'})};window.editCard=id=>{let x=cards.find(v=>v.id===id);if(!x)return;$('cardId').value=x.id;$('cardName').value=x.name;$('cardValue').value=x.denomination;$('cardPrice').value=x.price;$('cardStock').value=x.stock_quantity;$('cardImage').value=x.image_url||'';$('cardActive').value=String(x.is_active)};$('cardForm').onsubmit=async e=>{e.preventDefault();let id=$('cardId').value,row={name:$('cardName').value.trim(),denomination:$('cardValue').value.trim(),price:+$('cardPrice').value,stock_quantity:+$('cardStock').value,image_url:$('cardImage').value.trim()||null,is_active:$('cardActive').value==='true'};let q=id?sb.from('store_recharge_cards').update(row).eq('id',id):sb.from('store_recharge_cards').insert(row);let {error}=await q;if(error)alert(error.message);else{e.target.reset();$('cardId').value='';loadCards()}};
-let packages=[];async function loadPackages(){await genericLoad('store_ad_packages','packageList',rows=>{packages=rows;$('sPackages').textContent=rows.length;$('packageList').innerHTML=rows.map(x=>`<div class="item"><div><b>${esc(x.name)}</b> · ${money(x.price)} · ${x.duration_days} يوم · ${x.ad_limit} إعلان · ${x.is_active?'مفعلة':'متوقفة'}</div><div class="actions"><button class="secondary" onclick="editPackage('${x.id}')">تعديل</button><button class="danger" onclick="delRow('store_ad_packages','${x.id}','الحزمة')">حذف</button></div></div>`).join('')||'لا توجد حزم'})};window.editPackage=id=>{let x=packages.find(v=>v.id===id);if(!x)return;$('pkgId').value=x.id;$('pkgName').value=x.name;$('pkgPrice').value=x.price;$('pkgDays').value=x.duration_days;$('pkgAds').value=x.ad_limit;$('pkgFeatures').value=x.features||'';$('pkgActive').checked=x.is_active};$('packageForm').onsubmit=async e=>{e.preventDefault();let id=$('pkgId').value,row={name:$('pkgName').value.trim(),price:+$('pkgPrice').value,duration_days:+$('pkgDays').value,ad_limit:+$('pkgAds').value,features:$('pkgFeatures').value.trim(),is_active:$('pkgActive').checked};let q=id?sb.from('store_ad_packages').update(row).eq('id',id):sb.from('store_ad_packages').insert(row);let {error}=await q;if(error)alert(error.message);else{e.target.reset();$('pkgId').value='';loadPackages()}};
-window.delRow=async(table,id,label)=>{if(!confirm('تأكيد حذف '+label+'؟'))return;let {error}=await sb.from(table).delete().eq('id',id);if(error)alert('تعذر الحذف: '+error.message);else refreshAll()};
+
+/* التصنيفات */
+async function loadCategories(){
+  const {data,error}=await sb.from('store_categories').select('*').order('sort_order');
+  if(error){msg('catList','خطأ تحميل التصنيفات: '+error.message);return;}
+  categories=data||[];
+  $('catList').innerHTML=categories.map(c=>`<div class="item"><div><b>${esc(c.name)}</b><div class="muted">${esc(c.description||'')} · ${c.is_active?'نشط':'متوقف'}</div></div><div class="actions"><button class="secondary" onclick="editCat('${c.id}')">تعديل</button><button class="danger" onclick="delRow('store_categories','${c.id}','التصنيف')">حذف</button></div></div>`).join('')||'لا توجد تصنيفات';
+  $('categoryOptions').innerHTML=categories.map(c=>`<option value="${esc(c.name)}">`).join('');
+}
+window.resetCat=()=>{$('categoryForm').reset();$('catId').value='';$('catActive').checked=true;};
+window.editCat=id=>{const c=categories.find(x=>x.id===id);if(!c)return;$('catId').value=c.id;$('catName').value=c.name;$('catSort').value=c.sort_order||0;$('catDesc').value=c.description||'';$('catActive').checked=!!c.is_active;};
+$('categoryForm').onsubmit=async e=>{e.preventDefault();const id=$('catId').value,row={name:$('catName').value.trim(),sort_order:+$('catSort').value,description:$('catDesc').value.trim()||null,is_active:$('catActive').checked};const q=id?sb.from('store_categories').update(row).eq('id',id):sb.from('store_categories').insert(row);const {error}=await q;if(error)alert(error.message);else{resetCat();loadCategories();}};
+
+/* المنتجات */
+async function loadProducts(){
+  const {data,error}=await sb.from('store_products').select('*').order('created_at',{ascending:false});
+  if(error){$('productList').textContent=error.message;return;}
+  products=data||[];$('sProducts').textContent=products.length;
+  $('codeProduct').innerHTML=products.filter(p=>p.product_type!=='physical').map(p=>`<option value="${p.id}">${esc(p.title)}</option>`).join('');
+  $('productList').innerHTML=products.map(p=>`<div class="item"><div><b>${esc(p.title)}</b><div class="muted">${esc(p.category)} · ${money(p.price)} · مخزون ${esc(p.stock_quantity)} · ${p.is_active?'منشور':'مخفي'}</div></div><div class="actions"><button class="secondary" onclick="editProduct('${p.id}')">تعديل</button><button class="secondary" onclick="toggleProduct('${p.id}',${!p.is_active})">${p.is_active?'إخفاء':'نشر'}</button><button class="danger" onclick="delRow('store_products','${p.id}','المنتج')">حذف</button></div></div>`).join('')||'لا توجد منتجات';
+}
+window.resetProduct=()=>{$('productForm').reset();$('pId').value='';$('pActive').checked=true;$('pStock').value=0;};
+window.editProduct=id=>{const p=products.find(x=>x.id===id);if(!p)return;$('pId').value=p.id;$('pTitle').value=p.title;$('pCategory').value=p.category;$('pPrice').value=p.price;$('pCost').value=p.cost_price??p.cost??'';$('pStock').value=p.stock_quantity;$('pType').value=p.product_type;$('pDelivery').value=p.delivery_method||'manual';$('pImage').value=p.image_url||'';$('pDesc').value=p.description||'';$('pActive').checked=p.is_active??p.status==='active';document.querySelector('[data-page="products"]').click();};
+window.toggleProduct=async(id,v)=>{const {error}=await sb.from('store_products').update({is_active:v}).eq('id',id);if(error)alert(error.message);else loadProducts();};
+$('productForm').onsubmit=async e=>{e.preventDefault();const id=$('pId').value,row={title:$('pTitle').value.trim(),category:$('pCategory').value.trim(),price:+$('pPrice').value,cost_price:$('pCost').value===''?null:+$('pCost').value,stock_quantity:+$('pStock').value,product_type:$('pType').value,delivery_method:$('pDelivery').value,image_url:$('pImage').value.trim()||null,description:$('pDesc').value.trim(),is_active:$('pActive').checked};const q=id?sb.from('store_products').update(row).eq('id',id):sb.from('store_products').insert({...row,created_by:user.id});const {error}=await q;if(error)alert('تعذر حفظ المنتج: '+error.message);else{resetProduct();loadProducts();}};
+
+/* الطلبات */
+async function loadOrders(){
+  const {data,error}=await sb.from('store_orders').select('*').order('created_at',{ascending:false}).limit(250);
+  if(error){$('orderList').textContent='تعذر تحميل الطلبات: '+error.message;return;}
+  const rows=data||[];$('sOrders').textContent=rows.length;
+  $('orderList').innerHTML=rows.map(o=>`<div class="item"><div><b>طلب #${esc(o.id)}</b><div>${esc(o.customer_name||'')} · ${esc(o.phone||'')} · ${money(o.total_amount)}</div><small>${esc(o.city||o.shipping_city||'')} · ${o.created_at?new Date(o.created_at).toLocaleString('ar-SA'):''}</small><div class="muted">${esc(o.address||o.shipping_address||'')} ${o.map_url?`<a target="_blank" rel="noopener" href="${esc(o.map_url)}">عرض الموقع</a>`:''}</div></div><div><select class="field" id="os${esc(o.id)}"><option value="awaiting_payment">بانتظار الدفع</option><option value="paid">مدفوع</option><option value="processing">قيد التجهيز</option><option value="shipped">تم الشحن</option><option value="delivered">تم التسليم</option><option value="cancelled">ملغي</option></select><button class="primary" onclick="saveOrder('${o.id}')">حفظ الحالة</button></div></div>`).join('')||'لا توجد طلبات';
+  rows.forEach(o=>{const el=$('os'+o.id);if(el)el.value=o.order_status||o.status||'awaiting_payment';});
+}
+window.saveOrder=async id=>{const status=$('os'+id).value;const {error}=await sb.from('store_orders').update({order_status:status,status}).eq('id',id);if(error)alert(error.message);else loadOrders();};
+
+/* الأكواد */
+async function loadCodes(){
+  const {data,error}=await sb.from('store_digital_codes').select('id,product_id,status,created_at,code_value').order('created_at',{ascending:false}).limit(200);
+  if(error){$('codeList').textContent=error.message;return;}
+  codeRows=data||[];$('sCodes').textContent=codeRows.length;
+  $('codeList').innerHTML=codeRows.map(c=>`<div class="item"><div>كود #${String(c.id).slice(0,8)} · ${esc(products.find(p=>p.id===c.product_id)?.title||c.product_id)} · <span class="badge">${esc(c.status)}</span></div><div class="actions"><button class="secondary" onclick="editCode('${c.id}')">تعديل</button><button class="danger" onclick="delRow('store_digital_codes','${c.id}','الكود')">حذف</button></div></div>`).join('')||'لا توجد أكواد';
+}
+window.editCode=id=>{const c=codeRows.find(x=>x.id===id);if(!c)return;$('codeProduct').value=c.product_id;$('codeValue').value=c.code_value||'';$('codeForm').dataset.editId=id;};
+$('codeForm').onsubmit=async e=>{e.preventDefault();const id=e.currentTarget.dataset.editId,payload={product_id:$('codeProduct').value,code_value:$('codeValue').value.trim()};const q=id?sb.from('store_digital_codes').update(payload).eq('id',id):sb.from('store_digital_codes').insert(payload);const {error}=await q;if(error)alert('تعذر حفظ الكود: '+error.message);else{delete e.currentTarget.dataset.editId;$('codeValue').value='';loadCodes();}};
+
+/* المستخدمون */
+async function loadUsers(){
+  const {data,error}=await sb.from('profiles').select('*').order('created_at',{ascending:false}).limit(500);
+  if(error){msg('usersMsg','تعذر قراءة profiles: '+error.message);return;}
+  users=data||[];renderUsers();
+}
+function renderUsers(){
+  const q=$('userSearch').value.toLowerCase();
+  $('userRows').innerHTML=users.filter(u=>[u.display_name,u.full_name,u.phone,u.city,u.id].join(' ').toLowerCase().includes(q)).map(u=>`<tr><td>${esc(u.display_name||u.full_name||'—')}</td><td>${esc(u.phone||'—')}</td><td>${esc(u.city||'—')}</td><td>${u.created_at?new Date(u.created_at).toLocaleDateString('ar-SA'):'—'}</td></tr>`).join('')||'<tr><td colspan="4">لا توجد بيانات</td></tr>';
+}
+$('userSearch').oninput=renderUsers;
+
+async function genericLoad(table,target,render){
+  const {data,error}=await sb.from(table).select('*').order('created_at',{ascending:false});
+  if(error){$(target).textContent='تعذر التحميل: '+error.message;return;}
+  render(data||[]);
+}
+
+/* الألعاب */
+async function loadGames(){
+  await genericLoad('store_games','gameList',rows=>{
+    games=rows;
+    $('gameList').innerHTML=rows.map(x=>`<div class="item"><div><b>${esc(x.name)}</b> · ${esc(x.category||'')} · ${x.is_active?'نشطة':'متوقفة'}</div><div class="actions"><button class="secondary" onclick="editGame('${x.id}')">تعديل</button><button class="danger" onclick="delRow('store_games','${x.id}','اللعبة')">حذف</button></div></div>`).join('')||'لا توجد ألعاب';
+  });
+}
+window.resetGame=()=>{$('gameForm').reset();$('gId').value='';};
+window.editGame=id=>{const x=games.find(v=>v.id===id);if(!x)return;$('gId').value=x.id;$('gName').value=x.name;$('gCategory').value=x.category||'';$('gImage').value=x.image_url||'';$('gDesc').value=x.description||'';$('gActive').value=String(x.is_active);};
+$('gameForm').onsubmit=async e=>{e.preventDefault();const id=$('gId').value,row={name:$('gName').value.trim(),category:$('gCategory').value.trim(),image_url:$('gImage').value.trim()||null,description:$('gDesc').value.trim(),is_active:$('gActive').value==='true'};const q=id?sb.from('store_games').update(row).eq('id',id):sb.from('store_games').insert(row);const {error}=await q;if(error)alert(error.message);else{resetGame();loadGames();}};
+
+/* كروت الشحن */
+async function loadCards(){
+  await genericLoad('store_recharge_cards','cardList',rows=>{
+    cards=rows;
+    $('cardList').innerHTML=rows.map(x=>`<div class="item"><div><b>${esc(x.name)}</b> · ${esc(x.denomination)} · ${money(x.price)} · مخزون ${esc(x.stock_quantity)}</div><div class="actions"><button class="secondary" onclick="editCard('${x.id}')">تعديل</button><button class="danger" onclick="delRow('store_recharge_cards','${x.id}','البطاقة')">حذف</button></div></div>`).join('')||'لا توجد بطاقات';
+  });
+}
+window.editCard=id=>{const x=cards.find(v=>v.id===id);if(!x)return;$('cardId').value=x.id;$('cardName').value=x.name;$('cardValue').value=x.denomination;$('cardPrice').value=x.price;$('cardStock').value=x.stock_quantity;$('cardImage').value=x.image_url||'';$('cardActive').value=String(x.is_active);};
+$('cardForm').onsubmit=async e=>{e.preventDefault();const id=$('cardId').value,row={name:$('cardName').value.trim(),denomination:$('cardValue').value.trim(),price:+$('cardPrice').value,stock_quantity:+$('cardStock').value,image_url:$('cardImage').value.trim()||null,is_active:$('cardActive').value==='true'};const q=id?sb.from('store_recharge_cards').update(row).eq('id',id):sb.from('store_recharge_cards').insert(row);const {error}=await q;if(error)alert(error.message);else{e.target.reset();$('cardId').value='';loadCards();}};
+
+/* الحزم الإعلانية */
+async function loadPackages(){
+  await genericLoad('store_ad_packages','packageList',rows=>{
+    packages=rows;$('sPackages').textContent=rows.length;
+    $('packageList').innerHTML=rows.map(x=>`<div class="item"><div><b>${esc(x.name)}</b> · ${money(x.price)} · ${esc(x.duration_days)} يوم · ${esc(x.ad_limit)} إعلان · ${x.is_active?'مفعلة':'متوقفة'}</div><div class="actions"><button class="secondary" onclick="editPackage('${x.id}')">تعديل</button><button class="danger" onclick="delRow('store_ad_packages','${x.id}','الحزمة')">حذف</button></div></div>`).join('')||'لا توجد حزم';
+  });
+}
+window.editPackage=id=>{const x=packages.find(v=>v.id===id);if(!x)return;$('pkgId').value=x.id;$('pkgName').value=x.name;$('pkgPrice').value=x.price;$('pkgDays').value=x.duration_days;$('pkgAds').value=x.ad_limit;$('pkgFeatures').value=x.features||'';$('pkgActive').checked=x.is_active;};
+$('packageForm').onsubmit=async e=>{e.preventDefault();const id=$('pkgId').value,row={name:$('pkgName').value.trim(),price:+$('pkgPrice').value,duration_days:+$('pkgDays').value,ad_limit:+$('pkgAds').value,features:$('pkgFeatures').value.trim(),is_active:$('pkgActive').checked};const q=id?sb.from('store_ad_packages').update(row).eq('id',id):sb.from('store_ad_packages').insert(row);const {error}=await q;if(error)alert(error.message);else{e.target.reset();$('pkgId').value='';loadPackages();}};
+
+window.delRow=async(table,id,label)=>{
+  if(!confirm('تأكيد حذف '+label+'؟'))return;
+  const {error}=await sb.from(table).delete().eq('id',id);
+  if(error)alert('تعذر الحذف: '+error.message);else refreshAll();
+};
 </script></body></html>
