@@ -604,6 +604,95 @@ body.store-view .top,body.store-view .searchrow{display:none!important}
 #storeProducts .store-square-actions button{min-width:0!important;padding:8px 5px!important;font-size:11px!important}
 @media(min-width:760px){#storeProducts{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:16px!important}#storeProducts .store-square-body{padding:13px!important}}
 </style>
+
+<style id="vendor-marketplace-layer-styles">
+/* طبقة متاجر التجار المستقلة - تنسيق واجهة فقط، دون تغيير إعدادات المتجر الرسمي */
+.vendor-home-hero{position:relative;isolation:isolate;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:178px;margin:12px 0 18px;padding:24px;border:1px solid #385b91;border-radius:24px;background:radial-gradient(circle at 12% 110%,#174cba 0,transparent 34%),radial-gradient(circle at 88% 0%,#6625a5 0,transparent 36%),linear-gradient(112deg,#101e49,#101a31 58%,#25134b);box-shadow:0 12px 32px #050b1c66}
+.vendor-home-hero:after{content:'🎮';position:absolute;z-index:-1;left:24px;bottom:-24px;font-size:118px;opacity:.22;filter:drop-shadow(0 0 18px #7b4dff)}
+.vendor-home-hero-copy{max-width:72%}.vendor-home-hero h1{font-size:clamp(21px,4vw,34px);line-height:1.35;margin:0 0 7px;color:#f5f7ff}.vendor-home-hero p{margin:0 0 14px;color:#c6d4f4;font-size:14px}.vendor-home-hero .primary{background:linear-gradient(100deg,#16c7d9,#2874f0);color:#06172a;border-radius:999px;padding:11px 22px}
+.vendor-circle-section{margin:14px 0 18px;padding:14px 13px 12px;border:1px solid #2d4669;border-radius:20px;background:linear-gradient(145deg,#101d30,#121d2b 70%,#151b31);box-shadow:var(--shadow)}
+.vendor-circle-head,.vendor-section-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.vendor-circle-head strong{font-size:18px;color:var(--text)}
+.vendor-circle-head .linkbtn{color:#7edff0;font-weight:700;text-decoration:none}
+.vendor-circle-rail{display:flex;flex-direction:row;gap:16px;overflow-x:auto;overflow-y:hidden;padding:15px 4px 9px;scrollbar-width:none;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+.vendor-circle-rail::-webkit-scrollbar{display:none}
+.vendor-circle{position:relative;flex:0 0 92px;width:92px;min-height:118px;border:0;background:transparent;color:var(--text);padding:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:9px;text-align:center;scroll-snap-align:start}
+.vendor-circle-avatar{position:relative;width:78px;height:78px;flex:0 0 78px;border-radius:50%;display:grid;place-items:center;overflow:hidden;border:2px solid #23d4ed;background:radial-gradient(circle at 30% 20%,#253f72,#0d1729 72%);font-size:27px;font-weight:900;box-shadow:0 0 0 4px #17c9e51c,0 0 18px #16c7d955}
+.vendor-circle.featured .vendor-circle-avatar{border-color:#b36cff;box-shadow:0 0 0 4px #a855f722,0 0 20px #a855f799}
+.vendor-circle-avatar img{width:100%;height:100%;object-fit:cover}
+.vendor-circle-name{display:block;width:100%;font-size:12px;font-weight:700;line-height:1.4;max-width:92px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#edf4ff}
+.vendor-circle-verified{position:absolute;bottom:34px;right:7px;width:19px;height:19px;border-radius:50%;display:grid;place-items:center;background:#1687ef;color:white;border:2px solid #101d30;font-size:11px;font-weight:900}
+.vendor-home-shortcut{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:12px 0 16px}
+.vendor-home-shortcut button{min-width:0;min-height:88px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;text-align:center;border:1px solid #345174;border-radius:16px;background:linear-gradient(145deg,#172b46,#111d30);color:#edf4ff;padding:10px 6px;font-size:13px}
+.vendor-home-shortcut button .shortcut-icon{font-size:25px;line-height:1}
+.vendor-page-intro{padding:20px;border:1px solid var(--line);border-radius:17px;background:linear-gradient(120deg,#173443,#17232d);margin:8px 0 14px}
+.vendor-page-intro h1{margin:0 0 5px;color:var(--brand);font-size:clamp(22px,4vw,30px)}
+.vendor-page-intro p{margin:0;color:var(--muted);font-size:13px}
+.vendor-toolbar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;margin:12px 0}
+.vendor-directory-grid,.vendor-product-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.vendor-directory-card,.vendor-product-card{min-width:0;border:1px solid var(--line);border-radius:15px;background:var(--panel);overflow:hidden;box-shadow:var(--shadow)}
+.vendor-directory-cover{height:112px;background:linear-gradient(135deg,#173443,#24374a);display:grid;place-items:center;overflow:hidden}
+.vendor-directory-cover img{width:100%;height:100%;object-fit:cover}
+.vendor-directory-content,.vendor-product-content{padding:12px}
+.vendor-directory-logo{width:58px;height:58px;border:2px solid var(--panel);border-radius:50%;overflow:hidden;background:var(--panel2);display:grid;place-items:center;margin-top:-35px;margin-bottom:7px;font-size:24px}
+.vendor-directory-logo img{width:100%;height:100%;object-fit:cover}
+.vendor-directory-content h3,.vendor-product-content h3{margin:0 0 5px;font-size:15px;color:var(--brand)}
+.vendor-product-image{width:100%;aspect-ratio:1/1;display:grid;place-items:center;background:var(--panel2);overflow:hidden}
+.vendor-product-image img{width:100%;height:100%;object-fit:cover}
+.vendor-product-content{display:flex;flex-direction:column;gap:6px}
+.vendor-product-content h3{min-height:2.7em;line-height:1.4}
+.vendor-product-price{font-size:18px;font-weight:900;color:var(--brand)}
+.vendor-product-actions{display:flex;gap:6px;margin-top:auto;flex-wrap:wrap}
+.vendor-product-actions button{flex:1;min-width:0;font-size:12px;padding:8px 6px}
+.vendor-detail-head{display:flex;align-items:center;gap:12px;padding:15px;border:1px solid var(--line);border-radius:15px;background:var(--panel);margin:12px 0}
+.vendor-detail-logo{width:62px;height:62px;flex:0 0 62px;border-radius:15px;overflow:hidden;background:var(--panel2);display:grid;place-items:center;font-size:26px}
+.vendor-detail-logo img{width:100%;height:100%;object-fit:cover}
+.vendor-cart-box{margin:14px 0;padding:14px;border:1px solid var(--line);border-radius:15px;background:var(--panel)}
+.vendor-cart-row{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid var(--line);font-size:13px}
+.vendor-cart-form{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
+.vendor-cart-form .full{grid-column:1/-1}
+.vendor-dashboard-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.vendor-dashboard-card{padding:15px;border:1px solid var(--line);border-radius:15px;background:var(--panel)}
+.vendor-dashboard-card h3{margin:0 0 10px;color:var(--brand)}
+.vendor-dashboard-card.full{grid-column:1/-1}
+.vendor-state{padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--panel2);margin:10px 0}
+.vendor-table-wrap{overflow:auto}
+.vendor-table{width:100%;min-width:560px;border-collapse:collapse}
+.vendor-table th,.vendor-table td{text-align:right;padding:9px;border-bottom:1px solid var(--line);font-size:12px}
+.vendor-table th{color:var(--brand)}
+.vendor-promo-plan{padding:10px;border:1px solid var(--line);border-radius:11px;background:var(--panel2);font-size:12px}
+.vendor-muted-note{font-size:12px;color:var(--muted);line-height:1.7}
+.vendor-pill{display:inline-block;padding:3px 8px;border-radius:30px;background:#173744;color:#dffaff;font-size:11px}
+.vendor-danger-note{border-color:#725043;background:#392b23;color:#ffdfc3}
+.vendor-hidden{display:none!important}
+@media(max-width:760px){
+ .vendor-home-hero{min-height:154px;padding:18px 15px;border-radius:19px}
+ .vendor-home-hero:after{font-size:82px;left:8px;bottom:-15px}
+ .vendor-home-hero-copy{max-width:78%}
+ .vendor-home-hero h1{font-size:22px}
+ .vendor-home-hero p{font-size:12px}
+ .vendor-circle-section{padding:12px 10px 9px;border-radius:18px}
+ .vendor-circle-head strong{font-size:16px}
+ .vendor-circle-rail{gap:13px;padding-top:13px}
+ .vendor-circle{flex-basis:82px;width:82px;min-height:109px}
+ .vendor-circle-avatar{width:70px;height:70px;flex-basis:70px}
+ .vendor-circle-name{font-size:11px;max-width:82px}
+ .vendor-circle-verified{bottom:34px;right:4px}
+ .vendor-home-shortcut{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .vendor-home-shortcut button{min-height:76px;font-size:12px}
+ .vendor-directory-grid,.vendor-product-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ .vendor-toolbar{grid-template-columns:1fr}
+ .vendor-dashboard-grid{grid-template-columns:1fr}
+ .vendor-dashboard-card.full{grid-column:auto}
+ .vendor-cart-form{grid-template-columns:1fr}
+ .vendor-cart-form .full{grid-column:auto}
+ .vendor-directory-cover{height:92px}
+ .vendor-directory-content,.vendor-product-content{padding:9px}
+ .vendor-product-content h3{font-size:13px}
+ .vendor-product-actions{gap:5px}
+}
+</style>
+
 </head>
 <body class="theme-dark">
 <div class="wrap">
@@ -627,6 +716,26 @@ body.store-view .top,body.store-view .searchrow{display:none!important}
 <section id="page-profile" class="hidden"><div class="panel"><div class="pagehead"><div><h2>الملف الشخصي</h2><p>تعديل بيانات الملف من صفحة مستقلة.</p></div><button class="secondary" data-go="account">العودة للحساب</button></div><div id="profilePageContent" class="page-note">سجّل الدخول أولًا لعرض بياناتك.</div><button class="primary" id="profilePageEdit" type="button">فتح إعدادات الملف الشخصي</button></div></section>
 
 <section id="page-home">
+
+<div class="vendor-home-hero">
+ <div class="vendor-home-hero-copy">
+  <h1>اكتشف عالم القيمنق</h1>
+  <p>أجهزة ألعاب وكمبيوترات وقطع مميزة من متاجر وبائعين داخل السعودية</p>
+  <button class="primary" type="button" data-go="searchpage">تسوّق واستكشف ←</button>
+ </div>
+</div>
+
+<div class="vendor-circle-section" id="vendorCircleSection">
+ <div class="vendor-circle-head"><strong>👑 المتاجر المميزة</strong><button class="linkbtn" type="button" data-go="vendors">عرض جميع المتاجر ←</button></div>
+ <div class="vendor-circle-rail" id="vendorCircleRail"><div class="muted">جارٍ تحميل المتاجر...</div></div>
+</div>
+<div class="vendor-home-shortcut" aria-label="اختصارات السوق">
+ <button class="secondary" type="button" data-go="searchpage"><span class="shortcut-icon">▦</span><span>جميع الأقسام</span></button>
+ <button class="secondary" type="button" data-go="myads"><span class="shortcut-icon">🎮</span><span>إعلانات الأفراد</span></button>
+ <button class="secondary" type="button" data-go="store"><span class="shortcut-icon">🛒</span><span>متجر السوق</span></button>
+ <button class="primary" type="button" data-vendor-dashboard><span class="shortcut-icon">🏬</span><span>افتح متجرك</span></button>
+</div>
+
 <div class="store-ticker" id="homeStoreTicker" aria-label="منتجات المتجر المتحركة">
  <div class="store-ticker-head"><strong>🛍️ منتجات المتجر</strong></div>
  <div class="store-ticker-viewport" id="storeTickerViewport"><div class="store-ticker-track" id="storeTickerTrack"><div class="store-ticker-empty">جارٍ تحميل منتجات المتجر...</div></div></div>
@@ -704,6 +813,131 @@ body.store-view .top,body.store-view .searchrow{display:none!important}
  </div>
 </div>
 </section>
+
+<section id="page-vendors" class="hidden">
+ <div class="vendor-page-intro">
+  <div class="vendor-pill">متاجر مستقلة داخل السوق</div>
+  <h1>متاجر القيمنق</h1>
+  <p>تصفح متاجر التجار المعتمدة ومنتجاتهم. لكل تاجر متجره وصفحته وإدارته المستقلة.</p>
+  <div class="actions">
+   <button class="primary" type="button" data-vendor-dashboard>افتح متجرك / إدارة متجري</button>
+   <button class="secondary" type="button" data-go="home">العودة للسوق الرئيسي</button>
+  </div>
+ </div>
+ <div class="vendor-toolbar">
+  <input id="vendorDirectorySearch" class="field" type="search" placeholder="ابحث عن متجر أو مدينة أو تصنيف...">
+  <button class="secondary" id="vendorDirectoryRefresh" type="button">تحديث المتاجر</button>
+ </div>
+ <div id="vendorDirectoryGrid" class="vendor-directory-grid"><div class="empty">جارٍ تحميل المتاجر...</div></div>
+ <section id="vendorSelectedStore" class="hidden">
+  <div class="vendor-detail-head">
+   <button class="secondary" type="button" id="vendorBackToDirectory">← المتاجر</button>
+   <div class="vendor-detail-logo" id="vendorSelectedLogo">🏬</div>
+   <div style="min-width:0;flex:1"><h2 id="vendorSelectedName" style="margin:0;color:var(--brand)">المتجر</h2><p id="vendorSelectedMeta" class="muted" style="margin:2px 0"></p></div>
+  </div>
+  <p id="vendorSelectedDescription" class="muted"></p>
+  <div class="row space"><h2>منتجات المتجر</h2><span id="vendorSelectedProductCount" class="vendor-pill">0 منتج</span></div>
+  <div id="vendorSelectedProducts" class="vendor-product-grid"><div class="empty">اختر متجراً لعرض منتجاته.</div></div>
+  <div class="vendor-cart-box">
+   <div class="row space"><h3 style="margin:0">🛒 سلة متاجر التجار</h3><strong id="vendorCartTotal">0.00 ر.س</strong></div>
+   <div id="vendorCartRows" class="vendor-muted-note">السلة فارغة.</div>
+   <form id="vendorCheckoutForm" class="vendor-cart-form">
+    <label>اسم المستلم<input id="vendorCheckoutName" class="field" required maxlength="100"></label>
+    <label>رقم الجوال<input id="vendorCheckoutPhone" class="field" required type="tel" inputmode="tel" pattern="05[0-9]{8}" placeholder="05xxxxxxxx"></label>
+    <label>المدينة<input id="vendorCheckoutCity" class="field" required maxlength="80"></label>
+    <label class="full">العنوان بالتفصيل<textarea id="vendorCheckoutAddress" class="field" rows="2" required maxlength="700"></textarea></label>
+    <label class="full">ملاحظات (اختياري)<textarea id="vendorCheckoutNotes" class="field" rows="2" maxlength="500"></textarea></label>
+    <div class="full vendor-danger-note vendor-state">الدفع الإلكتروني لمتاجر التجار غير مفعّل بعد. يمكنك إنشاء طلب مبدئي فقط؛ لن يتم خصم أي مبلغ ولن يُطلب من التاجر الشحن قبل ربط مزود الدفع والتحقق من السداد.</div>
+    <button class="primary full" type="submit" id="vendorCreateOrderBtn">إنشاء طلب مبدئي بانتظار تفعيل الدفع</button>
+    <div id="vendorCheckoutMsg" class="full muted" role="status"></div>
+   </form>
+  </div>
+ </section>
+</section>
+
+<section id="page-vendor-dashboard" class="hidden">
+ <div class="vendor-page-intro">
+  <div class="vendor-pill">بوابة التاجر</div>
+  <h1>لوحة متجري</h1>
+  <p>إدارة بيانات متجرك ومنتجاته وطلبات الترويج. هذه اللوحة منفصلة عن المتجر الرسمي الذي تديره المنصة.</p>
+ </div>
+ <div id="vendorDashboardAuth" class="vendor-state">سجّل الدخول إلى حسابك أولاً لطلب متجر أو إدارة متجرك.</div>
+ <div id="vendorApplicationBox" class="vendor-dashboard-card hidden">
+  <h2>طلب فتح متجر</h2>
+  <p class="vendor-muted-note">بعد إرسال الطلب ستراجعه إدارة المنصة. لن يظهر المتجر للعامة قبل اعتماده.</p>
+  <form id="vendorApplicationForm" class="formgrid">
+   <div><label for="vendorApplyName">اسم المتجر *</label><input id="vendorApplyName" class="field" required maxlength="100"></div>
+   <div><label for="vendorApplySlug">رابط مختصر بالإنجليزية (اختياري)</label><input id="vendorApplySlug" class="field" maxlength="70" placeholder="my-gaming-store" pattern="[a-zA-Z0-9-]+"></div>
+   <div><label for="vendorApplyCategory">التصنيف</label><select id="vendorApplyCategory" class="field"><option>أجهزة الكمبيوتر والقيمنق</option><option>قطع الكمبيوتر</option><option>أجهزة الكونسول</option><option>ملحقات القيمنق</option><option>الألعاب الرقمية</option><option>كروت الشحن</option><option>إلكترونيات أخرى</option></select></div>
+   <div><label for="vendorApplyCity">المدينة</label><input id="vendorApplyCity" class="field" maxlength="80"></div>
+   <div class="full"><label for="vendorApplyLogo">رابط شعار المتجر (اختياري)</label><input id="vendorApplyLogo" class="field" type="url" placeholder="https://..."></div>
+   <div class="full"><label for="vendorApplyDescription">نبذة عن المتجر *</label><textarea id="vendorApplyDescription" class="field" rows="3" required maxlength="1200"></textarea></div>
+   <div><label for="vendorApplyWhatsapp">رقم واتساب المتجر (اختياري)</label><input id="vendorApplyWhatsapp" class="field" type="tel" maxlength="20"></div>
+   <div class="full"><label class="pledge-check"><input id="vendorApplyAgree" type="checkbox" required> أقر بصحة بيانات المتجر والتزامي بالأنظمة وسياسات المنصة.</label></div>
+   <div class="full"><button class="primary" type="submit" id="vendorApplySubmit">إرسال طلب فتح المتجر</button><div id="vendorApplyMsg" class="muted" role="status"></div></div>
+  </form>
+ </div>
+
+ <div id="vendorWorkspace" class="hidden">
+  <div id="vendorWorkspaceStatus" class="vendor-state"></div>
+  <div class="vendor-dashboard-grid">
+   <section class="vendor-dashboard-card full">
+    <h3>بيانات متجري</h3>
+    <form id="vendorStoreSettingsForm" class="formgrid">
+     <div><label>اسم المتجر<input id="vendorEditName" class="field" required maxlength="100"></label></div>
+     <div><label>الرابط المختصر<input id="vendorEditSlug" class="field" required maxlength="70" pattern="[a-zA-Z0-9-]+"></label></div>
+     <div><label>التصنيف<input id="vendorEditCategory" class="field" maxlength="100"></label></div>
+     <div><label>المدينة<input id="vendorEditCity" class="field" maxlength="80"></label></div>
+     <div><label>رابط الشعار<input id="vendorEditLogo" class="field" type="url"></label></div>
+     <div><label>واتساب المتجر<input id="vendorEditWhatsapp" class="field" type="tel" maxlength="20"></label></div>
+     <div class="full"><label>نبذة المتجر<textarea id="vendorEditDescription" class="field" rows="3" maxlength="1200"></textarea></label></div>
+     <div class="full"><button class="primary" type="submit">حفظ بيانات المتجر</button><span id="vendorStoreSettingsMsg" class="muted"></span></div>
+    </form>
+   </section>
+   <section class="vendor-dashboard-card full">
+    <h3>إضافة منتج إلى متجري</h3>
+    <form id="vendorProductForm" class="formgrid">
+     <input id="vendorProductId" type="hidden">
+     <div><label>اسم المنتج *</label><input id="vendorProductName" class="field" required maxlength="160"></div>
+     <div><label>التصنيف *</label><input id="vendorProductCategory" class="field" required maxlength="100"></div>
+     <div><label>السعر بالريال *</label><input id="vendorProductPrice" class="field" type="number" min=".01" step=".01" required></div>
+     <div><label>الكمية المتاحة *</label><input id="vendorProductStock" class="field" type="number" min="0" step="1" value="1" required></div>
+     <div><label>نوع المنتج</label><select id="vendorProductType" class="field"><option value="physical">مادي</option><option value="digital">رقمي</option></select></div>
+     <div><label>رابط صورة المنتج</label><input id="vendorProductImage" class="field" type="url"></div>
+     <div class="full"><label>الوصف</label><textarea id="vendorProductDescription" class="field" rows="3" maxlength="3000"></textarea></div>
+     <div class="full row"><button class="primary" type="submit" id="vendorProductSave">حفظ المنتج للمراجعة</button><button class="secondary" type="button" id="vendorProductReset">منتج جديد</button><span id="vendorProductMsg" class="muted"></span></div>
+    </form>
+    <h3 style="margin-top:22px">منتجاتي</h3>
+    <div id="vendorMyProducts" class="stack"><div class="empty">جارٍ التحميل...</div></div>
+   </section>
+
+   <section class="vendor-dashboard-card full">
+    <h3>طلبات متجري</h3>
+    <p class="vendor-muted-note">تظهر هنا الطلبات المرتبطة بمتجرك فقط. لا تبدأ تجهيز أو شحن الطلب قبل ظهور حالة دفع مؤكدة من مزود الدفع.</p>
+    <div id="vendorMyOrders" class="vendor-table-wrap"><div class="empty">جارٍ تحميل الطلبات...</div></div>
+   </section>
+   <section class="vendor-dashboard-card full">
+    <h3>ترويج المتجر والمنتجات والإعلانات</h3>
+    <p class="vendor-muted-note">اختر ما تريد ترويجه ثم الباقة. يسجل النظام طلب ترويج بانتظار ربط بوابة الدفع؛ لا يتم تفعيل الظهور المدفوع قبل تأكيد الدفع من الخادم.</p>
+    <form id="vendorPromotionForm" class="formgrid">
+     <div><label>نوع الترويج</label><select id="vendorPromotionTargetType" class="field"><option value="store">متجري</option><option value="product">منتج من متجري</option><option value="ad">إعلان من إعلاناتي</option></select></div>
+     <div><label>العنصر المراد ترويجه</label><select id="vendorPromotionTarget" class="field" required></select></div>
+     <div class="full"><label>الباقة</label><select id="vendorPromotionPackage" class="field" required></select></div>
+     <div class="full"><button class="primary" type="submit">إنشاء طلب ترويج</button><div id="vendorPromotionMsg" class="muted" role="status"></div></div>
+    </form>
+    <div id="vendorPromotionHistory" class="stack"></div>
+   </section>
+   <section class="vendor-dashboard-card full">
+    <h3>المبيعات والمستحقات</h3>
+    <div class="vendor-state"><strong>الرصيد المسجل:</strong> <span id="vendorLedgerBalance">—</span><p class="vendor-muted-note">يعرض هذا الرصيد قيوداً مالية مؤكدة فقط عند تسجيلها من خادم المنصة. لا يمكن للمتصفح إنشاء أرباح أو تحويلات أو تعديلها.</p></div>
+    <h4>سجل المستحقات</h4><div id="vendorLedgerRows" class="vendor-table-wrap"><div class="empty">لا توجد قيود مالية حتى الآن.</div></div>
+    <h4>التحويلات البنكية</h4><div id="vendorPayoutRows" class="vendor-table-wrap"><div class="empty">لا توجد تحويلات مسجلة.</div></div>
+    <div class="vendor-state">الهدف التشغيلي: تسوية مستحقات التاجر كل 3 أيام، بشرط اعتماد مزود الدفع لجدول التسوية. لا يوجد تحويل حقيقي مفعّل في هذه النسخة.</div>
+   </section>
+  </div>
+ </div>
+</section>
+
 <section id="page-add" class="hidden"><div class="panel"><h2 id="adFormTitle">إضافة إعلان جديد</h2><p class="muted">أضف تفاصيل المنتج ووسائطه، ثم وافق على تعهد العمولة قبل الحفظ.</p>
 <form id="adForm" class="formgrid ad-wizard">
 <input type="hidden" id="editId">
@@ -767,6 +1001,8 @@ body.store-view .top,body.store-view .searchrow{display:none!important}
   <button class="drawer-link" data-drawer-page="favorites"><span>♡ المفضلة<small>الإعلانات المحفوظة</small></span><span>‹</span></button>
   <button class="drawer-link" data-drawer-page="messages"><span>✉ المحادثات الخاصة<small>مراسلة البائعين والمشترين</small></span><span>‹</span></button>
   <button class="drawer-link" data-drawer-page="notifications"><span>♟ الإشعارات<small>تنبيهات الحساب</small></span><span>‹</span></button>
+  <button class="drawer-link" type="button" data-drawer-page="vendors"><span>🏬 متاجر التجار<small>تصفح المتاجر المعتمدة</small></span><span>‹</span></button>
+  <button class="drawer-link" type="button" data-vendor-dashboard><span>＋ افتح متجرك<small>تقديم طلب متجر وإدارة المنتجات</small></span><span>‹</span></button>
   <button class="drawer-link" data-drawer-page="settings"><span>⚙ الإعدادات<small>تفضيلات الموقع والخصوصية</small></span><span>‹</span></button>
 </aside>
 
@@ -1475,6 +1711,454 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
  fetchStoreProducts();
  checkStoreAdmin();
  sb.auth.onAuthStateChange(()=>setTimeout(checkStoreAdmin,0));
+})();
+</script>
+
+
+<script id="vendor-marketplace-engine">
+(() => {
+ 'use strict';
+ const vState = {
+  stores: [], selectedStore: null, selectedProducts: [],
+  myStore: null, myProducts: [], cart: {},
+  promotedStores: new Set(), promotedProducts: new Set(), promotedAds: new Set()
+ };
+ const v$ = id => document.getElementById(id);
+ const vMoney = amount => Number(amount || 0).toLocaleString('ar-SA',{minimumFractionDigits:2,maximumFractionDigits:2})+' ر.س';
+ const vEsc = value => String(value ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const vMsg = (id,text) => { const node=v$(id); if(node) node.textContent=text; };
+ const vSafeUrl = value => {
+  if(!value) return '';
+  try { const u=new URL(value); return ['http:','https:'].includes(u.protocol) ? u.href : ''; } catch { return ''; }
+ };
+ const vStatusLabel = status => ({
+  pending_review:'بانتظار مراجعة الإدارة', approved:'معتمد', rejected:'مرفوض',
+  suspended:'موقوف', active:'منشور', draft:'مسودة', awaiting_payment:'بانتظار الدفع',
+  not_configured:'الدفع غير مفعّل', paid:'مدفوع', pending:'قيد المعالجة',
+  scheduled:'مجدول', expired:'منتهي'
+ }[status] || status || 'غير محدد');
+
+ async function loadVendorDirectory() {
+  const grid=v$('vendorDirectoryGrid'), rail=v$('vendorCircleRail');
+  if(!grid && !rail) return;
+  const {data,error}=await sb.from('vendor_stores')
+   .select('id,store_name,slug,description,city,category,logo_url,is_featured,created_at')
+   .eq('status','approved').order('is_featured',{ascending:false}).order('created_at',{ascending:false}).limit(100);
+  if(error) {
+   console.error('Vendor directory load failed:',error);
+   if(grid) grid.innerHTML='<div class="empty">تعذر تحميل متاجر التجار. تأكد من تنفيذ ملف SQL الإضافي وسياسات القراءة العامة.</div>';
+   if(rail) rail.innerHTML='<span class="vendor-muted-note">تعذر تحميل المتاجر حالياً.</span>';
+   return;
+  }
+  vState.stores=data||[];
+  vState.stores.sort((a,b)=>{
+   const ap=Boolean(a.is_featured)||vState.promotedStores.has(String(a.id));
+   const bp=Boolean(b.is_featured)||vState.promotedStores.has(String(b.id));
+   return Number(bp)-Number(ap);
+  });
+  renderVendorCircles();
+  renderVendorDirectory();
+ }
+ function vendorLogoMarkup(store, klass='') {
+  const url=vSafeUrl(store.logo_url);
+  return url ? `<img class="${klass}" src="${vEsc(url)}" alt="${vEsc(store.store_name)}" loading="lazy" referrerpolicy="no-referrer">` : '🏬';
+ }
+ function renderVendorCircles() {
+  const rail=v$('vendorCircleRail'); if(!rail) return;
+  const list=vState.stores.slice(0,14);
+  if(!list.length){rail.innerHTML='<span class="vendor-muted-note">لا توجد متاجر معتمدة بعد. كن أول تاجر يطلب فتح متجر.</span>';return;}
+  rail.innerHTML=list.map(store=>{
+   const featured=Boolean(store.is_featured)||vState.promotedStores.has(String(store.id));
+   return `<button class="vendor-circle ${featured?'featured':''}" type="button" data-vendor-id="${vEsc(store.id)}" aria-label="زيارة متجر ${vEsc(store.store_name)}">
+    <span class="vendor-circle-avatar">${vendorLogoMarkup(store)}</span>
+    <span class="vendor-circle-verified" aria-label="متجر معتمد">✓</span>
+    <span class="vendor-circle-name">${vEsc(store.store_name)}</span>
+   </button>`;
+  }).join('');
+ }
+ function renderVendorDirectory() {
+  const grid=v$('vendorDirectoryGrid'); if(!grid) return;
+  const term=(v$('vendorDirectorySearch')?.value||'').trim().toLowerCase();
+  const rows=vState.stores.filter(store=>[store.store_name,store.city,store.category,store.description].join(' ').toLowerCase().includes(term));
+  if(!rows.length){grid.innerHTML='<div class="empty" style="grid-column:1/-1">لا توجد متاجر مطابقة حالياً.</div>';return;}
+  grid.innerHTML=rows.map(store=>`
+   <article class="vendor-directory-card">
+    <div class="vendor-directory-cover">${vSafeUrl(store.logo_url)?`<img src="${vEsc(vSafeUrl(store.logo_url))}" alt="" loading="lazy">`:'🎮'}</div>
+    <div class="vendor-directory-content">
+     <div class="vendor-directory-logo">${vendorLogoMarkup(store)}</div>
+     <h3>${vEsc(store.store_name)}</h3>
+     <div class="vendor-muted-note">${vEsc(store.category||'متجر قيمنق')} · ${vEsc(store.city||'السعودية')}</div>
+     <p class="vendor-muted-note">${vEsc((store.description||'').slice(0,130))}</p>
+     ${store.is_featured||vState.promotedStores.has(String(store.id))?'<span class="vendor-pill">متجر مميز / مروّج</span>':''}
+     <button class="primary" type="button" style="width:100%;margin-top:10px" onclick="openVendorStore('${store.id}')">زيارة المتجر</button>
+    </div>
+   </article>`).join('');
+ }
+ window.openVendorStore=async id=>{
+  if(v$('page-vendors')?.classList.contains('hidden'))showPage('vendors');
+  const store=vState.stores.find(x=>String(x.id)===String(id));
+  if(!store){vMsg('vendorCheckoutMsg','تعذر العثور على المتجر. حدّث قائمة المتاجر.');return;}
+  vState.selectedStore=store;
+  v$('vendorSelectedStore').classList.remove('hidden');
+  v$('vendorSelectedName').textContent=store.store_name;
+  v$('vendorSelectedMeta').textContent=[store.category,store.city].filter(Boolean).join(' · ');
+  v$('vendorSelectedDescription').textContent=store.description||'';
+  v$('vendorSelectedLogo').innerHTML=vendorLogoMarkup(store);
+  v$('vendorDirectoryGrid').classList.add('hidden');
+  const {data,error}=await sb.from('vendor_store_products')
+   .select('id,store_id,title,description,price,stock_quantity,category,image_url,product_type,status,created_at')
+   .eq('store_id',store.id).eq('status','active')
+   .order('created_at',{ascending:false}).limit(100);
+  if(error){v$('vendorSelectedProducts').innerHTML='<div class="empty">تعذر تحميل منتجات هذا المتجر.</div>';return;}
+  vState.selectedProducts=data||[];
+  v$('vendorSelectedProductCount').textContent=vState.selectedProducts.length.toLocaleString('ar-SA')+' منتج';
+  renderSelectedVendorProducts();
+  renderVendorCart();
+  v$('vendorSelectedStore').scrollIntoView({behavior:'smooth',block:'start'});
+ };
+ function renderSelectedVendorProducts(){
+  const grid=v$('vendorSelectedProducts');if(!grid)return;
+  if(!vState.selectedProducts.length){grid.innerHTML='<div class="empty" style="grid-column:1/-1">لا توجد منتجات منشورة في هذا المتجر حالياً.</div>';return;}
+  grid.innerHTML=vState.selectedProducts.map(p=>`
+   <article class="vendor-product-card">
+    <div class="vendor-product-image">${vSafeUrl(p.image_url)?`<img src="${vEsc(vSafeUrl(p.image_url))}" alt="${vEsc(p.title)}" loading="lazy">`:'🎮'}</div>
+    <div class="vendor-product-content">
+     ${vState.promotedProducts.has(String(p.id))?'<span class="vendor-pill">منتج مروّج</span>':''}<h3>${vEsc(p.title)}</h3><div class="vendor-muted-note">${vEsc(p.category||'')}</div>
+     <div class="vendor-product-price">${vMoney(p.price)}</div>
+     <div class="vendor-muted-note">${Number(p.stock_quantity)>0?'متوفر · الكمية '+Number(p.stock_quantity):'غير متوفر'}</div>
+     <div class="vendor-product-actions"><button class="primary" type="button" onclick="addVendorCart('${p.id}')">أضف للسلة</button><button class="secondary" type="button" onclick="showVendorProductDetails('${p.id}')">التفاصيل</button></div>
+    </div>
+   </article>`).join('');
+ }
+ window.showVendorProductDetails=id=>{
+  const p=vState.selectedProducts.find(x=>String(x.id)===String(id));if(!p)return;
+  alert(`${p.title}\n\n${p.description||'لا يوجد وصف إضافي.'}\n\nالسعر: ${vMoney(p.price)}`);
+ };
+ window.addVendorCart=id=>{
+  const p=vState.selectedProducts.find(x=>String(x.id)===String(id));
+  if(!p || Number(p.stock_quantity)<1){alert('المنتج غير متوفر حالياً.');return;}
+  const next=(vState.cart[id]||0)+1;
+  if(next>Number(p.stock_quantity)){alert('الكمية المطلوبة تتجاوز المخزون المتاح.');return;}
+  vState.cart[id]=next;
+  vState.cartProducts[String(id)]=p;
+  renderVendorCart();
+ };
+ window.changeVendorCart=(id,delta)=>{
+  const p=vState.cartProducts[String(id)]||vState.selectedProducts.find(x=>String(x.id)===String(id));
+  if(!p)return;
+  const next=(vState.cart[id]||0)+delta;
+  if(next<=0){delete vState.cart[id];delete vState.cartProducts[String(id)];}
+  else if(next>Number(p.stock_quantity))alert('لا توجد كمية إضافية في المخزون.');
+  else vState.cart[id]=next;
+  renderVendorCart();
+ };
+ function selectedCartItems(){
+  return Object.entries(vState.cart).map(([id,quantity])=>({
+   product:vState.cartProducts[String(id)]||vState.selectedProducts.find(p=>String(p.id)===String(id)),quantity
+  })).filter(x=>x.product);
+ }
+ function renderVendorCart(){
+  const rows=v$('vendorCartRows');if(!rows)return;
+  const items=selectedCartItems();
+  const total=items.reduce((sum,item)=>sum+Number(item.product.price)*item.quantity,0);
+  v$('vendorCartTotal').textContent=vMoney(total);
+  if(!items.length){rows.innerHTML='السلة فارغة. أضف منتجات من المتجر.';return;}
+  rows.innerHTML=items.map(({product,quantity})=>`
+   <div class="vendor-cart-row"><span>${vEsc(product.title)} × ${quantity}<small style="display:block">${vEsc(vState.stores.find(s=>String(s.id)===String(product.store_id))?.store_name||'متجر')}</small></span><span>${vMoney(product.price*quantity)} <button class="linkbtn" type="button" onclick="changeVendorCart('${product.id}',-1)">−</button> <button class="linkbtn" type="button" onclick="changeVendorCart('${product.id}',1)">＋</button></span></div>`).join('');
+  if(profile){if(!v$('vendorCheckoutName').value)v$('vendorCheckoutName').value=profile.display_name||'';if(!v$('vendorCheckoutPhone').value)v$('vendorCheckoutPhone').value=profile.phone||'';if(!v$('vendorCheckoutCity').value)v$('vendorCheckoutCity').value=profile.city||'';}
+ }
+ v$('vendorBackToDirectory').addEventListener('click',()=>{
+  v$('vendorSelectedStore').classList.add('hidden');
+  v$('vendorDirectoryGrid').classList.remove('hidden');
+  vState.selectedStore=null;
+  vState.selectedProducts=[];
+ });
+ v$('vendorDirectorySearch').addEventListener('input',renderVendorDirectory);
+ v$('vendorDirectoryRefresh').addEventListener('click',loadVendorDirectory);
+
+ v$('vendorCheckoutForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  if(!needAuth())return;
+  const items=selectedCartItems();
+  if(!items.length){vMsg('vendorCheckoutMsg','السلة فارغة.');return;}
+  const button=v$('vendorCreateOrderBtn');button.disabled=true;
+  vMsg('vendorCheckoutMsg','جارٍ إنشاء طلب مبدئي والتحقق من الأسعار والمخزون...');
+  try{
+   const payload=items.map(({product,quantity})=>({product_id:product.id,quantity}));
+   const {data,error}=await sb.rpc('create_vendor_checkout_draft',{
+    p_items:payload,
+    p_customer_name:v$('vendorCheckoutName').value.trim(),
+    p_phone:v$('vendorCheckoutPhone').value.trim(),
+    p_city:v$('vendorCheckoutCity').value.trim(),
+    p_address:v$('vendorCheckoutAddress').value.trim(),
+    p_notes:v$('vendorCheckoutNotes').value.trim()
+   });
+   if(error)throw error;
+   const checkoutId=typeof data==='string'?data:(data?.checkout_id||data?.id||'');
+   vState.cart={};vState.cartProducts={};renderVendorCart();
+   vMsg('vendorCheckoutMsg',`تم إنشاء طلب مبدئي${checkoutId?' رقم '+checkoutId:''}. لم يتم تحصيل أي مبلغ؛ سيبقى الطلب بانتظار ربط وتفعيل الدفع الإلكتروني.`);
+  }catch(error){
+   console.error('Vendor checkout draft failed:',error);
+   vMsg('vendorCheckoutMsg','تعذر إنشاء الطلب: '+error.message+' — تأكد من تنفيذ ملف SQL الإضافي.');
+  }finally{button.disabled=false;}
+ });
+
+ function resetVendorProductForm(){
+  v$('vendorProductForm').reset();v$('vendorProductId').value='';v$('vendorProductStock').value=1;
+  v$('vendorProductSave').textContent='حفظ المنتج للمراجعة';
+ }
+ v$('vendorProductReset').addEventListener('click',resetVendorProductForm);
+ async function loadMyVendorProducts(){
+  if(!vState.myStore)return;
+  const {data,error}=await sb.from('vendor_store_products').select('*')
+   .eq('store_id',vState.myStore.id).order('created_at',{ascending:false}).limit(200);
+  if(error){v$('vendorMyProducts').innerHTML='<div class="empty">تعذر تحميل المنتجات: '+vEsc(error.message)+'</div>';return;}
+  vState.myProducts=data||[];
+  v$('vendorMyProducts').innerHTML=vState.myProducts.map(p=>`
+   <div class="vendor-state">
+    <div class="row space"><strong>${vEsc(p.title)}</strong><span class="vendor-pill">${vEsc(vStatusLabel(p.status))}</span></div>
+    <div class="vendor-muted-note">${vMoney(p.price)} · المخزون ${Number(p.stock_quantity)||0} · ${vEsc(p.category||'')}</div>
+    <div class="actions"><button class="secondary" type="button" onclick="editMyVendorProduct('${p.id}')">تعديل</button><button class="danger" type="button" onclick="deleteMyVendorProduct('${p.id}')">حذف</button></div>
+   </div>`).join('')||'<div class="empty">لم تضف منتجات بعد.</div>';
+ }
+ window.editMyVendorProduct=id=>{
+  const p=vState.myProducts.find(x=>String(x.id)===String(id));if(!p)return;
+  v$('vendorProductId').value=p.id;v$('vendorProductName').value=p.title;
+  v$('vendorProductCategory').value=p.category||'';v$('vendorProductPrice').value=p.price;
+  v$('vendorProductStock').value=p.stock_quantity;v$('vendorProductType').value=p.product_type||'physical';
+  v$('vendorProductImage').value=p.image_url||'';v$('vendorProductDescription').value=p.description||'';
+  v$('vendorProductSave').textContent='حفظ التعديل وإعادة المراجعة';
+  v$('vendorProductForm').scrollIntoView({behavior:'smooth',block:'center'});
+ };
+ window.deleteMyVendorProduct=async id=>{
+  if(!confirm('تأكيد حذف هذا المنتج؟'))return;
+  const {error}=await sb.from('vendor_store_products').delete().eq('id',id);
+  if(error)alert('تعذر حذف المنتج: '+error.message);else loadMyVendorProducts();
+ };
+ v$('vendorProductForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  if(!vState.myStore||!currentUser)return;
+  const id=v$('vendorProductId').value;
+  const row={
+   title:v$('vendorProductName').value.trim(),category:v$('vendorProductCategory').value.trim(),
+   price:Number(v$('vendorProductPrice').value),stock_quantity:Number(v$('vendorProductStock').value),
+   product_type:v$('vendorProductType').value,image_url:vSafeUrl(v$('vendorProductImage').value)||null,
+   description:v$('vendorProductDescription').value.trim()
+  };
+  const button=v$('vendorProductSave');button.disabled=true;
+  try{
+   const query=id?sb.from('vendor_store_products').update(row).eq('id',id):
+    sb.from('vendor_store_products').insert({...row,store_id:vState.myStore.id,owner_id:currentUser.id});
+   const {error}=await query;if(error)throw error;
+   resetVendorProductForm();vMsg('vendorProductMsg',id?'تم حفظ التعديل وإرسال المنتج للمراجعة من جديد.':'تم استلام المنتج وسيظهر بعد موافقة الإدارة.');
+   await loadMyVendorProducts();
+  }catch(error){vMsg('vendorProductMsg','تعذر حفظ المنتج: '+error.message);}
+  finally{button.disabled=false;}
+ });
+
+ async function loadVendorStoreWorkspace(){
+  if(!currentUser){v$('vendorDashboardAuth').classList.remove('hidden');v$('vendorApplicationBox').classList.add('hidden');v$('vendorWorkspace').classList.add('hidden');return;}
+  v$('vendorDashboardAuth').classList.add('hidden');
+  const {data,error}=await sb.from('vendor_stores').select('*').eq('owner_id',currentUser.id).maybeSingle();
+  if(error){vMsg('vendorDashboardAuth','تعذر قراءة حالة المتجر: '+error.message+' — نفّذ ملف SQL الإضافي.');v$('vendorDashboardAuth').classList.remove('hidden');return;}
+  vState.myStore=data||null;
+  if(!data){v$('vendorApplicationBox').classList.remove('hidden');v$('vendorWorkspace').classList.add('hidden');return;}
+  v$('vendorApplicationBox').classList.add('hidden');v$('vendorWorkspace').classList.remove('hidden');
+  v$('vendorWorkspaceStatus').textContent='حالة المتجر: '+vStatusLabel(data.status)+'. '+(data.status==='approved'?'متجرك معتمد ويمكنك إدارة المنتجات وطلب الترويج.':'لن يظهر المتجر للعامة حتى تعتمد الإدارة الطلب، ولن تتمكن من نشر المنتجات أو طلب الترويج قبل الاعتماد.');
+  const canOperate=data.status==='approved';
+  [...v$('vendorProductForm').querySelectorAll('input,select,textarea,button')].forEach(el=>el.disabled=!canOperate);
+  [...v$('vendorPromotionForm').querySelectorAll('input,select,textarea,button')].forEach(el=>el.disabled=!canOperate);
+  v$('vendorEditName').value=data.store_name||'';v$('vendorEditSlug').value=data.slug||'';
+  v$('vendorEditCategory').value=data.category||'';v$('vendorEditCity').value=data.city||'';
+  v$('vendorEditLogo').value=data.logo_url||'';v$('vendorEditWhatsapp').value=data.contact_whatsapp||'';
+  v$('vendorEditDescription').value=data.description||'';
+  await Promise.all([loadMyVendorProducts(),loadMyVendorOrders(),loadVendorPromotables(),loadVendorFinance(),loadVendorPromotionHistory()]);
+ }
+ v$('vendorApplicationForm').addEventListener('submit',async e=>{
+  e.preventDefault();if(!needAuth())return;
+  const button=v$('vendorApplySubmit');button.disabled=true;
+  const autoSlug='vendor-'+currentUser.id.replace(/-/g,'').slice(0,10);
+  const slug=(v$('vendorApplySlug').value.trim().toLowerCase()||autoSlug).replace(/[^a-z0-9-]/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
+  const row={
+   owner_id:currentUser.id,store_name:v$('vendorApplyName').value.trim(),slug,
+   category:v$('vendorApplyCategory').value,city:v$('vendorApplyCity').value.trim(),
+   logo_url:vSafeUrl(v$('vendorApplyLogo').value)||null,
+   description:v$('vendorApplyDescription').value.trim(),
+   contact_whatsapp:v$('vendorApplyWhatsapp').value.trim()||null
+  };
+  try{
+   const {data,error}=await sb.from('vendor_stores').insert(row).select('*').single();
+   if(error)throw error;
+   vState.myStore=data;vMsg('vendorApplyMsg','تم إرسال طلب فتح المتجر بنجاح. حالته الآن بانتظار مراجعة الإدارة.');
+   await loadVendorStoreWorkspace();
+  }catch(error){vMsg('vendorApplyMsg','تعذر إرسال الطلب: '+error.message);}
+  finally{button.disabled=false;}
+ });
+ v$('vendorStoreSettingsForm').addEventListener('submit',async e=>{
+  e.preventDefault();if(!vState.myStore)return;
+  const row={
+   store_name:v$('vendorEditName').value.trim(),
+   slug:v$('vendorEditSlug').value.trim().toLowerCase(),
+   category:v$('vendorEditCategory').value.trim(),city:v$('vendorEditCity').value.trim(),
+   logo_url:vSafeUrl(v$('vendorEditLogo').value)||null,
+   contact_whatsapp:v$('vendorEditWhatsapp').value.trim()||null,
+   description:v$('vendorEditDescription').value.trim(),updated_at:new Date().toISOString()
+  };
+  const {error}=await sb.from('vendor_stores').update(row).eq('id',vState.myStore.id);
+  if(error)vMsg('vendorStoreSettingsMsg','تعذر الحفظ: '+error.message);
+  else{vMsg('vendorStoreSettingsMsg','تم حفظ بيانات المتجر.');await loadVendorDirectory();}
+ });
+
+
+ async function loadMyVendorOrders(){
+  if(!currentUser)return;
+  const box=v$('vendorMyOrders');if(!box)return;
+  const {data,error}=await sb.from('vendor_orders')
+   .select('id,checkout_group_id,subtotal_amount,commission_amount,vendor_net_amount,order_status,payment_status,created_at,vendor_checkout_groups(customer_name,customer_phone,customer_city,customer_address)')
+   .eq('vendor_owner_id',currentUser.id).order('created_at',{ascending:false}).limit(100);
+  if(error){box.innerHTML='<div class="vendor-muted-note">تعذر تحميل الطلبات: '+vEsc(error.message)+'</div>';return;}
+  const rows=data||[];
+  box.innerHTML=rows.length?`<table class="vendor-table"><thead><tr><th>رقم الطلب</th><th>العميل</th><th>الإجمالي</th><th>عمولة المنصة</th><th>صافي مبدئي</th><th>الدفع</th><th>الحالة</th></tr></thead><tbody>${rows.map(o=>{
+   const customer=o.vendor_checkout_groups||{};
+   return `<tr><td>${vEsc(String(o.id).slice(0,8))}</td><td>${vEsc(customer.customer_name||'')}<br>${vEsc(customer.customer_phone||'')}</td><td>${vMoney(o.subtotal_amount)}</td><td>${vMoney(o.commission_amount)}</td><td>${vMoney(o.vendor_net_amount)}</td><td>${vEsc(vStatusLabel(o.payment_status))}</td><td>${vEsc(vStatusLabel(o.order_status))}</td></tr>`;
+  }).join('')}</tbody></table>`:'<div class="vendor-muted-note">لا توجد طلبات لمتجرك حالياً.</div>';
+ }
+
+ async function loadVendorPromotables(){
+  const target=v$('vendorPromotionTarget'),type=v$('vendorPromotionTargetType');
+  if(!vState.myStore||!target)return;
+  if(type.value==='store'){
+   target.innerHTML=`<option value="${vState.myStore.id}">${vEsc(vState.myStore.store_name)}</option>`;
+  }else if(type.value==='product'){
+   target.innerHTML=vState.myProducts.map(p=>`<option value="${p.id}">${vEsc(p.title)}</option>`).join('')||'<option value="">لا توجد منتجات</option>';
+  }else{
+   const {data,error}=await sb.from('ads').select('id,title,status').eq('seller_id',currentUser.id).order('created_at',{ascending:false}).limit(100);
+   target.innerHTML=error?'<option value="">تعذر تحميل إعلاناتك</option>':
+    (data||[]).map(a=>`<option value="${vEsc(a.id)}">${vEsc(a.title)} (${vEsc(a.status)})</option>`).join('')||'<option value="">لا توجد إعلانات</option>';
+  }
+  await loadVendorPromotionPackages();
+ }
+ async function loadVendorPromotionPackages(){
+  const type=v$('vendorPromotionTargetType').value;
+  const {data,error}=await sb.from('vendor_promotion_packages').select('package_code,title,duration_days,price_sar')
+   .eq('target_type',type).eq('is_active',true).order('duration_days');
+  v$('vendorPromotionPackage').innerHTML=error?'<option value="">تعذر تحميل الباقات</option>':
+   (data||[]).map(p=>`<option value="${vEsc(p.package_code)}">${vEsc(p.title)} · ${p.duration_days} يوم · ${vMoney(p.price_sar)}</option>`).join('')||'<option value="">لا توجد باقات</option>';
+ }
+ v$('vendorPromotionTargetType').addEventListener('change',loadVendorPromotables);
+ v$('vendorPromotionForm').addEventListener('submit',async e=>{
+  e.preventDefault();if(!needAuth())return;
+  if(!vState.myStore){vMsg('vendorPromotionMsg','لا يوجد متجر مرتبط بحسابك.');return;}
+  const targetType=v$('vendorPromotionTargetType').value,targetId=v$('vendorPromotionTarget').value,packageCode=v$('vendorPromotionPackage').value;
+  if(!targetId||!packageCode){vMsg('vendorPromotionMsg','اختر العنصر والباقة.');return;}
+  const {data,error}=await sb.rpc('create_vendor_promotion_request',{
+   p_target_type:targetType,p_target_id:String(targetId),p_package_code:packageCode
+  });
+  if(error){vMsg('vendorPromotionMsg','تعذر إنشاء طلب الترويج: '+error.message);return;}
+  vMsg('vendorPromotionMsg','تم تسجيل طلب الترويج بانتظار تفعيل الدفع. لم يتم خصم مبلغ ولم يبدأ الترويج بعد.');
+  await loadVendorPromotionHistory();
+ });
+ async function loadVendorPromotionHistory(){
+  if(!currentUser)return;
+  const {data,error}=await sb.from('vendor_promotions').select('id,target_type,target_id,package_code,amount_sar,duration_days,status,payment_status,created_at')
+   .eq('owner_id',currentUser.id).order('created_at',{ascending:false}).limit(100);
+  const box=v$('vendorPromotionHistory');if(!box)return;
+  if(error){box.innerHTML='<div class="vendor-muted-note">تعذر تحميل طلبات الترويج.</div>';return;}
+  box.innerHTML=(data||[]).map(p=>`<div class="vendor-state"><strong>${vEsc(p.target_type)} · ${vEsc(p.package_code)}</strong><div class="vendor-muted-note">${vMoney(p.amount_sar)} · ${p.duration_days} يوم · ${vEsc(vStatusLabel(p.status))} · ${vEsc(vStatusLabel(p.payment_status))}</div></div>`).join('')||'<div class="vendor-muted-note">لا توجد طلبات ترويج.</div>';
+ }
+ async function loadVendorFinance(){
+  if(!currentUser)return;
+  const [ledger,payouts]=await Promise.all([
+   sb.from('vendor_financial_ledger').select('id,entry_type,description,amount_sar,created_at,reference_code').eq('owner_id',currentUser.id).order('created_at',{ascending:false}).limit(100),
+   sb.from('vendor_payouts').select('id,amount_sar,status,scheduled_for,paid_at,provider_reference,created_at').eq('owner_id',currentUser.id).order('created_at',{ascending:false}).limit(100)
+  ]);
+  const ledgerBox=v$('vendorLedgerRows'),payoutBox=v$('vendorPayoutRows');
+  if(ledger.error){ledgerBox.innerHTML='<div class="vendor-muted-note">سجل المستحقات غير متاح حتى تفعيل جداول النظام المالي.</div>';v$('vendorLedgerBalance').textContent='غير متاح';}
+  else{
+   const rows=ledger.data||[],balance=rows.reduce((sum,r)=>sum+Number(r.amount_sar||0),0);
+   v$('vendorLedgerBalance').textContent=vMoney(balance);
+   ledgerBox.innerHTML=rows.length?`<table class="vendor-table"><thead><tr><th>النوع</th><th>الوصف</th><th>المبلغ</th><th>التاريخ</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${vEsc(r.entry_type)}</td><td>${vEsc(r.description||'')}</td><td>${vMoney(r.amount_sar)}</td><td>${new Date(r.created_at).toLocaleDateString('ar-SA')}</td></tr>`).join('')}</tbody></table>`:'<div class="vendor-muted-note">لا توجد قيود مالية مؤكدة حتى الآن.</div>';
+  }
+  if(payouts.error)payoutBox.innerHTML='<div class="vendor-muted-note">سجل التحويلات غير متاح حالياً.</div>';
+  else{
+   const rows=payouts.data||[];
+   payoutBox.innerHTML=rows.length?`<table class="vendor-table"><thead><tr><th>المبلغ</th><th>الحالة</th><th>تاريخ الجدولة</th><th>تاريخ التنفيذ</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${vMoney(r.amount_sar)}</td><td>${vEsc(vStatusLabel(r.status))}</td><td>${r.scheduled_for?new Date(r.scheduled_for).toLocaleDateString('ar-SA'):'—'}</td><td>${r.paid_at?new Date(r.paid_at).toLocaleDateString('ar-SA'):'—'}</td></tr>`).join('')}</tbody></table>`:'<div class="vendor-muted-note">لا توجد تحويلات مسجلة. لن يظهر تحويل قبل تسجيله من نظام التسوية.</div>';
+  }
+ }
+
+
+ async function loadActiveVendorPromotions(){
+  const now=new Date().toISOString();
+  const {data,error}=await sb.from('vendor_promotions')
+   .select('target_type,target_id,status,payment_status,starts_at,ends_at')
+   .eq('status','active').eq('payment_status','paid')
+   .lte('starts_at',now).gt('ends_at',now).limit(1000);
+  if(error){console.info('Active promotion placements are not available yet:',error.message);return;}
+  vState.promotedStores.clear();vState.promotedProducts.clear();vState.promotedAds.clear();
+  (data||[]).forEach(p=>{
+   if(p.target_type==='store')vState.promotedStores.add(String(p.target_id));
+   if(p.target_type==='product')vState.promotedProducts.add(String(p.target_id));
+   if(p.target_type==='ad')vState.promotedAds.add(String(p.target_id));
+  });
+ }
+ function applyPromotedAdOrdering(){
+  const box=v$('ads');if(!box||!vState.promotedAds.size)return;
+  const cards=[...box.querySelectorAll('.ad-square-card')];
+  cards.forEach(card=>{
+   const opener=card.querySelector('[onclick*="openAdDetail"]');
+   const match=opener?.getAttribute('onclick')?.match(/openAdDetail\('([^']+)'\)/);
+   const id=match?.[1];
+   const promoted=!!id&&vState.promotedAds.has(String(id));
+   card.dataset.promoted=promoted?'1':'0';
+   if(promoted&&!card.querySelector('.vendor-sponsored-label')){
+    const label=document.createElement('span');
+    label.className='vendor-sponsored-label vendor-pill';
+    label.textContent='إعلان مروّج';
+    const body=card.querySelector('.adbody');
+    if(body)body.insertBefore(label,body.firstChild);
+   }
+  });
+  cards.sort((a,b)=>Number(b.dataset.promoted)-Number(a.dataset.promoted));
+  cards.forEach(card=>box.appendChild(card));
+ }
+ const originalRenderVendorAds=window.renderAdsFromCache;
+ if(typeof originalRenderVendorAds==='function'){
+  window.renderAdsFromCache=function(...args){
+   const result=originalRenderVendorAds.apply(this,args);
+   applyPromotedAdOrdering();
+   return result;
+  };
+ }
+
+ window.openVendorDashboard=async()=>{
+  if(!needAuth())return;
+  showPage('vendor-dashboard');
+  await loadVendorStoreWorkspace();
+ };
+ document.querySelectorAll('[data-vendor-dashboard]').forEach(button=>button.addEventListener('click',()=>{if(typeof closeDrawer==='function')closeDrawer();window.openVendorDashboard();}));
+ v$('vendorCircleRail')?.addEventListener('click',e=>{
+  const button=e.target.closest('[data-vendor-id]');if(button)window.openVendorStore(button.dataset.vendorId);
+ });
+ const originalShowPage=window.showPage;
+ if(typeof originalShowPage==='function'){
+  window.showPage=function(page){
+   originalShowPage(page);
+   if(page==='vendors')void loadVendorDirectory();
+  };
+ }
+ sb.auth.onAuthStateChange((_event,session)=>{
+  if(session?.user){
+   setTimeout(()=>{if(!v$('page-vendor-dashboard')?.classList.contains('hidden'))loadVendorStoreWorkspace();},0);
+  }else{
+   vState.myStore=null;vState.myProducts=[];
+  }
+ });
+ // Active paid placements only are ranked first. Pending/unpaid promotion requests never affect search order.
+ void (async()=>{
+  await loadActiveVendorPromotions();
+  await loadVendorDirectory();
+  if(typeof window.renderAdsFromCache==='function')window.renderAdsFromCache();
+ })();
 })();
 </script>
 
