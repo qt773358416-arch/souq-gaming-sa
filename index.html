@@ -693,6 +693,66 @@ body.store-view .top,body.store-view .searchrow{display:none!important}
 }
 </style>
 
+
+<style id="souq-home-reference-design-final">
+/* الصفحة الرئيسية: هوية القيمنق المرجعية، محسّنة للجوال */
+#page-home{padding-bottom:92px}
+.vendor-home-hero{min-height:clamp(165px,27vw,245px)!important;aspect-ratio:3.35/1;max-height:245px;padding:clamp(15px,3vw,28px)!important;margin:12px 0 16px!important;border-radius:22px!important}
+.vendor-home-hero-copy{max-width:68%!important}
+.vendor-home-hero h1{font-size:clamp(22px,3.8vw,36px)!important}
+.vendor-home-hero p{font-size:clamp(12px,1.5vw,16px)!important}
+.vendor-circle-section{margin:13px 0 15px!important;padding:12px 12px 8px!important;border-radius:18px!important}
+.vendor-circle-head{flex-direction:row!important;align-items:center!important}
+.vendor-circle-head strong{font-size:18px!important}
+.vendor-circle-rail{gap:14px!important;padding:12px 3px 8px!important}
+.vendor-circle{flex-basis:88px!important;width:88px!important;min-height:112px!important}
+.vendor-circle-avatar{width:76px!important;height:76px!important;flex-basis:76px!important}
+.home-personal-categories{margin:13px 0 12px;padding:11px 12px 7px;border:1px solid #2c4050;border-radius:16px;background:linear-gradient(145deg,#121f2b,#101a25)}
+.home-personal-categories-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:5px}
+.home-personal-categories-head strong{font-size:15px;color:#eef7fa}
+.home-personal-categories-head span{font-size:11px;color:#a9bac7}
+.home-personal-categories .categories{display:flex!important;flex-wrap:nowrap!important;overflow-x:auto!important;gap:7px!important;margin:5px 0 2px!important;padding:4px 1px 8px!important;scrollbar-width:none}
+.home-personal-categories .categories::-webkit-scrollbar{display:none}
+.home-personal-categories .chip{flex:0 0 auto!important;border-radius:999px!important;padding:8px 13px!important;font-size:12px!important;white-space:nowrap!important;background:#1d2b39!important;border:1px solid #30485a!important;color:#e8f3f8!important}
+.home-personal-categories .chip.selected{background:#123e4b!important;border-color:#16c7d9!important;color:#7ce9f5!important}
+#page-home .listing-tools{margin-top:10px!important}
+#page-home>.row.space{margin-top:16px!important}
+#page-home>.row.space h2{font-size:19px!important}
+.vendor-home-shortcut,.homeStoreTicker,.store-ticker{display:none!important}
+.souq-side-float{position:fixed;z-index:30;bottom:calc(100px + env(safe-area-inset-bottom));width:66px;min-height:66px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:6px 3px!important;border:2px solid #dce8ef!important;background:#fff!important;color:#10202b!important;box-shadow:0 5px 20px #0006!important;font-size:10px!important;font-weight:900!important;line-height:1.15!important}
+.souq-side-float .float-icon{font-size:23px;line-height:1.1}
+.souq-side-float.ai{left:10px}
+.souq-side-float.news{right:10px}
+.souq-side-float:active{transform:scale(.96)}
+.souq-float-panel{position:fixed;z-index:31;bottom:calc(174px + env(safe-area-inset-bottom));width:min(300px,calc(100vw - 32px));max-height:55vh;overflow:auto;padding:15px;border-radius:18px;border:1px solid #3c6174;background:#12212d;color:#eef7fa;box-shadow:0 15px 45px #0009}
+.souq-float-panel.ai-panel{left:12px}.souq-float-panel.news-panel{right:12px}
+.souq-float-panel h3{margin:0 0 8px;color:#70d9f0;font-size:16px}
+.souq-float-panel p{margin:0;color:#b9cbd4;font-size:12px;line-height:1.7}
+.souq-float-panel button.close-float{float:left;padding:3px 8px;background:#203644;color:#fff}
+@media(max-width:600px){
+ .vendor-home-hero{aspect-ratio:1.95/1!important;min-height:168px!important;max-height:205px!important;padding:17px 14px!important;border-radius:19px!important}
+ .vendor-home-hero-copy{max-width:78%!important}
+ .vendor-home-hero h1{font-size:21px!important;max-width:100%!important}
+ .vendor-home-hero p{font-size:12px!important;line-height:1.6!important;max-width:100%!important}
+ .vendor-home-hero .primary{padding:9px 15px!important;font-size:12px!important}
+ .vendor-home-hero:after{font-size:78px!important;left:8px!important;bottom:-18px!important}
+ .vendor-circle-section{padding:10px 9px 6px!important}
+ .vendor-circle-head strong{font-size:15px!important}
+ .vendor-circle{flex-basis:76px!important;width:76px!important;min-height:102px!important;gap:7px!important}
+ .vendor-circle-avatar{width:66px!important;height:66px!important;flex-basis:66px!important}
+ .vendor-circle-name{font-size:11px!important;max-width:76px!important}
+ .vendor-circle-verified{bottom:32px!important;right:2px!important}
+ .home-personal-categories{padding:9px 9px 5px!important}
+ .home-personal-categories-head strong{font-size:13px!important}
+ .home-personal-categories .chip{font-size:11px!important;padding:7px 11px!important}
+ .souq-side-float{width:60px;min-height:60px;bottom:calc(91px + env(safe-area-inset-bottom));font-size:9px!important}
+ .souq-side-float .float-icon{font-size:21px}
+ .souq-side-float.ai{left:7px}.souq-side-float.news{right:7px}
+ .souq-float-panel{bottom:calc(160px + env(safe-area-inset-bottom))}
+}
+@media(min-width:761px){.souq-side-float{bottom:28px}.souq-float-panel{bottom:105px}}
+</style>
+
 </head>
 <body class="theme-dark">
 <div class="wrap">
@@ -726,22 +786,21 @@ body.store-view .top,body.store-view .searchrow{display:none!important}
 </div>
 
 <div class="vendor-circle-section" id="vendorCircleSection">
- <div class="vendor-circle-head"><strong>👑 المتاجر المميزة</strong><button class="linkbtn" type="button" data-go="vendors">عرض جميع المتاجر ←</button></div>
+ <div class="vendor-circle-head"><strong>👑 المتاجر</strong><button class="linkbtn" type="button" data-go="vendors">عرض جميع المتاجر ←</button></div>
  <div class="vendor-circle-rail" id="vendorCircleRail"><div class="muted">جارٍ تحميل المتاجر...</div></div>
 </div>
-<div class="vendor-home-shortcut" aria-label="اختصارات السوق">
- <button class="secondary" type="button" data-go="searchpage"><span class="shortcut-icon">▦</span><span>جميع الأقسام</span></button>
- <button class="secondary" type="button" data-go="myads"><span class="shortcut-icon">🎮</span><span>إعلانات الأفراد</span></button>
- <button class="secondary" type="button" data-go="store"><span class="shortcut-icon">🛒</span><span>متجر السوق</span></button>
- <button class="primary" type="button" data-vendor-dashboard><span class="shortcut-icon">🏬</span><span>افتح متجرك</span></button>
+<div class="home-personal-categories" aria-label="تصنيفات إعلانات الأفراد">
+ <div class="home-personal-categories-head"><strong>تصفح إعلانات الأفراد</strong><span>اختر التصنيف</span></div>
+ <div class="categories" id="categories">
+  <button class="chip selected" data-category="">الكل</button>
+  <button class="chip" data-category="كمبيوترات">كمبيوترات</button>
+  <button class="chip" data-category="قطع الكمبيوتر">قطع الكمبيوتر</button>
+  <button class="chip" data-category="أجهزة الألعاب">أجهزة الألعاب</button>
+  <button class="chip" data-category="شاشات وملحقات">شاشات وملحقات</button>
+  <button class="chip" data-category="جوالات وإلكترونيات">جوالات وإلكترونيات</button>
+  <button class="chip" data-category="خدمات وصيانة">خدمات وصيانة</button>
+ </div>
 </div>
-
-<div class="store-ticker" id="homeStoreTicker" aria-label="منتجات المتجر المتحركة">
- <div class="store-ticker-head"><strong>🛍️ منتجات المتجر</strong></div>
- <div class="store-ticker-viewport" id="storeTickerViewport"><div class="store-ticker-track" id="storeTickerTrack"><div class="store-ticker-empty">جارٍ تحميل منتجات المتجر...</div></div></div>
-</div>
-
-<div class="categories" id="categories"><button class="chip selected" data-category="">الكل</button><button class="chip" data-category="كمبيوترات">كمبيوترات</button><button class="chip" data-category="قطع الكمبيوتر">قطع الكمبيوتر</button><button class="chip" data-category="أجهزة الألعاب">أجهزة الألعاب</button><button class="chip" data-category="شاشات وملحقات">شاشات وملحقات</button><button class="chip" data-category="جوالات وإلكترونيات">جوالات وإلكترونيات</button><button class="chip" data-category="خدمات وصيانة">خدمات وصيانة</button></div>
 <div class="listing-tools">
  <div class="listing-tools-title"><strong>تصفح الإعلانات</strong><span class="muted" id="activeFilterLabel">كل الأقسام</span></div>
  <button class="secondary smart-filter-toggle" id="toggleListingFilters" type="button" aria-expanded="false" aria-controls="listingAdvanced">
@@ -2159,6 +2218,34 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   await loadVendorDirectory();
   if(typeof window.renderAdsFromCache==='function')window.renderAdsFromCache();
  })();
+})();
+</script>
+
+
+<button class="souq-side-float ai" id="souqAiFloat" type="button" aria-label="مساعد القيمنق الذكي">
+ <span class="float-icon">✦</span><span>مساعد القيمنق</span>
+</button>
+<button class="souq-side-float news" id="souqNewsFloat" type="button" aria-label="أخبار القيمنق">
+ <span class="float-icon">📰</span><span>أخبار القيمنق</span>
+</button>
+<section class="souq-float-panel ai-panel hidden" id="souqAiPanel" aria-live="polite">
+ <button class="close-float" type="button" data-close-float="souqAiPanel">×</button>
+ <h3>✦ مساعد القيمنق</h3>
+ <p>مساعد متخصص لمقارنة أجهزة الكمبيوتر وقطعها وأجهزة الألعاب واختيار المنتجات المناسبة. يلزم ربط خدمة الذكاء الاصطناعي بمفتاح API آمن من الخادم لتفعيل المحادثة الذكية.</p>
+</section>
+<section class="souq-float-panel news-panel hidden" id="souqNewsPanel" aria-live="polite">
+ <button class="close-float" type="button" data-close-float="souqNewsPanel">×</button>
+ <h3>📰 أخبار القيمنق</h3>
+ <p>قناة أخبار السوق والقيمنق. ستظهر الأخبار هنا بعد ربط مصدر أخبار موثوق أو لوحة نشر الأخبار.</p>
+</section>
+<script id="souq-home-float-actions">
+(()=>{
+ const ai=document.getElementById('souqAiFloat'),news=document.getElementById('souqNewsFloat');
+ const aiPanel=document.getElementById('souqAiPanel'),newsPanel=document.getElementById('souqNewsPanel');
+ const toggle=(panel,other)=>{if(!panel)return;other?.classList.add('hidden');panel.classList.toggle('hidden');};
+ ai?.addEventListener('click',()=>toggle(aiPanel,newsPanel));
+ news?.addEventListener('click',()=>toggle(newsPanel,aiPanel));
+ document.querySelectorAll('[data-close-float]').forEach(b=>b.addEventListener('click',()=>document.getElementById(b.dataset.closeFloat)?.classList.add('hidden')));
 })();
 </script>
 
