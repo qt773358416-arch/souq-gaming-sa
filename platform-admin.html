@@ -1,66 +1,476 @@
+```html
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#101820"><title>لوحة الإدارة | سوق القيمنق السعودي</title>
+<meta name="theme-color" content="#101820">
+<title>لوحة الإدارة | سوق القيمنق السعودي</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{color-scheme:dark;--bg:#101820;--panel:#19232e;--panel2:#202d3a;--line:#344454;--text:#f4f7fb;--muted:#aab8c6;--brand:#3888d8;--brand2:#2367ad;--danger:#a83d48}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px Tahoma,Arial,sans-serif;line-height:1.65}button,input{font:inherit}button{cursor:pointer;border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-weight:700;background:var(--panel2);color:var(--text)}button:disabled{opacity:.55;cursor:wait}.primary{background:var(--brand);border-color:var(--brand);color:#fff}.danger{background:#3a2027;border-color:#67343d}.hidden{display:none!important}.wrap{max-width:1500px;margin:auto;padding:18px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}.brand{display:flex;align-items:center;gap:12px}.mark{width:44px;height:44px;border-radius:13px;background:linear-gradient(135deg,var(--brand),#72b8ff);display:grid;place-items:center;font-weight:900;color:#071522;font-size:20px}.top h1{font-size:clamp(20px,3vw,29px);margin:0}.muted{color:var(--muted)}.panel,.stat,.tile{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:16px}.login{max-width:520px;margin:8vh auto}.field{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;background:#0e1720;color:var(--text)}label{display:grid;gap:7px;color:var(--muted);font-size:13px}.form{display:grid;grid-template-columns:1fr 1fr;gap:11px}.full{grid-column:1/-1}.msg{padding:11px;background:var(--panel2);border-radius:10px;margin-top:12px;overflow-wrap:anywhere}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}.stat span{display:block;color:var(--muted);font-size:12px}.stat b{font-size:15px}.layout{display:grid;grid-template-columns:245px minmax(0,1fr);gap:14px}.side{align-self:start;position:sticky;top:12px}.nav{display:grid;gap:6px}.nav button{text-align:right;background:transparent;border-color:transparent}.nav button.active,.nav button:hover{background:#203d58;border-color:#35658d}.content{min-width:0}.view{display:none}.view.active{display:block}.head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:14px}.tile h3{margin:0 0 5px}.tile p{margin:0;color:var(--muted);font-size:13px}.tile button{margin-top:12px}.frame{width:100%;height:calc(100vh - 190px);min-height:650px;border:1px solid var(--line);border-radius:12px;background:#fff}.notice{background:#332d1c;border:1px solid #67562c;color:#f3dfaa;border-radius:11px;padding:12px;margin:12px 0}.pill{background:#1d3b30;color:#9de2c1;border-radius:30px;padding:4px 10px;font-size:12px}.actions{display:flex;gap:8px;flex-wrap:wrap}a{color:#8bc4ff}@media(max-width:850px){.layout{grid-template-columns:1fr}.side{position:static}.nav{grid-template-columns:repeat(2,minmax(0,1fr))}.stats{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr 1fr}}@media(max-width:560px){.wrap{padding:10px}.form{grid-template-columns:1fr}.full{grid-column:auto}.grid{grid-template-columns:1fr}.frame{height:75vh;min-height:600px}.nav{grid-template-columns:1fr 1fr}}
-</style></head><body><main class="wrap">
-<header class="top"><div class="brand"><div class="mark">SG</div><div><h1>لوحة إدارة سوق القيمنق السعودي</h1><div class="muted">مركز تحكم موحّد للمنصة والمتجر</div></div></div><div class="actions"><a href="./" style="align-self:center">العودة إلى السوق</a><button id="logout" class="hidden">تسجيل الخروج</button></div></header>
-<section id="login" class="panel login"><h2>تسجيل دخول الإدارة</h2><p class="muted">استخدم بريد المدير المعتمد لاستلام رمز من 6 أرقام، أو سجّل عبر Google. تسجيل الدخول وحده لا يمنح صلاحية الإدارة.</p>
-<form id="emailForm" class="form"><label class="full">البريد الإلكتروني<input id="email" class="field" type="email" autocomplete="email" required placeholder="admin@example.com"></label><button id="sendOtp" class="primary full">إرسال رمز التحقق للبريد</button></form>
-<form id="verifyForm" class="form hidden" style="margin-top:12px"><label class="full">رمز التحقق<input id="otp" class="field" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" required placeholder="000000"></label><button id="verifyOtp" class="primary">تأكيد الدخول</button><button type="button" id="resendOtp">إعادة إرسال الرمز</button></form>
-<div style="text-align:center;margin:14px;color:var(--muted)">أو</div><button id="googleLogin" style="width:100%">الدخول باستخدام Google</button><div id="loginMsg" class="msg" role="status">رمز التحقق يصل إلى البريد الإلكتروني وليس رسالة SMS.</div></section>
-<section id="app" class="hidden"><div class="stats"><div class="stat"><span>الحساب</span><b id="who">—</b></div><div class="stat"><span>إدارة المنصة</span><b id="platformRole">—</b></div><div class="stat"><span>إدارة المتجر</span><b id="storeRole">—</b></div><div class="stat"><span>الجلسة</span><b>متصل</b></div></div>
-<div class="layout"><aside class="panel side"><h3 style="margin-top:0">أقسام الإدارة</h3><nav class="nav">
-<button class="active" data-view="home">الرئيسية</button><button data-view="platform">إدارة السوق والإعلانات</button><button data-view="store">إدارة المتجر والمنتجات</button><button data-view="vendors">المتاجر والبائعون</button><button data-view="banners">البنرات والواجهة</button><button data-view="links">الأزرار والروابط</button><button data-view="news">القناة الإخبارية</button><button data-view="ai">الذكاء الاصطناعي</button><button data-view="wallets">المحافظ والمدفوعات</button><button data-view="users">العملاء والصلاحيات</button><button data-view="reports">التقارير والعمولات</button><button data-view="settings">الإعدادات العامة</button></nav></aside>
-<div class="content">
-<section id="view-home" class="panel view active"><div class="head"><div><h2>الرئيسية</h2><p class="muted">إدارة المنصة من مكان واحد مع الإبقاء على لوحتي الإدارة الحاليتين.</p></div><span class="pill">مركز الإدارة</span></div><div class="grid">
-<article class="tile"><h3>إدارة السوق</h3><p>الإعلانات، مراجعة المحتوى، المستخدمون، التصنيفات، المظهر وسياسة النشر.</p><button class="primary" data-open="platform">فتح إدارة السوق</button></article>
-<article class="tile"><h3>إدارة المتجر</h3><p>الأقسام، المنتجات، الطلبات، الألعاب، الأكواد الرقمية، بطاقات الشحن والحزم.</p><button class="primary" data-open="store">فتح إدارة المتجر</button></article>
-<article class="tile"><h3>المتاجر والبائعون</h3><p>اعتماد المتاجر ومراجعة بيانات البائعين بعد ربط جداول المنصة المعتمدة.</p><button data-open="vendors">عرض القسم</button></article>
-<article class="tile"><h3>البنرات والأزرار</h3><p>التحكم في صور الواجهة والروابط وترتيب ظهورها بعد الربط.</p><button data-open="banners">عرض القسم</button></article>
-<article class="tile"><h3>الأخبار والذكاء الاصطناعي</h3><p>إدارة الأخبار والمساعد الذكي ومفاتيح الخدمات من الخادم.</p><button data-open="news">عرض القسم</button></article>
-<article class="tile"><h3>المحافظ والمدفوعات</h3><p>المحافظ، العمولات، الإيداعات، السحوبات والتسويات وفق سجل مالي آمن.</p><button data-open="wallets">عرض القسم</button></article></div>
-<div class="notice">ملاحظة مهمة: الأقسام الجديدة ظاهرة هنا كواجهات تنظيمية، لكنها لا تنفذ عمليات حفظ أو تعديل حتى يتم ربطها بأسماء الجداول والأعمدة وسياسات RLS الصحيحة. لن أختلق ربطاً قد يضر بيانات المنصة.</div></section>
-<section id="view-platform" class="view"><iframe class="frame" title="إدارة السوق والإعلانات" src="./platform-admin.html"></iframe></section><section id="view-store" class="view"><iframe class="frame" title="إدارة المتجر" src="./admin.html"></iframe></section>
-<section id="view-vendors" class="panel view"><h2>المتاجر والبائعون</h2><div class="notice">يحتاج هذا القسم إلى تحديد جدول المتاجر الفعلي وحقول حالة المتجر وبيانات البائع وسياسات الوصول. لن يتم تغيير بنية قاعدة البيانات بالتخمين.</div><p>المهام المحددة: اعتماد/رفض متجر، إيقافه، تعديل بيانات العرض، مراجعة البائعين، والبحث والتصفية.</p></section>
-<section id="view-banners" class="panel view"><h2>البنرات والتحكم بالواجهة</h2><div class="notice">غير مربوط بعد بجدول البنرات الحالي. هذه النسخة لا تغيّر أي شيء في الصفحة الرئيسية.</div><p>المهام: صورة الكمبيوتر والجوال، العنوان، الرابط، الترتيب، الإظهار والإخفاء، وتواريخ بداية ونهاية العرض.</p></section>
-<section id="view-links" class="panel view"><h2>الأزرار والروابط</h2><div class="notice">لا يتم تغيير وجهات الأزرار الحالية إلا بعد معرفة مفاتيحها وطريقة قراءة الواجهة لإعداداتها.</div><p>المهام: نص الزر، الرابط، مكان الظهور، الترتيب، والتفعيل.</p></section>
-<section id="view-news" class="panel view"><h2>القناة الإخبارية</h2><div class="notice">تحتاج جدول أخبار ومصدر محتوى موثوق أو إدخالاً يدوياً، ثم ربط قسم الأخبار في الموقع.</div><p>المهام: إضافة خبر، صورة، مصدر، تصنيف، مسودة/منشور، تثبيت الخبر، وإيقاف النشر.</p></section>
-<section id="view-ai" class="panel view"><h2>إعدادات الذكاء الاصطناعي</h2><div class="notice">لا تضع مفتاح API في كود المتصفح. يجب حفظه في Vercel Environment Variables أو Supabase Edge Function Secrets.</div><p>المهام: تشغيل المساعد، رسالة الترحيب، حدود الاستخدام، اختيار النموذج، وقياس الاستهلاك.</p></section>
-<section id="view-wallets" class="panel view"><h2>المحافظ والمدفوعات</h2><div class="notice">لن يتم تعديل الرصيد من المتصفح. التنفيذ يحتاج مزود دفع مرخصاً، وسجل حركات غير قابل للتلاعب، وعمليات قاعدة بيانات ذرية، والتحقق من إشعارات الدفع.</div><p>المهام: محفظة العميل، محفظة البائع، محفظة المتجر، رصيد معلق/متاح، عمولة المنصة (النسبة المعتمدة حالياً في المشروع 2%)، الإيداع، السحب، الاسترداد والتسوية.</p></section>
-<section id="view-users" class="panel view"><h2>العملاء والصلاحيات</h2><p>إدارة مستخدمي السوق متاحة من لوحة السوق الأصلية. صلاحيات الموظفين يجب أن تدار من قاعدة البيانات بسياسات تمنع المستخدم من منح نفسه صلاحية مدير.</p><button class="primary" data-open="platform">فتح إدارة السوق</button></section>
-<section id="view-reports" class="panel view"><h2>التقارير والعمولات</h2><div class="notice">لن تظهر أرقام مبيعات أو أرباح وهمية. يلزم ربط الطلبات والمدفوعات والعمولات من مصادرها الفعلية.</div><p>التقارير المستهدفة: المبيعات، الطلبات، رسوم المنصة، أرصدة البائعين، السحوبات، أداء المتاجر والمنتجات.</p></section>
-<section id="view-settings" class="panel view"><h2>الإعدادات العامة</h2><p>المظهر وسياسة النشر موجودان في لوحة إدارة السوق الأصلية. إعدادات الدفع والبريد وOAuth تُدار من إعدادات الخدمات المرتبطة.</p><button class="primary" data-open="platform">فتح إعدادات السوق</button></section>
-</div></div></section></main>
+:root{
+ --bg:#080f1b;--panel:#111f31;--panel2:#17283d;--line:rgba(151,180,215,.16);
+ --text:#f4f8ff;--muted:#91a5bd;--brand:#54d7ff;--brand2:#648cff;
+ --danger:#ff647c;--shadow:0 18px 55px rgba(0,0,0,.28)
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+ margin:0;min-height:100vh;color:var(--text);font:15px/1.7 "Tahoma","Arial",sans-serif;
+ background:radial-gradient(ellipse at 12% 0%,rgba(54,119,190,.18),transparent 34%),
+ radial-gradient(ellipse at 90% 12%,rgba(35,195,211,.10),transparent 28%),var(--bg)
+}
+button,input{font:inherit}
+button{
+ cursor:pointer;border:1px solid var(--line);border-radius:12px;padding:11px 16px;
+ font-weight:800;background:linear-gradient(180deg,#203650,#17283d);color:var(--text);
+ transition:transform .18s,border-color .18s,filter .18s
+}
+button:hover{transform:translateY(-1px);border-color:rgba(84,215,255,.5);filter:brightness(1.08)}
+button:disabled{opacity:.5;cursor:wait;transform:none}
+.primary{background:linear-gradient(135deg,var(--brand),var(--brand2));border:0;color:#071321;box-shadow:0 8px 22px rgba(67,177,255,.2)}
+.danger{background:rgba(255,75,105,.13);border-color:rgba(255,100,124,.3)}
+.hidden{display:none!important}
+.wrap{max-width:1600px;margin:auto;padding:clamp(12px,2vw,28px)}
+.top{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:20px;padding:10px 2px}
+.brand{display:flex;align-items:center;gap:14px}
+.mark{
+ width:52px;height:52px;border-radius:17px;background:linear-gradient(135deg,var(--brand),#648cff);
+ display:grid;place-items:center;font-weight:1000;color:#071321;font-size:20px;
+ box-shadow:0 10px 28px rgba(73,166,255,.22);border:1px solid rgba(255,255,255,.25)
+}
+.top h1{font-size:clamp(21px,3vw,31px);margin:0;letter-spacing:-.5px}
+.muted{color:var(--muted)}
+.panel,.stat,.tile{
+ background:linear-gradient(145deg,rgba(21,37,57,.96),rgba(13,26,43,.96));
+ border:1px solid var(--line);border-radius:20px;padding:clamp(15px,1.8vw,23px);box-shadow:var(--shadow)
+}
+.login{max-width:540px;margin:7vh auto}
+.login h2{margin:0 0 8px;font-size:25px}
+.field{width:100%;padding:13px 14px;border:1px solid rgba(151,180,215,.2);border-radius:12px;background:#0a1524;color:var(--text);outline:none}
+.field:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(84,215,255,.12)}
+label{display:grid;gap:7px;color:#b7c8dc;font-size:13px;font-weight:700}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.full{grid-column:1/-1}
+.msg{padding:12px 14px;background:rgba(84,215,255,.07);border:1px solid rgba(84,215,255,.14);border-radius:12px;margin-top:12px;overflow-wrap:anywhere;color:#cceeff}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:16px}
+.stat{min-width:0}
+.stat span{display:block;color:var(--muted);font-size:12px;margin-bottom:4px}
+.stat b{font-size:15px;overflow-wrap:anywhere}
+.layout{display:grid;grid-template-columns:270px minmax(0,1fr);gap:16px;align-items:start}
+.side{align-self:start;position:sticky;top:14px;padding:16px}
+.side h3{margin:0 0 12px}
+.nav{display:grid;gap:7px}
+.nav button{
+ text-align:right;background:transparent;border:1px solid transparent;color:#c8d8eb;
+ padding:11px 13px;min-height:46px
+}
+.nav button:before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:#66829f;margin-left:11px;vertical-align:2px}
+.nav button.active,.nav button:hover{background:linear-gradient(100deg,rgba(84,215,255,.15),rgba(100,140,255,.1));border-color:rgba(84,215,255,.22);color:#fff}
+.nav button.active:before{background:var(--brand);box-shadow:0 0 12px var(--brand)}
+.content{min-width:0}
+.view{display:none;min-width:0}
+.view.active{display:block;animation:fadeIn .22s ease}
+@keyframes fadeIn{from{opacity:.55;transform:translateY(4px)}to{opacity:1;transform:none}}
+.head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin-top:16px}
+.tile{padding:18px;transition:transform .2s,border-color .2s}
+.tile:hover{transform:translateY(-3px);border-color:rgba(84,215,255,.35)}
+.tile h3{margin:0 0 7px;font-size:17px}
+.tile p{margin:0;color:var(--muted);font-size:13px}
+.tile button{margin-top:15px}
+.frame{width:100%;height:calc(100vh - 185px);min-height:680px;border:1px solid var(--line);border-radius:16px;background:#080f1b;box-shadow:var(--shadow)}
+.notice{background:rgba(255,197,88,.09);border:1px solid rgba(255,197,88,.22);color:#f5dca2;border-radius:13px;padding:14px;margin:14px 0}
+.pill{background:rgba(81,214,162,.12);border:1px solid rgba(81,214,162,.2);color:#9de9c8;border-radius:30px;padding:5px 12px;font-size:12px;font-weight:800}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+a{color:var(--brand);text-decoration:none}
+a:hover{text-decoration:underline}
+h2{font-size:clamp(20px,2.2vw,26px);margin:0 0 8px}
+@media(max-width:1050px){
+ .layout{grid-template-columns:1fr}
+ .side{position:static}
+ .nav{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:650px){
+ .wrap{padding:10px}
+ .top{align-items:flex-start}
+ .brand{gap:10px}
+ .mark{width:44px;height:44px;border-radius:14px}
+ .stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .stat{padding:12px;border-radius:14px}
+ .layout{gap:10px}
+ .side,.panel{border-radius:16px;padding:13px}
+ .nav{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+ .nav button{font-size:12px;padding:9px 8px;min-height:44px}
+ .grid{grid-template-columns:1fr;gap:9px}
+ .form{grid-template-columns:1fr}
+ .full{grid-column:auto}
+ .frame{height:78vh;min-height:560px;border-radius:12px}
+}
+@media(prefers-reduced-motion:reduce){
+ *{scroll-behavior:auto!important;animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+<header class="top">
+ <div class="brand">
+  <div class="mark">SG</div>
+  <div>
+   <h1>لوحة إدارة سوق القيمنق السعودي</h1>
+   <div class="muted">مركز تحكم موحّد للمنصة والمتجر</div>
+  </div>
+ </div>
+ <div class="actions">
+  <a href="./" style="align-self:center">العودة إلى السوق</a>
+  <button id="logout" class="hidden">تسجيل الخروج</button>
+ </div>
+</header>
+
+<section id="login" class="panel login">
+ <h2>تسجيل دخول الإدارة</h2>
+ <p class="muted">استخدم بريد المدير المعتمد لاستلام رمز من 6 أرقام، أو سجّل عبر Google. تسجيل الدخول وحده لا يمنح صلاحية الإدارة.</p>
+
+ <form id="emailForm" class="form">
+  <label class="full">
+   البريد الإلكتروني
+   <input id="email" class="field" type="email" autocomplete="email" required placeholder="admin@example.com">
+  </label>
+  <button id="sendOtp" class="primary full">إرسال رمز التحقق للبريد</button>
+ </form>
+
+ <form id="verifyForm" class="form hidden" style="margin-top:12px">
+  <label class="full">
+   رمز التحقق
+   <input id="otp" class="field" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" required placeholder="000000">
+  </label>
+  <button id="verifyOtp" class="primary">تأكيد الدخول</button>
+  <button type="button" id="resendOtp">إعادة إرسال الرمز</button>
+ </form>
+
+ <div style="text-align:center;margin:14px;color:var(--muted)">أو</div>
+ <button id="googleLogin" style="width:100%">الدخول باستخدام Google</button>
+ <div id="loginMsg" class="msg" role="status">رمز التحقق يصل إلى البريد الإلكتروني وليس رسالة SMS.</div>
+</section>
+
+<section id="app" class="hidden">
+ <div class="stats">
+  <div class="stat"><span>الحساب</span><b id="who">—</b></div>
+  <div class="stat"><span>إدارة المنصة</span><b id="platformRole">—</b></div>
+  <div class="stat"><span>إدارة المتجر</span><b id="storeRole">—</b></div>
+  <div class="stat"><span>الجلسة</span><b>متصل</b></div>
+ </div>
+
+ <div class="layout">
+  <aside class="panel side">
+   <h3 style="margin-top:0">أقسام الإدارة</h3>
+   <nav class="nav">
+    <button class="active" data-view="home">الرئيسية</button>
+    <button data-view="platform">إدارة السوق والإعلانات</button>
+    <button data-view="store">إدارة المتجر والمنتجات</button>
+    <button data-view="vendors">المتاجر والبائعون</button>
+    <button data-view="banners">البنرات والواجهة</button>
+    <button data-view="links">الأزرار والروابط</button>
+    <button data-view="news">القناة الإخبارية</button>
+    <button data-view="ai">الذكاء الاصطناعي</button>
+    <button data-view="wallets">المحافظ والمدفوعات</button>
+    <button data-view="users">العملاء والصلاحيات</button>
+    <button data-view="reports">التقارير والعمولات</button>
+    <button data-view="settings">الإعدادات العامة</button>
+   </nav>
+  </aside>
+
+  <div class="content">
+
+   <section id="view-home" class="panel view active">
+    <div class="head">
+     <div>
+      <h2>الرئيسية</h2>
+      <p class="muted">إدارة المنصة من مكان واحد مع الإبقاء على لوحتي الإدارة الحاليتين.</p>
+     </div>
+     <span class="pill">مركز الإدارة</span>
+    </div>
+
+    <div class="grid">
+     <article class="tile">
+      <h3>إدارة السوق</h3>
+      <p>الإعلانات، مراجعة المحتوى، المستخدمون، التصنيفات، المظهر وسياسة النشر.</p>
+      <button class="primary" data-open="platform">فتح إدارة السوق</button>
+     </article>
+
+     <article class="tile">
+      <h3>إدارة المتجر</h3>
+      <p>الأقسام، المنتجات، الطلبات، الألعاب، الأكواد الرقمية، بطاقات الشحن والحزم.</p>
+      <button class="primary" data-open="store">فتح إدارة المتجر</button>
+     </article>
+
+     <article class="tile">
+      <h3>المتاجر والبائعون</h3>
+      <p>اعتماد المتاجر ومراجعة بيانات البائعين بعد ربط جداول المنصة المعتمدة.</p>
+      <button data-open="vendors">عرض القسم</button>
+     </article>
+
+     <article class="tile">
+      <h3>البنرات والأزرار</h3>
+      <p>التحكم في صور الواجهة والروابط وترتيب ظهورها بعد الربط.</p>
+      <button data-open="banners">عرض القسم</button>
+     </article>
+
+     <article class="tile">
+      <h3>الأخبار والذكاء الاصطناعي</h3>
+      <p>إدارة الأخبار والمساعد الذكي ومفاتيح الخدمات من الخادم.</p>
+      <button data-open="news">عرض القسم</button>
+     </article>
+
+     <article class="tile">
+      <h3>المحافظ والمدفوعات</h3>
+      <p>المحافظ، العمولات، الإيداعات، السحوبات والتسويات وفق سجل مالي آمن.</p>
+      <button data-open="wallets">عرض القسم</button>
+     </article>
+    </div>
+
+    <div class="notice">
+     ملاحظة مهمة: الأقسام الجديدة ظاهرة هنا كواجهات تنظيمية، لكنها لا تنفذ عمليات حفظ أو تعديل حتى يتم ربطها بأسماء الجداول والأعمدة وسياسات RLS الصحيحة. لن أختلق ربطاً قد يضر بيانات المنصة.
+    </div>
+   </section>
+
+   <section id="view-platform" class="view">
+    <iframe class="frame" title="إدارة السوق والإعلانات" src="./platform-admin.html"></iframe>
+   </section>
+
+   <section id="view-store" class="view">
+    <iframe class="frame" title="إدارة المتجر" src="./admin.html"></iframe>
+   </section>
+
+   <section id="view-vendors" class="panel view">
+    <h2>المتاجر والبائعون</h2>
+    <div class="notice">يحتاج هذا القسم إلى تحديد جدول المتاجر الفعلي وحقول حالة المتجر وبيانات البائع وسياسات الوصول. لن يتم تغيير بنية قاعدة البيانات بالتخمين.</div>
+    <p>المهام المحددة: اعتماد/رفض متجر، إيقافه، تعديل بيانات العرض، مراجعة البائعين، والبحث والتصفية.</p>
+   </section>
+
+   <section id="view-banners" class="panel view">
+    <h2>البنرات والتحكم بالواجهة</h2>
+    <div class="notice">غير مربوط بعد بجدول البنرات الحالي. هذه النسخة لا تغيّر أي شيء في الصفحة الرئيسية.</div>
+    <p>المهام: صورة الكمبيوتر والجوال، العنوان، الرابط، الترتيب، الإظهار والإخفاء، وتواريخ بداية ونهاية العرض.</p>
+   </section>
+
+   <section id="view-links" class="panel view">
+    <h2>الأزرار والروابط</h2>
+    <div class="notice">لا يتم تغيير وجهات الأزرار الحالية إلا بعد معرفة مفاتيحها وطريقة قراءة الواجهة لإعداداتها.</div>
+    <p>المهام: نص الزر، الرابط، مكان الظهور، الترتيب، والتفعيل.</p>
+   </section>
+
+   <section id="view-news" class="panel view">
+    <h2>القناة الإخبارية</h2>
+    <div class="notice">تحتاج جدول أخبار ومصدر محتوى موثوق أو إدخالاً يدوياً، ثم ربط قسم الأخبار في الموقع.</div>
+    <p>المهام: إضافة خبر، صورة، مصدر، تصنيف، مسودة/منشور، تثبيت الخبر، وإيقاف النشر.</p>
+   </section>
+
+   <section id="view-ai" class="panel view">
+    <h2>إعدادات الذكاء الاصطناعي</h2>
+    <div class="notice">لا تضع مفتاح API في كود المتصفح. يجب حفظه في Vercel Environment Variables أو Supabase Edge Function Secrets.</div>
+    <p>المهام: تشغيل المساعد، رسالة الترحيب، حدود الاستخدام، اختيار النموذج، وقياس الاستهلاك.</p>
+   </section>
+
+   <section id="view-wallets" class="panel view">
+    <h2>المحافظ والمدفوعات</h2>
+    <div class="notice">لن يتم تعديل الرصيد من المتصفح. التنفيذ يحتاج مزود دفع مرخصاً، وسجل حركات غير قابل للتلاعب، وعمليات قاعدة بيانات ذرية، والتحقق من إشعارات الدفع.</div>
+    <p>المهام: محفظة العميل، محفظة البائع، محفظة المتجر، رصيد معلق/متاح، عمولة المنصة (النسبة المعتمدة حالياً في المشروع 2%)، الإيداع، السحب، الاسترداد والتسوية.</p>
+   </section>
+
+   <section id="view-users" class="panel view">
+    <h2>العملاء والصلاحيات</h2>
+    <p>إدارة مستخدمي السوق متاحة من لوحة السوق الأصلية. صلاحيات الموظفين يجب أن تدار من قاعدة البيانات بسياسات تمنع المستخدم من منح نفسه صلاحية مدير.</p>
+    <button class="primary" data-open="platform">فتح إدارة السوق</button>
+   </section>
+
+   <section id="view-reports" class="panel view">
+    <h2>التقارير والعمولات</h2>
+    <div class="notice">لن تظهر أرقام مبيعات أو أرباح وهمية. يلزم ربط الطلبات والمدفوعات والعمولات من مصادرها الفعلية.</div>
+    <p>التقارير المستهدفة: المبيعات، الطلبات، رسوم المنصة، أرصدة البائعين، السحوبات، أداء المتاجر والمنتجات.</p>
+   </section>
+
+   <section id="view-settings" class="panel view">
+    <h2>الإعدادات العامة</h2>
+    <p>المظهر وسياسة النشر موجودان في لوحة إدارة السوق الأصلية. إعدادات الدفع والبريد وOAuth تُدار من إعدادات الخدمات المرتبطة.</p>
+    <button class="primary" data-open="platform">فتح إعدادات السوق</button>
+   </section>
+
+  </div>
+ </div>
+</section>
+</main>
+
 <script>
 (() => {
 'use strict';
+
 const SUPABASE_URL='https://hmcsgkavqdsfwqomxakw.supabase.co';
 const SUPABASE_ANON_KEY='sb_publishable_I2FLI3drU7_xB8tWWGjnOg_b6Sm2j2m';
-const $=id=>document.getElementById(id);let pendingEmail='';let authBusy=false;
-const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+
+const $=id=>document.getElementById(id);
+let pendingEmail='';
+let authBusy=false;
+
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{
+ auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}
+});
+
 const setMsg=t=>{$('loginMsg').textContent=t};
 const platformRole=u=>u?.app_metadata?.platform_admin===true;
-async function storeRole(u){if(!u?.id)return false;const {data,error}=await sb.from('store_admins').select('user_id').eq('user_id',u.id).maybeSingle();if(error)throw new Error('تعذر التحقق من صلاحية مدير المتجر: '+error.message);return !!data;}
-async function showDashboard(u){const isPlatform=platformRole(u);const isStore=await storeRole(u);if(!isPlatform&&!isStore)throw new Error('الحساب غير معتمد كمدير منصة أو مدير متجر. أضف الصلاحية من جهة موثوقة ثم أعد الدخول.');$('who').textContent=u.email||u.user_metadata?.full_name||'حساب Google';$('platformRole').textContent=isPlatform?'مفعّل':'غير مفعّل';$('storeRole').textContent=isStore?'مفعّل':'غير مفعّل';$('login').classList.add('hidden');$('app').classList.remove('hidden');$('logout').classList.remove('hidden');
-// Hide panels the current role cannot open; each original panel also retains its own server-side/RLS checks.
-document.querySelector('[data-view="platform"]').classList.toggle('hidden',!isPlatform);
-document.querySelector('[data-view="store"]').classList.toggle('hidden',!isStore);
+
+async function storeRole(u){
+ if(!u?.id)return false;
+ const {data,error}=await sb.from('store_admins').select('user_id').eq('user_id',u.id).maybeSingle();
+ if(error)throw new Error('تعذر التحقق من صلاحية مدير المتجر: '+error.message);
+ return !!data;
 }
-async function checkExistingSession(){const {data,error}=await sb.auth.getSession();if(error)throw error;if(data.session?.user){try{await showDashboard(data.session.user)}catch(e){setMsg(e.message);await sb.auth.signOut()}}}
-$('emailForm').addEventListener('submit',async e=>{e.preventDefault();if(authBusy)return;authBusy=true;pendingEmail=$('email').value.trim().toLowerCase();$('sendOtp').disabled=true;setMsg('جارٍ إرسال رمز التحقق...');try{const {error}=await sb.auth.signInWithOtp({email:pendingEmail,options:{shouldCreateUser:false}});if(error)throw error;$('verifyForm').classList.remove('hidden');setMsg('تم إرسال رمز من 6 أرقام إلى بريدك.');$('otp').focus()}catch(e){setMsg('تعذر إرسال الرمز: '+(e.message||'خطأ غير معروف'))}finally{authBusy=false;$('sendOtp').disabled=false}});
+
+async function showDashboard(u){
+ const isPlatform=platformRole(u);
+ const isStore=await storeRole(u);
+
+ if(!isPlatform&&!isStore){
+  throw new Error('الحساب غير معتمد كمدير منصة أو مدير متجر. أضف الصلاحية من جهة موثوقة ثم أعد الدخول.');
+ }
+
+ $('who').textContent=u.email||u.user_metadata?.full_name||'حساب Google';
+ $('platformRole').textContent=isPlatform?'مفعّل':'غير مفعّل';
+ $('storeRole').textContent=isStore?'مفعّل':'غير مفعّل';
+ $('login').classList.add('hidden');
+ $('app').classList.remove('hidden');
+ $('logout').classList.remove('hidden');
+
+ document.querySelector('[data-view="platform"]').classList.toggle('hidden',!isPlatform);
+ document.querySelector('[data-view="store"]').classList.toggle('hidden',!isStore);
+}
+
+async function checkExistingSession(){
+ const {data,error}=await sb.auth.getSession();
+ if(error)throw error;
+
+ if(data.session?.user){
+  try{
+   await showDashboard(data.session.user);
+  }catch(e){
+   setMsg(e.message);
+   await sb.auth.signOut();
+  }
+ }
+}
+
+$('emailForm').addEventListener('submit',async e=>{
+ e.preventDefault();
+ if(authBusy)return;
+
+ authBusy=true;
+ pendingEmail=$('email').value.trim().toLowerCase();
+ $('sendOtp').disabled=true;
+ setMsg('جارٍ إرسال رمز التحقق...');
+
+ try{
+  const {error}=await sb.auth.signInWithOtp({
+   email:pendingEmail,
+   options:{shouldCreateUser:false}
+  });
+
+  if(error)throw error;
+
+  $('verifyForm').classList.remove('hidden');
+  setMsg('تم إرسال رمز من 6 أرقام إلى بريدك.');
+  $('otp').focus();
+ }catch(e){
+  setMsg('تعذر إرسال الرمز: '+(e.message||'خطأ غير معروف'));
+ }finally{
+  authBusy=false;
+  $('sendOtp').disabled=false;
+ }
+});
+
 $('resendOtp').addEventListener('click',()=>$('emailForm').requestSubmit());
-$('verifyForm').addEventListener('submit',async e=>{e.preventDefault();if(authBusy)return;authBusy=true;const token=$('otp').value.trim();if(!/^\d{6}$/.test(token)){setMsg('أدخل رمزاً صحيحاً من 6 أرقام.');authBusy=false;return}$('verifyOtp').disabled=true;try{const {data,error}=await sb.auth.verifyOtp({email:pendingEmail||$('email').value.trim().toLowerCase(),token,type:'email'});if(error)throw error;await showDashboard(data.user)}catch(e){setMsg('تعذر الدخول: '+(e.message||'خطأ غير معروف'));await sb.auth.signOut()}finally{authBusy=false;$('verifyOtp').disabled=false}});
-$('googleLogin').addEventListener('click',async()=>{try{const {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.href.split('#')[0]}});if(error)throw error}catch(e){setMsg('تعذر بدء دخول Google: '+e.message)}});
-$('logout').addEventListener('click',async()=>{await sb.auth.signOut();location.reload()});
-function openView(name){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='view-'+name));document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===name));}
-document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>openView(b.dataset.view)));
-document.querySelectorAll('[data-open]').forEach(b=>b.addEventListener('click',()=>openView(b.dataset.open)));
-// Do not run database queries from inside onAuthStateChange; Supabase auth lock can deadlock that pattern.
-sb.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'){ $('app').classList.add('hidden');$('login').classList.remove('hidden');$('logout').classList.add('hidden');} });
-checkExistingSession().catch(e=>setMsg('تعذر استعادة الجلسة: '+(e.message||'خطأ غير معروف')));
+
+$('verifyForm').addEventListener('submit',async e=>{
+ e.preventDefault();
+ if(authBusy)return;
+
+ authBusy=true;
+ const token=$('otp').value.trim();
+
+ if(!/^\d{6}$/.test(token)){
+  setMsg('أدخل رمزاً صحيحاً من 6 أرقام.');
+  authBusy=false;
+  return;
+ }
+
+ $('verifyOtp').disabled=true;
+
+ try{
+  const {data,error}=await sb.auth.verifyOtp({
+   email:pendingEmail||$('email').value.trim().toLowerCase(),
+   token,
+   type:'email'
+  });
+
+  if(error)throw error;
+  await showDashboard(data.user);
+ }catch(e){
+  setMsg('تعذر الدخول: '+(e.message||'خطأ غير معروف'));
+  await sb.auth.signOut();
+ }finally{
+  authBusy=false;
+  $('verifyOtp').disabled=false;
+ }
+});
+
+$('googleLogin').addEventListener('click',async()=>{
+ try{
+  const {error}=await sb.auth.signInWithOAuth({
+   provider:'google',
+   options:{redirectTo:location.href.split('#')[0]}
+  });
+  if(error)throw error;
+ }catch(e){
+  setMsg('تعذر بدء دخول Google: '+e.message);
+ }
+});
+
+$('logout').addEventListener('click',async()=>{
+ await sb.auth.signOut();
+ location.reload();
+});
+
+function openView(name){
+ document.querySelectorAll('.view').forEach(v=>{
+  v.classList.toggle('active',v.id==='view-'+name);
+ });
+ document.querySelectorAll('[data-view]').forEach(b=>{
+  b.classList.toggle('active',b.dataset.view===name);
+ });
+}
+
+document.querySelectorAll('[data-view]').forEach(b=>{
+ b.addEventListener('click',()=>openView(b.dataset.view));
+});
+
+document.querySelectorAll('[data-open]').forEach(b=>{
+ b.addEventListener('click',()=>openView(b.dataset.open));
+});
+
+sb.auth.onAuthStateChange((event,session)=>{
+ if(event==='SIGNED_OUT'){
+  $('app').classList.add('hidden');
+  $('login').classList.remove('hidden');
+  $('logout').classList.add('hidden');
+ }
+});
+
+checkExistingSession().catch(e=>{
+ setMsg('تعذر استعادة الجلسة: '+(e.message||'خطأ غير معروف'));
+});
+
 })();
-</script></body></html>
+</script>
+</body>
+</html>
