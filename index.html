@@ -784,6 +784,18 @@ body.store-view .top,body.store-view .searchrow{display:none!important}
 
 <div class="vendor-circle-section" id="vendorCircleSection">
  <div class="vendor-circle-head"><strong>👑 المتاجر</strong><button class="linkbtn" type="button" data-go="vendors">عرض جميع المتاجر ←</button></div>
+ <div class="vendor-category-circle-rail" id="vendorCategoryCircleRail" aria-label="تصنيفات المتاجر">
+  <button class="vendor-category-circle selected" type="button" data-vendor-category=""><span class="vendor-category-circle-icon">🏬</span><b>الكل</b></button>
+  <button class="vendor-category-circle" type="button" data-vendor-category="بلايستيشن"><span class="vendor-category-circle-icon"><img src="https://cdn.simpleicons.org/playstation/ffffff" alt="PlayStation" loading="lazy"></span><b>بلايستيشن</b></button>
+  <button class="vendor-category-circle" type="button" data-vendor-category="إكس بوكس"><span class="vendor-category-circle-icon"><img src="https://cdn.simpleicons.org/xbox/ffffff" alt="Xbox" loading="lazy"></span><b>إكس بوكس</b></button>
+  <button class="vendor-category-circle" type="button" data-vendor-category="أجهزة الألعاب"><span class="vendor-category-circle-icon">🎮</span><b>أجهزة الألعاب</b></button>
+  <button class="vendor-category-circle" type="button" data-vendor-category="كمبيوترات"><span class="vendor-category-circle-icon">💻</span><b>كمبيوترات</b></button>
+  <button class="vendor-category-circle" type="button" data-vendor-category="قطع الكمبيوتر"><span class="vendor-category-circle-icon">⚙️</span><b>قطع الكمبيوتر</b></button>
+  <button class="vendor-category-circle" type="button" data-vendor-category="شاشات وملحقات"><span class="vendor-category-circle-icon">🖥️</span><b>شاشات</b></button>
+  <button class="vendor-category-circle" type="button" data-vendor-category="جوالات وإلكترونيات"><span class="vendor-category-circle-icon">📱</span><b>جوالات وإلكترونيات</b></button>
+  <button class="vendor-category-circle" type="button" data-vendor-category="خدمات وصيانة"><span class="vendor-category-circle-icon">🛠️</span><b>خدمات وصيانة</b></button>
+  <button class="vendor-category-circle" type="button" data-vendor-category="إكسسوارات القيمنق"><span class="vendor-category-circle-icon"><img src="https://cdn.simpleicons.org/razer/ffffff" alt="Gaming accessories" loading="lazy"></span><b>إكسسوارات</b></button>
+ </div>
  <div class="vendor-circle-rail" id="vendorCircleRail"><div class="muted">جارٍ تحميل المتاجر...</div></div>
 </div>
 <div class="home-personal-categories" aria-label="تصنيفات إعلانات الأفراد">
@@ -1838,7 +1850,16 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   const grid=v$('vendorDirectoryGrid'); if(!grid) return;
   const term=(v$('vendorDirectorySearch')?.value||'').trim().toLowerCase();
   const intro=v$('page-vendors')?.querySelector('.vendor-page-intro h1');if(intro)intro.textContent=vState.selectedCategory?'متاجر '+vState.selectedCategory:'متاجر القيمنق';
-  const rows=vState.stores.filter(store=>(!vState.selectedCategory||String(store.category||'').toLowerCase().includes(vState.selectedCategory.toLowerCase()))&&[store.store_name,store.city,store.category,store.description].join(' ').toLowerCase().includes(term));
+  const categoryAliases={
+   'بلايستيشن':['بلايستيشن','playstation','ps5','ps4','ps'],
+   'إكس بوكس':['إكس بوكس','اكس بوكس','xbox'],
+   'كمبيوترات':['كمبيوترات','كمبيوتر','pc','gaming pc'],
+   'قطع الكمبيوتر':['قطع الكمبيوتر','قطع pc','مكونات الكمبيوتر','pc parts'],
+   'شاشات وملحقات':['شاشات وملحقات','شاشات','monitor','screens'],
+   'إكسسوارات القيمنق':['إكسسوارات القيمنق','اكسسوارات','ملحقات القيمنق','accessories']
+  };
+  const wanted=(categoryAliases[vState.selectedCategory]||[vState.selectedCategory]).map(x=>x.toLowerCase());
+  const rows=vState.stores.filter(store=>(!vState.selectedCategory||wanted.some(x=>String(store.category||'').toLowerCase().includes(x)))&&[store.store_name,store.city,store.category,store.description].join(' ').toLowerCase().includes(term));
   if(!rows.length){grid.innerHTML='<div class="empty" style="grid-column:1/-1">لا توجد متاجر مطابقة حالياً.</div>';return;}
   grid.innerHTML=rows.map(store=>`
    <article class="vendor-directory-card">
@@ -1934,6 +1955,16 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
  });
  v$('vendorDirectorySearch').addEventListener('input',renderVendorDirectory);
  v$('vendorDirectoryRefresh').addEventListener('click',()=>{vState.selectedCategory='';const h=v$('page-vendors')?.querySelector('.vendor-page-intro h1');if(h)h.textContent='متاجر القيمنق';loadVendorDirectory();});
+ v$('vendorCategoryCircleRail')?.addEventListener('click',event=>{
+  const button=event.target.closest('[data-vendor-category]');if(!button)return;
+  vState.selectedCategory=button.dataset.vendorCategory||'';
+  v$('vendorCategoryCircleRail').querySelectorAll('[data-vendor-category]').forEach(item=>item.classList.toggle('selected',item===button));
+  const directoryRail=v$('vendorCircleRail');if(directoryRail)directoryRail.querySelectorAll('[data-vendor-id]').forEach(item=>item.classList.remove('active'));
+  showPage('vendors');
+  v$('vendorSelectedStore')?.classList.add('hidden');
+  v$('vendorDirectoryGrid')?.classList.remove('hidden');
+  renderVendorDirectory();
+ });
 
  v$('vendorCheckoutForm').addEventListener('submit',async e=>{
   e.preventDefault();
@@ -2327,3 +2358,29 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
 </style>
 
 </body></html>
+
+
+<style id="vendor-category-circles-and-compact-mobile-banner">
+.vendor-category-circle-rail{display:flex;gap:13px;overflow-x:auto;overflow-y:hidden;padding:10px 3px 13px;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory}
+.vendor-category-circle-rail::-webkit-scrollbar{display:none}
+.vendor-category-circle{flex:0 0 76px;width:76px;min-height:94px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:7px;padding:0 3px;background:transparent!important;border:0!important;color:#eef7fa!important;scroll-snap-align:start}
+.vendor-category-circle-icon{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#203c58,#101d30);border:2px solid #355c7d;box-shadow:0 4px 13px #0005;font-size:27px;overflow:hidden}
+.vendor-category-circle-icon img{width:34px;height:34px;object-fit:contain}
+.vendor-category-circle b{font-size:10px;white-space:nowrap;font-weight:700}
+.vendor-category-circle.selected .vendor-category-circle-icon{border-color:#55c9df;box-shadow:0 0 0 3px #55c9df35,0 4px 13px #0005}
+.vendor-category-circle.selected b{color:#7ce9f5}
+@media(max-width:600px){
+ .vendor-home-hero{width:100%!important;height:76px!important;min-height:76px!important;max-height:76px!important;aspect-ratio:auto!important;padding:7px 10px!important;margin:8px 0 10px!important;border-radius:13px!important}
+ .vendor-home-hero-copy{max-width:82%!important}
+ .vendor-home-hero h1{font-size:13px!important;line-height:1.25!important;margin:0 0 2px!important}
+ .vendor-home-hero p{font-size:8px!important;line-height:1.2!important;margin:0 0 3px!important;max-width:100%!important}
+ .vendor-home-hero .primary{font-size:8px!important;padding:3px 8px!important;line-height:1.2!important}
+ .vendor-home-hero:after{font-size:36px!important;left:5px!important;bottom:-9px!important}
+ .vendor-home-hero.has-image:before{background:linear-gradient(90deg,#0b1530ed 0%,#101a31c4 65%,#17133875 100%)!important}
+ .vendor-category-circle-rail{gap:9px;padding:8px 2px 10px}
+ .vendor-category-circle{flex-basis:67px;width:67px;min-height:82px;gap:5px}
+ .vendor-category-circle-icon{width:54px;height:54px;font-size:23px}
+ .vendor-category-circle-icon img{width:29px;height:29px}
+ .vendor-category-circle b{font-size:9px}
+}
+</style>
