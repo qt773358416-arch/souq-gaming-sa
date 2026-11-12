@@ -777,18 +777,27 @@ body.store-view .top,body.store-view .searchrow{display:none!important}
 
 <section id="page-home">
 
-<div class="vendor-home-hero">
- <div class="vendor-home-hero-copy">
-  <h1>اكتشف عالم القيمنق</h1>
-  <p>أجهزة ألعاب وكمبيوترات وقطع مميزة من متاجر وبائعين داخل السعودية</p>
-  <button class="primary" type="button" data-go="searchpage">تسوّق واستكشف ←</button>
- </div>
+<div class="vendor-home-hero" id="vendorHomeHero">
+ <img id="vendorHomeHeroImage" class="vendor-home-hero-image hidden" alt="" aria-hidden="true">
+ <div class="vendor-home-hero-copy"><h1 id="vendorHomeHeroTitle">اكتشف عالم القيمنق</h1><p id="vendorHomeHeroSubtitle">أجهزة ألعاب وكمبيوترات وقطع مميزة من متاجر وبائعين داخل السعودية</p><button class="primary" type="button" id="vendorHomeHeroButton">تسوّق الآن ←</button></div>
 </div>
 
 <div class="vendor-circle-section" id="vendorCircleSection">
  <div class="vendor-circle-head"><strong>👑 المتاجر</strong><button class="linkbtn" type="button" data-go="vendors">عرض جميع المتاجر ←</button></div>
  <div class="vendor-circle-rail" id="vendorCircleRail"><div class="muted">جارٍ تحميل المتاجر...</div></div>
 </div>
+<div class="vendor-category-section" aria-label="تصفح المتاجر حسب التصنيف"><div class="vendor-category-heading"><strong>تسوّق حسب التصنيف</strong><span>اسحب لاكتشاف المتاجر</span></div><div class="vendor-category-rail" id="vendorCategoryRail">
+ <button class="vendor-category-card cat-pc" type="button" data-vendor-category="أجهزة الكمبيوتر والقيمنق"><span>🖥️</span><b>متاجر الكمبيوتر</b></button>
+ <button class="vendor-category-card cat-parts" type="button" data-vendor-category="قطع الكمبيوتر"><span>⚙️</span><b>قطع الكمبيوتر</b></button>
+ <button class="vendor-category-card cat-console" type="button" data-vendor-category="أجهزة الكونسول"><span>🎮</span><b>متاجر الكونسول</b></button>
+ <button class="vendor-category-card cat-games" type="button" data-vendor-category="الألعاب الرقمية"><span>🕹️</span><b>متاجر الألعاب</b></button>
+ <button class="vendor-category-card cat-ps" type="button" data-vendor-category="أجهزة الكونسول"><span>🔵</span><b>متاجر بلايستيشن</b></button>
+ <button class="vendor-category-card cat-xbox" type="button" data-vendor-category="أجهزة الكونسول"><span>🟢</span><b>متاجر إكس بوكس</b></button>
+ <button class="vendor-category-card cat-accessories" type="button" data-vendor-category="ملحقات القيمنق"><span>🎧</span><b>متاجر الملحقات</b></button>
+ <button class="vendor-category-card cat-gpu" type="button" data-vendor-category="قطع الكمبيوتر"><span>🎨</span><b>كروت الشاشة</b></button>
+ <button class="vendor-category-card cat-cards" type="button" data-vendor-category="كروت الشحن"><span>💳</span><b>كروت الشحن</b></button>
+ <button class="vendor-category-card cat-digital" type="button" data-vendor-category="الاشتراكات"><span>⭐</span><b>الاشتراكات</b></button>
+ </div></div>
 <div class="home-personal-categories" aria-label="تصنيفات إعلانات الأفراد">
  <div class="home-personal-categories-head"><strong>تصفح إعلانات الأفراد</strong><span>اختر التصنيف</span></div>
  <div class="categories" id="categories">
@@ -848,7 +857,7 @@ body.store-view .top,body.store-view .searchrow{display:none!important}
 <div id="storeAdminEntry" class="panel hidden">
  <div class="pagehead"><div><h2>إدارة متجر سوق القيمنق</h2><p>إدارة المنتجات والطلبات والمخزون من لوحة مستقلة.</p></div><button class="primary" id="storeAdminToggle" type="button">فتح لوحة التحكم</button></div>
  <div id="storeAdminPanel" class="hidden">
-  <div class="subnav"><button type="button" data-store-admin-tab="products">المنتجات</button><button type="button" data-store-admin-tab="orders">الطلبات</button><button type="button" data-store-admin-tab="codes">الأكواد الرقمية</button></div>
+  <div class="subnav"><button type="button" data-store-admin-tab="products">المنتجات</button><button type="button" data-store-admin-tab="orders">الطلبات</button><button type="button" data-store-admin-tab="codes">الأكواد الرقمية</button><button type="button" data-store-admin-tab="banner">بنر الصفحة الرئيسية</button></div>
   <div id="storeAdminProducts">
    <h3>إضافة / تعديل منتج</h3>
    <form id="storeProductForm" class="formgrid">
@@ -869,6 +878,7 @@ body.store-view .top,body.store-view .searchrow{display:none!important}
   </div>
   <div id="storeAdminOrders" class="hidden"><div class="row space"><h3>إدارة الطلبات</h3><button class="secondary" id="refreshStoreOrders" type="button">تحديث</button></div><div id="storeAdminOrderList"><div class="empty">جارٍ التحميل...</div></div></div>
   <div id="storeAdminCodes" class="hidden"><h3>مخزون الأكواد الرقمية</h3><p class="muted">تُضاف الأكواد هنا وتبقى مخفية عن الزوار. التسليم الآلي الآمن يتطلب تنفيذًا خادميًا (Edge Function) بعد تهيئة بوابة الدفع.</p><form id="storeCodeForm" class="stack"><label>المنتج الرقمي<select id="scProduct" class="field"></select></label><label>الكود الرقمي<textarea id="scCode" class="field" rows="3" required maxlength="2000"></textarea></label><button class="primary" type="submit">إضافة الكود للمخزون</button><div id="scMsg" class="muted"></div></form><div id="storeCodeCount" class="notice"></div></div>
+  <div id="storeAdminBanner" class="hidden"><h3>إعدادات البنر الرئيسي</h3><p class="vendor-muted-note">غيّر محتوى البنر وصورته ورابط زر التسوق. التعديلات تظهر للزوار بعد الحفظ.</p><form id="homeBannerForm" class="formgrid"><div><label>عنوان البنر</label><input id="homeBannerTitle" class="field" maxlength="100" value="اكتشف عالم القيمنق"></div><div><label>نص توضيحي</label><input id="homeBannerSubtitle" class="field" maxlength="220" value="أحدث أجهزة الألعاب من أفضل المتاجر الموثوقة"></div><div><label>نص الزر</label><input id="homeBannerButton" class="field" maxlength="35" value="تسوّق الآن"></div><div><label>وجهة الزر</label><select id="homeBannerTarget" class="field"><option value="vendors">جميع المتاجر</option><option value="store">المتجر الرسمي</option><option value="searchpage">البحث</option></select></div><div class="full"><label>رابط صورة البنر (اختياري)</label><input id="homeBannerImageUrl" class="field" type="url" placeholder="https://..."></div><div class="full"><label>أو ارفع صورة من جهازك</label><input id="homeBannerImageFile" class="field" type="file" accept="image/png,image/jpeg,image/webp"><div id="homeBannerPreview" class="home-banner-preview">معاينة صورة البنر</div></div><div class="full row"><button class="primary" type="submit" id="saveHomeBanner">حفظ إعدادات البنر</button><span id="homeBannerMsg" class="muted" role="status"></span></div></form></div>
  </div>
 </div>
 </section>
@@ -1701,7 +1711,8 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
  byId('storeAdminToggle').addEventListener('click',()=>byId('storeAdminPanel').classList.toggle('hidden'));
  document.querySelectorAll('[data-store-admin-tab]').forEach(b=>b.addEventListener('click',()=>{
   document.querySelectorAll('[data-store-admin-tab]').forEach(x=>x.classList.toggle('active',x===b));
-  ['products','orders','codes'].forEach(k=>byId('storeAdmin'+k[0].toUpperCase()+k.slice(1)).classList.toggle('hidden',k!==b.dataset.storeAdminTab));
+  ['products','orders','codes','banner'].forEach(k=>byId('storeAdmin'+k[0].toUpperCase()+k.slice(1)).classList.toggle('hidden',k!==b.dataset.storeAdminTab));
+  if(b.dataset.storeAdminTab==='banner')loadHomeBannerAdmin();
   if(b.dataset.storeAdminTab==='orders')loadAdminOrders();if(b.dataset.storeAdminTab==='codes')loadCodeInventory();
  }));
  async function loadAdminProducts(){
@@ -1778,7 +1789,7 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
 (() => {
  'use strict';
  const vState = {
-  stores: [], selectedStore: null, selectedProducts: [],
+  stores: [], selectedStore: null, selectedProducts: [], selectedCategory: '',
   myStore: null, myProducts: [], cart: {},
   promotedStores: new Set(), promotedProducts: new Set(), promotedAds: new Set()
  };
@@ -1838,7 +1849,8 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
  function renderVendorDirectory() {
   const grid=v$('vendorDirectoryGrid'); if(!grid) return;
   const term=(v$('vendorDirectorySearch')?.value||'').trim().toLowerCase();
-  const rows=vState.stores.filter(store=>[store.store_name,store.city,store.category,store.description].join(' ').toLowerCase().includes(term));
+  const intro=v$('page-vendors')?.querySelector('.vendor-page-intro h1');if(intro)intro.textContent=vState.selectedCategory?'متاجر '+vState.selectedCategory:'متاجر القيمنق';
+  const rows=vState.stores.filter(store=>(!vState.selectedCategory||String(store.category||'').toLowerCase().includes(vState.selectedCategory.toLowerCase()))&&[store.store_name,store.city,store.category,store.description].join(' ').toLowerCase().includes(term));
   if(!rows.length){grid.innerHTML='<div class="empty" style="grid-column:1/-1">لا توجد متاجر مطابقة حالياً.</div>';return;}
   grid.innerHTML=rows.map(store=>`
    <article class="vendor-directory-card">
@@ -1933,7 +1945,7 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   vState.selectedProducts=[];
  });
  v$('vendorDirectorySearch').addEventListener('input',renderVendorDirectory);
- v$('vendorDirectoryRefresh').addEventListener('click',loadVendorDirectory);
+ v$('vendorDirectoryRefresh').addEventListener('click',()=>{vState.selectedCategory='';const h=v$('page-vendors')?.querySelector('.vendor-page-intro h1');if(h)h.textContent='متاجر القيمنق';loadVendorDirectory();});
 
  v$('vendorCheckoutForm').addEventListener('submit',async e=>{
   e.preventDefault();
@@ -2205,6 +2217,67 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
    if(page==='vendors')void loadVendorDirectory();
   };
  }
+ // تصنيفات المتاجر الشريطية: كل اختيار يفتح دليل المتاجر مفلترًا حسب تصنيف التاجر.
+ v$('vendorCategoryRail')?.addEventListener('click',e=>{
+  const button=e.target.closest('[data-vendor-category]');if(!button)return;
+  vState.selectedCategory=button.dataset.vendorCategory||'';
+  v$('vendorDirectorySearch').value='';
+  showPage('vendors');
+  renderVendorDirectory();
+  v$('vendorDirectoryGrid')?.scrollIntoView({behavior:'smooth',block:'start'});
+ });
+ // إعدادات البنر محفوظة في جدول مستقل حتى لا تتغير إعدادات المتجر أو المنتجات.
+ const bannerDefaults={title:'اكتشف عالم القيمنق',subtitle:'أجهزة ألعاب وكمبيوترات وقطع مميزة من متاجر وبائعين داخل السعودية',button_text:'تسوّق الآن',target_page:'vendors',image_url:''};
+ let bannerImageFile=null;
+ function applyHomeBanner(config={}){
+  const c={...bannerDefaults,...(config||{})};
+  if(v$('vendorHomeHeroTitle'))v$('vendorHomeHeroTitle').textContent=c.title||bannerDefaults.title;
+  if(v$('vendorHomeHeroSubtitle'))v$('vendorHomeHeroSubtitle').textContent=c.subtitle||bannerDefaults.subtitle;
+  if(v$('vendorHomeHeroButton'))v$('vendorHomeHeroButton').textContent=(c.button_text||bannerDefaults.button_text)+' ←';
+  const image=v$('vendorHomeHeroImage'),hero=v$('vendorHomeHero');
+  if(image&&hero){if(c.image_url){image.src=c.image_url;image.classList.remove('hidden');hero.classList.add('has-image');}else{image.removeAttribute('src');image.classList.add('hidden');hero.classList.remove('has-image');}}
+  if(v$('vendorHomeHeroButton'))v$('vendorHomeHeroButton').dataset.targetPage=c.target_page||'vendors';
+ }
+ async function fetchHomeBanner(){
+  const {data,error}=await sb.from('marketplace_home_banner').select('title,subtitle,button_text,target_page,image_url').eq('id',1).maybeSingle();
+  if(error){console.info('Home banner settings not configured yet:',error.message);applyHomeBanner();return;}
+  applyHomeBanner(data||{});
+ }
+ async function loadHomeBannerAdmin(){
+  const {data,error}=await sb.from('marketplace_home_banner').select('*').eq('id',1).maybeSingle();
+  if(error){vMsg('homeBannerMsg','نفّذ ملف SQL المرفق أولاً: '+error.message);return;}
+  const c={...bannerDefaults,...(data||{})};
+  v$('homeBannerTitle').value=c.title;v$('homeBannerSubtitle').value=c.subtitle;v$('homeBannerButton').value=c.button_text;v$('homeBannerTarget').value=c.target_page;v$('homeBannerImageUrl').value=c.image_url||'';
+  const preview=v$('homeBannerPreview');if(preview)preview.innerHTML=c.image_url?`<img src="${vEsc(c.image_url)}" alt="معاينة البنر">`:'معاينة صورة البنر';
+ }
+ v$('homeBannerImageFile')?.addEventListener('change',e=>{
+  bannerImageFile=e.target.files?.[0]||null;const preview=v$('homeBannerPreview');if(!preview)return;
+  if(!bannerImageFile){preview.textContent='معاينة صورة البنر';return;}
+  if(!/^image\/(png|jpeg|webp)$/.test(bannerImageFile.type)||bannerImageFile.size>5*1024*1024){bannerImageFile=null;e.target.value='';preview.textContent='اختر صورة PNG أو JPG أو WebP بحجم أقصى 5 ميجابايت.';return;}
+  const reader=new FileReader();reader.onload=()=>preview.innerHTML=`<img src="${reader.result}" alt="معاينة البنر">`;reader.readAsDataURL(bannerImageFile);
+ });
+ v$('homeBannerForm')?.addEventListener('submit',async e=>{
+  e.preventDefault();const btn=v$('saveHomeBanner');btn.disabled=true;vMsg('homeBannerMsg','جارٍ حفظ البنر...');
+  try{
+   let imageUrl=v$('homeBannerImageUrl').value.trim();
+   if(bannerImageFile){
+    const ext=(bannerImageFile.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'');
+    const path='home-banner/'+Date.now()+'-'+Math.random().toString(36).slice(2,8)+'.'+ext;
+    const {error:uploadError}=await sb.storage.from('marketplace-assets').upload(path,bannerImageFile,{upsert:false,contentType:bannerImageFile.type});
+    if(uploadError)throw new Error('تعذر رفع الصورة: '+uploadError.message);
+    const {data:publicData}=sb.storage.from('marketplace-assets').getPublicUrl(path);imageUrl=publicData?.publicUrl||'';
+   }
+   const row={id:1,title:v$('homeBannerTitle').value.trim()||bannerDefaults.title,subtitle:v$('homeBannerSubtitle').value.trim(),button_text:v$('homeBannerButton').value.trim()||bannerDefaults.button_text,target_page:v$('homeBannerTarget').value,image_url:imageUrl,updated_at:new Date().toISOString()};
+   const {error}=await sb.from('marketplace_home_banner').upsert(row,{onConflict:'id'});if(error)throw error;
+   bannerImageFile=null;v$('homeBannerImageFile').value='';applyHomeBanner(row);vMsg('homeBannerMsg','تم حفظ البنر وتحديث الواجهة.');
+  }catch(err){vMsg('homeBannerMsg','لم يتم الحفظ: '+(err.message||String(err)));}
+  finally{btn.disabled=false;}
+ });
+ v$('vendorHomeHeroButton')?.addEventListener('click',()=>{
+  const target=v$('vendorHomeHeroButton').dataset.targetPage||'vendors';
+  if(target==='store'&&typeof showPage==='function')showPage('store');else if(target==='searchpage'&&typeof showPage==='function')showPage('searchpage');else{vState.selectedCategory='';showPage('vendors');}
+ });
+ void fetchHomeBanner();
  sb.auth.onAuthStateChange((_event,session)=>{
   if(session?.user){
    setTimeout(()=>{if(!v$('page-vendor-dashboard')?.classList.contains('hidden'))loadVendorStoreWorkspace();},0);
@@ -2248,5 +2321,30 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
  document.querySelectorAll('[data-close-float]').forEach(b=>b.addEventListener('click',()=>document.getElementById(b.dataset.closeFloat)?.classList.add('hidden')));
 })();
 </script>
+
+
+<style id="souq-home-banner-categories-upgrade">
+/* بنر رئيسي مستطيل قصير ومتجاوب للجوال */
+.vendor-home-hero{aspect-ratio:2.65/1!important;min-height:150px!important;height:auto!important;max-height:230px!important;padding:clamp(14px,2.5vw,24px)!important;border-radius:20px!important;}
+.vendor-home-hero-copy{max-width:72%!important;position:relative;z-index:2}
+.vendor-home-hero-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:.48}
+.vendor-home-hero.has-image{background:#101e49!important}
+.vendor-home-hero.has-image:before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,#0b1530e8 0%,#101a31b8 58%,#17133870 100%)}
+.vendor-home-hero.has-image:after{display:none}
+.vendor-home-hero h1{font-size:clamp(19px,3vw,30px)!important;margin-bottom:5px!important}
+.vendor-home-hero p{font-size:clamp(11px,1.35vw,14px)!important;margin-bottom:10px!important;line-height:1.55}
+.vendor-home-hero .primary{padding:8px 16px!important;font-size:12px!important}
+.vendor-category-section{margin:10px 0 15px;padding:12px 11px 9px;border:1px solid #2d4669;border-radius:17px;background:linear-gradient(145deg,#101d30,#121d2b 70%,#151b31)}
+.vendor-category-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.vendor-category-heading strong{font-size:15px;color:#eef7fa}.vendor-category-heading span{font-size:10px;color:#9fb4c4}
+.vendor-category-rail{display:flex;gap:9px;overflow-x:auto;overflow-y:hidden;padding:3px 1px 8px;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory}
+.vendor-category-rail::-webkit-scrollbar{display:none}
+.vendor-category-card{position:relative;isolation:isolate;overflow:hidden;flex:0 0 116px;min-height:91px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;border:1px solid #496b9a;border-radius:14px;color:#f4f8ff;padding:9px 7px;background:linear-gradient(145deg,#172d52,#101b32);scroll-snap-align:start}
+.vendor-category-card:before{content:"";position:absolute;inset:0;z-index:-1;opacity:.5;background:radial-gradient(circle at 80% 15%,var(--cat-glow,#2867ad),transparent 65%)}
+.vendor-category-card>span{font-size:25px;line-height:1.1}.vendor-category-card b{font-size:11px;line-height:1.35;text-align:center}
+.vendor-category-card.cat-parts{--cat-glow:#2877d6;background:linear-gradient(145deg,#182e51,#101a2c)}.vendor-category-card.cat-console{--cat-glow:#8b4de0;background:linear-gradient(145deg,#302052,#111a30)}.vendor-category-card.cat-games{--cat-glow:#c13e94;background:linear-gradient(145deg,#402047,#111a30)}.vendor-category-card.cat-ps{--cat-glow:#126ee8;background:linear-gradient(145deg,#152c5b,#101a30)}.vendor-category-card.cat-xbox{--cat-glow:#1e9e61;background:linear-gradient(145deg,#123f36,#101a30)}.vendor-category-card.cat-accessories{--cat-glow:#13a6b8;background:linear-gradient(145deg,#123e4b,#101a30)}.vendor-category-card.cat-gpu{--cat-glow:#a84ce4;background:linear-gradient(145deg,#38204f,#101a30)}.vendor-category-card.cat-cards{--cat-glow:#bb9133;background:linear-gradient(145deg,#42371e,#101a30)}.vendor-category-card.cat-digital{--cat-glow:#d06a9c;background:linear-gradient(145deg,#44233c,#101a30)}
+.home-banner-preview{min-height:85px;border:1px dashed var(--line);border-radius:12px;display:grid;place-items:center;padding:8px;color:var(--muted);font-size:12px;overflow:hidden}.home-banner-preview img{display:block;width:100%;max-height:190px;object-fit:cover;border-radius:8px}
+@media(max-width:600px){.vendor-home-hero{aspect-ratio:2.05/1!important;min-height:142px!important;max-height:175px!important;padding:14px 12px!important;margin:10px 0 13px!important;border-radius:17px!important}.vendor-home-hero-copy{max-width:76%!important}.vendor-home-hero h1{font-size:18px!important}.vendor-home-hero p{font-size:10.5px!important;max-width:100%!important}.vendor-home-hero .primary{font-size:11px!important;padding:7px 12px!important}.vendor-home-hero:after{font-size:66px!important;left:5px!important;bottom:-16px!important}.vendor-category-section{padding:10px 8px 7px;margin:9px 0 12px}.vendor-category-heading strong{font-size:13px}.vendor-category-card{flex-basis:100px;min-height:82px;border-radius:12px}.vendor-category-card>span{font-size:22px}.vendor-category-card b{font-size:10px}}
+</style>
 
 </body></html>
