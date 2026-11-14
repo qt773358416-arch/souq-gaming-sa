@@ -7,97 +7,12 @@
 <title>مركز التحكم | سوق القيمنق السعودي</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{
---bg:#0b121b;--panel:#121e2a;--panel2:#1b2b39;
---line:#2b4050;--text:#eff8fc;--muted:#9eb2c0;
---brand:#55c9df;--danger:#ff647c;--ok:#58d6a5
-}
-*{box-sizing:border-box}
-body{
-margin:0;background:radial-gradient(circle at 10% 0,#153143 0,transparent 30%),var(--bg);
-color:var(--text);font:15px/1.65 Tahoma,Arial,sans-serif
-}
-button,input,select,textarea{font:inherit}
-button{
-border:1px solid var(--line);background:var(--panel2);
-color:var(--text);padding:10px 14px;border-radius:12px;
-cursor:pointer;font-weight:800
-}
-button.primary{background:linear-gradient(120deg,#16c7d9,#69a8ff);border:0;color:#07151d}
-button.danger{color:#ffdce2;background:#451c2a;border-color:#7f293d}
-button:disabled{opacity:.5;cursor:wait}
-.hidden{display:none!important}
-.shell{max-width:1500px;margin:auto;padding:18px}
-.head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}
-.brand{display:flex;align-items:center;gap:12px}
-.logo{
-width:48px;height:48px;border-radius:15px;
-background:linear-gradient(135deg,#55d5ed,#688cff);
-display:grid;place-items:center;color:#07151d;font-weight:1000;font-size:19px
-}
-.brand h1{font-size:clamp(19px,3vw,27px);margin:0}
-.muted{color:var(--muted)}
-.layout{display:grid;grid-template-columns:265px minmax(0,1fr);gap:16px}
-.panel{
-background:linear-gradient(145deg,#142536,#101c29);
-border:1px solid var(--line);border-radius:19px;padding:18px;
-min-width:0;box-shadow:0 12px 35px #0003
-}
-.sidebar{position:sticky;top:12px;align-self:start}
-.sidebar h3{margin:0 0 12px}
-.nav{display:grid;gap:6px}
-.nav button{text-align:right;background:transparent;border-color:transparent;color:#c6d7e2}
-.nav button.active,.nav button:hover{background:#1a3545;border-color:#31596a;color:#fff}
-.main{min-width:0}
-.page{display:none}
-.page.active{display:block}
-.page h2{margin:0 0 6px;font-size:24px}
-.pagehead{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:15px}
-.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-.stat{background:#172a39;border:1px solid var(--line);border-radius:15px;padding:15px}
-.stat small{display:block;color:var(--muted)}
-.stat strong{font-size:22px}
-.field{
-width:100%;background:#091522;color:var(--text);
-border:1px solid var(--line);border-radius:11px;padding:11px;outline:none
-}
-.field:focus{border-color:var(--brand)}
-label{display:grid;gap:6px;color:#bfd0dc;font-size:13px}
-.form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.full{grid-column:1/-1}
-.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:13px;margin-top:14px}
-table{width:100%;border-collapse:collapse;min-width:650px}
-th,td{text-align:right;padding:11px;border-bottom:1px solid var(--line);vertical-align:middle}
-th{background:#1a2d3b;color:#bde8f0}
-tr:last-child td{border:0}
-.msg{padding:12px;border:1px solid #31596a;background:#122c3a;border-radius:12px;margin-top:12px;color:#c9f5ff;overflow-wrap:anywhere}
-.notice{padding:13px;border-radius:12px;background:#382d17;border:1px solid #65502a;color:#f7dfac;margin:12px 0}
-.swatch{height:40px;padding:3px}
-.login{max-width:480px;margin:8vh auto}
-.login h2{margin-top:0}
-.empty{padding:20px;text-align:center;color:var(--muted)}
-.pill{font-size:11px;padding:4px 8px;border-radius:30px;background:#173b39;color:#9ef0d0}
-.actions{display:flex;gap:6px;flex-wrap:wrap}
-.actions button{padding:7px 10px;font-size:12px}
-@media(max-width:900px){
-.layout{grid-template-columns:1fr}
-.sidebar{position:static}
-.nav{grid-template-columns:repeat(3,minmax(0,1fr))}
-.grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-}
-@media(max-width:600px){
-.shell{padding:10px}
-.panel{padding:13px;border-radius:15px}
-.nav{grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}
-.nav button{font-size:12px;padding:9px 7px}
-.form{grid-template-columns:1fr}
-.full{grid-column:auto}
-.grid{grid-template-columns:1fr 1fr;gap:8px}
-.stat{padding:11px}
-.stat strong{font-size:18px}
-.page h2{font-size:20px}
-}
+:root{--bg:#f4f6fb;--panel:#fff;--panel2:#f7f8fc;--line:#e7eaf2;--text:#20243a;--muted:#7b8198;--brand:#6b5cff;--brand2:#22b8cf;--danger:#e85d75;--ok:#159b78;--shadow:0 10px 30px rgba(31,39,75,.06)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.65 Tahoma,Arial,sans-serif}button,input,select,textarea{font:inherit}button{border:1px solid var(--line);background:#fff;color:var(--text);padding:10px 14px;border-radius:11px;cursor:pointer;font-weight:800;transition:.18s}button:hover{border-color:#c9c4ff;transform:translateY(-1px)}button.primary{background:linear-gradient(120deg,var(--brand),#8a7dff);border:0;color:#fff;box-shadow:0 7px 18px #6b5cff35}button.danger{color:#bd334f;background:#fff0f3;border-color:#ffd5de}button:disabled{opacity:.5;cursor:wait}.hidden{display:none!important}
+.shell{max-width:1600px;margin:auto;padding:22px}.head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px;padding:14px 18px;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}.brand{display:flex;align-items:center;gap:12px}.logo{width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,#6b5cff,#23c2d7);display:grid;place-items:center;color:white;font-weight:1000;font-size:19px;box-shadow:0 8px 18px #6b5cff35}.brand h1{font-size:clamp(18px,2.2vw,24px);margin:0;letter-spacing:-.4px}.muted{color:var(--muted)}.layout{display:grid;grid-template-columns:250px minmax(0,1fr);gap:20px;align-items:start}.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px;min-width:0;box-shadow:var(--shadow)}.sidebar{position:sticky;top:16px;align-self:start;padding:16px}.sidebar h3{margin:3px 8px 12px;font-size:13px;color:#a0a5b8;font-weight:800}.nav{display:grid;gap:5px}.nav button{text-align:right;background:transparent;border-color:transparent;color:#666d84;padding:11px 12px;border-radius:11px;display:flex;align-items:center;gap:10px}.nav button:before{content:'◈';font-size:16px;color:#a2a7bc}.nav button.active,.nav button:hover{background:#f0efff;border-color:#e3e0ff;color:#5548d8;transform:none}.nav button.active:before{color:var(--brand)}.main{min-width:0}.page{display:none}.page.active{display:block}.page h2{margin:0 0 5px;font-size:23px;letter-spacing:-.4px}.pagehead{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:18px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}.stat{background:linear-gradient(145deg,#fff,#fbfbff);border:1px solid var(--line);border-radius:15px;padding:17px;position:relative;overflow:hidden}.stat:after{content:'';position:absolute;width:64px;height:64px;border-radius:50%;background:#f0efff;left:-18px;top:-22px}.stat small{display:block;color:var(--muted);font-size:12px;position:relative;z-index:1}.stat strong{font-size:25px;display:block;margin-top:5px;position:relative;z-index:1;color:#292d46}.field{width:100%;background:#fff;color:var(--text);border:1px solid #e3e6ef;border-radius:11px;padding:11px 12px;outline:none}.field:focus{border-color:#8b80ff;box-shadow:0 0 0 3px #6b5cff14}label{display:grid;gap:6px;color:#626980;font-size:13px}.form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.full{grid-column:1/-1}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:13px;margin-top:14px;background:#fff}table{width:100%;border-collapse:collapse;min-width:650px}th,td{text-align:right;padding:12px 13px;border-bottom:1px solid #edf0f5;vertical-align:middle}th{background:#f7f8fc;color:#747b92;font-size:12px;white-space:nowrap}td{font-size:13px}tr:last-child td{border:0}.msg{padding:12px;border:1px solid #d9e8ff;background:#f3f8ff;border-radius:12px;margin-top:12px;color:#365c8b;overflow-wrap:anywhere}.notice{padding:13px;border-radius:12px;background:#fff8e9;border:1px solid #f5e3b9;color:#87621d;margin:12px 0}.swatch{height:42px;padding:3px}.login{max-width:480px;margin:8vh auto}.login h2{margin-top:0}.empty{padding:20px;text-align:center;color:var(--muted)}.pill{font-size:11px;padding:5px 10px;border-radius:30px;background:#e9fbf4;color:#13825f;font-weight:800}.actions{display:flex;gap:6px;flex-wrap:wrap}.actions button{padding:7px 10px;font-size:12px}.overview-banner{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:22px 24px;margin-bottom:15px;border-radius:18px;color:white;background:radial-gradient(circle at 15% 20%,#8b7dff 0,transparent 27%),linear-gradient(115deg,#25214f,#5147b9 62%,#287e9c);overflow:hidden}.overview-banner h2{margin:0 0 5px;font-size:22px}.overview-banner p{margin:0;color:#e3e1ff}.overview-mark{font-size:48px;opacity:.9}.overview-kicker{font-size:11px;letter-spacing:1px;color:#c9c4ff;font-weight:900;margin-bottom:4px}.overview-tools{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 0}.overview-tools button{background:#fff;color:#4d46a5;border:0}.overview-section{margin-top:16px}.section-caption{font-size:13px;font-weight:900;margin:0 0 10px;color:#4e536b}.mobile-menu{display:none}
+@media(max-width:980px){.shell{padding:14px}.layout{grid-template-columns:1fr}.sidebar{position:static}.nav{grid-template-columns:repeat(3,minmax(0,1fr))}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:640px){.shell{padding:9px}.head{padding:10px 12px;border-radius:14px;margin-bottom:10px}.brand{gap:9px}.logo{width:39px;height:39px;border-radius:12px}.brand h1{font-size:16px}.head .row{gap:6px}.head a{font-size:12px}.mobile-menu{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;padding:0;font-size:20px;background:#f1efff;color:#5548d8;border:0}.layout{display:block}.sidebar{display:none;position:fixed;z-index:100;top:0;right:0;bottom:0;width:min(84vw,310px);overflow:auto;border-radius:0 0 0 18px;box-shadow:-15px 0 40px #1a20452b;padding:18px}.sidebar.mobile-open{display:block}.nav{grid-template-columns:1fr;gap:4px}.nav button{padding:12px}.mobile-backdrop{display:none;position:fixed;inset:0;background:#11172b80;z-index:99}.mobile-backdrop.show{display:block}.panel{padding:13px;border-radius:14px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.stat{padding:12px}.stat strong{font-size:19px}.stat small{font-size:11px}.page h2{font-size:19px}.pagehead{margin-bottom:12px}.form{grid-template-columns:1fr}.full{grid-column:auto}.overview-banner{padding:16px;border-radius:14px}.overview-banner h2{font-size:18px}.overview-banner p{font-size:12px}.overview-mark{font-size:34px}.tablewrap{margin-top:10px}th,td{padding:10px;font-size:12px}.login{margin:5vh auto}.actions{min-width:150px}}
+@media(max-width:370px){.grid{grid-template-columns:1fr}.overview-mark{display:none}}
 </style>
 </head>
 <body>
@@ -112,6 +27,7 @@ tr:last-child td{border:0}
   </div>
  </div>
  <div class="row">
+  <button id="menuToggle" class="mobile-menu" type="button" aria-label="فتح القائمة">☰</button>
   <a href="./index.html" style="color:#70d9f0;text-decoration:none">العودة للمنصة ↗</a>
   <button id="logout" class="hidden">خروج</button>
  </div>
@@ -133,6 +49,7 @@ tr:last-child td{border:0}
 </section>
 
 <section id="app" class="hidden">
+ <div id="mobileBackdrop" class="mobile-backdrop"></div>
  <div class="grid" style="margin-bottom:15px">
   <div class="stat"><small>الحساب الحالي</small><strong id="who" style="font-size:14px">—</strong></div>
   <div class="stat"><small>حالة الصلاحية</small><strong class="pill">مدير معتمد</strong></div>
@@ -160,7 +77,12 @@ tr:last-child td{border:0}
 
   <main class="main">
 
-   <section class="page panel active" id="page-overview">
+   <section class="page active" id="page-overview">
+    <div class="overview-banner">
+     <div><div class="overview-kicker">SAUDI GAMING MARKETPLACE</div><h2>مرحباً بك في مركز قيادة السوق</h2><p>تابع الإعلانات والمتاجر والمنتجات والطلبات من مكان واحد</p></div>
+     <div class="overview-mark">🎮</div>
+    </div>
+    <div class="panel">
     <div class="pagehead">
      <div><h2>نظرة عامة</h2><div class="muted">ملخص وحدات الإدارة المرتبطة بقاعدة البيانات</div></div>
      <span class="pill">إدارة مركزية</span>
@@ -173,7 +95,10 @@ tr:last-child td{border:0}
      <div class="stat"><small>الطلبات</small><strong id="orderCount">—</strong></div>
      <div class="stat"><small>جلسة المدير</small><strong>نشطة</strong></div>
     </div>
+    </div>
+    <div class="overview-section"><div class="section-caption">اختصارات الإدارة</div><div class="overview-tools"><button data-page="ads">مراجعة الإعلانات</button><button data-page="vendors">إدارة المتاجر</button><button data-page="products">المنتجات</button><button data-page="orders">الطلبات</button></div></div>
     <div class="notice">المظهر والتصنيفات والعناصر العامة تحفظ في جداول التحكم الجديدة. وحدات الإعلانات والمتاجر والمنتجات والطلبات تستخدم الجداول الموجودة في مشروعك. لم أضف عمليات مالية أو تحويل أرصدة؛ هذه تتطلب تحققاً خادمياً ومزود دفع.</div>
+    </div>
    </section>
 
    <section class="page panel" id="page-appearance">
@@ -314,9 +239,9 @@ const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({
 const msg=(id,t)=>$(id).textContent=t;
 const money=n=>Number(n||0).toLocaleString('ar-SA')+' ر.س';
 const defaults={
- bg:'#101820',panel:'#17232d',panel2:'#202f3a',
- text:'#eef7fa',muted:'#a4b5c0',line:'#30414d',
- brand:'#16c7d9',header:'#111c25'
+ bg:'#f4f6fb',panel:'#ffffff',panel2:'#f7f8fc',
+ text:'#20243a',muted:'#7b8198',line:'#e7eaf2',
+ brand:'#6b5cff',header:'#ffffff'
 };
 let user=null;
 
@@ -383,6 +308,7 @@ function openPage(name){
  document.querySelectorAll('[data-page]').forEach(x=>
   x.classList.toggle('active',x.dataset.page===name)
  );
+ closeMobileMenu();
  const loaders={
   categories:loadCategories,elements:loadElements,ads:loadAds,
   vendors:loadVendors,products:loadProducts,orders:loadOrders,
@@ -394,6 +320,12 @@ function openPage(name){
 document.querySelectorAll('[data-page]').forEach(b=>{
  b.onclick=()=>openPage(b.dataset.page);
 });
+const mobileSidebar=document.querySelector('.sidebar');
+const mobileBackdrop=$('mobileBackdrop');
+function closeMobileMenu(){mobileSidebar?.classList.remove('mobile-open');mobileBackdrop?.classList.remove('show')}
+$('menuToggle').onclick=()=>{mobileSidebar.classList.toggle('mobile-open');mobileBackdrop.classList.toggle('show')};
+mobileBackdrop.onclick=closeMobileMenu;
+
 
 async function count(table){
  const {count,error}=await db.from(table).select('*',{count:'exact',head:true});
