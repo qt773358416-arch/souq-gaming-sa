@@ -972,7 +972,7 @@ body.store-view .top,body.store-view .searchrow{display:none!important}
      <div><label>السعر بالريال *</label><input id="vendorProductPrice" class="field" type="number" min=".01" step=".01" required></div>
      <div><label>الكمية المتاحة *</label><input id="vendorProductStock" class="field" type="number" min="0" step="1" value="1" required></div>
      <div><label>نوع المنتج</label><select id="vendorProductType" class="field"><option value="physical">مادي</option><option value="digital">رقمي</option></select></div>
-     <div><label>رابط صورة المنتج</label><input id="vendorProductImage" class="field" type="url"></div>
+     <div><label>صورة المنتج من جهازك</label><input id="vendorProductImageFile" class="field" type="file" accept="image/jpeg,image/png,image/webp,image/avif"><small class="vendor-muted-note">JPG أو PNG أو WEBP — حتى 5 ميجابايت</small><div id="vendorProductImagePreview" class="media-preview"></div></div>
      <div class="full"><label>الوصف</label><textarea id="vendorProductDescription" class="field" rows="3" maxlength="3000"></textarea></div>
      <div class="full row"><button class="primary" type="submit" id="vendorProductSave">حفظ المنتج للمراجعة</button><button class="secondary" type="button" id="vendorProductReset">منتج جديد</button><span id="vendorProductMsg" class="muted"></span></div>
     </form>
@@ -980,6 +980,16 @@ body.store-view .top,body.store-view .searchrow{display:none!important}
     <div id="vendorMyProducts" class="stack"><div class="empty">جارٍ التحميل...</div></div>
    </section>
 
+   <section class="vendor-dashboard-card full">
+    <h3>ملخص أداء المتجر</h3>
+    <div class="vendor-dashboard-grid">
+     <div class="vendor-state"><small>عدد الطلبات</small><strong id="vendorMetricOrders">—</strong></div>
+     <div class="vendor-state"><small>إجمالي المبيعات</small><strong id="vendorMetricSales">—</strong></div>
+     <div class="vendor-state"><small>عمولة المنصة</small><strong id="vendorMetricCommission">—</strong></div>
+     <div class="vendor-state"><small>صافي التاجر</small><strong id="vendorMetricNet">—</strong></div>
+    </div>
+    <div id="vendorSalesBars" class="vendor-state">الرسم البياني للمبيعات — آخر 7 أيام</div>
+   </section>
    <section class="vendor-dashboard-card full">
     <h3>طلبات متجري</h3>
     <p class="vendor-muted-note">تظهر هنا الطلبات المرتبطة بمتجرك فقط. لا تبدأ تجهيز أو شحن الطلب قبل ظهور حالة دفع مؤكدة من مزود الدفع.</p>
@@ -1841,7 +1851,16 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   byId('storeAdminOrderList').innerHTML=(data||[]).map(o=>`<div class="store-admin-row"><div><strong>طلب #${o.id}</strong><small>${esc(o.product_title)} · ${money(o.total_amount)} ر.س · ${esc(o.customer_name)} · ${esc(o.phone)} · ${esc(o.city)}</small><small>الحالة: ${esc(o.order_status)} / الدفع: ${esc(o.payment_status)}</small></div><div class="row"><select class="field" id="orderStatus-${o.id}"><option value="awaiting_payment">بانتظار الدفع</option><option value="paid">مدفوع</option><option value="processing">قيد التجهيز</option><option value="shipped">تم الشحن</option><option value="delivered">تم التسليم</option><option value="cancelled">ملغي</option></select><button class="primary" type="button" onclick="updateStoreOrder('${o.id}')">حفظ</button></div></div>`).join('')||'<div class="empty">لا توجد طلبات.</div>';
   (data||[]).forEach(o=>{const el=byId('orderStatus-'+o.id);if(el)el.value=o.order_status;});
  }
- window.updateStoreOrder=async id=>{const status=byId('orderStatus-'+id).value;const {error}=await sb.from('store_orders').update({order_status:status,...(status==='paid'?{payment_status:'paid'}:{})}).eq('id',id);alert(error?'تعذر تحديث الطلب: '+error.message:'تم تحديث الطلب.');loadAdminOrders();};
+ window.updateStoreOrder=async id=>{
+   const status=byId('orderStatus-'+id).value;
+   const {data:order,error:readError}=await sb.from('store_orders').select('payment_status').eq('id',id).single();
+   if(readError){alert('تعذر التحقق من الدفع: '+readError.message);return;}
+   if(['processing','completed'].includes(status)&&order.payment_status!=='paid'){
+    alert('لا يمكن تجهيز أو إكمال الطلب قبل تأكيد الدفع من بوابة الدفع.');return;
+   }
+   const {error}=await sb.from('store_orders').update({order_status:status}).eq('id',id);
+   alert(error?'تعذر تحديث الطلب: '+error.message:'تم تحديث حالة الطلب فقط.');loadAdminOrders();
+  };
  byId('refreshStoreOrders').addEventListener('click',loadAdminOrders);
  async function loadCodeInventory(){
   const {count,error}=await sb.from('store_digital_codes').select('*',{count:'exact',head:true});
@@ -1888,7 +1907,7 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
  'use strict';
  const vState = {
   stores: [], selectedStore: null, selectedProducts: [], selectedCategory: '',
-  myStore: null, myProducts: [], cart: {},
+  myStore: null, myProducts: [], cart: {}, cartProducts: {},
   promotedStores: new Set(), promotedProducts: new Set(), promotedAds: new Set()
  };
  const v$ = id => document.getElementById(id);
@@ -2092,10 +2111,19 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
  });
 
  function resetVendorProductForm(){
-  v$('vendorProductForm').reset();v$('vendorProductId').value='';v$('vendorProductStock').value=1;
+  v$('vendorProductForm').reset();v$('vendorProductId').value='';v$('vendorProductStock').value=1;v$('vendorProductImagePreview').innerHTML='';
   v$('vendorProductSave').textContent='حفظ المنتج للمراجعة';
  }
  v$('vendorProductReset').addEventListener('click',resetVendorProductForm);
+  v$('vendorProductImageFile').addEventListener('change',()=>{
+   const file=v$('vendorProductImageFile').files?.[0],box=v$('vendorProductImagePreview');
+   if(!box)return;
+   if(!file){box.innerHTML='';return;}
+   if(!file.type.startsWith('image/')||file.size>5*1024*1024){
+    v$('vendorProductImageFile').value='';box.textContent='اختر صورة صالحة لا تتجاوز 5 ميجابايت.';return;
+   }
+   const reader=new FileReader();reader.onload=()=>{box.innerHTML=`<img src="${reader.result}" alt="معاينة صورة المنتج">`};reader.readAsDataURL(file);
+  });
  async function loadMyVendorProducts(){
   if(!vState.myStore)return;
   const {data,error}=await sb.from('vendor_store_products').select('*')
@@ -2114,7 +2142,7 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   v$('vendorProductId').value=p.id;v$('vendorProductName').value=p.title;
   v$('vendorProductCategory').value=p.category||'';v$('vendorProductPrice').value=p.price;
   v$('vendorProductStock').value=p.stock_quantity;v$('vendorProductType').value=p.product_type||'physical';
-  v$('vendorProductImage').value=p.image_url||'';v$('vendorProductDescription').value=p.description||'';
+  v$('vendorProductImageFile').value='';v$('vendorProductImagePreview').innerHTML=p.image_url?`<img src="${vEsc(p.image_url)}" alt="صورة المنتج الحالية"><small>الصورة الحالية — اختر صورة جديدة لاستبدالها</small>`:'';v$('vendorProductDescription').value=p.description||'';
   v$('vendorProductSave').textContent='حفظ التعديل وإعادة المراجعة';
   v$('vendorProductForm').scrollIntoView({behavior:'smooth',block:'center'});
  };
@@ -2130,12 +2158,22 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   const row={
    title:v$('vendorProductName').value.trim(),category:v$('vendorProductCategory').value.trim(),
    price:Number(v$('vendorProductPrice').value),stock_quantity:Number(v$('vendorProductStock').value),
-   product_type:v$('vendorProductType').value,image_url:vSafeUrl(v$('vendorProductImage').value)||null,
+   product_type:v$('vendorProductType').value,
+   image_url:(id?vState.myProducts.find(p=>String(p.id)===String(id))?.image_url:null)||null,
    description:v$('vendorProductDescription').value.trim()
   };
   const button=v$('vendorProductSave');button.disabled=true;
   try{
-   const query=id?sb.from('vendor_store_products').update(row).eq('id',id):
+   const imageFile=v$('vendorProductImageFile').files?.[0];
+   if(imageFile){
+    if(!imageFile.type.startsWith('image/')||imageFile.size>5*1024*1024)throw new Error('الصورة يجب أن تكون صورة فعلية ولا تتجاوز 5 ميجابايت.');
+    const ext=(imageFile.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'')||'jpg';
+    const path=`vendor-products/${currentUser.id}/${Date.now()}-${Math.random().toString(36).slice(2,8)}.${ext}`;
+    const {error:uploadError}=await sb.storage.from('marketplace-assets').upload(path,imageFile,{upsert:false,contentType:imageFile.type});
+    if(uploadError)throw new Error('تعذر رفع الصورة إلى التخزين. تحقق من bucket marketplace-assets وسياساته: '+uploadError.message);
+    row.image_url=sb.storage.from('marketplace-assets').getPublicUrl(path).data.publicUrl;
+   }
+   const query=id?sb.from('vendor_store_products').update(row).eq('id',id).eq('store_id',vState.myStore.id):
     sb.from('vendor_store_products').insert({...row,store_id:vState.myStore.id,owner_id:currentUser.id});
    const {error}=await query;if(error)throw error;
    resetVendorProductForm();vMsg('vendorProductMsg',id?'تم حفظ التعديل وإرسال المنتج للمراجعة من جديد.':'تم استلام المنتج وسيظهر بعد موافقة الإدارة.');
@@ -2206,6 +2244,18 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
    .eq('vendor_owner_id',currentUser.id).order('created_at',{ascending:false}).limit(100);
   if(error){box.innerHTML='<div class="vendor-muted-note">تعذر تحميل الطلبات: '+vEsc(error.message)+'</div>';return;}
   const rows=data||[];
+  const sum=key=>rows.reduce((n,o)=>n+Number(o[key]||0),0);
+  if(v$('vendorMetricOrders'))v$('vendorMetricOrders').textContent=rows.length.toLocaleString('ar-SA');
+  if(v$('vendorMetricSales'))v$('vendorMetricSales').textContent=vMoney(sum('subtotal_amount'));
+  if(v$('vendorMetricCommission'))v$('vendorMetricCommission').textContent=vMoney(sum('commission_amount'));
+  if(v$('vendorMetricNet'))v$('vendorMetricNet').textContent=vMoney(sum('vendor_net_amount'));
+  if(v$('vendorSalesBars')){
+   const days=Array.from({length:7},(_,i)=>{const d=new Date();d.setDate(d.getDate()-(6-i));return d;});
+   const totals=days.map(d=>rows.filter(o=>new Date(o.created_at).toDateString()===d.toDateString()).reduce((n,o)=>n+Number(o.subtotal_amount||0),0));
+   const max=Math.max(1,...totals);
+   v$('vendorSalesBars').innerHTML='<strong>المبيعات اليومية — آخر 7 أيام</strong><div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:7px;align-items:end;height:130px;margin-top:12px">'+days.map((d,i)=>`<div style="display:flex;flex-direction:column;justify-content:end;align-items:center;gap:5px;height:100%"><small>${vMoney(totals[i])}</small><div style="height:${Math.max(4,totals[i]/max*78)}px;width:100%;background:linear-gradient(180deg,#55c9df,#267da5);border-radius:7px 7px 2px 2px"></div><small>${d.toLocaleDateString('ar-SA',{weekday:'short'})}</small></div>`).join('')+'</div>';
+  }
+
   box.innerHTML=rows.length?`<table class="vendor-table"><thead><tr><th>رقم الطلب</th><th>العميل</th><th>الإجمالي</th><th>عمولة المنصة</th><th>صافي مبدئي</th><th>الدفع</th><th>الحالة</th></tr></thead><tbody>${rows.map(o=>{
    const customer=o.vendor_checkout_groups||{};
    return `<tr><td>${vEsc(String(o.id).slice(0,8))}</td><td>${vEsc(customer.customer_name||'')}<br>${vEsc(customer.customer_phone||'')}</td><td>${vMoney(o.subtotal_amount)}</td><td>${vMoney(o.commission_amount)}</td><td>${vMoney(o.vendor_net_amount)}</td><td>${vEsc(vStatusLabel(o.payment_status))}</td><td>${vEsc(vStatusLabel(o.order_status))}</td></tr>`;
