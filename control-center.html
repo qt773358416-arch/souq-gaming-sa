@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
@@ -120,7 +119,7 @@ tr:last-child td{border:0}
 
 <section id="login" class="panel login">
  <h2>تسجيل دخول المدير</h2>
- <p class="muted">يجب أن يكون حسابك مضافاً مسبقاً في جدول store_admins. تسجيل الدخول لا يمنح الصلاحية تلقائياً.</p>
+ <p class="muted">يجب أن يحمل حسابك صلاحية platform_admin في app_metadata. تسجيل الدخول وحده لا يمنح صلاحية الإدارة.</p>
  <form id="loginForm" class="form">
   <label class="full">البريد الإلكتروني
    <input id="email" class="field" type="email" required autocomplete="username">
@@ -130,7 +129,7 @@ tr:last-child td{border:0}
   </label>
   <button class="primary full" type="submit">دخول مركز التحكم</button>
  </form>
- <div id="loginMsg" class="msg" role="status">تأكد من تنفيذ ملف SQL أولاً وإضافة حساب المدير إلى store_admins.</div>
+ <div id="loginMsg" class="msg" role="status">يلزم تعيين صلاحية platform_admin لحسابك من جهة موثوقة قبل الدخول.</div>
 </section>
 
 <section id="app" class="hidden">
@@ -153,6 +152,8 @@ tr:last-child td{border:0}
     <button data-page="vendors">المتاجر والبائعون</button>
     <button data-page="products">منتجات المتجر</button>
     <button data-page="orders">الطلبات</button>
+    <button data-page="finance">المحافظ والعمولات</button>
+    <button data-page="reviews">تقييمات المتاجر</button>
     <button data-page="settings">إعدادات متقدمة</button>
    </nav>
   </aside>
@@ -263,6 +264,28 @@ tr:last-child td{border:0}
     <div id="ordersMsg" class="msg"></div>
    </section>
 
+    <section class="page panel" id="page-finance">
+     <div class="pagehead"><div><h2>محافظ السوق والتجار</h2><div class="muted">قراءة المبيعات والعمولات وصافي مستحقات التجار من السجلات الموجودة</div></div><button id="reloadFinance">تحديث</button></div>
+     <div class="form">
+      <label>من تاريخ<input id="financeFrom" class="field" type="date"></label>
+      <label>إلى تاريخ<input id="financeTo" class="field" type="date"></label>
+      <label class="full">التاجر<select id="financeVendor" class="field"><option value="">جميع التجار</option></select></label>
+     </div>
+     <div class="grid" style="margin-top:14px">
+      <div class="stat"><small>إجمالي قيمة الطلبات</small><strong id="financeGross">—</strong></div>
+      <div class="stat"><small>عمولة المنصة المسجلة</small><strong id="financeCommission">—</strong></div>
+      <div class="stat"><small>صافي التجار المسجل</small><strong id="financeNet">—</strong></div>
+      <div class="stat"><small>عدد الطلبات</small><strong id="financeOrders">—</strong></div>
+     </div>
+     <div class="notice">هذه أرقام سجل الطلبات وليست إثبات تحصيل نقدي. ضريبة القيمة المضافة غير محسوبة هنا لأن ملف الواجهة الحالي لا يثبت وجود عمود ضريبة أو إعداد نسبة ضريبية معتمد. المحفظة الافتراضية لا تعني تحويل أموال حقيقية.</div>
+     <div class="tablewrap"><table><thead><tr><th>رقم الطلب</th><th>التاجر</th><th>الإجمالي</th><th>عمولة المنصة</th><th>صافي التاجر</th><th>الدفع</th><th>الحالة</th><th>التاريخ</th></tr></thead><tbody id="financeRows"></tbody></table></div>
+     <div id="financeMsg" class="msg"></div>
+    </section>
+    <section class="page panel" id="page-reviews">
+     <div class="pagehead"><div><h2>تقييمات المتاجر</h2><div class="muted">مراجعة جاهزية جدول تقييمات المتاجر قبل ربطه</div></div></div>
+     <div class="notice">الملفات المرفوعة تحتوي على seller_reviews لتقييم البائعين المرتبطين بالإعلانات، لكنها لا تثبت وجود جدول مستقل لتقييم المتاجر vendor_store_reviews. لن أعرض تقييمات الإعلانات على أنها تقييمات متاجر أو أخلط بينها.</div>
+     <div class="msg">بعد استلام ملف SQL سنربط جدول تقييمات المتاجر ونضيف متوسط التقييم وعدد المراجعات والبلاغات.</div>
+    </section>
    <section class="page panel" id="page-settings">
     <h2>إعدادات متقدمة وملاحظات الربط</h2>
     <div class="notice">لا تضع مفاتيح سرية أو Service Role في المتصفح. إدارة المستخدمين والصلاحيات، تنفيذ المدفوعات، تغيير الأرصدة، وإرسال الإشعارات الجماعية تحتاج عمليات خادمية وسياسات أمان مستقلة.</div>
@@ -298,10 +321,10 @@ const defaults={
 let user=null;
 
 async function requireAdmin(u){
- const {data,error}=await db.from('store_admins')
-  .select('user_id').eq('user_id',u.id).maybeSingle();
- if(error)throw new Error('تعذر التحقق من صلاحية المدير: '+error.message);
- if(!data)throw new Error('هذا الحساب غير موجود في store_admins. أضف UUID الحساب يدوياً من Supabase.');
+ const meta=u?.app_metadata||{};
+ const roles=Array.isArray(meta.roles)?meta.roles:[];
+ const allowed=meta.role==='platform_admin'||meta.platform_admin===true||roles.includes('platform_admin');
+ if(!allowed)throw new Error('هذا الحساب لا يحمل صلاحية platform_admin. لا تستخدم store_admins لمنح صلاحية مالك المنصة؛ فهي مخصصة لإدارة المتجر الرسمي.');
 }
 
 async function start(u){
@@ -313,7 +336,7 @@ async function start(u){
  $('who').textContent=u.email||u.id;
  await Promise.all([
   loadOverview(),loadAppearance(),loadCategories(),
-  loadElements(),loadBanner()
+  loadElements(),loadBanner(),loadFinance()
  ]);
 }
 
@@ -363,7 +386,7 @@ function openPage(name){
  const loaders={
   categories:loadCategories,elements:loadElements,ads:loadAds,
   vendors:loadVendors,products:loadProducts,orders:loadOrders,
-  banner:loadBanner,appearance:loadAppearance
+  banner:loadBanner,appearance:loadAppearance,finance:loadFinance
  };
  if(loaders[name])loaders[name]();
 }
@@ -567,6 +590,31 @@ $('bannerForm').onsubmit=async e=>{
  const {error}=await db.from('marketplace_home_banner').upsert(row,{onConflict:'id'});
  msg('bannerMsg',error?.message||'تم حفظ البنر');
 };
+
+async function loadFinance(){
+ const from=$('financeFrom').value,to=$('financeTo').value,vendor=$('financeVendor').value;
+ let q=db.from('vendor_orders').select('id,vendor_owner_id,subtotal_amount,commission_amount,vendor_net_amount,payment_status,order_status,created_at').order('created_at',{ascending:false}).limit(2000);
+ if(from)q=q.gte('created_at',from+'T00:00:00');
+ if(to)q=q.lte('created_at',to+'T23:59:59');
+ if(vendor)q=q.eq('vendor_owner_id',vendor);
+ const [{data:orders,error},{data:stores}] = await Promise.all([
+  q,db.from('vendor_stores').select('owner_id,store_name').order('store_name')
+ ]);
+ if(error){msg('financeMsg','تعذر قراءة سجل الطلبات: '+error.message);return;}
+ const rows=orders||[],sum=k=>rows.reduce((n,r)=>n+Number(r[k]||0),0);
+ $('financeGross').textContent=money(sum('subtotal_amount'));
+ $('financeCommission').textContent=money(sum('commission_amount'));
+ $('financeNet').textContent=money(sum('vendor_net_amount'));
+ $('financeOrders').textContent=rows.length.toLocaleString('ar-SA');
+ const select=$('financeVendor'),old=select.value;
+ select.innerHTML='<option value="">جميع التجار</option>'+(stores||[]).map(s=>`<option value="${esc(s.owner_id)}">${esc(s.store_name||s.owner_id)}</option>`).join('');
+ select.value=vendor||old||'';
+ const names=new Map((stores||[]).map(s=>[s.owner_id,s.store_name]));
+ $('financeRows').innerHTML=rows.map(r=>`<tr><td>${esc(String(r.id).slice(0,12))}</td><td>${esc(names.get(r.vendor_owner_id)||r.vendor_owner_id)}</td><td>${money(r.subtotal_amount)}</td><td>${money(r.commission_amount)}</td><td>${money(r.vendor_net_amount)}</td><td>${esc(r.payment_status)}</td><td>${esc(r.order_status)}</td><td>${new Date(r.created_at).toLocaleDateString('ar-SA')}</td></tr>`).join('')||'<tr><td colspan="8" class="empty">لا توجد طلبات في الفترة المحددة</td></tr>';
+ msg('financeMsg','تم تحميل '+rows.length+' طلباً من سجل طلبات المتاجر.');
+}
+$('reloadFinance').onclick=loadFinance;
+['financeFrom','financeTo','financeVendor'].forEach(id=>$(id).addEventListener('change',loadFinance));
 
 async function loadAds(){
  const {data,error}=await db.from('ads')
