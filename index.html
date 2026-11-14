@@ -753,6 +753,30 @@ body.store-view .top,body.store-view .searchrow{display:none!important}
 @media(min-width:761px){.souq-side-float{bottom:28px}.souq-float-panel{bottom:105px}}
 </style>
 
+
+<style id="souq-ai-chat-styles">
+.souq-float-panel.ai-panel{left:12px;bottom:calc(174px + env(safe-area-inset-bottom));width:min(390px,calc(100vw - 24px));height:min(590px,68vh);max-height:calc(100dvh - 190px);padding:0;display:flex;flex-direction:column;overflow:hidden;border:1px solid #31566a;background:#101d28;border-radius:20px;}
+.souq-float-panel.ai-panel.hidden{display:none!important}
+.souq-ai-head{display:flex;align-items:center;justify-content:space-between;padding:13px 15px;background:linear-gradient(120deg,#123644,#17283b);border-bottom:1px solid #29495a;direction:rtl}
+.souq-ai-head>div{display:flex;align-items:center;gap:10px}.souq-ai-mark{display:grid;place-items:center;width:38px;height:38px;border-radius:13px;background:#123e4b;color:#42d9e8;font-size:25px}
+.souq-ai-head h3{margin:0;color:#71e2f0;font-size:16px}.souq-ai-head small{color:#9fb7c4;font-size:11px}
+.souq-ai-head .close-float{float:none;border:0;border-radius:9px;font-size:22px;line-height:1.2}
+.souq-ai-messages{flex:1;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:10px;direction:rtl;overscroll-behavior:contain}
+.souq-ai-msg{max-width:88%;padding:11px 13px;border-radius:15px;font-size:13px;line-height:1.75;white-space:pre-wrap;overflow-wrap:anywhere}
+.souq-ai-msg.assistant{align-self:flex-start;background:#1b2d39;border:1px solid #2c4858;color:#e6f1f5;border-bottom-right-radius:5px}
+.souq-ai-msg.user{align-self:flex-end;background:#0c5967;border:1px solid #168b9b;color:#fff;border-bottom-left-radius:5px}
+.souq-ai-suggestions{display:flex;gap:6px;flex-wrap:wrap;padding:0 12px 9px;direction:rtl}
+.souq-ai-suggestions button{font-size:10px!important;padding:7px 9px!important;border-radius:999px!important;background:#1c3441!important;border:1px solid #345969!important;color:#bdebf0!important}
+.souq-ai-form{display:flex;align-items:flex-end;gap:8px;padding:10px;border-top:1px solid #294454;background:#142531;direction:rtl}
+.souq-ai-form textarea{flex:1;resize:none;max-height:100px;min-height:42px;border:1px solid #365667;border-radius:13px;background:#0d1923;color:#f4fbff;padding:10px 12px;font:inherit;font-size:13px;outline:none}
+.souq-ai-form textarea:focus{border-color:#19c4d5;box-shadow:0 0 0 2px #19c4d522}
+.souq-ai-form button{width:42px;height:42px;flex:0 0 42px;border:0;border-radius:13px;background:#12bfd0;color:#06232b;font-size:22px;font-weight:900}
+.souq-ai-form button:disabled{opacity:.55}
+.souq-ai-foot{text-align:center;color:#8299a6;font-size:9px;padding:0 8px 8px;background:#142531}
+@media(max-width:600px){.souq-float-panel.ai-panel{left:8px;right:8px;bottom:calc(160px + env(safe-area-inset-bottom));width:auto;height:min(62vh,560px);max-height:calc(100dvh - 180px)}}
+@media(min-width:761px){.souq-float-panel.ai-panel{bottom:105px}}
+</style>
+
 </head>
 <body class="theme-dark">
 <div class="wrap">
@@ -1249,7 +1273,7 @@ function renderAdsFromCache(){
  $('activeFilterLabel').textContent=terms.join(' · ')||'كل الأقسام';
  if(!rows.length){box.innerHTML='<div class="empty">لا توجد إعلانات مطابقة للفلاتر الحالية. جرّب تغيير كلمات البحث أو مسح الفلاتر.</div>';return;}
  box.classList.toggle('list-view',document.body.dataset.viewMode==='list');
- box.innerHTML=rows.map(a=>{const img=Array.isArray(a.image_urls)&&a.image_urls.length?a.image_urls[0]:'';const added=a.created_at?new Date(a.created_at).toLocaleDateString('ar-SA'):'—';const city=a.city||a.location||'السعودية';return `<article class="card ad-square-card" role="link" tabindex="0" aria-label="تفاصيل ${esc(a.title||'الإعلان')}" onclick="openAdDetail('${a.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openAdDetail('${a.id}')}" style="cursor:pointer"><div class="ad-image-wrap">${img?`<img class="adimg" src="${esc(img)}" alt="${esc(a.title)}" loading="lazy" onerror="this.style.display='none'">`:`<div class="adimg ad-placeholder" aria-label="لا توجد صورة">لا توجد صورة</div>`}</div><div class="adbody ad-square-body"><h3 title="${esc(a.title)}">${esc(a.title||'إعلان')}</h3><div class="price ad-square-price">${Number(a.price||0).toLocaleString('ar-SA')} <small>ر.س</small></div><div class="ad-square-meta"><span>📍 ${esc(city)}</span><span>🗓 ${esc(added)}</span></div></div></article>`}).join('');
+ box.innerHTML=rows.map(a=>{const img=Array.isArray(a.image_urls)&&a.image_urls.length?a.image_urls[0]:'';const added=a.created_at?new Date(a.created_at).toLocaleDateString('ar-SA'):'—';const city=a.city||a.location||'السعودية';return `<article class="card ad-square-card"><div class="ad-image-wrap"><button class="ad-share-top" type="button" aria-label="مشاركة الإعلان" title="مشاركة الإعلان" onclick="shareAd('${a.id}','${esc(a.title)}')">↗</button>${img?`<img class="adimg" src="${esc(img)}" alt="${esc(a.title)}" loading="lazy" onerror="this.style.display='none'">`:`<div class="adimg ad-placeholder" aria-label="لا توجد صورة">لا توجد صورة</div>`}</div><div class="adbody ad-square-body"><h3 title="${esc(a.title)}">${esc(a.title||'إعلان')}</h3><div class="price ad-square-price">${Number(a.price||0).toLocaleString('ar-SA')} <small>ر.س</small></div>${a.product_terms_accepted?`<span class="ad-pledge-badge ${a.product_condition_status==='defect'?'defect':''}">${a.product_condition_status==='defect'?'⚠ تم الإفصاح عن خلل':'✓ تعهّد البائع بسلامة المنتج'}</span>`:''}<div class="ad-square-meta"><span>📍 ${esc(city)}</span><span>🗓 ${esc(added)}</span></div><button class="primary ad-square-open" type="button" onclick="openAdDetail('${a.id}')" aria-label="عرض التفاصيل">＋</button></div></article>`}).join('');
 }
 async function loadAds(){
  const box=$('ads');
@@ -2459,10 +2483,14 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
 <button class="souq-side-float news" id="souqNewsFloat" type="button" aria-label="أخبار القيمنق">
  <span class="float-icon">📰</span><span>أخبار القيمنق</span>
 </button>
-<section class="souq-float-panel ai-panel hidden" id="souqAiPanel" aria-live="polite">
- <button class="close-float" type="button" data-close-float="souqAiPanel">×</button>
- <h3>✦ مساعد القيمنق</h3>
- <p>مساعد متخصص لمقارنة أجهزة الكمبيوتر وقطعها وأجهزة الألعاب واختيار المنتجات المناسبة. يلزم ربط خدمة الذكاء الاصطناعي بمفتاح API آمن من الخادم لتفعيل المحادثة الذكية.</p>
+<section class="souq-float-panel ai-panel hidden" id="souqAiPanel" aria-label="محادثة مساعد القيمنق">
+ <header class="souq-ai-head"><div><span class="souq-ai-mark">✦</span><div><h3>مساعد القيمنق</h3><small>مساعد سوق القيمنق السعودي</small></div></div><button class="close-float" type="button" data-close-float="souqAiPanel" aria-label="إغلاق">×</button></header>
+ <div class="souq-ai-messages" id="souqAiMessages" aria-live="polite" aria-relevant="additions">
+  <div class="souq-ai-msg assistant">أهلاً بك! 🎮 أنا مساعدك في سوق القيمنق السعودي. اسألني عن الكمبيوترات وقطعها، أجهزة الألعاب، الإكسسوارات، أو طريقة البيع والشراء في السوق.</div>
+ </div>
+ <div class="souq-ai-suggestions" id="souqAiSuggestions"><button type="button" data-ai-prompt="ساعدني أختار كمبيوتر قيمنق حسب ميزانيتي">اختيار كمبيوتر</button><button type="button" data-ai-prompt="كيف أنشر إعلاناً في السوق؟">كيف أنشر إعلان؟</button><button type="button" data-ai-prompt="كيف تعمل عمولة السوق؟">عمولة السوق</button></div>
+ <form class="souq-ai-form" id="souqAiForm"><textarea id="souqAiInput" rows="1" maxlength="1500" placeholder="اكتب سؤالك هنا..." aria-label="اكتب رسالتك" required></textarea><button id="souqAiSend" type="submit" aria-label="إرسال الرسالة">➤</button></form>
+ <div class="souq-ai-foot">قد لا تتوفر للمساعد بيانات الأسعار والمخزون المباشرة حالياً.</div>
 </section>
 <section class="souq-float-panel news-panel hidden" id="souqNewsPanel" aria-live="polite">
  <button class="close-float" type="button" data-close-float="souqNewsPanel">×</button>
@@ -2473,10 +2501,28 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
 (()=>{
  const ai=document.getElementById('souqAiFloat'),news=document.getElementById('souqNewsFloat');
  const aiPanel=document.getElementById('souqAiPanel'),newsPanel=document.getElementById('souqNewsPanel');
+ const form=document.getElementById('souqAiForm'),input=document.getElementById('souqAiInput'),messages=document.getElementById('souqAiMessages'),send=document.getElementById('souqAiSend'),suggestions=document.getElementById('souqAiSuggestions');
+ const history=[];
  const toggle=(panel,other)=>{if(!panel)return;other?.classList.add('hidden');panel.classList.toggle('hidden');};
- ai?.addEventListener('click',()=>toggle(aiPanel,newsPanel));
+ ai?.addEventListener('click',()=>{toggle(aiPanel,newsPanel);if(!aiPanel.classList.contains('hidden'))setTimeout(()=>input?.focus(),80);});
  news?.addEventListener('click',()=>toggle(newsPanel,aiPanel));
  document.querySelectorAll('[data-close-float]').forEach(b=>b.addEventListener('click',()=>document.getElementById(b.dataset.closeFloat)?.classList.add('hidden')));
+ const addMessage=(role,text)=>{const el=document.createElement('div');el.className='souq-ai-msg '+role;el.textContent=text;messages.appendChild(el);messages.scrollTop=messages.scrollHeight;return el;};
+ const sendMessage=async(text)=>{
+  text=(text||'').trim();if(!text||send.disabled)return;
+  suggestions?.classList.add('hidden');addMessage('user',text);history.push({role:'user',content:text});input.value='';input.style.height='auto';send.disabled=true;send.textContent='…';
+  const waiting=addMessage('assistant','لحظة، أجهز لك الإجابة…');
+  try{
+   const res=await fetch('/api/ai-chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:history.slice(-10)})});
+   const data=await res.json().catch(()=>({}));
+   if(!res.ok)throw new Error(data.error||'تعذر الاتصال بالمساعد حالياً.');
+   const answer=String(data.reply||'لم أتمكن من إعداد إجابة.');waiting.textContent=answer;history.push({role:'assistant',content:answer});
+  }catch(err){waiting.textContent=err.message||'حدث خطأ. حاول مرة أخرى.';}
+  finally{send.disabled=false;send.textContent='➤';messages.scrollTop=messages.scrollHeight;input.focus();}
+ };
+ form?.addEventListener('submit',e=>{e.preventDefault();sendMessage(input.value);});
+ input?.addEventListener('input',()=>{input.style.height='auto';input.style.height=Math.min(input.scrollHeight,100)+'px';});
+ suggestions?.querySelectorAll('[data-ai-prompt]').forEach(b=>b.addEventListener('click',()=>sendMessage(b.dataset.aiPrompt)));
 })();
 </script>
 
@@ -2505,46 +2551,6 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
 @media(max-width:600px){.vendor-home-hero{aspect-ratio:2.05/1!important;min-height:142px!important;max-height:175px!important;padding:14px 12px!important;margin:10px 0 13px!important;border-radius:17px!important}.vendor-home-hero-copy{max-width:76%!important}.vendor-home-hero h1{font-size:18px!important}.vendor-home-hero p{font-size:10.5px!important;max-width:100%!important}.vendor-home-hero .primary{font-size:11px!important;padding:7px 12px!important}.vendor-home-hero:after{font-size:66px!important;left:5px!important;bottom:-16px!important}.vendor-category-section{padding:10px 8px 7px;margin:9px 0 12px}.vendor-category-heading strong{font-size:13px}.vendor-category-card{flex-basis:100px;min-height:82px;border-radius:12px}.vendor-category-card>span{font-size:22px}.vendor-category-card b{font-size:10px}}
 </style>
 
-
-<style id="ad-cards-compact-four-column-final">
-/* بطاقات إعلانات صغيرة مثل بطاقات المنتجات في التصميم المرجعي */
-#ads.grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important;align-items:stretch!important}
-#ads.grid>.ad-square-card{display:flex!important;flex-direction:column!important;min-width:0!important;width:auto!important;margin:0!important;padding:0!important;border:1px solid var(--line)!important;border-radius:13px!important;overflow:hidden!important;background:var(--panel)!important;box-shadow:var(--shadow)!important;transition:transform .15s ease,border-color .15s ease}
-#ads.grid>.ad-square-card:active{transform:scale(.985)}
-#ads .ad-square-card .ad-image-wrap{position:relative!important;width:100%!important;aspect-ratio:1/1!important;height:auto!important;margin:0!important;overflow:hidden!important;border-radius:0!important;background:var(--panel2)!important}
-#ads .ad-square-card .adimg{display:block!important;width:100%!important;height:100%!important;min-height:0!important;aspect-ratio:1/1!important;object-fit:cover!important}
-#ads .ad-square-card .adbody{display:flex!important;flex:1!important;flex-direction:column!important;gap:5px!important;min-width:0!important;padding:8px!important;background:transparent!important}
-#ads .ad-square-card .adbody h3{display:-webkit-box!important;-webkit-line-clamp:2!important;-webkit-box-orient:vertical!important;overflow:hidden!important;min-height:2.6em!important;margin:0!important;font-size:12px!important;line-height:1.35!important;color:var(--text)!important}
-#ads .ad-square-price{margin:0!important;font-size:15px!important;font-weight:900!important;color:var(--brand)!important;white-space:nowrap}
-#ads .ad-square-price small{font-size:10px!important}
-#ads .ad-square-meta{display:flex!important;flex-direction:column!important;gap:2px!important;margin-top:2px!important;color:var(--muted)!important;font-size:10px!important;line-height:1.35!important}
-#ads .ad-square-open,#ads .ad-share-top{display:none!important}
-#ads .ad-square-card .ad-pledge-badge{display:none!important}
-#ads .ad-square-card:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
-@media(min-width:700px){#ads.grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important}#ads .ad-square-card .adbody{padding:9px!important}#ads .ad-square-card .adbody h3{font-size:13px!important}#ads .ad-square-price{font-size:16px!important}}
-@media(min-width:1050px){#ads.grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:13px!important}}
-@media(max-width:360px){#ads.grid{gap:7px!important}#ads .ad-square-card .adbody{padding:7px!important}#ads .ad-square-card .adbody h3{font-size:11px!important}#ads .ad-square-price{font-size:14px!important}}
-</style>
-
-
-<style id="souq-ultra-compact-ad-cards">
-/* بطاقات صغيرة جداً: ثلاثة أعمدة على الجوال وأربعة على الكمبيوتر */
-#ads.grid,#ads.grid.list-view{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important;align-items:start!important}
-#ads.grid>.ad-square-card{display:flex!important;flex-direction:column!important;min-width:0!important;width:100%!important;min-height:0!important;margin:0!important;padding:0!important;border:1px solid var(--line)!important;border-radius:11px!important;overflow:hidden!important;background:var(--panel)!important;box-shadow:var(--shadow)!important}
-#ads .ad-square-card .ad-image-wrap{width:100%!important;height:auto!important;min-height:0!important;aspect-ratio:1.18/1!important;overflow:hidden!important}
-#ads .ad-square-card .ad-image-wrap .adimg{width:100%!important;height:100%!important;min-height:0!important;object-fit:cover!important}
-#ads .ad-square-card .adbody{display:flex!important;flex-direction:column!important;gap:3px!important;min-height:0!important;padding:6px 7px 7px!important}
-#ads .ad-square-card .adbody h3{display:-webkit-box!important;-webkit-box-orient:vertical!important;-webkit-line-clamp:2!important;overflow:hidden!important;min-height:0!important;max-height:2.5em!important;margin:0!important;font-size:11px!important;line-height:1.25!important}
-#ads .ad-square-card .ad-square-price{margin:1px 0 0!important;font-size:13px!important;line-height:1.2!important;white-space:nowrap!important}
-#ads .ad-square-card .ad-square-price small{font-size:9px!important}
-#ads .ad-square-card .ad-square-meta{display:flex!important;flex-direction:column!important;gap:1px!important;margin:1px 0 0!important;font-size:9px!important;line-height:1.2!important}
-#ads .ad-square-card .ad-square-meta span{overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
-#ads .ad-square-card .ad-square-open,#ads .ad-square-card .ad-share-top{display:none!important}
-#ads .ad-square-card .ad-pledge-badge,#ads .ad-square-card .actions{display:none!important}
-#ads .ad-square-card{cursor:pointer!important}
-@media(min-width:760px){#ads.grid,#ads.grid.list-view{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:11px!important}#ads .ad-square-card .adbody{padding:7px 8px 8px!important}#ads .ad-square-card .adbody h3{font-size:12px!important}#ads .ad-square-card .ad-square-price{font-size:14px!important}#ads .ad-square-card .ad-square-meta{font-size:10px!important}}
-@media(max-width:360px){#ads.grid,#ads.grid.list-view{gap:6px!important}#ads .ad-square-card .adbody{padding:5px!important}#ads .ad-square-card .adbody h3{font-size:10px!important}#ads .ad-square-card .ad-square-price{font-size:12px!important}#ads .ad-square-card .ad-square-meta{font-size:8px!important}}
-</style>
 </body></html>
 
 
