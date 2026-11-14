@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>أخبار القيمنق | سوق القيمنق السعودي</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{color-scheme:dark;--bg:#101820;--panel:#17232d;--line:#30414d;--text:#eef7fa;--muted:#a4b5c0;--brand:#16c7d9}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.7 Tahoma,Arial,sans-serif}button,input,textarea{font:inherit}button{cursor:pointer;border:1px solid var(--line);border-radius:10px;padding:9px 13px;background:#202f3a;color:var(--text);font-weight:bold}.primary{background:var(--brand);color:#071820}.danger{background:#542333}.wrap{max-width:900px;margin:auto;padding:16px}.panel,.post,.head{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:16px;margin:12px 0}.head,.row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.head a{color:var(--brand)}.field{width:100%;padding:11px;border-radius:9px;background:#0d1722;color:white;border:1px solid var(--line)}.stack{display:grid;gap:9px}.muted,.meta{color:var(--muted);font-size:12px}.post h2{margin:5px 0}.post-body{white-space:pre-wrap;overflow-wrap:anywhere}.post img{width:100%;max-height:420px;object-fit:cover;border-radius:10px}.actions{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0}.react.active{border-color:var(--brand);background:#173744}.comment{padding:10px 0;border-top:1px solid var(--line)}.comment-form{display:grid;grid-template-columns:1fr auto;gap:8px}.notice,.msg{background:#172b38;border:1px solid #31505d;border-radius:9px;padding:10px}.hidden{display:none!important}.empty{text-align:center;padding:24px;color:var(--muted)}@media(max-width:560px){.wrap{padding:9px}.comment-form{grid-template-columns:1fr}}
+</style></head><body><main class="wrap">
+<header class="head"><div><strong style="font-size:20px;color:var(--brand)">📰 أخبار القيمنق</strong><div class="muted">أخبار الألعاب والتقنية في سوق القيمنق السعودي</div></div><a href="./index.html">العودة للسوق ←</a></header>
+<section id="loginNotice" class="panel hidden">سجّل الدخول بحسابك المعتاد في سوق القيمنق. <a href="./index.html#account">تسجيل الدخول</a></section>
+<section id="adminPanel" class="panel hidden"><h2>إدارة الأخبار</h2><form id="newsForm" class="stack"><input id="editId" type="hidden"><input id="newsTitle" class="field" required maxlength="180" placeholder="عنوان الخبر"><textarea id="newsBody" class="field" required maxlength="12000" rows="5" placeholder="تفاصيل الخبر"></textarea><input id="newsImage" class="field" type="url" placeholder="رابط صورة الخبر (اختياري)"><div class="row"><button class="primary" id="publishBtn">نشر الخبر</button><button type="button" id="cancelEdit" class="hidden">إلغاء</button></div><div id="adminMsg" class="msg"></div></form></section>
+<div class="row"><h2>أحدث الأخبار</h2><button id="refreshBtn">تحديث</button></div><div id="newsFeed"><div class="empty">جارٍ تحميل الأخبار...</div></div>
+</main><script>
+const SB_URL='https://hmcsgkavqdsfwqomxakw.supabase.co';
+const SB_KEY='sb_publishable_I2FLI3drU7_xB8tWWGjnOg_b6Sm2j2m';
+const sb=supabase.createClient(SB_URL,SB_KEY);
+const $=id=>document.getElementById(id);let user=null,admin=false,posts=[];
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const isAdmin=u=>!!(u?.app_metadata?.role==='platform_admin'||u?.app_metadata?.platform_admin===true||u?.app_metadata?.is_platform_admin===true);
+const dt=s=>new Date(s).toLocaleString('ar-SA');
+async function loadNews(){
+ const box=$('newsFeed');box.innerHTML='<div class="empty">جارٍ التحميل...</div>';
+ const {data,error}=await sb.from('gaming_news').select('*').order('created_at',{ascending:false}).limit(100);
+ if(error){box.innerHTML='<div class="notice">تعذر تحميل الأخبار: '+esc(error.message)+'</div>';return}
+ posts=data||[];if(!posts.length){box.innerHTML='<div class="empty">لا توجد أخبار منشورة حتى الآن.</div>';return}
+ const ids=posts.map(p=>p.id);
+ const [cr,rr]=await Promise.all([sb.from('news_comments').select('*').in('post_id',ids).order('created_at'),sb.from('news_reactions').select('post_id,user_id,reaction').in('post_id',ids)]);
+ if(cr.error||rr.error){box.innerHTML='<div class="notice">تعذر تحميل التعليقات أو التفاعلات. راجع سياسات Supabase.</div>';return}
+ const comments=cr.data||[],reactions=rr.data||[];
+ box.innerHTML=posts.map(p=>{
+ const cs=comments.filter(c=>c.post_id===p.id),rs=reactions.filter(r=>r.post_id===p.id),mine=rs.find(r=>r.user_id===user?.id)?.reaction;
+ const count=k=>rs.filter(r=>r.reaction===k).length,own=cs.find(c=>c.user_id===user?.id);
+ return `<article class="post"><div class="row"><b style="color:var(--brand)">أخبار سوق القيمنق</b><span class="meta">${dt(p.created_at)}</span></div><h2>${esc(p.title)}</h2>${p.image_url?`<img src="${esc(p.image_url)}" alt="">`:''}<div class="post-body">${esc(p.body)}</div>${admin?`<div class="actions"><button data-edit="${p.id}">تعديل</button><button class="danger" data-delete="${p.id}">حذف الخبر</button></div>`:''}
+ <div class="actions"><button class="react ${mine==='like'?'active':''}" data-react="like" data-post="${p.id}">👍 ${count('like')}</button><button class="react ${mine==='heart'?'active':''}" data-react="heart" data-post="${p.id}">❤️ ${count('heart')}</button><button class="react ${mine==='ok'?'active':''}" data-react="ok" data-post="${p.id}">👌 ${count('ok')}</button><span class="meta">${cs.length} تعليق</span></div>
+ <div>${cs.map(c=>`<div class="comment"><div class="meta">${dt(c.created_at)}</div><div>${esc(c.body)}</div>${user?.id===c.user_id?`<div class="actions"><button data-edit-comment="${c.id}" data-body="${encodeURIComponent(c.body)}">تعديل تعليقي</button><button class="danger" data-delete-comment="${c.id}">حذف</button></div>`:''}${admin?`<button class="danger" data-delete-comment="${c.id}">حذف التعليق</button>`:''}</div>`).join('')}</div>
+ ${user?(own?'<div class="notice">لديك تعليق بالفعل على هذا المنشور. يمكنك تعديله.</div>':`<form class="comment-form" data-comment="${p.id}"><input class="field" name="body" required maxlength="1500" placeholder="اكتب تعليقك (مرة واحدة لكل منشور)"><button class="primary">إرسال</button></form>`):'<div class="notice">سجّل الدخول للتعليق والتفاعل.</div>'}</article>`;
+ }).join('');
+}
+async function boot(){const {data}=await sb.auth.getSession();user=data.session?.user||null;admin=isAdmin(user);$('loginNotice').classList.toggle('hidden',!!user);$('adminPanel').classList.toggle('hidden',!admin);await loadNews();sb.auth.onAuthStateChange((_e,s)=>{user=s?.user||null;admin=isAdmin(user);$('loginNotice').classList.toggle('hidden',!!user);$('adminPanel').classList.toggle('hidden',!admin);loadNews()})}
+$('newsForm').onsubmit=async e=>{e.preventDefault();if(!admin||!user)return;const id=$('editId').value,p={title:$('newsTitle').value.trim(),body:$('newsBody').value.trim(),image_url:$('newsImage').value.trim()||null,status:'published',updated_at:new Date().toISOString()};$('publishBtn').disabled=true;const r=id?await sb.from('gaming_news').update(p).eq('id',id):await sb.from('gaming_news').insert({...p,author_id:user.id});$('publishBtn').disabled=false;if(r.error){$('adminMsg').textContent=r.error.message;return}$('newsForm').reset();$('editId').value='';$('publishBtn').textContent='نشر الخبر';$('cancelEdit').classList.add('hidden');$('adminMsg').textContent='تم الحفظ';loadNews()};
+$('cancelEdit').onclick=()=>{$('newsForm').reset();$('editId').value='';$('publishBtn').textContent='نشر الخبر';$('cancelEdit').classList.add('hidden')};$('refreshBtn').onclick=loadNews;
+$('newsFeed').addEventListener('submit',async e=>{const f=e.target.closest('[data-comment]');if(!f)return;e.preventDefault();if(!user)return alert('سجّل الدخول أولاً');const body=new FormData(f).get('body').toString().trim(),post_id=f.dataset.comment;const {error}=await sb.from('news_comments').insert({post_id,user_id:user.id,body});if(error)alert(error.code==='23505'?'لك تعليق سابق على هذا الخبر.':'تعذر إرسال التعليق: '+error.message);loadNews()});
+$('newsFeed').addEventListener('click',async e=>{const b=e.target.closest('button');if(!b)return;
+if(b.dataset.react){if(!user)return alert('سجّل الدخول أولاً');const post_id=b.dataset.post,reaction=b.dataset.react,{data:old}=await sb.from('news_reactions').select('reaction').eq('post_id',post_id).eq('user_id',user.id).maybeSingle();const r=old?.reaction===reaction?await sb.from('news_reactions').delete().eq('post_id',post_id).eq('user_id',user.id):await sb.from('news_reactions').upsert({post_id,user_id:user.id,reaction},{onConflict:'post_id,user_id'});if(r.error)alert(r.error.message);loadNews();return}
+if(b.dataset.edit){const p=posts.find(x=>x.id===b.dataset.edit);if(!p||!admin)return;$('editId').value=p.id;$('newsTitle').value=p.title;$('newsBody').value=p.body;$('newsImage').value=p.image_url||'';$('publishBtn').textContent='حفظ التعديلات';$('cancelEdit').classList.remove('hidden');$('adminPanel').scrollIntoView({behavior:'smooth'});return}
+if(b.dataset.delete){if(admin&&confirm('حذف الخبر وتعليقاته وتفاعلاته؟')){const {error}=await sb.from('gaming_news').delete().eq('id',b.dataset.delete);if(error)alert(error.message);loadNews()}return}
+if(b.dataset.editComment){const body=prompt('تعديل تعليقك:',decodeURIComponent(b.dataset.body||''));if(body?.trim()){const {error}=await sb.from('news_comments').update({body:body.trim(),updated_at:new Date().toISOString()}).eq('id',b.dataset.editComment).eq('user_id',user.id);if(error)alert(error.message);loadNews()}return}
+if(b.dataset.deleteComment&&confirm('حذف التعليق؟')){const {error}=await sb.from('news_comments').delete().eq('id',b.dataset.deleteComment);if(error)alert(error.message);loadNews()}
+});boot();
+</script></body></html>
