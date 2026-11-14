@@ -1488,6 +1488,104 @@ sb.auth.onAuthStateChange((_event,session)=>{
  if(currentUser){void loadProfile().catch(err=>console.error('Profile refresh failed:',err));}
  else{profile=null;}
 });
+
+/* === ربط واجهة السوق بمركز التحكم === */
+(async function applyPlatformControl(){
+  try {
+    const [appearanceResult, categoriesResult, elementsResult] = await Promise.all([
+      sb.from('platform_control_settings')
+        .select('setting_value')
+        .eq('setting_key', 'appearance')
+        .maybeSingle(),
+      sb.from('platform_control_categories')
+        .select('name, icon, sort_order, is_active')
+        .eq('section', 'ads')
+        .eq('is_active', true)
+        .order('sort_order', { ascending: true }),
+      sb.from('platform_control_elements')
+        .select('element_key, element_value, is_visible')
+    ]);
+
+    // تطبيق ألوان الهوية إذا كانت محفوظة في إعداد appearance.
+    if (!appearanceResult.error) {
+      const colors = appearanceResult.data?.setting_value || {};
+      const cssVariables = {
+        bg: '--bg', panel: '--panel', panel2: '--panel2',
+        text: '--text', muted: '--muted', line: '--line',
+        brand: '--brand', header: '--header'
+      };
+      for (const [key, variable] of Object.entries(cssVariables)) {
+        const color = colors[key];
+        if (typeof color === 'string' && /^#[0-9a-f]{3,8}$/i.test(color)) {
+          document.documentElement.style.setProperty(variable, color);
+        }
+      }
+    } else {
+      console.warn('تعذر تحميل إعدادات المظهر:', appearanceResult.error.message);
+    }
+
+    // استبدال تصنيفات الإعلانات فقط إذا نجح الاستعلام وأعاد تصنيفات.
+    if (!categoriesResult.error && Array.isArray(categoriesResult.data) &&
+        categoriesResult.data.length) {
+      const categoryHost = $('categories');
+      if (categoryHost) {
+        categoryHost.innerHTML =
+          '<button type="button" class="chip selected" data-category="">الكل</button>' +
+          categoriesResult.data.map(category =>
+            `<button type="button" class="chip" data-category="${esc(category.name)}">${esc(category.icon || '🎮')} ${esc(category.name)}</button>`
+          ).join('');
+
+        categoryHost.querySelectorAll('[data-category]').forEach(button => {
+          button.addEventListener('click', () => {
+            selectedCategory = button.dataset.category || '';
+            categoryHost.querySelectorAll('[data-category]').forEach(item => {
+              item.classList.toggle('selected', item === button);
+            });
+            renderAdsFromCache();
+          });
+        });
+      }
+    } else if (categoriesResult.error) {
+      console.warn('تعذر تحميل تصنيفات مركز التحكم:', categoriesResult.error.message);
+    }
+
+    // عناصر الواجهة التي يحددها المدير بصيغة element_key = id:HTML_ID.
+    if (!elementsResult.error && Array.isArray(elementsResult.data)) {
+      for (const item of elementsResult.data) {
+        const key = String(item.element_key || '');
+        if (!key.startsWith('id:')) continue;
+
+        const elementId = key.slice(3);
+        if (!/^[A-Za-z][A-Za-z0-9_-]{0,79}$/.test(elementId)) continue;
+
+        const element = $(elementId);
+        if (!element) continue;
+
+        element.hidden = item.is_visible === false;
+        const value = item.element_value && typeof item.element_value === 'object'
+          ? item.element_value : {};
+
+        if (typeof value.text === 'string') {
+          element.textContent = value.text;
+        }
+
+        if (typeof value.href === 'string' && element instanceof HTMLAnchorElement) {
+          try {
+            const target = new URL(value.href, location.origin);
+            if (target.protocol === 'https:' || target.protocol === 'http:') {
+              element.href = target.href;
+            }
+          } catch (_) {}
+        }
+      }
+    } else if (elementsResult.error) {
+      console.warn('تعذر تحميل إعدادات عناصر الواجهة:', elementsResult.error.message);
+    }
+  } catch (error) {
+    console.warn('تعذر تطبيق إعدادات مركز التحكم:', error?.message || error);
+  }
+})();
+
 </script>
 
 <div id="storeOrderModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="storeOrderTitle" style="position:fixed;inset:0;z-index:10000;background:#000b;display:flex;align-items:center;justify-content:center;padding:14px;overflow:auto">
