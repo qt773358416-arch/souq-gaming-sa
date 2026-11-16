@@ -162,6 +162,91 @@ h2{font-size:clamp(20px,2.2vw,26px);margin:0 0 8px}
  *{scroll-behavior:auto!important;animation:none!important;transition:none!important}
 }
 </style>
+
+<style id="souq-global-admin-enterprise">
+:root{
+ --sa-bg:#08121e;--sa-surface:#101f30;--sa-surface2:#14283b;
+ --sa-line:#263e52;--sa-cyan:#55d7ee;--sa-blue:#638dff;
+ --sa-text:#edf7ff;--sa-muted:#91a8bd;--sa-green:#48d6a1;
+}
+body{
+ background:
+ radial-gradient(ellipse at 8% 0%,#17416b55,transparent 32%),
+ radial-gradient(ellipse at 100% 8%,#0d777744,transparent 28%),
+ var(--sa-bg)!important;
+ color:var(--sa-text)!important;
+}
+.wrap{max-width:1800px!important;padding:clamp(12px,2vw,30px)!important}
+.top{padding:16px 4px 22px!important;border-bottom:1px solid var(--sa-line)}
+.mark{background:linear-gradient(140deg,var(--sa-cyan),var(--sa-blue))!important;box-shadow:0 10px 35px #39c7e733}
+.top h1{letter-spacing:-.6px}
+.layout{grid-template-columns:285px minmax(0,1fr)!important;gap:20px!important}
+.side,.panel,.stat,.tile{
+ background:linear-gradient(145deg,#13263aee,#0e1d2dee)!important;
+ border:1px solid var(--sa-line)!important;
+ box-shadow:0 16px 45px #0003!important;
+ border-radius:20px!important;
+}
+.side{padding:16px!important;max-height:calc(100vh - 30px);overflow:auto}
+.nav{gap:6px!important}
+.nav button{border-radius:12px!important;min-height:45px!important}
+.nav button.active{background:linear-gradient(100deg,#1b4b62aa,#253b70aa)!important;border-color:#55d7ee55!important}
+.stats{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:13px!important}
+.stat{padding:17px!important;position:relative;overflow:hidden}
+.stat:after{content:"";position:absolute;width:90px;height:90px;border-radius:50%;left:-32px;top:-36px;background:#55d7ee12}
+.stat span{font-size:12px!important;color:var(--sa-muted)!important}
+.stat b{font-size:clamp(17px,2vw,25px)!important;color:#f2fbff}
+.grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+.tile{padding:20px!important;min-height:155px}
+.tile h3{font-size:17px!important}
+.tile p{line-height:1.8}
+.tile button{border-radius:11px!important}
+.view.active{animation:saIn .22s ease}
+@keyframes saIn{from{opacity:.6;transform:translateY(5px)}to{opacity:1;transform:none}}
+.sa-kicker{color:var(--sa-cyan);font-size:12px;font-weight:900;letter-spacing:.4px}
+.sa-section-title{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:4px 0 14px}
+.sa-section-title h2{margin:0}
+.sa-live-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0}
+.sa-live-card{border:1px solid var(--sa-line);border-radius:16px;padding:15px;background:#0b1a29}
+.sa-live-card span{display:block;color:var(--sa-muted);font-size:12px}
+.sa-live-card b{display:block;font-size:23px;margin-top:5px;color:#f3fbff}
+.sa-live-card small{display:block;color:#8ea7bd;margin-top:3px}
+.sa-table-wrap{overflow:auto;border:1px solid var(--sa-line);border-radius:14px;margin-top:12px}
+.sa-table{width:100%;border-collapse:collapse;min-width:640px}
+.sa-table th,.sa-table td{padding:12px;text-align:right;border-bottom:1px solid var(--sa-line);font-size:13px}
+.sa-table th{color:#8edff0;background:#10283a}
+.sa-table tr:last-child td{border-bottom:0}
+.sa-status{display:inline-flex;border:1px solid #4b7890;border-radius:99px;padding:3px 9px;font-size:11px;color:#aeeeff}
+.sa-actions{display:flex;gap:6px;flex-wrap:wrap}
+.sa-actions button{padding:7px 10px;font-size:12px}
+.sa-empty{padding:20px;text-align:center;color:var(--sa-muted);border:1px dashed var(--sa-line);border-radius:14px}
+.sa-refresh{background:#19364b;border:1px solid #35617a;color:#dffaff}
+.sa-warning{padding:13px;border:1px solid #755b31;background:#3a2b163d;color:#f5dba8;border-radius:13px;margin:12px 0}
+.frame{border-color:var(--sa-line)!important;border-radius:18px!important}
+.notice{background:#3a2b163d!important;border-color:#755b31!important;color:#f5dba8!important}
+.pill{background:#123b35!important;color:#8ff0c9!important;border-color:#286d5c!important}
+@media(max-width:1050px){
+ .layout{grid-template-columns:1fr!important}
+ .side{max-height:none}
+ .stats{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ .nav{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+}
+@media(max-width:650px){
+ .wrap{padding:10px!important}
+ .top{gap:10px}
+ .top h1{font-size:20px}
+ .stats{gap:8px!important}
+ .stat{padding:12px!important}
+ .grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
+ .tile{padding:13px!important;min-height:150px}
+ .nav{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ .nav button{font-size:11px!important;padding:8px!important}
+ .sa-live-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .sa-live-card{padding:12px}
+ .sa-live-card b{font-size:19px}
+}
+</style>
+
 </head>
 
 <body>
@@ -227,6 +312,8 @@ h2{font-size:clamp(20px,2.2vw,26px);margin:0 0 8px}
    <h3 style="margin-top:0">أقسام الإدارة</h3>
    <nav class="nav">
     <button class="active" data-view="home">الرئيسية</button>
+     <button data-view="operations">مركز العمليات</button>
+     <button data-view="promotions">الترويج المدفوع</button>
     <button data-view="platform">إدارة السوق والإعلانات</button>
     <button data-view="store">إدارة المتجر والمنتجات</button>
     <button data-view="vendors">المتاجر والبائعون</button>
@@ -243,7 +330,34 @@ h2{font-size:clamp(20px,2.2vw,26px);margin:0 0 8px}
 
   <div class="content">
 
-   <section id="view-home" class="panel view active">
+   
+    <section id="view-operations" class="panel view">
+     <div class="sa-section-title">
+      <div><div class="sa-kicker">SOUQ GAMING · OPERATIONS CENTER</div><h2>مركز العمليات</h2><p class="muted">مؤشرات مباشرة من قاعدة بيانات المنصة، وليست أرقاماً تجريبية.</p></div>
+      <button class="sa-refresh" id="saRefreshAll" type="button">↻ تحديث البيانات</button>
+     </div>
+     <div class="sa-live-grid">
+      <div class="sa-live-card"><span>إعلانات السوق</span><b id="saAdsCount">—</b><small>من جدول ads</small></div>
+      <div class="sa-live-card"><span>المتاجر المسجلة</span><b id="saStoresCount">—</b><small>من جدول vendor_stores</small></div>
+      <div class="sa-live-card"><span>طلبات متاجر السوق</span><b id="saVendorOrdersCount">—</b><small>من جدول vendor_orders</small></div>
+      <div class="sa-live-card"><span>طلبات المتجر الرسمي</span><b id="saStoreOrdersCount">—</b><small>من جدول store_orders</small></div>
+     </div>
+     <div class="sa-warning">الأرقام المعروضة إحصاءات سجلات فقط. لا تمثل الأموال المحصلة أو الرصيد البنكي. لن يتم اعتماد دفعة أو تعديل رصيد من هذه اللوحة دون سجل مالي موثوق وتأكيد دفع من مزود الخدمة.</div>
+     <div class="sa-section-title"><h2>آخر المتاجر المقدمة</h2><button class="sa-refresh" id="saRefreshVendors" type="button">تحديث</button></div>
+     <div id="saRecentVendors" class="sa-empty">جارٍ تحميل المتاجر...</div>
+    </section>
+
+    <section id="view-vendors" class="panel view">
+     <div class="sa-section-title"><div><div class="sa-kicker">MERCHANT MANAGEMENT</div><h2>المتاجر والبائعون</h2><p class="muted">مراجعة طلبات الانضمام ومتابعة حالة المتاجر.</p></div><button class="sa-refresh" id="saLoadVendors" type="button">تحديث القائمة</button></div>
+     <div id="saVendorsList" class="sa-empty">جارٍ تحميل المتاجر...</div>
+    </section>
+
+    <section id="view-promotions" class="panel view">
+     <div class="sa-section-title"><div><div class="sa-kicker">PAID VISIBILITY</div><h2>طلبات الترويج المدفوع</h2><p class="muted">مراجعة الطلبات وحالة الدفع. لا يتم تفعيل أي ترويج قبل ثبوت الدفع.</p></div><button class="sa-refresh" id="saLoadPromotions" type="button">تحديث</button></div>
+     <div id="saPromotionsList" class="sa-empty">جارٍ تحميل طلبات الترويج...</div>
+    </section>
+
+    <section id="view-home" class="panel view active">
     <div class="head">
      <div>
       <h2>الرئيسية</h2>
@@ -256,7 +370,7 @@ h2{font-size:clamp(20px,2.2vw,26px);margin:0 0 8px}
      <article class="tile">
       <h3>إدارة السوق</h3>
       <p>الإعلانات، مراجعة المحتوى، المستخدمون، التصنيفات، المظهر وسياسة النشر.</p>
-      <button class="primary" data-open="platform">فتح إدارة السوق</button>
+      <button class="primary" data-open="operations">فتح مركز العمليات</button>
      </article>
 
      <article class="tile">
@@ -303,13 +417,6 @@ h2{font-size:clamp(20px,2.2vw,26px);margin:0 0 8px}
     <iframe class="frame" title="إدارة المتجر" src="./admin.html"></iframe>
    </section>
 
-   <section id="view-vendors" class="panel view">
-    <h2>المتاجر والبائعون</h2>
-    <div class="notice">
-     يحتاج هذا القسم إلى تحديد جدول المتاجر الفعلي وحقول حالة المتجر وبيانات البائع وسياسات الوصول. لن يتم تغيير بنية قاعدة البيانات بالتخمين.
-    </div>
-    <p>المهام المحددة: اعتماد/رفض متجر، إيقافه، تعديل بيانات العرض، مراجعة البائعين، والبحث والتصفية.</p>
-   </section>
 
    <section id="view-banners" class="panel view">
     <h2>البنرات والتحكم بالواجهة</h2>
@@ -413,6 +520,8 @@ async function showDashboard(u){
  $('login').classList.add('hidden');
  $('app').classList.remove('hidden');
  $('logout').classList.remove('hidden');
+  saLoadOperations();
+  saLoadPromotions();
 
  document.querySelector('[data-view="platform"]').classList.toggle('hidden',!isPlatform);
  document.querySelector('[data-view="store"]').classList.toggle('hidden',!isStore);
@@ -547,6 +656,72 @@ $('logout').addEventListener('click',async()=>{
  await sb.auth.signOut();
  location.reload();
 });
+
+
+/* === Live operations modules: use existing project tables only === */
+const saMoney = n => Number(n||0).toLocaleString('ar-SA',{maximumFractionDigits:2})+' ر.س';
+const saEsc = v => String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const saDate = v => v?new Date(v).toLocaleString('ar-SA'):'—';
+async function saCount(table, filters){
+ let q=sb.from(table).select('*',{count:'exact',head:true});
+ if(filters) q=filters(q);
+ const {count,error}=await q;
+ if(error) return {count:null,error};
+ return {count:count||0};
+}
+async function saLoadOperations(){
+ const ids=[
+  ['ads','saAdsCount',q=>q],
+  ['vendor_stores','saStoresCount',q=>q],
+  ['vendor_orders','saVendorOrdersCount',q=>q],
+  ['store_orders','saStoreOrdersCount',q=>q]
+ ];
+ await Promise.all(ids.map(async ([table,id,filter])=>{
+  const r=await saCount(table,filter);
+  const el=$(id);if(el)el.textContent=r.error?'غير متاح':Number(r.count).toLocaleString('ar-SA');
+ }));
+ await saLoadVendors(true);
+}
+async function saLoadVendors(compact=false){
+ const box=$(compact?'saRecentVendors':'saVendorsList');if(!box)return;
+ box.textContent='جارٍ تحميل المتاجر...';
+ const {data,error}=await sb.from('vendor_stores').select('id,owner_id,store_name,slug,category,city,status,created_at,contact_whatsapp')
+  .order('created_at',{ascending:false}).limit(compact?6:150);
+ if(error){box.innerHTML='<div class="sa-empty">تعذر قراءة المتاجر: '+saEsc(error.message)+'</div>';return;}
+ const rows=data||[];
+ if(!rows.length){box.innerHTML='<div class="sa-empty">لا توجد متاجر مسجلة حتى الآن.</div>';return;}
+ box.innerHTML='<div class="sa-table-wrap"><table class="sa-table"><thead><tr><th>المتجر</th><th>المدينة</th><th>التصنيف</th><th>الحالة</th><th>تاريخ الطلب</th>'+(compact?'':'<th>إجراء</th>')+'</tr></thead><tbody>'+
+ rows.map(s=>'<tr><td><strong>'+saEsc(s.store_name)+'</strong><br><small>'+saEsc(s.slug||'')+'</small></td><td>'+saEsc(s.city||'—')+'</td><td>'+saEsc(s.category||'—')+'</td><td><span class="sa-status">'+saEsc(s.status||'—')+'</span></td><td>'+saDate(s.created_at)+'</td>'+
+ (compact?'':'<td><div class="sa-actions">'+(s.status!=='approved'?'<button class="primary" type="button" data-sa-vendor-action="approved" data-id="'+saEsc(s.id)+'">اعتماد</button>':'')+'<button type="button" data-sa-vendor-action="rejected" data-id="'+saEsc(s.id)+'">رفض</button><button type="button" data-sa-vendor-action="pending" data-id="'+saEsc(s.id)+'">إرجاع للمراجعة</button></div></td>')+'</tr>').join('')+
+ '</tbody></table></div>';
+}
+async function saLoadPromotions(){
+ const box=$('saPromotionsList');if(!box)return;box.textContent='جارٍ تحميل طلبات الترويج...';
+ const {data,error}=await sb.from('vendor_promotions').select('id,owner_id,target_type,target_id,package_code,amount_sar,duration_days,status,payment_status,created_at')
+  .order('created_at',{ascending:false}).limit(150);
+ if(error){box.innerHTML='<div class="sa-empty">تعذر قراءة طلبات الترويج: '+saEsc(error.message)+'</div>';return;}
+ const rows=data||[];
+ if(!rows.length){box.innerHTML='<div class="sa-empty">لا توجد طلبات ترويج حالياً.</div>';return;}
+ box.innerHTML='<div class="sa-table-wrap"><table class="sa-table"><thead><tr><th>نوع الترويج</th><th>الباقة</th><th>القيمة</th><th>المدة</th><th>حالة الدفع</th><th>حالة الطلب</th><th>التاريخ</th></tr></thead><tbody>'+
+ rows.map(p=>'<tr><td>'+saEsc(p.target_type)+'<br><small>'+saEsc(String(p.target_id||'').slice(0,12))+'</small></td><td>'+saEsc(p.package_code)+'</td><td>'+saMoney(p.amount_sar)+'</td><td>'+Number(p.duration_days||0)+' يوم</td><td><span class="sa-status">'+saEsc(p.payment_status)+'</span></td><td><span class="sa-status">'+saEsc(p.status)+'</span></td><td>'+saDate(p.created_at)+'</td></tr>').join('')+
+ '</tbody></table></div><p class="muted">هذه القائمة للمتابعة فقط. لا يوجد هنا زر لتغيير الدفع أو تفعيل حملة يدوياً.</p>';
+}
+document.addEventListener('click',async e=>{
+ const b=e.target.closest('[data-sa-vendor-action]');if(!b)return;
+ if(!platformRole((await sb.auth.getUser()).data.user)){alert('هذه العملية مخصصة لمدير المنصة.');return;}
+ const id=b.dataset.id,status=b.dataset.saVendorAction;
+ const labels={approved:'اعتماد هذا المتجر؟',rejected:'رفض طلب هذا المتجر؟',pending:'إرجاع المتجر للمراجعة؟'};
+ if(!confirm(labels[status]||'تأكيد الإجراء؟'))return;
+ b.disabled=true;
+ const {error}=await sb.from('vendor_stores').update({status}).eq('id',id);
+ b.disabled=false;
+ if(error){alert('لم يتم التعديل. تحقق من سياسة RLS وصلاحية مدير المنصة: '+error.message);return;}
+ await Promise.all([saLoadVendors(false),saLoadOperations()]);
+});
+$('saRefreshAll')?.addEventListener('click',saLoadOperations);
+$('saRefreshVendors')?.addEventListener('click',()=>saLoadVendors(true));
+$('saLoadVendors')?.addEventListener('click',()=>saLoadVendors(false));
+$('saLoadPromotions')?.addEventListener('click',saLoadPromotions);
 
 /* التنقل بين أقسام لوحة الإدارة */
 function openView(name){
