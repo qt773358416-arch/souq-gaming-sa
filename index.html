@@ -2498,8 +2498,7 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
 
  window.openVendorDashboard=async()=>{
   if(!needAuth())return;
-  showPage('vendor-dashboard');
-  await loadVendorStoreWorkspace();
+  window.open('vendor-portal.html','_blank','noopener');
  };
  document.querySelectorAll('[data-vendor-dashboard]').forEach(button=>button.addEventListener('click',()=>{if(typeof closeDrawer==='function')closeDrawer();window.openVendorDashboard();}));
  v$('vendorCircleRail')?.addEventListener('click',e=>{
