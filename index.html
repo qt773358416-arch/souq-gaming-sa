@@ -1323,17 +1323,26 @@ function renderAdsFromCache(){
  $('activeFilterLabel').textContent=terms.join(' · ')||'كل الأقسام';
  if(!rows.length){box.innerHTML='<div class="empty">لا توجد إعلانات مطابقة للفلاتر الحالية. جرّب تغيير كلمات البحث أو مسح الفلاتر.</div>';return;}
  box.classList.toggle('list-view',document.body.dataset.viewMode==='list');
- box.innerHTML=rows.map(a=>{const img=Array.isArray(a.image_urls)&&a.image_urls.length?a.image_urls[0]:'';const added=a.created_at?new Date(a.created_at).toLocaleDateString('ar-SA'):'—';const city=a.city||a.location||'السعودية';return `<article class="card ad-square-card ${activePromotedAdIds.has(String(a.id))?'is-paid-promoted':''}" data-ad-card-id="${esc(a.id)}" role="link" tabindex="0" aria-label="عرض تفاصيل ${esc(a.title||'الإعلان')}">${activePromotedAdIds.has(String(a.id))?'<span class="paid-promotion-badge">⭐ مميز مدفوع</span>':''}<div class="ad-image-wrap"><button class="ad-share-top" type="button" aria-label="مشاركة الإعلان" title="مشاركة الإعلان" onclick="shareAd('${a.id}','${esc(a.title)}')">↗</button>${img?`<img class="adimg" src="${esc(img)}" alt="${esc(a.title)}" loading="lazy" onerror="this.style.display='none'">`:`<div class="adimg ad-placeholder" aria-label="لا توجد صورة">لا توجد صورة</div>`}</div><div class="adbody ad-square-body"><h3 title="${esc(a.title)}">${esc(a.title||'إعلان')}</h3><div class="price ad-square-price">${Number(a.price||0).toLocaleString('ar-SA')} <small>ر.س</small></div>${a.product_terms_accepted?`<span class="ad-pledge-badge ${a.product_condition_status==='defect'?'defect':''}">${a.product_condition_status==='defect'?'⚠ تم الإفصاح عن خلل':'✓ تعهّد البائع بسلامة المنتج'}</span>`:''}<div class="ad-square-meta"><span>📍 ${esc(city)}</span><span>🗓 ${esc(added)}</span></div><button class="primary ad-square-open" type="button" onclick="openAdDetail('${a.id}')" aria-label="عرض التفاصيل">＋</button></div></article>`}).join('');
+ box.innerHTML=rows.map(a=>{const img=Array.isArray(a.image_urls)&&a.image_urls.length?a.image_urls[0]:'';const added=a.created_at?new Date(a.created_at).toLocaleDateString('ar-SA'):'—';const city=a.city||a.location||'السعودية';return `<article class="card ad-square-card ${activePromotedAdIds.has(String(a.id))?'is-paid-promoted':''}" data-ad-card-id="${esc(a.id)}" role="link" tabindex="0" aria-label="عرض تفاصيل ${esc(a.title||'الإعلان')}">${activePromotedAdIds.has(String(a.id))?'<span class="paid-promotion-badge">⭐ مميز مدفوع</span>':''}<div class="ad-image-wrap"><button class="ad-share-top" type="button" aria-label="مشاركة الإعلان" title="مشاركة الإعلان" onclick="shareAd('${a.id}','${esc(a.title)}')">↗</button>${img?`<img class="adimg" src="${esc(img)}" alt="${esc(a.title)}" loading="lazy" onerror="this.style.display='none'">`:`<div class="adimg ad-placeholder" aria-label="لا توجد صورة">لا توجد صورة</div>`}</div><div class="adbody ad-square-body"><h3 title="${esc(a.title)}">${esc(a.title||'إعلان')}</h3><div class="ad-square-price-row"><div class="price ad-square-price">${Number(a.price||0).toLocaleString('ar-SA')} <small>ر.س</small></div>${a.product_terms_accepted?`<span class="ad-pledge-badge ad-pledge-icon ${a.product_condition_status==='defect'?'defect':''}" title="${a.product_condition_status==='defect'?'تم الإفصاح عن خلل':'تعهد البائع بسلامة المنتج'}" aria-label="${a.product_condition_status==='defect'?'تم الإفصاح عن خلل':'تعهد البائع بسلامة المنتج'}">${a.product_condition_status==='defect'?'⚠':'✓'}</span>`:''}</div><div class="ad-square-meta"><span>📍 ${esc(city)}</span><span>🗓 ${esc(added)}</span></div><button class="primary ad-square-open" type="button" onclick="openAdDetail('${a.id}')" aria-label="عرض التفاصيل">＋</button></div></article>`}).join('');
 }
 async function loadAds(){
  const box=$('ads');
  if(!box)return;
  box.innerHTML='<div class="empty">جارٍ تحميل الإعلانات...</div>';
  try{
-  let q=sb.from('ads').select('*').eq('status','published').order('created_at',{ascending:false}).limit(200);
-  const {data,error}=await q;
-  if(error){console.error('Ads query error:',error);box.innerHTML='<div class="empty">تعذر تحميل الإعلانات. تحقق من اتصال Supabase وصلاحية قراءة الإعلانات.</div>';return;}
-  adsCache=Array.isArray(data)?data:[];
+  // تحميل الإعلانات على دفعات حتى لا يتوقف العرض عند 200 إعلان.
+  const pageSize=500;
+  let allAds=[], from=0, hasMore=true;
+  while(hasMore){
+   const {data,error}=await sb.from('ads').select('*').eq('status','published')
+    .order('created_at',{ascending:false}).range(from,from+pageSize-1);
+   if(error){console.error('Ads query error:',error);box.innerHTML='<div class="empty">تعذر تحميل الإعلانات. تحقق من اتصال Supabase وصلاحية قراءة الإعلانات.</div>';return;}
+   const page=Array.isArray(data)?data:[];
+   allAds=allAds.concat(page);
+   hasMore=page.length===pageSize;
+   from+=pageSize;
+  }
+  adsCache=allAds;
   const promoResult=await sb.from('ad_promotions').select('ad_id').eq('status','active').eq('payment_status','paid').lte('starts_at',new Date().toISOString()).gt('ends_at',new Date().toISOString());
   activePromotedAdIds=new Set((promoResult.data||[]).map(x=>String(x.ad_id)));
   renderAdsFromCache();
@@ -2005,9 +2014,21 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
  async function loadVendorDirectory() {
   const grid=v$('vendorDirectoryGrid'), rail=v$('vendorCircleRail');
   if(!grid && !rail) return;
-  const {data,error}=await sb.from('vendor_stores')
-   .select('id,store_name,slug,description,city,category,logo_url,is_featured,created_at')
-   .eq('status','approved').order('is_featured',{ascending:false}).order('created_at',{ascending:false}).limit(100);
+  // جلب جميع المتاجر المعتمدة على دفعات، مع إبقاء تصنيف كل متجر كما سجله التاجر.
+  const pageSize=500;
+  let allStores=[], from=0, hasMore=true, error=null;
+  while(hasMore){
+   const result=await sb.from('vendor_stores')
+    .select('id,store_name,slug,description,city,category,logo_url,is_featured,created_at')
+    .eq('status','approved').order('is_featured',{ascending:false}).order('created_at',{ascending:false})
+    .range(from,from+pageSize-1);
+   if(result.error){error=result.error;break;}
+   const page=Array.isArray(result.data)?result.data:[];
+   allStores=allStores.concat(page);
+   hasMore=page.length===pageSize;
+   from+=pageSize;
+  }
+  const data=allStores;
   if(error) {
    console.error('Vendor directory load failed:',error);
    if(grid) grid.innerHTML='<div class="empty">تعذر تحميل متاجر التجار. تأكد من تنفيذ ملف SQL الإضافي وسياسات القراءة العامة.</div>';
@@ -3657,6 +3678,79 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
     gap:4px!important;
     font-size:10px!important;
   }
+}
+</style>
+
+
+<style id="souq-approved-store-and-ad-card-final-fix">
+/* ثلاثة إعلانات في كل سطر على الجوال، مع الحفاظ على الشبكة في الشاشات الكبيرة */
+#ads.grid{
+ display:grid!important;
+ grid-template-columns:repeat(3,minmax(0,1fr))!important;
+ gap:9px!important;
+ align-items:stretch!important;
+}
+#ads.grid>.ad-square-card{
+ display:flex!important;flex-direction:column!important;
+ min-width:0!important;width:auto!important;margin:0!important;padding:0!important;
+ border:1px solid var(--line)!important;border-radius:13px!important;
+ overflow:hidden!important;background:var(--panel)!important;
+ box-shadow:var(--shadow)!important;
+}
+#ads .ad-square-card .ad-image-wrap{
+ position:relative!important;width:100%!important;aspect-ratio:1/1!important;
+ height:auto!important;margin:0!important;overflow:hidden!important;
+ border-radius:0!important;background:var(--panel2)!important;
+}
+#ads .ad-square-card .adimg{
+ display:block!important;width:100%!important;height:100%!important;
+ min-height:0!important;aspect-ratio:1/1!important;object-fit:cover!important;
+}
+#ads .ad-square-card .adbody{
+ display:flex!important;flex:1!important;flex-direction:column!important;
+ gap:6px!important;min-width:0!important;padding:8px!important;
+ background:transparent!important;
+}
+#ads .ad-square-card .adbody h3{
+ order:0!important;display:-webkit-box!important;-webkit-line-clamp:2!important;
+ -webkit-box-orient:vertical!important;overflow:hidden!important;
+ min-height:2.7em!important;margin:0!important;font-size:12px!important;
+ line-height:1.4!important;color:var(--text)!important;
+}
+#ads .ad-square-card .ad-square-price-row{
+ display:flex!important;align-items:center!important;justify-content:space-between!important;
+ gap:5px!important;min-width:0!important;order:1!important;
+}
+#ads .ad-square-card .price{font-size:14px!important;font-weight:900!important;margin:0!important}
+#ads .ad-square-card .ad-pledge-icon{
+ display:inline-grid!important;place-items:center!important;flex:0 0 23px!important;
+ width:23px!important;height:23px!important;padding:0!important;
+ border-radius:50%!important;background:#173744!important;color:#70d9f0!important;
+ border:1px solid #315766!important;font-size:13px!important;font-weight:900!important;
+ line-height:1!important;
+}
+#ads .ad-square-card .ad-pledge-icon.defect{background:#492b22!important;color:#ffd08a!important;border-color:#8b5a36!important}
+#ads .ad-square-card .ad-square-meta{order:2!important;display:flex!important;justify-content:space-between!important;gap:3px!important;flex-wrap:wrap!important;font-size:9px!important;color:var(--muted)!important}
+#ads .ad-square-card .ad-square-open{order:3!important;width:100%!important;min-height:30px!important;padding:4px!important;font-size:11px!important;margin-top:auto!important}
+#ads .ad-square-card .ad-share-top{width:27px!important;height:27px!important;top:5px!important;left:5px!important;font-size:14px!important}
+#ads .ad-square-card .paid-promotion-badge{font-size:9px!important;z-index:4}
+
+/* إظهار المتاجر المعتمدة داخل قسم التصنيف المطابق دون تغيير تصميم بقية الصفحة */
+#vendorDirectoryGrid{align-items:stretch}
+@media(max-width:760px){
+ #ads.grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:7px!important}
+ #ads .ad-square-card .adbody{padding:6px!important;gap:5px!important}
+ #ads .ad-square-card .adbody h3{font-size:11px!important;min-height:2.7em!important}
+ #ads .ad-square-card .price{font-size:12px!important}
+ #ads .ad-square-card .price small{font-size:9px!important}
+ #ads .ad-square-card .ad-square-meta{font-size:8px!important}
+ #ads .ad-square-card .ad-pledge-icon{width:21px!important;height:21px!important;flex-basis:21px!important}
+}
+@media(max-width:360px){
+ #ads.grid{gap:5px!important}
+ #ads .ad-square-card .adbody{padding:5px!important}
+ #ads .ad-square-card .adbody h3{font-size:10px!important}
+ #ads .ad-square-card .price{font-size:11px!important}
 }
 </style>
 
