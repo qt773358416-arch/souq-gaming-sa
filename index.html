@@ -3521,6 +3521,145 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
 })();
 </script>
 
+
+<style id="souq-filter-button-alignment-fix">
+/* تصحيح شريط التصنيفات والفلاتر: ارتفاع موحد وبدون فراغ رأسي */
+#page-home .home-browse-combined {
+  display:flex!important;
+  flex-direction:row!important;
+  align-items:center!important;
+  gap:8px!important;
+  min-height:0!important;
+  height:auto!important;
+  padding:8px!important;
+  margin:8px 0 12px!important;
+  overflow:hidden!important;
+  border-radius:13px!important;
+  box-sizing:border-box!important;
+}
+#page-home .home-browse-combined .home-personal-categories {
+  flex:1 1 0!important;
+  width:auto!important;
+  min-width:0!important;
+  height:auto!important;
+  padding:0!important;
+  margin:0!important;
+  overflow:hidden!important;
+}
+#page-home .home-browse-combined .home-personal-categories .categories {
+  display:flex!important;
+  align-items:center!important;
+  flex-wrap:nowrap!important;
+  gap:7px!important;
+  width:100%!important;
+  min-width:0!important;
+  height:46px!important;
+  padding:2px 0!important;
+  margin:0!important;
+  overflow-x:auto!important;
+  overflow-y:hidden!important;
+  scrollbar-width:none!important;
+  -webkit-overflow-scrolling:touch!important;
+}
+#page-home .home-browse-combined .home-personal-categories .categories::-webkit-scrollbar {
+  display:none!important;
+}
+#page-home .home-browse-combined .home-personal-categories .chip {
+  flex:0 0 auto!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-height:40px!important;
+  height:40px!important;
+  padding:0 12px!important;
+  margin:0!important;
+  border-radius:10px!important;
+  font-size:12px!important;
+  line-height:1!important;
+  white-space:nowrap!important;
+}
+#page-home .home-browse-combined .listing-tools {
+  position:relative!important;
+  flex:0 0 auto!important;
+  width:auto!important;
+  min-width:0!important;
+  max-width:none!important;
+  height:auto!important;
+  min-height:0!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  overflow:visible!important;
+}
+#page-home .home-browse-combined .listing-tools-title {
+  display:none!important;
+}
+#page-home .home-browse-combined .smart-filter-toggle {
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:6px!important;
+  width:auto!important;
+  min-width:0!important;
+  min-height:40px!important;
+  height:40px!important;
+  margin:0!important;
+  padding:0 12px!important;
+  border:1px solid #3a596a!important;
+  border-radius:10px!important;
+  background:#203542!important;
+  color:#eaf8fc!important;
+  box-shadow:none!important;
+  font-size:12px!important;
+  line-height:1!important;
+  font-weight:800!important;
+  white-space:nowrap!important;
+}
+#page-home .home-browse-combined .smart-filter-toggle .smart-filter-chevron {
+  margin:0!important;
+  font-size:15px!important;
+  line-height:1!important;
+}
+#page-home .home-browse-combined .listing-advanced {
+  position:absolute!important;
+  z-index:30!important;
+  top:calc(100% + 8px)!important;
+  right:0!important;
+  left:auto!important;
+  width:min(310px,calc(100vw - 32px))!important;
+  max-width:calc(100vw - 32px)!important;
+  box-sizing:border-box!important;
+}
+@media(max-width:600px) {
+  #page-home .home-browse-combined {
+    min-height:0!important;
+    height:auto!important;
+    padding:7px!important;
+    gap:6px!important;
+  }
+  #page-home .home-browse-combined .home-personal-categories .categories {
+    height:42px!important;
+    gap:5px!important;
+  }
+  #page-home .home-browse-combined .home-personal-categories .chip {
+    min-height:36px!important;
+    height:36px!important;
+    padding:0 9px!important;
+    font-size:10px!important;
+  }
+  #page-home .home-browse-combined .smart-filter-toggle {
+    min-height:36px!important;
+    height:36px!important;
+    padding:0 9px!important;
+    gap:4px!important;
+    font-size:10px!important;
+  }
+}
+</style>
+
 </body></html>
 
 
