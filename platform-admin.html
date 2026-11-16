@@ -317,6 +317,7 @@ body{
     <button data-view="platform">إدارة السوق والإعلانات</button>
     <button data-view="store">إدارة المتجر والمنتجات</button>
     <button data-view="vendors">المتاجر والبائعون</button>
+     <button data-view="agreements">اتفاقيات التجار</button>
     <button data-view="banners">البنرات والواجهة</button>
     <button data-view="links">الأزرار والروابط</button>
     <button data-view="news">القناة الإخبارية</button>
@@ -352,6 +353,12 @@ body{
      <div id="saVendorsList" class="sa-empty">جارٍ تحميل المتاجر...</div>
     </section>
 
+    <section id="view-agreements" class="panel view">
+     <div class="sa-section-title"><div><div class="sa-kicker">MERCHANT AGREEMENTS</div><h2>اتفاقيات التجار</h2><p class="muted">إنشاء المسودات ومتابعة القبول.</p></div><button class="sa-refresh" id="saLoadAgreements" type="button">تحديث الاتفاقيات</button></div>
+     <div class="notice">الإرسال الآلي للبريد وواتساب غير مفعّل هنا. انسخ نص الاتفاقية وأرسله فعلياً للتاجر، ثم سجّل تأكيد الإرسال.</div>
+     <div id="saAgreementsList" class="sa-empty">جارٍ تحميل الاتفاقيات...</div>
+    </section>
+
     <section id="view-promotions" class="panel view">
      <div class="sa-section-title"><div><div class="sa-kicker">PAID VISIBILITY</div><h2>طلبات الترويج المدفوع</h2><p class="muted">مراجعة الطلبات وحالة الدفع. لا يتم تفعيل أي ترويج قبل ثبوت الدفع.</p></div><button class="sa-refresh" id="saLoadPromotions" type="button">تحديث</button></div>
      <div id="saPromotionsList" class="sa-empty">جارٍ تحميل طلبات الترويج...</div>
@@ -381,7 +388,7 @@ body{
 
      <article class="tile">
       <h3>المتاجر والبائعون</h3>
-      <p>اعتماد المتاجر ومراجعة بيانات البائعين بعد ربط جداول المنصة المعتمدة.</p>
+      <p>مراجعة طلبات المتاجر وإنشاء اتفاقيات الانضمام قبل تفعيل البيع.</p>
       <button data-open="vendors">عرض القسم</button>
      </article>
 
@@ -692,7 +699,7 @@ async function saLoadVendors(compact=false){
  if(!rows.length){box.innerHTML='<div class="sa-empty">لا توجد متاجر مسجلة حتى الآن.</div>';return;}
  box.innerHTML='<div class="sa-table-wrap"><table class="sa-table"><thead><tr><th>المتجر</th><th>المدينة</th><th>التصنيف</th><th>الحالة</th><th>تاريخ الطلب</th>'+(compact?'':'<th>إجراء</th>')+'</tr></thead><tbody>'+
  rows.map(s=>'<tr><td><strong>'+saEsc(s.store_name)+'</strong><br><small>'+saEsc(s.slug||'')+'</small></td><td>'+saEsc(s.city||'—')+'</td><td>'+saEsc(s.category||'—')+'</td><td><span class="sa-status">'+saEsc(s.status||'—')+'</span></td><td>'+saDate(s.created_at)+'</td>'+
- (compact?'':'<td><div class="sa-actions">'+(s.status!=='approved'?'<button class="primary" type="button" data-sa-vendor-action="approved" data-id="'+saEsc(s.id)+'">اعتماد</button>':'')+'<button type="button" data-sa-vendor-action="rejected" data-id="'+saEsc(s.id)+'">رفض</button><button type="button" data-sa-vendor-action="pending" data-id="'+saEsc(s.id)+'">إرجاع للمراجعة</button></div></td>')+'</tr>').join('')+
+ (compact?'':'<td><div class="sa-actions"><button class="primary" type="button" data-sa-store-agreement="1" data-id="'+saEsc(s.id)+'" data-owner="'+saEsc(s.owner_id||'')+'" data-name="'+saEsc(s.store_name||'')+'">الاتفاقية</button>'+(s.status!=='approved'?'<button type="button" data-sa-vendor-action="rejected" data-id="'+saEsc(s.id)+'">رفض</button>':'')+'</div></td>')+'</tr>').join('')+
  '</tbody></table></div>';
 }
 async function saLoadPromotions(){
@@ -706,14 +713,78 @@ async function saLoadPromotions(){
  rows.map(p=>'<tr><td>'+saEsc(p.target_type)+'<br><small>'+saEsc(String(p.target_id||'').slice(0,12))+'</small></td><td>'+saEsc(p.package_code)+'</td><td>'+saMoney(p.amount_sar)+'</td><td>'+Number(p.duration_days||0)+' يوم</td><td><span class="sa-status">'+saEsc(p.payment_status)+'</span></td><td><span class="sa-status">'+saEsc(p.status)+'</span></td><td>'+saDate(p.created_at)+'</td></tr>').join('')+
  '</tbody></table></div><p class="muted">هذه القائمة للمتابعة فقط. لا يوجد هنا زر لتغيير الدفع أو تفعيل حملة يدوياً.</p>';
 }
+
+/* إدارة اتفاقيات التجار: إنشاء مسودة فقط، والتفعيل عبر RPC قبول التاجر */
+let saAgreementRows=[];
+function saBuildAgreementText(storeName,cfg,version){
+ return `اتفاقية انضمام تاجر إلى سوق القيمنق السعودي
+المتجر: ${storeName}
+الإصدار: ${version}
+
+عمولة المنصة: ${cfg.commission_percent}%.
+رسوم التوصيل: على ${cfg.delivery_payer==='merchant'?'التاجر':cfg.delivery_payer==='customer'?'العميل':'حسب الطلب'}.
+تفاصيل التوصيل: ${cfg.delivery_fee_note||'وفق الرسوم الموضحة عند الطلب'}.
+ضريبة القيمة المضافة: ${cfg.vat_rate}% إذا كانت واجبة التطبيق وفق وضع التسجيل والفاتورة النظامية.
+رسوم الدفع الإلكتروني: ${cfg.payment_fee_percent}% + ${cfg.payment_fee_fixed} ريال لكل عملية إذا انطبقت.
+التكاليف الإضافية: ${cfg.other_fees||'لا توجد رسوم إضافية محددة'}.
+مواعيد التسوية: ${cfg.settlement_terms||'وفق دورة التسوية المعتمدة'}.
+الإلغاء والاسترجاع: ${cfg.cancellation_terms||'وفق سياسة المنصة والأنظمة المعمول بها'}.
+شروط إضافية: ${cfg.additional_terms||'لا توجد'}.
+
+لا يبدأ المتجر البيع إلا بعد قبول التاجر لهذه الاتفاقية من حسابه في المنصة.`;
+}
+async function saCreateAgreement(storeId,ownerId,storeName){
+ if(!storeId||!ownerId){alert('بيانات المتجر أو owner_id غير متوفرة؛ لم يتم إنشاء الاتفاقية.');return;}
+ const {data:cfg,error:cfgErr}=await sb.from('vendor_agreement_settings').select('*').order('updated_at',{ascending:false}).limit(1).maybeSingle();
+ if(cfgErr){alert('تعذر قراءة إعدادات الاتفاقية: '+cfgErr.message);return;}
+ const settings=cfg||{commission_percent:2,delivery_payer:'merchant',delivery_fee_note:'',vat_rate:15,payment_fee_percent:0,payment_fee_fixed:0,other_fees:'',settlement_terms:'وفق دورة التسوية المعتمدة',cancellation_terms:'وفق سياسة المنصة',additional_terms:''};
+ const {data:prev,error:prevErr}=await sb.from('vendor_agreements').select('version').eq('store_id',storeId).order('created_at',{ascending:false}).limit(1);
+ if(prevErr){alert('تعذر قراءة إصدار الاتفاقية السابق: '+prevErr.message);return;}
+ const version=(Number(prev?.[0]?.version)||0)+1;
+ const agreementText=saBuildAgreementText(storeName,settings,version);
+ const {error}=await sb.from('vendor_agreements').insert({store_id:storeId,owner_id:ownerId,version,title:'اتفاقية التاجر - '+storeName,terms_snapshot:{...settings,store_name:storeName,version},agreement_text:agreementText,status:'draft'});
+ if(error){alert('تعذر إنشاء مسودة الاتفاقية: '+error.message);return;}
+ alert('تم إنشاء المسودة. انتقل إلى قسم اتفاقيات التجار لعرض النص ونسخه. لم يتم إرسالها أو تفعيل المتجر.');
+ await saLoadAgreements();
+}
+async function saLoadAgreements(){
+ const box=$('saAgreementsList');if(!box)return;box.textContent='جارٍ تحميل الاتفاقيات...';
+ const {data,error}=await sb.from('vendor_agreements').select('id,store_id,owner_id,version,title,agreement_text,status,sent_at,accepted_at,created_at').order('created_at',{ascending:false}).limit(150);
+ if(error){box.innerHTML='<div class="sa-empty">تعذر تحميل الاتفاقيات: '+saEsc(error.message)+'</div>';return;}
+ saAgreementRows=data||[];
+ if(!saAgreementRows.length){box.innerHTML='<div class="sa-empty">لا توجد اتفاقيات.</div>';return;}
+ box.innerHTML='<div class="sa-table-wrap"><table class="sa-table"><thead><tr><th>الاتفاقية</th><th>الإصدار</th><th>الحالة</th><th>التاريخ</th><th>الإجراء</th></tr></thead><tbody>'+
+ saAgreementRows.map(a=>'<tr><td>'+saEsc(a.title||a.store_id)+'</td><td>'+Number(a.version||1)+'</td><td>'+saEsc(a.status)+'</td><td>'+saDate(a.created_at)+'</td><td><div class="sa-actions"><button type="button" data-sa-preview="'+saEsc(a.id)+'">عرض ونسخ النص</button></div></td></tr>').join('')+
+ '</tbody></table></div><div id="saAgreementTextPreview" class="notice hidden" style="white-space:pre-wrap;overflow-wrap:anywhere"></div>';
+}
+document.addEventListener('click',async e=>{
+ const storeAgreement=e.target.closest('[data-sa-store-agreement]');
+ if(storeAgreement){
+  if(!platformRole((await sb.auth.getUser()).data.user)){alert('هذه العملية لمدير المنصة فقط.');return;}
+  const storeId=storeAgreement.dataset.id;
+  const {data:existing,error}=await sb.from('vendor_agreements').select('id,store_id,owner_id,version,title,agreement_text,status,sent_at,accepted_at,created_at').eq('store_id',storeId).order('created_at',{ascending:false}).limit(1);
+  if(error){alert('تعذر التحقق من اتفاقية المتجر: '+error.message);return;}
+  if(existing&&existing.length){
+   await saLoadAgreements();
+   const a=saAgreementRows.find(x=>x.id===existing[0].id);
+   if(a){const el=$('saAgreementTextPreview');if(el){el.textContent=a.agreement_text||'لا يوجد نص محفوظ';el.classList.remove('hidden');try{await navigator.clipboard.writeText(a.agreement_text||'');alert('تم فتح آخر اتفاقية ونسخ نصها.');}catch(_){alert('تم فتح نص الاتفاقية. انسخه يدوياً من قسم اتفاقيات التجار.');}}}
+   else{alert('تم العثور على اتفاقية لهذا المتجر. افتح قسم اتفاقيات التجار لعرضها.');}
+  }else{await saCreateAgreement(storeId,storeAgreement.dataset.owner,storeAgreement.dataset.name);}
+  return;
+ }
+ const preview=e.target.closest('[data-sa-preview]');
+ if(preview){const a=saAgreementRows.find(x=>x.id===preview.dataset.saPreview);if(!a)return;const el=$('saAgreementTextPreview');el.textContent=a.agreement_text||'لا يوجد نص محفوظ';el.classList.remove('hidden');try{await navigator.clipboard.writeText(a.agreement_text||'');preview.textContent='تم النسخ';}catch(_){preview.textContent='انسخ النص الظاهر يدوياً';}}
+});
+$('saLoadAgreements')?.addEventListener('click',saLoadAgreements);
+
 document.addEventListener('click',async e=>{
  const b=e.target.closest('[data-sa-vendor-action]');if(!b)return;
  if(!platformRole((await sb.auth.getUser()).data.user)){alert('هذه العملية مخصصة لمدير المنصة.');return;}
  const id=b.dataset.id,status=b.dataset.saVendorAction;
- const labels={approved:'اعتماد هذا المتجر؟',rejected:'رفض طلب هذا المتجر؟',pending:'إرجاع المتجر للمراجعة؟'};
+ if(status!=='rejected'){alert('تفعيل المتجر يتم فقط بعد قبول الاتفاقية من حساب التاجر.');return;} const labels={rejected:'رفض طلب هذا المتجر؟'};
  if(!confirm(labels[status]||'تأكيد الإجراء؟'))return;
  b.disabled=true;
- const {error}=await sb.from('vendor_stores').update({status}).eq('id',id);
+ const {error}=await sb.from('vendor_stores').update({status:'rejected'}).eq('id',id);
  b.disabled=false;
  if(error){alert('لم يتم التعديل. تحقق من سياسة RLS وصلاحية مدير المنصة: '+error.message);return;}
  await Promise.all([saLoadVendors(false),saLoadOperations()]);
