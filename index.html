@@ -2029,6 +2029,10 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
  }
  function renderVendorCircles() {
   const rail=v$('vendorCircleRail'); if(!rail) return;
+  // لا تعرض المتاجر المعتمدة في الرئيسية؛ تظهر فقط بعد اختيار تصنيف المتاجر.
+  rail.innerHTML='';
+  rail.setAttribute('hidden','');
+  return;
   const categories=[
    {name:'بلايستيشن',aliases:['بلايستيشن','playstation','ps5','ps4','ps']},
    {name:'إكس بوكس',aliases:['إكس بوكس','اكس بوكس','xbox']},
@@ -2073,18 +2077,35 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
  function renderVendorDirectory() {
   const grid=v$('vendorDirectoryGrid'); if(!grid) return;
   const term=(v$('vendorDirectorySearch')?.value||'').trim().toLowerCase();
-  const intro=v$('page-vendors')?.querySelector('.vendor-page-intro h1');if(intro)intro.textContent=vState.selectedCategory?'متاجر '+vState.selectedCategory:'متاجر القيمنق';
+  const intro=v$('page-vendors')?.querySelector('.vendor-page-intro h1');
+  if(intro)intro.textContent=vState.selectedCategory?'متاجر '+vState.selectedCategory:'متاجر القيمنق';
   const categoryAliases={
-   'بلايستيشن':['بلايستيشن','playstation','ps5','ps4','ps'],
+   'بلايستيشن':['بلايستيشن','playstation','ps5','ps4'],
    'إكس بوكس':['إكس بوكس','اكس بوكس','xbox'],
-   'كمبيوترات':['كمبيوترات','كمبيوتر','pc','gaming pc'],
-   'قطع الكمبيوتر':['قطع الكمبيوتر','قطع pc','مكونات الكمبيوتر','pc parts'],
+   'أجهزة الألعاب':['أجهزة الألعاب','اجهزة الألعاب','gaming consoles','console'],
+   'كمبيوترات':['كمبيوترات','كمبيوتر','computer','computers','pc','gaming pc'],
+   'قطع الكمبيوتر':['قطع الكمبيوتر','قطع pc','مكونات الكمبيوتر','pc parts','computer parts'],
    'شاشات وملحقات':['شاشات وملحقات','شاشات','monitor','screens'],
+   'جوالات وإلكترونيات':['جوالات وإلكترونيات','جوالات','الكترونيات','electronics','mobile'],
+   'خدمات وصيانة':['خدمات وصيانة','صيانة','خدمات','repair','maintenance'],
    'إكسسوارات القيمنق':['إكسسوارات القيمنق','اكسسوارات','ملحقات القيمنق','accessories']
   };
-  const wanted=(categoryAliases[vState.selectedCategory]||[vState.selectedCategory]).map(x=>x.toLowerCase());
-  const rows=vState.stores.filter(store=>(!vState.selectedCategory||wanted.some(x=>String(store.category||'').toLowerCase().includes(x)))&&[store.store_name,store.city,store.category,store.description].join(' ').toLowerCase().includes(term));
-  if(!rows.length){grid.innerHTML='<div class="empty" style="grid-column:1/-1">لا توجد متاجر مطابقة حالياً.</div>';return;}
+  const norm=value=>normalizeStoreText(String(value||'')).toLowerCase().trim();
+  const wanted=(categoryAliases[vState.selectedCategory]||[vState.selectedCategory])
+    .map(norm).filter(Boolean);
+  const rows=vState.stores.filter(store=>{
+   const storeCategory=norm(store.category);
+   const categoryMatch=!vState.selectedCategory || wanted.some(alias=>
+    storeCategory===alias || storeCategory.includes(alias) || alias.includes(storeCategory)
+   );
+   const searchMatch=[store.store_name,store.city,store.category,store.description]
+    .map(norm).join(' ').includes(norm(term));
+   return categoryMatch&&searchMatch;
+  });
+  if(!rows.length){
+   grid.innerHTML='<div class="empty" style="grid-column:1/-1">لا توجد متاجر معتمدة ضمن هذا التصنيف حالياً.</div>';
+   return;
+  }
   grid.innerHTML=rows.map(store=>`
    <article class="vendor-directory-card">
     <div class="vendor-directory-cover">${vSafeUrl(store.logo_url)?`<img src="${vEsc(vSafeUrl(store.logo_url))}" alt="" loading="lazy">`:'🎮'}</div>
@@ -3944,6 +3965,14 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
  .vendor-category-store-items{gap:8px!important}
  .vendor-category-store-items .vendor-circle{flex-basis:68px!important;width:68px!important;max-width:68px!important}
 }
+</style>
+
+
+<style id="souq-hide-home-store-list-show-by-category-only">
+#vendorCircleRail[hidden],
+#vendorCircleRail{display:none!important;height:0!important;min-height:0!important;margin:0!important;padding:0!important;border:0!important}
+#vendorCircleSection{display:block!important}
+#vendorCategoryCircleRail{display:flex!important}
 </style>
 
 </body>
