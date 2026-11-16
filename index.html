@@ -861,6 +861,7 @@ body.store-view .top,body.store-view .searchrow{display:none!important}
  </div>
  <div class="vendor-circle-rail" id="vendorCircleRail"><div class="muted">جارٍ تحميل المتاجر...</div></div>
 </div>
+<div class="home-browse-combined" aria-label="تصفح وتصنيف الإعلانات">
 <div class="home-personal-categories" aria-label="تصنيفات إعلانات الأفراد">
  <div class="home-personal-categories-head"><strong>تصفح إعلانات الأفراد</strong><span>اختر التصنيف</span></div>
  <div class="categories" id="categories">
@@ -893,6 +894,7 @@ body.store-view .top,body.store-view .searchrow{display:none!important}
   </div>
   <div class="city-picker-hint" id="cityPickerHint" role="status">اختر الترتيب أو المدينة لتصفية الإعلانات.</div>
  </div>
+</div>
 </div>
 <div class="row space"><h2>أحدث الإعلانات</h2><span class="muted" id="adCount"></span></div><div id="ads" class="grid"><div class="empty">جارٍ تحميل الإعلانات...</div></div>
 </section>
@@ -1274,6 +1276,7 @@ async function loadProfilePage(){
 $('contactForm').onsubmit=async e=>{e.preventDefault();const submit=$('contactForm').querySelector('button[type=submit]');submit.disabled=true;submit.textContent='جارٍ الإرسال...';msg('contactMsg','جارٍ إرسال طلبك...');try{const payload={name:$('contactName').value.trim(),email:$('contactEmail').value.trim(),topic:$('contactTopic').value,message:$('contactMessage').value.trim(),user_id:currentUser?.id||null};const {error}=await sb.from('support_messages').insert(payload);if(error)throw error;$('contactForm').reset();msg('contactMsg','تم استلام طلبك بنجاح. شكرًا لتواصلك معنا.');}catch(err){msg('contactMsg','تعذر إرسال الطلب. تأكد من تطبيق ملف تحديث قاعدة البيانات ثم حاول مجددًا.');console.error('Support submit:',err);}finally{submit.disabled=false;submit.textContent='إرسال الطلب';}};
 
 let adsCache=[];
+let activePromotedAdIds=new Set();
 let removeExistingImages=false, removeExistingVideo=false;
 let removedExistingImageUrls=new Set();
 const COMMISSION_RATE=0.02;
@@ -1302,6 +1305,8 @@ function renderAdsFromCache(){
  if(onlyAdsWithImages) rows=rows.filter(a=>Array.isArray(a.image_urls)&&a.image_urls.length>0);
  if(cityFilterValue) rows=rows.filter(a=>getAdCity(a).includes(cityFilterValue));
  rows.sort((a,b)=>{
+  const ap=activePromotedAdIds.has(String(a.id)),bp=activePromotedAdIds.has(String(b.id));
+  if(ap!==bp)return ap?-1:1;
   if(adSortOrder==='price_low') return Number(a.price||0)-Number(b.price||0);
   if(adSortOrder==='price_high') return Number(b.price||0)-Number(a.price||0);
   if(adSortOrder==='nearby'){const city=cityFilterValue||String(profile?.city||'').trim().toLowerCase();const am=getAdCity(a),bm=getAdCity(b);const ah=city&&am.includes(city),bh=city&&bm.includes(city);if(ah!==bh)return ah?-1:1;}
@@ -1312,7 +1317,7 @@ function renderAdsFromCache(){
  $('activeFilterLabel').textContent=terms.join(' · ')||'كل الأقسام';
  if(!rows.length){box.innerHTML='<div class="empty">لا توجد إعلانات مطابقة للفلاتر الحالية. جرّب تغيير كلمات البحث أو مسح الفلاتر.</div>';return;}
  box.classList.toggle('list-view',document.body.dataset.viewMode==='list');
- box.innerHTML=rows.map(a=>{const img=Array.isArray(a.image_urls)&&a.image_urls.length?a.image_urls[0]:'';const added=a.created_at?new Date(a.created_at).toLocaleDateString('ar-SA'):'—';const city=a.city||a.location||'السعودية';return `<article class="card ad-square-card" data-ad-card-id="${esc(a.id)}" role="link" tabindex="0" aria-label="عرض تفاصيل ${esc(a.title||'الإعلان')}"><div class="ad-image-wrap"><button class="ad-share-top" type="button" aria-label="مشاركة الإعلان" title="مشاركة الإعلان" onclick="shareAd('${a.id}','${esc(a.title)}')">↗</button>${img?`<img class="adimg" src="${esc(img)}" alt="${esc(a.title)}" loading="lazy" onerror="this.style.display='none'">`:`<div class="adimg ad-placeholder" aria-label="لا توجد صورة">لا توجد صورة</div>`}</div><div class="adbody ad-square-body"><h3 title="${esc(a.title)}">${esc(a.title||'إعلان')}</h3><div class="price ad-square-price">${Number(a.price||0).toLocaleString('ar-SA')} <small>ر.س</small></div>${a.product_terms_accepted?`<span class="ad-pledge-badge ${a.product_condition_status==='defect'?'defect':''}">${a.product_condition_status==='defect'?'⚠ تم الإفصاح عن خلل':'✓ تعهّد البائع بسلامة المنتج'}</span>`:''}<div class="ad-square-meta"><span>📍 ${esc(city)}</span><span>🗓 ${esc(added)}</span></div><button class="primary ad-square-open" type="button" onclick="openAdDetail('${a.id}')" aria-label="عرض التفاصيل">＋</button></div></article>`}).join('');
+ box.innerHTML=rows.map(a=>{const img=Array.isArray(a.image_urls)&&a.image_urls.length?a.image_urls[0]:'';const added=a.created_at?new Date(a.created_at).toLocaleDateString('ar-SA'):'—';const city=a.city||a.location||'السعودية';return `<article class="card ad-square-card ${activePromotedAdIds.has(String(a.id))?'is-paid-promoted':''}" data-ad-card-id="${esc(a.id)}" role="link" tabindex="0" aria-label="عرض تفاصيل ${esc(a.title||'الإعلان')}">${activePromotedAdIds.has(String(a.id))?'<span class="paid-promotion-badge">⭐ مميز مدفوع</span>':''}<div class="ad-image-wrap"><button class="ad-share-top" type="button" aria-label="مشاركة الإعلان" title="مشاركة الإعلان" onclick="shareAd('${a.id}','${esc(a.title)}')">↗</button>${img?`<img class="adimg" src="${esc(img)}" alt="${esc(a.title)}" loading="lazy" onerror="this.style.display='none'">`:`<div class="adimg ad-placeholder" aria-label="لا توجد صورة">لا توجد صورة</div>`}</div><div class="adbody ad-square-body"><h3 title="${esc(a.title)}">${esc(a.title||'إعلان')}</h3><div class="price ad-square-price">${Number(a.price||0).toLocaleString('ar-SA')} <small>ر.س</small></div>${a.product_terms_accepted?`<span class="ad-pledge-badge ${a.product_condition_status==='defect'?'defect':''}">${a.product_condition_status==='defect'?'⚠ تم الإفصاح عن خلل':'✓ تعهّد البائع بسلامة المنتج'}</span>`:''}<div class="ad-square-meta"><span>📍 ${esc(city)}</span><span>🗓 ${esc(added)}</span></div><button class="primary ad-square-open" type="button" onclick="openAdDetail('${a.id}')" aria-label="عرض التفاصيل">＋</button></div></article>`}).join('');
 }
 async function loadAds(){
  const box=$('ads');
@@ -1323,6 +1328,8 @@ async function loadAds(){
   const {data,error}=await q;
   if(error){console.error('Ads query error:',error);box.innerHTML='<div class="empty">تعذر تحميل الإعلانات. تحقق من اتصال Supabase وصلاحية قراءة الإعلانات.</div>';return;}
   adsCache=Array.isArray(data)?data:[];
+  const promoResult=await sb.from('ad_promotions').select('ad_id').eq('status','active').eq('payment_status','paid').lte('starts_at',new Date().toISOString()).gt('ends_at',new Date().toISOString());
+  activePromotedAdIds=new Set((promoResult.data||[]).map(x=>String(x.ad_id)));
   renderAdsFromCache();
   if(!$('page-store').classList.contains('hidden'))renderStoreProducts();
  }catch(err){
@@ -1487,7 +1494,7 @@ $('profileForm').onsubmit=async e=>{
  }finally{button.disabled=false;button.textContent=original;}
 };
 $('signoutBtn').onclick=async()=>{await sb.auth.signOut();currentUser=null;profile=null;$('authBox').classList.remove('hidden');$('profileBox').classList.add('hidden');$('accountStatus').textContent='تم تسجيل الخروج.';showPage('home')};
-async function loadMyAds(targetId){if(!currentUser){$(targetId).innerHTML='<div class="empty">سجّل الدخول لعرض إعلاناتك.</div>';return;}const {data,error}=await sb.from('ads').select('*').eq('seller_id',currentUser.id).order('created_at',{ascending:false});if(error){$(targetId).innerHTML='<div class="empty">تعذر تحميل إعلاناتك.</div>';return;}$(targetId).innerHTML=(data||[]).map(a=>`<div class="listitem"><div class="row space"><div><strong>${esc(a.title)}</strong><div class="muted">${Number(a.price||0).toLocaleString('ar-SA')} ر.س · الحالة: ${esc(a.status)}</div></div><div class="actions"><button class="secondary" onclick="editAd('${a.id}')">تعديل</button><button class="danger" onclick="deleteAd('${a.id}')">حذف</button></div></div></div>`).join('')||'<div class="empty">لم تضف إعلانات بعد.</div>';}
+async function loadMyAds(targetId){if(!currentUser){$(targetId).innerHTML='<div class="empty">سجّل الدخول لعرض إعلاناتك.</div>';return;}const {data,error}=await sb.from('ads').select('*').eq('seller_id',currentUser.id).order('created_at',{ascending:false});if(error){$(targetId).innerHTML='<div class="empty">تعذر تحميل إعلاناتك.</div>';return;}$(targetId).innerHTML=(data||[]).map(a=>`<div class="listitem"><div class="row space"><div><strong>${esc(a.title)}</strong><div class="muted">${Number(a.price||0).toLocaleString('ar-SA')} ر.س · الحالة: ${esc(a.status)}</div></div><div class="actions"><button class="secondary" onclick="promoteMyAd('${a.id}')">⭐ روّج إعلانك</button><button class="secondary" onclick="editAd('${a.id}')">تعديل</button><button class="danger" onclick="deleteAd('${a.id}')">حذف</button></div></div></div>`).join('')||'<div class="empty">لم تضف إعلانات بعد.</div>';}
 window.editAd=async id=>{const {data,error}=await sb.from('ads').select('*').eq('id',id).eq('seller_id',currentUser.id).single();if(error||!data){alert('تعذر فتح الإعلان أو لا تملك صلاحية تعديله.');return;}editingAd=data;$('editId').value=data.id;$('adTitle').value=data.title||'';$('adPrice').value=data.price||'';$('adModelYear').value=data.model_year||'';$('adCategory').value=data.category||'';$('adCondition').value=data.condition||'مستعمل';$('adType').value=data.ad_type||'direct';$('externalProductUrl').value=data.external_product_url||'';$('productConditionStatus').value=data.product_condition_status||'sound';$('productIssue').value=data.product_issue||'';$('productAgree').checked=!!data.product_terms_accepted;$('productPledgeChoice').classList.toggle('hidden',!data.product_terms_accepted);syncAdTypeFields();syncProductIssueFields();$('adCity').value=data.city||profile?.city||'';$('adDesc').value=data.description||'';$('sellerName').value=data.seller_name||profile?.display_name||'';$('sellerPhone').value=data.seller_phone||profile?.phone||'';resetMediaFlags();renderMediaPreviews();$('adFormTitle').textContent='تعديل الإعلان';$('saveAd').textContent='حفظ التعديلات';$('cancelEdit').classList.remove('hidden');showAdWizardStep(1);showPage('add')};
 $('cancelEdit').onclick=()=>resetAdForm();renderMediaPreviews();
 function resetAdForm(){$('adForm').reset();$('editId').value='';editingAd=null;resetMediaFlags();showAdWizardStep(1);$('productPledgeChoice').classList.add('hidden');$('adFormTitle').textContent='إضافة إعلان جديد';$('saveAd').textContent='نشر الإعلان';$('cancelEdit').classList.add('hidden');syncAdTypeFields();syncProductIssueFields();msg('adFormMsg','')}
@@ -3186,6 +3193,242 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
     text-align:center !important;
   }
 }
+</style>
+
+
+<style id="souq-combined-compact-scroll-toolbar">
+/* شريط واحد مستطيل للتصنيفات والفلاتر، محدود بعرض المحتوى */
+#page-home .home-browse-combined {
+  display:flex !important;
+  align-items:center !important;
+  gap:9px !important;
+  width:100% !important;
+  max-width:100% !important;
+  min-width:0 !important;
+  box-sizing:border-box !important;
+  margin:9px 0 12px !important;
+  padding:8px 9px !important;
+  border:1px solid #304653 !important;
+  border-radius:13px !important;
+  background:linear-gradient(110deg,#14232f,#182a36) !important;
+  overflow:hidden !important;
+}
+#page-home .home-browse-combined .home-personal-categories {
+  flex:1 1 auto !important;
+  width:0 !important;
+  min-width:0 !important;
+  margin:0 !important;
+  padding:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  overflow:hidden !important;
+}
+#page-home .home-browse-combined .home-personal-categories-head {
+  display:none !important;
+}
+#page-home .home-browse-combined .home-personal-categories .categories {
+  display:flex !important;
+  flex-wrap:nowrap !important;
+  width:100% !important;
+  max-width:100% !important;
+  min-width:0 !important;
+  overflow-x:auto !important;
+  overflow-y:hidden !important;
+  gap:6px !important;
+  margin:0 !important;
+  padding:1px 0 3px !important;
+  scrollbar-width:none !important;
+  -webkit-overflow-scrolling:touch !important;
+  scroll-snap-type:x proximity !important;
+  touch-action:pan-x pan-y !important;
+}
+#page-home .home-browse-combined .home-personal-categories .categories::-webkit-scrollbar {
+  display:none !important;
+}
+#page-home .home-browse-combined .home-personal-categories .chip {
+  flex:0 0 auto !important;
+  min-height:32px !important;
+  padding:6px 10px !important;
+  border-radius:9px !important;
+  font-size:11px !important;
+  line-height:1.2 !important;
+  white-space:nowrap !important;
+  scroll-snap-align:start !important;
+}
+#page-home .home-browse-combined .listing-tools {
+  flex:0 0 auto !important;
+  width:auto !important;
+  max-width:100% !important;
+  min-width:0 !important;
+  margin:0 !important;
+  padding:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  overflow:visible !important;
+}
+#page-home .home-browse-combined .listing-tools-title {
+  display:none !important;
+}
+#page-home .home-browse-combined .smart-filter-toggle {
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:4px !important;
+  min-height:33px !important;
+  padding:6px 9px !important;
+  border-radius:9px !important;
+  border:1px solid #355365 !important;
+  background:#203542 !important;
+  color:#eaf8fc !important;
+  font-size:11px !important;
+  font-weight:800 !important;
+  white-space:nowrap !important;
+}
+#page-home .home-browse-combined .listing-advanced {
+  position:absolute !important;
+  z-index:12 !important;
+  top:calc(100% + 6px) !important;
+  right:0 !important;
+  left:0 !important;
+  width:100% !important;
+  max-width:100% !important;
+  box-sizing:border-box !important;
+  padding:10px !important;
+  border:1px solid #355365 !important;
+  border-radius:12px !important;
+  background:#172630 !important;
+  box-shadow:0 12px 28px #0007 !important;
+}
+#page-home .home-browse-combined .listing-tools {
+  position:relative !important;
+}
+#page-home .home-browse-combined .listing-advanced[hidden] {
+  display:none !important;
+}
+#page-home .home-browse-combined .listing-advanced .filters {
+  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  gap:7px !important;
+}
+#page-home .home-browse-combined .listing-advanced .field,
+#page-home .home-browse-combined .listing-advanced .image-filter,
+#page-home .home-browse-combined .listing-advanced #clearFilters {
+  min-width:0 !important;
+  min-height:36px !important;
+  padding:7px !important;
+  font-size:11px !important;
+}
+@media(max-width:600px) {
+  #page-home .home-browse-combined {
+    gap:6px !important;
+    padding:6px 7px !important;
+    margin:7px 0 10px !important;
+    border-radius:11px !important;
+  }
+  #page-home .home-browse-combined .home-personal-categories .chip {
+    min-height:30px !important;
+    padding:5px 8px !important;
+    font-size:10px !important;
+  }
+  #page-home .home-browse-combined .smart-filter-toggle {
+    min-height:30px !important;
+    padding:5px 7px !important;
+    font-size:10px !important;
+  }
+}
+</style>
+
+
+<style id="souq-paid-ad-promotion-style">
+.ad-promo-modal{position:fixed;inset:0;z-index:99990;display:none;align-items:center;justify-content:center;padding:16px;background:#020811c9;backdrop-filter:blur(7px)}
+.ad-promo-modal.open{display:flex}
+.ad-promo-card{width:min(100%,520px);max-height:88vh;overflow:auto;border:1px solid #35566a;border-radius:20px;background:linear-gradient(155deg,#172b3b,#101b29);box-shadow:0 22px 70px #0009;padding:18px;color:#eefaff}
+.ad-promo-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px}
+.ad-promo-head h2{font-size:19px;margin:0}
+.ad-promo-close{border:0;border-radius:11px;background:#263d4d;color:#fff;width:38px;height:38px;font-size:22px}
+.ad-promo-sub{color:#a9c0cc;font-size:13px;line-height:1.7;margin:6px 0 14px}
+.ad-promo-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.ad-promo-option{border:1px solid #35566a;border-radius:14px;background:#1c3445;color:#f4fbff;padding:12px 7px;text-align:center;cursor:pointer}
+.ad-promo-option.selected{border:2px solid #28c5d8;background:#124455;box-shadow:0 0 0 3px #28c5d822}
+.ad-promo-option strong{display:block;font-size:21px;color:#5de0ed;margin:6px 0}
+.ad-promo-option span{display:block;font-size:12px;color:#d1e1e8}
+.ad-promo-option small{display:block;color:#a8c3ce;margin-top:5px}
+.ad-promo-footnote{font-size:11px;color:#9db2bd;line-height:1.7;margin:12px 0}
+.ad-promo-submit{width:100%;border:0;border-radius:12px;padding:13px;background:#18bfd2;color:#05202a;font-weight:900;font-size:15px}
+.ad-promo-message{font-size:12px;line-height:1.7;color:#9fe8ed;margin-top:10px;min-height:20px}
+@media(max-width:420px){.ad-promo-card{padding:14px}.ad-promo-option{padding:10px 4px}.ad-promo-option strong{font-size:18px}}
+</style>
+<div class="ad-promo-modal" id="adPromotionModal" role="dialog" aria-modal="true" aria-labelledby="adPromotionTitle">
+ <div class="ad-promo-card">
+  <div class="ad-promo-head"><h2 id="adPromotionTitle">⭐ روّج إعلانك</h2><button class="ad-promo-close" type="button" id="adPromotionClose" aria-label="إغلاق">×</button></div>
+  <p class="ad-promo-sub">ارفع ظهور إعلانك في بداية نتائج البحث والقسم المناسب. الإعلان المروّج سيحمل شارة «مميز مدفوع» بوضوح.</p>
+  <div class="ad-promo-options">
+   <button class="ad-promo-option" type="button" data-promo-package="boost_3">
+    <span>دفعة سريعة</span><strong>9 ر.س</strong><span>3 أيام</span><small>ظهور مميز</small>
+   </button>
+   <button class="ad-promo-option selected" type="button" data-promo-package="boost_7">
+    <span>الأكثر اختياراً</span><strong>19 ر.س</strong><span>7 أيام</span><small>ظهور مميز</small>
+   </button>
+   <button class="ad-promo-option" type="button" data-promo-package="boost_14">
+    <span>انتشار أطول</span><strong>35 ر.س</strong><span>14 يوماً</span><small>ظهور مميز</small>
+   </button>
+  </div>
+  <p class="ad-promo-footnote">الأسعار المقترحة لإطلاق الخدمة. إرسال الطلب لا يعني تفعيل الترويج أو خصم المبلغ؛ يبدأ الترويج بعد تأكيد استلام الدفع ومراجعة الإعلان. لا نضمن عدد المشاهدات أو البيع.</p>
+  <button class="ad-promo-submit" type="button" id="adPromotionSubmit">متابعة طلب الترويج</button>
+  <div class="ad-promo-message" id="adPromotionMessage" role="status"></div>
+ </div>
+</div>
+<script id="souq-paid-ad-promotion-logic">
+(() => {
+ let selectedAdId = null;
+ let selectedPackage = 'boost_7';
+ const modal = document.getElementById('adPromotionModal');
+ const message = document.getElementById('adPromotionMessage');
+ const close = () => { modal?.classList.remove('open'); selectedAdId = null; };
+ document.getElementById('adPromotionClose')?.addEventListener('click', close);
+ modal?.addEventListener('click', e => { if (e.target === modal) close(); });
+ document.querySelectorAll('[data-promo-package]').forEach(btn => {
+   btn.addEventListener('click', () => {
+     selectedPackage = btn.dataset.promoPackage;
+     document.querySelectorAll('[data-promo-package]').forEach(x => x.classList.toggle('selected', x === btn));
+   });
+ });
+ window.promoteMyAd = async (adId) => {
+   if (!window.currentUser && typeof currentUser === 'undefined') { alert('سجّل الدخول أولاً.'); return; }
+   if (!currentUser?.id) { alert('سجّل الدخول أولاً.'); return; }
+   selectedAdId = adId;
+   selectedPackage = 'boost_7';
+   document.querySelectorAll('[data-promo-package]').forEach(x => x.classList.toggle('selected', x.dataset.promoPackage === selectedPackage));
+   if (message) message.textContent = '';
+   modal?.classList.add('open');
+ };
+ document.getElementById('adPromotionSubmit')?.addEventListener('click', async () => {
+   if (!currentUser?.id || !selectedAdId) { message.textContent = 'انتهت الجلسة. سجّل الدخول ثم حاول مجدداً.'; return; }
+   const button = document.getElementById('adPromotionSubmit');
+   button.disabled = true; button.textContent = 'جارٍ تسجيل الطلب...';
+   try {
+     const { data, error } = await sb.rpc('create_ad_promotion_request', {
+       p_ad_id: selectedAdId,
+       p_package_code: selectedPackage
+     });
+     if (error) throw error;
+     message.textContent = 'تم تسجيل طلبك بنجاح برقم: ' + String(data).slice(0,8) + '. الترويج لم يبدأ بعد؛ يلزم تأكيد الدفع من إدارة المنصة.';
+     button.textContent = 'تم تسجيل الطلب';
+   } catch (err) {
+     message.textContent = 'تعذر تسجيل الطلب: ' + (err?.message || 'تحقق من تشغيل ملف SQL الخاص بالترويج.');
+     button.disabled = false; button.textContent = 'إعادة المحاولة';
+   }
+ });
+})();
+</script>
+
+
+<style id="souq-paid-promoted-listing-badge">
+#ads .ad-square-card.is-paid-promoted{position:relative!important;border-color:#c79a42!important;box-shadow:0 0 0 1px #c79a4240,0 5px 18px #0005!important}
+#ads .ad-square-card .paid-promotion-badge{position:absolute;z-index:5;top:5px;right:5px;max-width:calc(100% - 12px);padding:3px 6px;border:1px solid #d8ad55;border-radius:7px;background:#382b12;color:#ffe3a0;font-size:9px;font-weight:900;line-height:1.25;white-space:nowrap;pointer-events:none}
+@media(max-width:759px){#ads .ad-square-card .paid-promotion-badge{font-size:8px;padding:2px 4px;top:4px;right:4px}}
 </style>
 
 </body></html>
