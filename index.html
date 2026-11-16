@@ -2492,10 +2492,21 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
  <form class="souq-ai-form" id="souqAiForm"><textarea id="souqAiInput" rows="1" maxlength="1500" placeholder="اكتب سؤالك هنا..." aria-label="اكتب رسالتك" required></textarea><button id="souqAiSend" type="submit" aria-label="إرسال الرسالة">➤</button></form>
  <div class="souq-ai-foot">قد لا تتوفر للمساعد بيانات الأسعار والمخزون المباشرة حالياً.</div>
 </section>
-<section class="souq-float-panel news-panel hidden" id="souqNewsPanel" aria-live="polite">
- <button class="close-float" type="button" data-close-float="souqNewsPanel">×</button>
- <h3>📰 أخبار القيمنق</h3>
- <p>قناة أخبار السوق والقيمنق. ستظهر الأخبار هنا بعد ربط مصدر أخبار موثوق أو لوحة نشر الأخبار.</p>
+<section class="souq-float-panel news-panel hidden" id="souqNewsPanel" aria-label="قناة سوق القيمنق السعودي">
+ <header class="sc-head">
+  <div class="sc-brand"><span class="sc-avatar">🎮</span><div><strong>قناة سوق القيمنق السعودي</strong><small>آخر الأخبار والتحديثات والعروض</small></div></div>
+  <button class="close-float" type="button" data-close-float="souqNewsPanel" aria-label="إغلاق">×</button>
+ </header>
+ <div class="sc-intro">تابع جديد السوق وأخبار عالم القيمنق. المشاهدة متاحة للجميع، والمتابعة والتفاعل للأعضاء المسجلين.</div>
+ <div class="sc-toolbar"><span id="scStatus" role="status">جارٍ تحميل المنشورات...</span><button type="button" class="secondary" id="scFollowBtn">متابعة القناة</button></div>
+ <div class="sc-composer hidden" id="scComposer">
+  <strong>نشر تحديث جديد</strong>
+  <textarea id="scPostBody" maxlength="10000" placeholder="اكتب الخبر أو التحديث أو العرض..." rows="3"></textarea>
+  <input id="scMediaUrl" type="url" placeholder="رابط صورة أو فيديو (اختياري)" inputmode="url">
+  <div class="sc-compose-row"><select id="scMediaType"><option value="none">بدون وسائط</option><option value="image">صورة</option><option value="video">فيديو</option></select><button type="button" id="scPublishBtn" class="primary">نشر التحديث</button></div>
+  <small>أضف رابط HTTPS مباشر للصورة أو الفيديو. الرفع المباشر للملفات غير مفعّل في هذه النسخة.</small>
+ </div>
+ <div id="scFeed" class="sc-feed"><div class="sc-empty">جارٍ تحميل القناة...</div></div>
 </section>
 <script id="souq-home-float-actions">
 (()=>{
@@ -2550,6 +2561,129 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
 .home-banner-preview{min-height:85px;border:1px dashed var(--line);border-radius:12px;display:grid;place-items:center;padding:8px;color:var(--muted);font-size:12px;overflow:hidden}.home-banner-preview img{display:block;width:100%;max-height:190px;object-fit:cover;border-radius:8px}
 @media(max-width:600px){.vendor-home-hero{aspect-ratio:2.05/1!important;min-height:142px!important;max-height:175px!important;padding:14px 12px!important;margin:10px 0 13px!important;border-radius:17px!important}.vendor-home-hero-copy{max-width:76%!important}.vendor-home-hero h1{font-size:18px!important}.vendor-home-hero p{font-size:10.5px!important;max-width:100%!important}.vendor-home-hero .primary{font-size:11px!important;padding:7px 12px!important}.vendor-home-hero:after{font-size:66px!important;left:5px!important;bottom:-16px!important}.vendor-category-section{padding:10px 8px 7px;margin:9px 0 12px}.vendor-category-heading strong{font-size:13px}.vendor-category-card{flex-basis:100px;min-height:82px;border-radius:12px}.vendor-category-card>span{font-size:22px}.vendor-category-card b{font-size:10px}}
 </style>
+
+
+<style id="souq-channel-ui">
+#souqNewsPanel.news-panel{width:min(560px,calc(100vw - 24px));max-height:min(78vh,760px);bottom:calc(174px + env(safe-area-inset-bottom));padding:0;overflow:hidden;background:#101e2a;border:1px solid #315366;color:#eef7fa;display:flex;flex-direction:column}
+#souqNewsPanel .sc-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px;border-bottom:1px solid #2c4352;background:linear-gradient(120deg,#153247,#12212d)}
+#souqNewsPanel .sc-brand{display:flex;align-items:center;gap:10px;min-width:0}
+#souqNewsPanel .sc-avatar{width:44px;height:44px;flex:0 0 44px;display:grid;place-items:center;border-radius:14px;background:#1c3b4d;font-size:24px}
+#souqNewsPanel .sc-brand strong{display:block;font-size:14px;color:#eafaff}
+#souqNewsPanel .sc-brand small{display:block;font-size:11px;color:#9eb6c4;margin-top:3px}
+#souqNewsPanel .close-float{float:none;flex:0 0 auto;font-size:20px;line-height:1;padding:6px 10px}
+#souqNewsPanel .sc-intro{padding:10px 14px;font-size:12px;line-height:1.7;color:#b9cbd4;background:#142632}
+#souqNewsPanel .sc-toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 14px;border-bottom:1px solid #2b414f}
+#souqNewsPanel #scStatus{font-size:11px;color:#a9c0cc}
+#souqNewsPanel .sc-toolbar button{padding:7px 11px;font-size:11px}
+#souqNewsPanel .sc-feed{padding:10px 12px;overflow:auto;overscroll-behavior:contain;min-height:90px}
+#souqNewsPanel .sc-post{padding:12px;margin:0 0 10px;border:1px solid #2b4656;border-radius:14px;background:#152633}
+#souqNewsPanel .sc-post-head{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:8px}
+#souqNewsPanel .sc-post-author{font-size:11px;font-weight:900;color:#70d9f0}
+#souqNewsPanel .sc-post-date{font-size:10px;color:#91a8b5}
+#souqNewsPanel .sc-post-body{font-size:13px;line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere;color:#edf7fa}
+#souqNewsPanel .sc-media{display:block;width:100%;max-height:300px;object-fit:contain;margin-top:10px;border-radius:10px;background:#08131b}
+#souqNewsPanel .sc-reactions{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+#souqNewsPanel .sc-reactions button{padding:6px 9px;font-size:11px;background:#203846;color:#e8f7fb;border:1px solid #355365}
+#souqNewsPanel .sc-reactions button:disabled{opacity:.55;cursor:not-allowed}
+#souqNewsPanel .sc-delete{padding:5px 8px;font-size:10px;background:#4b2530;color:#ffe6eb}
+#souqNewsPanel .sc-composer{padding:12px;margin:10px 12px;border:1px solid #27758a;border-radius:13px;background:#142b38}
+#souqNewsPanel .sc-composer strong{display:block;margin-bottom:8px;color:#70d9f0;font-size:13px}
+#souqNewsPanel .sc-composer textarea,#souqNewsPanel .sc-composer input,#souqNewsPanel .sc-composer select{display:block;width:100%;min-width:0;margin:7px 0;padding:10px;border:1px solid #355365;border-radius:9px;background:#0d1a24;color:#eef7fa;font:inherit;font-size:12px}
+#souqNewsPanel .sc-compose-row{display:flex;gap:8px;align-items:center}
+#souqNewsPanel .sc-compose-row select{flex:1}
+#souqNewsPanel .sc-compose-row button{white-space:nowrap}
+#souqNewsPanel .sc-composer small{display:block;color:#9fb5c1;font-size:10px;line-height:1.6}
+#souqNewsPanel .sc-empty{padding:24px 10px;text-align:center;color:#9fb5c1;font-size:12px}
+@media(max-width:600px){#souqNewsPanel.news-panel{right:8px;left:8px;width:auto;bottom:calc(160px + env(safe-area-inset-bottom));max-height:min(76vh,720px)}#souqNewsPanel .sc-feed{padding:8px}#souqNewsPanel .sc-post{padding:10px}}
+</style>
+
+
+<script id="souq-channel-actions">
+(()=>{
+ 'use strict';
+ const panel=document.getElementById('souqNewsPanel');
+ if(!panel || typeof sb==='undefined') return;
+ const $id=id=>document.getElementById(id);
+ const OWNER_EMAIL='qt773358416@outlook.com';
+ const feed=$id('scFeed'),status=$id('scStatus'),followBtn=$id('scFollowBtn');
+ const composer=$id('scComposer'),bodyInput=$id('scPostBody'),urlInput=$id('scMediaUrl');
+ const typeInput=$id('scMediaType'),publishBtn=$id('scPublishBtn');
+ let session=null, user=null, isOwner=false, following=false, busy=false;
+ const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+ const dateText=value=>{try{return new Date(value).toLocaleString('ar-SA',{dateStyle:'medium',timeStyle:'short'});}catch(_){return '';}};
+ const setStatus=t=>{if(status)status.textContent=t;};
+ const msg=(text)=>{feed.innerHTML='<div class="sc-empty">'+esc(text)+'</div>';};
+ const getSession=async()=>{const {data,error}=await sb.auth.getSession();if(error)throw error;session=data?.session||null;user=session?.user||null;isOwner=!!user&&String(user.email||'').toLowerCase()===OWNER_EMAIL;composer?.classList.toggle('hidden',!isOwner);followBtn?.classList.toggle('hidden',!user);if(!user)following=false;};
+ const loadFollow=async()=>{if(!user){following=false;return;}const {data,error}=await sb.from('channel_follows').select('user_id').eq('user_id',user.id).maybeSingle();if(error)throw error;following=!!data;};
+ const loadPosts=async()=>{
+  const {data,error}=await sb.from('channel_posts').select('id,body,media_url,media_type,author_id,created_at').order('created_at',{ascending:false}).limit(50);
+  if(error)throw error;
+  if(!data?.length){msg('لا توجد منشورات حتى الآن. ترقّبوا أول تحديث من القناة 🎮');return;}
+  const ids=data.map(p=>p.id);
+  const {data:reactions,error:reactionError}=await sb.from('channel_reactions').select('post_id,reaction_type,user_id').in('post_id',ids);
+  if(reactionError)console.warn('Channel reactions:',reactionError.message);
+  const rows=reactions||[];
+  const labels={like:'👍',heart:'❤️',fire:'🔥',wow:'😮'};
+  feed.innerHTML=data.map(post=>{
+   const counts={like:0,heart:0,fire:0,wow:0};let mine='';
+   rows.filter(r=>r.post_id===post.id).forEach(r=>{if(counts[r.reaction_type]!==undefined)counts[r.reaction_type]++;if(user&&r.user_id===user.id)mine=r.reaction_type;});
+   let media='';
+   if(post.media_url&&/^https:\/\/[^\s"'<>]+$/i.test(post.media_url)){
+    if(post.media_type==='image')media='<img class="sc-media" loading="lazy" src="'+esc(post.media_url)+'" alt="وسائط المنشور">';
+    else if(post.media_type==='video')media='<video class="sc-media" controls playsinline preload="metadata" src="'+esc(post.media_url)+'"></video>';
+   }
+   const reactionButtons=Object.keys(labels).map(k=>'<button type="button" data-sc-react="'+k+'" data-post="'+esc(post.id)+'" '+(!user?'disabled title="سجّل الدخول للتفاعل"':'')+'>'+labels[k]+' '+counts[k]+(mine===k?' ✓':'')+'</button>').join('');
+   const del=isOwner?'<button type="button" class="sc-delete" data-sc-delete="'+esc(post.id)+'">حذف</button>':'';
+   return '<article class="sc-post"><div class="sc-post-head"><span class="sc-post-author">🎮 قناة سوق القيمنق السعودي</span><span class="sc-post-date">'+esc(dateText(post.created_at))+'</span></div><div class="sc-post-body">'+esc(post.body)+'</div>'+media+'<div class="sc-reactions">'+reactionButtons+del+'</div></article>';
+  }).join('');
+ };
+ const refresh=async()=>{
+  try{await getSession();await loadFollow();followBtn.textContent=following?'إلغاء المتابعة':'متابعة القناة';await loadPosts();setStatus(user?(following?'أنت تتابع القناة':'أنت غير متابع للقناة'):'المشاهدة متاحة للجميع');}
+  catch(err){console.error('Channel load error:',err);msg('تعذر تحميل القناة. تحقق من إعداد SQL والاتصال ثم أعد المحاولة.');setStatus('تعذر الاتصال بالقناة');}
+ };
+ followBtn?.addEventListener('click',async()=>{
+  if(busy)return;busy=true;followBtn.disabled=true;
+  try{await getSession();if(!user){setStatus('سجّل الدخول أولاً لمتابعة القناة');return;}
+   if(following){const {error}=await sb.from('channel_follows').delete().eq('user_id',user.id);if(error)throw error;following=false;}
+   else{const {error}=await sb.from('channel_follows').insert({user_id:user.id});if(error)throw error;following=true;}
+   followBtn.textContent=following?'إلغاء المتابعة':'متابعة القناة';setStatus(following?'تمت متابعة القناة':'تم إلغاء المتابعة');
+  }catch(err){console.error(err);setStatus(err.message||'تعذر تحديث المتابعة');}
+  finally{busy=false;followBtn.disabled=false;}
+ });
+ publishBtn?.addEventListener('click',async()=>{
+  if(busy)return;const body=bodyInput.value.trim(),url=urlInput.value.trim(),type=typeInput.value;
+  if(!body){setStatus('اكتب نص التحديث أولاً');bodyInput.focus();return;}
+  if(url&&(!/^https:\/\/\S+$/i.test(url))){setStatus('استخدم رابط HTTPS صحيحاً للوسائط');urlInput.focus();return;}
+  if(!url&&type!=='none'){setStatus('أضف رابط الوسائط أو اختر بدون وسائط');return;}
+  if(url&&type==='none'){setStatus('حدد نوع الوسائط: صورة أو فيديو');return;}
+  busy=true;publishBtn.disabled=true;publishBtn.textContent='جارٍ النشر...';
+  try{await getSession();if(!isOwner)throw new Error('حساب النشر غير مخوّل.');
+   const {error}=await sb.from('channel_posts').insert({body,media_url:url||null,media_type:url?type:'none',author_id:user.id});
+   if(error)throw error;bodyInput.value='';urlInput.value='';typeInput.value='none';setStatus('تم نشر التحديث');await loadPosts();
+  }catch(err){console.error(err);setStatus(err.message||'تعذر نشر التحديث');}
+  finally{busy=false;publishBtn.disabled=false;publishBtn.textContent='نشر التحديث';}
+ });
+ feed?.addEventListener('click',async e=>{
+  const reaction=e.target.closest('[data-sc-react]');
+  const del=e.target.closest('[data-sc-delete]');
+  if(reaction){
+   if(!user){setStatus('سجّل الدخول أولاً للتفاعل');return;}
+   const postId=reaction.dataset.post,type=reaction.dataset.scReact;
+   try{const {data:existing,error:findError}=await sb.from('channel_reactions').select('reaction_type').eq('post_id',postId).eq('user_id',user.id).maybeSingle();if(findError)throw findError;
+    let result;if(existing?.reaction_type===type)result=await sb.from('channel_reactions').delete().eq('post_id',postId).eq('user_id',user.id);
+    else result=await sb.from('channel_reactions').upsert({post_id:postId,user_id:user.id,reaction_type:type},{onConflict:'post_id,user_id'});
+    if(result.error)throw result.error;await loadPosts();
+   }catch(err){console.error(err);setStatus(err.message||'تعذر تسجيل التفاعل');}
+  }
+  if(del&&isOwner&&confirm('هل تريد حذف هذا المنشور؟')){
+   try{const {error}=await sb.from('channel_posts').delete().eq('id',del.dataset.scDelete);if(error)throw error;await loadPosts();setStatus('تم حذف المنشور');}
+   catch(err){console.error(err);setStatus(err.message||'تعذر حذف المنشور');}
+  }
+ });
+ document.getElementById('souqNewsFloat')?.addEventListener('click',()=>{if(!panel.classList.contains('hidden'))void refresh();});
+ sb.auth.onAuthStateChange(()=>{setTimeout(()=>{if(!panel.classList.contains('hidden'))void refresh();},0);});
+})();
+</script>
 
 </body></html>
 
