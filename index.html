@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8"><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>سوق القيمنق السعودي | بيع وشراء أجهزة القيمنق</title>
 <meta name="description" content="سوق القيمنق السعودي لبيع وشراء الكمبيوترات وقطع PC وأجهزة الألعاب والإلكترونيات في السعودية."><meta name="theme-color" content="#101820">
@@ -2587,7 +2587,8 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   await loadVendorDirectory();
   if(typeof window.renderAdsFromCache==='function')window.renderAdsFromCache();
  })();
-})();
+window.__souqVendorContext={state:vState,money:vMoney,safeUrl:vSafeUrl,esc:vEsc,selectedCartItems,renderSelectedVendorProducts,renderVendorCart};
+ })();
 </script>
 
 
@@ -3985,5 +3986,75 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
 #vendorCategoryCircleRail{display:flex!important}
 </style>
 
+<style id="souq-storefront-customization-css">
+#souqStorefrontPublic{--souq-shop-color:#e8dce8;background:#fff;border:1px solid #eadfe8;border-radius:18px;padding:14px;margin:12px 0 18px;color:#252129;overflow:hidden}
+#souqStorefrontPublic .souq-shop-banner{height:clamp(130px,28vw,260px);background:#f3edf3;border-radius:14px;overflow:hidden;margin-bottom:12px}
+#souqStorefrontPublic .souq-shop-banner img{width:100%;height:100%;object-fit:cover;display:block}
+#souqStorefrontPublic .souq-shop-top{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+#souqStorefrontPublic .souq-shop-logo{width:58px;height:58px;border-radius:16px;overflow:hidden;background:var(--souq-shop-color);display:grid;place-items:center;font-size:25px;font-weight:900;color:#423746;flex:0 0 auto}
+#souqStorefrontPublic .souq-shop-logo img{width:100%;height:100%;object-fit:cover}
+#souqStorefrontPublic .souq-shop-top h2{margin:0;color:#28212a;font-size:21px}
+#souqStorefrontPublic .souq-shop-top p{margin:3px 0 0;color:#6e6470;font-size:13px}
+#souqStorefrontPublic .souq-shop-announcement{background:color-mix(in srgb,var(--souq-shop-color) 35%,white);padding:10px 12px;border-radius:11px;margin:12px 0;color:#453b46;font-size:13px}
+#souqStorefrontPublic .souq-shop-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+#souqStorefrontPublic .souq-shop-actions a{color:#46354b;border:1px solid var(--souq-shop-color);background:#fff;padding:7px 10px;border-radius:10px;text-decoration:none;font-size:12px}
+#souqStorefrontPublic .souq-shop-delivery{font-size:12px;line-height:1.7;color:#635966;background:#faf7fa;border-radius:10px;padding:10px;margin-top:10px}
+#souqStorefrontTools{background:#fff;border:1px solid #ece5ec;border-radius:14px;padding:12px;margin:13px 0}
+#souqStorefrontTools input,#souqStorefrontTools select{background:#fff;color:#2b2530;border:1px solid #e1d9e2;border-radius:10px;padding:10px;min-width:0}
+#souqStorefrontTools .souq-product-controls{display:flex;gap:8px;flex-wrap:wrap}
+#souqStorefrontTools .souq-product-controls input{flex:1;min-width:150px}
+#souqStorefrontTools .souq-category-pills{display:flex;gap:7px;overflow:auto;padding-top:10px}
+#souqStorefrontTools .souq-category-pills button{white-space:nowrap;border-radius:99px;padding:7px 12px;background:#f8f4f8;border:1px solid #e6dce6;color:#493b4d}
+#souqStorefrontTools .souq-category-pills button.active{background:var(--souq-shop-color);border-color:var(--souq-shop-color);font-weight:800}
+#vendorSelectedProducts.souq-columns-3{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+#vendorSelectedProducts.souq-columns-2{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+@media(max-width:560px){#vendorSelectedProducts.souq-columns-3{grid-template-columns:repeat(2,minmax(0,1fr))!important}#souqStorefrontPublic{padding:10px}}
+</style>
+<script id="souq-public-storefront-engine">
+(()=>{
+ 'use strict';if(window.__souqPublicStorefrontBooted)return;window.__souqPublicStorefrontBooted=true;
+ const $=id=>document.getElementById(id), esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const providerNames={smsa:'سمسا',aramex:'أرامكس',spl:'سبل',naqel:'ناقل',aymakan:'أي مكان',jt:'J&T',redbox:'ريد بوكس',shipa:'Shipa',dhl:'DHL',fedex:'FedEx',oto:'OTO',torod:'طرود',eeasy:'eeasy',shipq:'ShipQ'};
+ let lastStoreId='',shopPublic={},filterCategory='all',filterQuery='';
+ function safeColor(x){return /^#[0-9a-f]{6}$/i.test(String(x||''))?x:'#e8dce8'}
+ function ensureMount(){const root=$('vendorSelectedStore');if(!root)return null;let m=$('souqStorefrontPublic');if(!m){m=document.createElement('div');m.id='souqStorefrontPublic';root.insertBefore(m,root.firstChild)}return m}
+ function ensureTools(){const grid=$('vendorSelectedProducts');if(!grid)return null;let t=$('souqStorefrontTools');if(!t){t=document.createElement('div');t.id='souqStorefrontTools';grid.parentNode.insertBefore(t,grid)}return t}
+ async function loadPublic(storeId){try{const {data,error}=await sb.from('vendor_store_public_preferences').select('public_settings').eq('store_id',storeId).maybeSingle();if(error){console.warn('Public store customization not loaded',error);shopPublic={};return}shopPublic=data?.public_settings||{}}catch(e){console.warn(e);shopPublic={}}}
+ function linksMarkup(links){const labels={instagram:'Instagram',tiktok:'TikTok',snapchat:'Snapchat',whatsapp:'WhatsApp',facebook:'Facebook',google:'Google Merchant',google_business:'Google Business',youtube:'YouTube',x:'X',amazon:'Amazon',noon:'نون',haraj:'حراج',salla:'سلة',zid:'زد',shopify:'Shopify',trendyol:'ترينديول',woocommerce:'WooCommerce',magento:'Magento',opencart:'OpenCart'};return Object.entries(links||{}).map(([k,u])=>{let url='';try{const parsed=new URL(u);if(parsed.protocol==='https:')url=parsed.href}catch{}return url?`<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(labels[k]||k)} ↗</a>`:''}).join('')}
+ function renderHeader(store){const f=shopPublic.storefront||{},delivery=shopPublic.delivery_display||{},mount=ensureMount();if(!mount)return;const color=safeColor(f.theme_color);mount.style.setProperty('--souq-shop-color',color);const logo=store.logo_url&&window.__souqVendorContext.safeUrl(store.logo_url)?`<img src="${esc(window.__souqVendorContext.safeUrl(store.logo_url))}" alt="${esc(store.store_name)}">`:(esc((store.store_name||'م').trim().charAt(0)||'م'));
+  const banner=f.show_banner&&f.banner_url&&window.__souqVendorContext.safeUrl(f.banner_url)?`<div class="souq-shop-banner"><img src="${esc(window.__souqVendorContext.safeUrl(f.banner_url))}" alt="واجهة ${esc(store.store_name)}"></div>`:'';
+  const announce=f.show_announcement&&f.announcement?`<div class="souq-shop-announcement">${esc(f.announcement)}</div>`:'';
+  const whats=f.show_whatsapp&&f.whatsapp?`<a href="https://wa.me/${esc(String(f.whatsapp).replace(/\D/g,''))}" target="_blank" rel="noopener">تواصل واتساب ↗</a>`:'';
+  const socials=f.show_social_links?linksMarkup(shopPublic.channel_links):'';
+  const carriers=(delivery.providers||[]).map(x=>providerNames[x]||x).join('، ');
+  const fee=Number(delivery.estimated_fee||0),payer=delivery.fee_payer==='merchant'?'على المتجر':delivery.fee_payer==='shared'?'حسب الاتفاق':'على العميل',primaryName=providerNames[delivery.primary]||'',scopeLabel=({local:'داخل المدينة',national:'داخل المملكة',international:'دولي',mixed:'محلي ودولي'})[delivery.shipping_scope]||'',pickupLabel=delivery.allow_pickup?'الاستلام من المتجر متاح. ':'';
+  const deliver=carriers||delivery.note||fee>0?`<div class="souq-shop-delivery">🚚 ${carriers?'شركات التوصيل التي اختارها المتجر: '+esc(carriers)+'. ':''}${primaryName?'الشركة المفضلة: '+esc(primaryName)+'. ':''}${scopeLabel?'نطاق التوصيل: '+esc(scopeLabel)+'. ':''}${delivery.coverage?'المناطق: '+esc(delivery.coverage)+'. ':''}${delivery.delivery_window?'المدة المتوقعة: '+esc(delivery.delivery_window)+'. ':''}${pickupLabel}${fee>0?`رسوم إرشادية: ${fee.toLocaleString('ar-SA')} ر.س (${payer})، وليست سعرًا نهائيًا. `:''}${esc(delivery.note||'تأكيد شركة التوصيل والتكلفة قبل تجهيز الطلب.')}</div>`:'';
+  const policies=[['الاستبدال والاسترجاع',f.returns_policy],['التوصيل والشحن',f.shipping_policy],['الضمان',f.warranty_policy],['الخصوصية وحماية البيانات',f.privacy_policy],['استقبال الشكاوى',f.complaints_contact],['مدة الرد على الشكاوى',f.complaint_response_time]].filter(x=>x[1]).map(x=>`<details style="margin-top:7px"><summary>${esc(x[0])}</summary><p>${esc(x[1])}</p></details>`).join('');
+  let docHref='';try{const u=new URL(String(f.documentation_url||''),location.href);if(u.protocol==='https:')docHref=u.href}catch{}const supportEmail=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(f.support_email||''))?String(f.support_email):'';const legal=[f.business_address?`العنوان: ${esc(f.business_address)}`:'',f.cr_number?`السجل التجاري: ${esc(f.cr_number)}`:'',f.vat_number?`الرقم الضريبي: ${esc(f.vat_number)}`:'',supportEmail?`البريد: <a href="mailto:${esc(supportEmail)}">${esc(supportEmail)}</a>`:'',docHref?`<a href="${esc(docHref)}" target="_blank" rel="noopener noreferrer">رابط التوثيق الرسمي ↗</a>`:''].filter(Boolean).join(' · ');
+  const contactInfo=legal?`<div class="souq-shop-delivery">${legal}</div>`:'';
+  mount.innerHTML=`${banner}<div class="souq-shop-top"><div class="souq-shop-logo">${logo}</div><div><h2>${esc(store.store_name||'المتجر')}</h2><p>${esc([store.category,store.city].filter(Boolean).join(' · '))}</p></div></div>${announce}<div class="souq-shop-actions">${whats}${socials}</div>${contactInfo}${deliver}${policies}`;
+  const grid=$('vendorSelectedProducts');if(grid){grid.classList.toggle('souq-columns-3',Number(f.product_columns)===3);grid.classList.toggle('souq-columns-2',Number(f.product_columns)!==3)}
+ }
+ function renderTools(){const f=shopPublic.storefront||{},tools=ensureTools();if(!tools)return;if(!f.show_search&&!f.show_category_filters){tools.hidden=true;tools.innerHTML='';return}tools.hidden=false;
+  const cats=[...new Set(((window.__souqVendorContext?.state?.selectedProducts||[])||[]).map(p=>String(p.category||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'ar'));
+  tools.innerHTML=`<div class="souq-product-controls">${f.show_search?'<input id="souqStoreProductSearch" type="search" placeholder="ابحث في منتجات المتجر..." aria-label="بحث منتجات المتجر">':''}<select id="souqStoreProductSort" aria-label="ترتيب المنتجات"><option value="default">ترتيب المنتجات</option><option value="newest">الأحدث</option><option value="price_low">السعر الأقل</option><option value="price_high">السعر الأعلى</option><option value="name">الاسم</option></select></div>${f.show_category_filters&&cats.length?'<div class="souq-category-pills"><button type="button" class="active" data-souq-category="all">الكل</button>'+cats.map(c=>`<button type="button" data-souq-category="${esc(c)}">${esc(c)}</button>`).join('')+'</div>':''}`;
+  if($('souqStoreProductSort'))$('souqStoreProductSort').value=f.sort_mode||'newest';
+  $('souqStoreProductSearch')?.addEventListener('input',e=>{filterQuery=e.target.value.trim().toLowerCase();renderProducts()});
+  $('souqStoreProductSort')?.addEventListener('change',renderProducts);
+  tools.querySelectorAll('[data-souq-category]').forEach(b=>b.addEventListener('click',()=>{filterCategory=b.dataset.souqCategory;tools.querySelectorAll('[data-souq-category]').forEach(x=>x.classList.toggle('active',x===b));renderProducts()}));
+ }
+ function renderProducts(){const grid=$('vendorSelectedProducts');if(!grid)return;const f=shopPublic.storefront||{};let products=[...((window.__souqVendorContext?.state?.selectedProducts||[])||[])];if(f.hide_out_of_stock)products=products.filter(p=>Number(p.stock_quantity)>0);if(filterCategory!=='all')products=products.filter(p=>String(p.category||'')===filterCategory);if(filterQuery)products=products.filter(p=>[p.title,p.category,p.description].join(' ').toLowerCase().includes(filterQuery));const sort=$('souqStoreProductSort')?.value||f.sort_mode||'newest';products.sort((a,b)=>sort==='price_low'?Number(a.price)-Number(b.price):sort==='price_high'?Number(b.price)-Number(a.price):sort==='name'?String(a.title).localeCompare(String(b.title),'ar'):sort==='newest'?new Date(b.created_at||0)-new Date(a.created_at||0):0);
+  if(!products.length){grid.innerHTML='<div class="empty" style="grid-column:1/-1">لا توجد منتجات مطابقة لاختياراتك.</div>';return}
+  grid.innerHTML=products.map(p=>`<article class="vendor-product-card"><div class="vendor-product-image">${window.__souqVendorContext.safeUrl(p.image_url)?`<img src="${esc(window.__souqVendorContext.safeUrl(p.image_url))}" alt="${esc(p.title)}" loading="lazy">`:'🎮'}</div><div class="vendor-product-content">${window.__souqVendorContext?.state?.promotedProducts.has(String(p.id))?'<span class="vendor-pill">منتج مروّج</span>':''}<h3>${esc(p.title)}</h3><div class="vendor-muted-note">${esc(p.category||'')}</div><div class="vendor-product-price">${window.__souqVendorContext.money(p.price)}</div>${f.show_stock?`<div class="vendor-muted-note">${Number(p.stock_quantity)>0?'متوفر · الكمية '+Number(p.stock_quantity):'غير متوفر'}</div>`:''}<div class="vendor-product-actions"><button class="primary" type="button" onclick="addVendorCart('${esc(p.id)}')" ${Number(p.stock_quantity)<1?'disabled':''}>أضف للسلة</button><button class="secondary" type="button" onclick="showVendorProductDetails('${esc(p.id)}')">التفاصيل</button></div></div></article>`).join('');
+ }
+ async function apply(id){const store=window.__souqVendorContext?.state?.selectedStore;if(!store||String(store.id)!==String(id))return;filterCategory='all';filterQuery='';await loadPublic(id);renderHeader(store);renderTools();renderProducts();}
+ const baseOpen=window.openVendorStore;
+ if(typeof baseOpen==='function')window.openVendorStore=async function(id){const res=await baseOpen.apply(this,arguments);lastStoreId=String(id);filterCategory='all';filterQuery='';await apply(id);return res};
+ const cartObserver=new MutationObserver(()=>{renderCheckoutHint()});
+ function watchCart(){const rows=$('vendorCartRows');if(rows&&!rows.dataset.souqWatching){rows.dataset.souqWatching='1';cartObserver.observe(rows,{childList:true,subtree:true})}}
+ watchCart();setTimeout(watchCart,500);setTimeout(watchCart,1500);
+ async function renderCheckoutHint(){const form=$('vendorCheckoutForm');if(!form)return;let box=$('souqCheckoutDeliveryHint');if(!box){box=document.createElement('div');box.id='souqCheckoutDeliveryHint';box.className='full vendor-state';const warning=form.querySelector('.vendor-danger-note');if(warning)form.insertBefore(box,warning);else form.prepend(box)}const ids=[...new Set(window.__souqVendorContext.selectedCartItems().map(x=>String(x.product.store_id)).filter(Boolean))];if(!ids.length){box.hidden=true;return}box.hidden=false;box.textContent='جارٍ تحميل خيارات التوصيل المفضلة للمتاجر في السلة...';try{const {data,error}=await sb.from('vendor_store_public_preferences').select('store_id,public_settings').in('store_id',ids);if(error)throw error;const prefs=new Map((data||[]).map(x=>[String(x.store_id),x.public_settings||{}]));const names=new Map(((window.__souqVendorContext?.state?.stores)||[]).map(x=>[String(x.id),x.store_name]));box.innerHTML=ids.map(id=>{const d=prefs.get(id)?.delivery_display||{},providers=(d.providers||[]).map(p=>providerNames[p]||p).join('، '),primary=providerNames[d.primary]||'',fee=Number(d.estimated_fee||0),payer=d.fee_payer==='merchant'?'على المتجر':d.fee_payer==='shared'?'حسب الاتفاق':'على العميل',windowText=d.delivery_window||'',coverage=d.coverage||'',pickup=!!d.allow_pickup;return `<div style="padding:5px 0;border-bottom:1px solid #ddd">🚚 <b>${esc(names.get(id)||'متجر')}</b>: ${providers?esc(providers):'لم يحدد المتجر شركة مفضلة'}. ${primary?'المفضلة: '+esc(primary)+'. ':''}${coverage?'المناطق: '+esc(coverage)+'. ':''}${windowText?'المدة المتوقعة: '+esc(windowText)+'. ':''}${pickup?'الاستلام من المتجر متاح. ':''}${fee>0?'رسوم إرشادية '+fee.toLocaleString('ar-SA')+' ر.س ('+payer+'). ':''}${esc(d.note||'يتم تأكيد الشحن قبل تجهيز الطلب.')}</div>`}).join('')+'<small>هذه تفضيلات المتجر وليست حجز شحنة أو تسعيرًا مؤكدًا.</small>'}catch(e){box.textContent='تظهر خيارات الشحن بعد إعداد قاعدة بيانات التخصيص.'}}
+})();
+</script>
 </body>
 </html>
