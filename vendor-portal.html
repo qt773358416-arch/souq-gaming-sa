@@ -891,6 +891,13 @@ body.vendor-portal-mode .vendor-dashboard-card.full{grid-column:1/-1}
 @media(max-width:760px){body.vendor-portal-mode .wrap{padding:10px 10px 28px}body.vendor-portal-mode .vendor-dashboard-grid{grid-template-columns:1fr}body.vendor-portal-mode .vendor-dashboard-card{padding:14px}body.vendor-portal-mode .vendor-page-intro{padding:18px 15px}body.vendor-portal-mode .vendor-portal-topline{align-items:flex-start;flex-direction:column}}
 </style>
 
+<style id="merchant-extra-tweaks">
+body.vendor-portal-mode .merchant-original-grid-hidden{display:none!important}
+body.vendor-portal-mode #merchantLegacyOrdersHolder{display:none!important}
+body.vendor-portal-mode .merchant-menu-filtered{display:none!important}
+body.vendor-portal-mode.merchant-compact .merchant-data-row{padding:8px!important}
+@media print{.merchant-bottom-nav,.merchant-drawer,.merchant-drawer-shade,.merchant-header-actions{display:none!important}body.vendor-portal-mode{background:#fff!important;color:#111!important}.merchant-panel,.merchant-data-row{break-inside:avoid}}
+</style>
 </head>
 <body class="theme-dark">
 <div class="wrap">
@@ -4081,63 +4088,252 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
 </script>
 
 
-<script id="merchant-reference-dashboard">
+<script id="merchant-dashboard-video-workflow">
 (function(){
+ 'use strict';
  const $=id=>document.getElementById(id);
- function setup(){
-  const page=$('page-vendor-dashboard'); if(!page||page.dataset.merchantUi==='1')return;
-  page.dataset.merchantUi='1';
-  const intro=page.querySelector('.vendor-page-intro');
-  const head=document.createElement('div');head.className='merchant-welcome';head.innerHTML='<div><h2 id="merchantWelcomeName">ÙØ±Ø­Ø¨Ø§Ù Ø¨Ù ÙÙ ÙØªØ¬Ø±Ù</h2><p>Ø¨Ø§Ø±Ù Ø§ÙÙÙ ÙÙ ÙÙ Ø³Ø¹ÙÙ ÙØ±Ø²ÙÙ â¨</p></div><div class="merchant-avatar" id="merchantAvatar">Ù</div>';
-  if(intro)intro.insertAdjacentElement('beforebegin',head);else page.insertBefore(head,page.firstChild);
-  const search=document.createElement('div');search.className='merchant-search';search.innerHTML='<input id="merchantQuickSearch" type="search" placeholder="Ø§Ø¨Ø­Ø« ÙÙ Ø§ÙØ·ÙØ¨Ø§Øª ÙØ§ÙÙÙØªØ¬Ø§Øª..." aria-label="Ø¨Ø­Ø« Ø¯Ø§Ø®Ù ÙÙØ­Ø© Ø§ÙØªØ§Ø¬Ø±"><button type="button" id="merchantSearchBtn" aria-label="Ø¨Ø­Ø«">â</button>';
-  head.insertAdjacentElement('afterend',search);
-  const period=document.createElement('div');period.className='merchant-period';period.innerHTML='<strong>ÙÙØ®Øµ Ø§ÙÙØªØ¬Ø±</strong><span>'+new Intl.DateTimeFormat('ar-SA',{dateStyle:'full',timeZone:'Asia/Riyadh'}).format(new Date())+'</span><span>ØªÙÙÙØª Ø§ÙØ³Ø¹ÙØ¯ÙØ©</span>';
-  search.insertAdjacentElement('afterend',period);
-  const ws=$('vendorWorkspace');
-  const grid=ws&&ws.querySelector('.vendor-dashboard-grid');
-  if(grid){
-   const perf=[...grid.children].find(x=>x.textContent.includes('ÙÙØ®Øµ Ø£Ø¯Ø§Ø¡ Ø§ÙÙØªØ¬Ø±'));
-   if(perf){
-    const chart=document.createElement('div');chart.className='merchant-chart';chart.innerHTML='<h3>Ø£Ø¯Ø§Ø¡ Ø§ÙÙØ¨ÙØ¹Ø§Øª</h3><div id="merchantChartMount"></div>';
-    period.insertAdjacentElement('afterend',chart);
-    const kpis=document.createElement('div');kpis.className='merchant-kpis';
-    const defs=[['Ø§ÙØ·ÙØ¨Ø§Øª','vendorMetricOrders','â£'],['ØµØ§ÙÙ Ø§ÙÙØ¨ÙØ¹Ø§Øª','vendorMetricSales','â·'],['Ø¹ÙÙÙØ© Ø§ÙÙÙØµØ©','vendorMetricCommission','Ùª'],['ØµØ§ÙÙ Ø§ÙØªØ§Ø¬Ø±','vendorMetricNet','Ø±.Ø³']];
-    defs.forEach(([label,id,icon])=>{const node=document.createElement('div');node.className='merchant-kpi';node.innerHTML='<span>'+icon+'ã'+label+'</span><strong id="mirror-'+id+'">â</strong>';kpis.appendChild(node);});
-    chart.insertAdjacentElement('afterend',kpis);
-    const sales=perf.querySelector('#vendorSalesBars');if(sales)$('merchantChartMount').appendChild(sales);
-    perf.classList.add('merchant-hidden');
-   }
-   const cards=[...grid.children];
-   const map=[['Ø¨ÙØ§ÙØ§Øª ÙØªØ¬Ø±Ù','store'],['Ø¥Ø¶Ø§ÙØ© ÙÙØªØ¬ Ø¥ÙÙ ÙØªØ¬Ø±Ù','products'],['Ø·ÙØ¨Ø§Øª ÙØªØ¬Ø±Ù','orders'],['ØªØ±ÙÙØ¬ Ø§ÙÙØªØ¬Ø±','marketing'],['Ø§ÙÙØ¨ÙØ¹Ø§Øª ÙØ§ÙÙØ³ØªØ­ÙØ§Øª','reports']];
-   cards.forEach(card=>{const title=card.querySelector('h3')?.textContent||'';const found=map.find(([t])=>title.includes(t));card.dataset.merchantSection=found?found[1]:'more';});
-   const nav=document.createElement('nav');nav.className='merchant-bottom-nav';nav.setAttribute('aria-label','ØªÙÙÙ ÙÙØ­Ø© Ø§ÙØªØ§Ø¬Ø±');
-   const items=[['home','â','Ø§ÙØ±Ø¦ÙØ³ÙØ©'],['orders','â£','Ø§ÙØ·ÙØ¨Ø§Øª'],['products','â§','Ø§ÙÙÙØªØ¬Ø§Øª'],['reports','â·','Ø§ÙØªÙØ§Ø±ÙØ±'],['more','â°','Ø§ÙÙØ²ÙØ¯']];
-   items.forEach(([key,ico,label],i)=>{const b=document.createElement('button');b.type='button';b.dataset.merchantTab=key;b.className=i===0?'active':'';b.innerHTML='<b>'+ico+'</b>'+label;nav.appendChild(b);});
-   document.body.appendChild(nav);
-   const sections={home:[],orders:['orders'],products:['products','store'],reports:['reports'],more:['marketing','more']};
-   function show(tab){nav.querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.merchantTab===tab));
-    cards.forEach(c=>{const sec=c.dataset.merchantSection;const visible=tab==='home'?['store','products','orders','marketing','reports','more'].includes(sec):sections[tab].includes(sec);c.classList.toggle('merchant-hidden',!visible);});
-    if(tab==='home'){cards.forEach(c=>c.classList.remove('merchant-hidden'));}
-    if(tab==='more')cards.forEach(c=>{if(['marketing','more'].includes(c.dataset.merchantSection))c.classList.remove('merchant-hidden');});
-   }
-   nav.addEventListener('click',e=>{const b=e.target.closest('[data-merchant-tab]');if(b)show(b.dataset.merchantTab);});
-   show('home');
-  }
-  const searchInput=$('merchantQuickSearch');
-  function runSearch(){const q=(searchInput?.value||'').trim().toLowerCase();if(!q)return;const cards=[...page.querySelectorAll('.vendor-dashboard-card')];let found=0;cards.forEach(c=>{const hit=c.textContent.toLowerCase().includes(q);c.classList.toggle('merchant-hidden',!hit);if(hit)found++;});if(!found)alert('ÙÙ ÙØªÙ Ø§ÙØ¹Ø«ÙØ± Ø¹ÙÙ ÙØªØ§Ø¦Ø¬ Ø¯Ø§Ø®Ù Ø£ÙØ³Ø§Ù ÙÙØ­Ø© Ø§ÙØªØ§Ø¬Ø±.');}
-  $('merchantSearchBtn')?.addEventListener('click',runSearch);searchInput?.addEventListener('keydown',e=>{if(e.key==='Enter')runSearch();});
-  const sync=()=>{const name=$('vendorEditName')?.value||$('vendorApplyName')?.value||'';if(name){$('merchantWelcomeName').textContent='Ø­ÙØ§Ù Ø§ÙÙÙØ '+name;$('merchantAvatar').textContent=name.trim().charAt(0)||'Ù';}};
-  const nameInput=$('vendorEditName');nameInput?.addEventListener('input',sync);setTimeout(sync,800);setTimeout(sync,2200);
-  const mirrors=['vendorMetricOrders','vendorMetricSales','vendorMetricCommission','vendorMetricNet'];
-  const obs=new MutationObserver(()=>mirrors.forEach(id=>{const a=$(id),b=$('mirror-'+id);if(a&&b)b.textContent=a.textContent;}));
-  mirrors.forEach(id=>{const a=$(id);if(a)obs.observe(a,{childList:true,subtree:true,characterData:true});});
+ const cash=n=>Number(n||0).toLocaleString('ar-SA',{minimumFractionDigits:2,maximumFractionDigits:2})+' Ø±.Ø³';
+ const escM=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const dateKey=d=>new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Riyadh',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(d));
+ const dateLabel=d=>new Intl.DateTimeFormat('ar-SA',{timeZone:'Asia/Riyadh',day:'numeric',month:'short'}).format(new Date(d));
+ let initialized=false, workspaceWasVisible=false, orders=[], reportPeriod='day', reportFrom='', reportTo='', currentView='home';
+ let drawerOpen=false, selectedOrder=null;
+ const sectionCards={};
+ function user(){try{return currentUser||null}catch(_){return null}}
+ function safeText(id){return $(id)?.textContent?.trim()||''}
+ function storeName(){return $('vendorEditName')?.value?.trim()||$('vendorApplyName')?.value?.trim()||'ÙØªØ¬Ø±Ù'}
+ function storeLogo(){return $('vendorEditLogo')?.value?.trim()||''}
+ function addStyles(){
+  if($('merchant-dashboard-video-css'))return;
+  const s=document.createElement('style');s.id='merchant-dashboard-video-css';s.textContent=`
+  body.vendor-portal-mode{background:#191a1c!important;color:#f4f7f6!important;font-family:Tahoma,Arial,sans-serif!important}
+  body.vendor-portal-mode .wrap{max-width:1040px!important;padding:12px 14px calc(100px + env(safe-area-inset-bottom))!important}
+  body.vendor-portal-mode #page-vendor-dashboard .vendor-page-intro{display:none!important}
+  body.vendor-portal-mode #vendorWorkspaceStatus{margin:8px 0 12px!important}
+  .merchant-app{max-width:820px;margin:0 auto;color:#f4f7f6}
+  .merchant-header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 2px 16px}
+  .merchant-brandline{display:flex;gap:10px;align-items:center;min-width:0}
+  .merchant-brandlogo{width:48px;height:48px;flex:0 0 48px;border-radius:50%;display:grid;place-items:center;background:#d9f4ed;color:#18564b;font-weight:900;overflow:hidden;border:2px solid #a6e5d8}
+  .merchant-brandlogo img{width:100%;height:100%;object-fit:cover}
+  .merchant-brandline h2{margin:0;font-size:19px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .merchant-brandline p{margin:3px 0 0;color:#aab4b1;font-size:12px}
+  .merchant-header-actions{display:flex;gap:7px;align-items:center}
+  .merchant-iconbtn{width:44px;height:44px;border:1px solid #3a4143;background:#222629;color:#d8eee8;border-radius:13px;font-size:19px;position:relative}
+  .merchant-searchbar{display:flex;gap:8px;margin-bottom:12px}
+  .merchant-searchbar input{flex:1;min-width:0;background:#222629;color:#f4f7f6;border:1px solid #3a4143;border-radius:14px;padding:13px 15px}
+  .merchant-periodbar{display:flex;gap:12px;align-items:center;overflow:auto;padding:8px 2px 12px;color:#b6c5c1;font-size:13px}
+  .merchant-periodbar button{background:transparent;color:#aab4b1;padding:7px 10px;border-bottom:2px solid transparent;border-radius:0}
+  .merchant-periodbar button.active{color:#a8e4d9;border-color:#a8e4d9;font-weight:900}
+  .merchant-periodbar .merchant-date{margin-right:auto;white-space:nowrap;color:#a8e4d9}
+  .merchant-panel{background:#222427;border:1px solid #373d40;border-radius:17px;padding:15px;margin:10px 0;color:#f4f7f6}
+  .merchant-panel h3{font-size:15px;margin:0 0 12px;color:#d5e9e4}
+  .merchant-kpis-new{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:12px 0}
+  .merchant-kpi-new{background:#222427;border:1px solid #373d40;border-radius:15px;padding:13px;min-width:0}
+  .merchant-kpi-new span{display:block;color:#aab4b1;font-size:12px}
+  .merchant-kpi-new strong{display:block;font-size:21px;margin-top:6px;color:#f5fbf9;overflow-wrap:anywhere}
+  .merchant-kpi-new small{display:block;color:#899692;font-size:10px;margin-top:4px}
+  .merchant-bars{height:150px;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:7px;align-items:end;padding:5px 0}
+  .merchant-bar-col{display:flex;flex-direction:column;justify-content:end;align-items:center;height:100%;gap:5px;min-width:0}
+  .merchant-bar{width:100%;max-width:30px;background:#83cfc0;border-radius:7px 7px 2px 2px;min-height:4px}
+  .merchant-bar-col small{font-size:10px;color:#aab4b1;white-space:nowrap}
+  .merchant-shortcuts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:12px 0}
+  .merchant-shortcut{display:flex;align-items:center;gap:10px;background:#222427;border:1px solid #373d40;color:#eaf6f2;border-radius:14px;padding:13px;text-align:right}
+  .merchant-shortcut b{font-size:20px;color:#a8e4d9}
+  .merchant-view{display:none;animation:merchantFade .16s ease}.merchant-view.active{display:block}
+  @keyframes merchantFade{from{opacity:.6;transform:translateY(3px)}to{opacity:1;transform:none}}
+  .merchant-view-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:15px 2px 10px}.merchant-view-head h2{font-size:20px;margin:0}.merchant-view-head p{margin:3px 0 0;color:#aab4b1;font-size:12px}
+  .merchant-bottom-nav{position:fixed;z-index:100;bottom:0;left:0;right:0;background:#202326f5;border-top:1px solid #3a4143;display:grid;grid-template-columns:repeat(5,1fr);padding:8px 5px calc(8px + env(safe-area-inset-bottom));backdrop-filter:blur(14px)}
+  .merchant-bottom-nav button{background:transparent;color:#aab4b1;padding:7px 2px;font-size:11px;border-radius:12px;display:flex;flex-direction:column;align-items:center;gap:3px}
+  .merchant-bottom-nav button b{font-size:20px;font-weight:400}.merchant-bottom-nav button.active{background:#c9eee7;color:#174d45;font-weight:900}
+  .merchant-drawer-shade{position:fixed;inset:0;background:#0009;z-index:120;display:none}.merchant-drawer-shade.open{display:block}
+  .merchant-drawer{position:fixed;z-index:121;top:0;bottom:0;right:0;width:min(390px,88vw);background:#202326;color:#f4f7f6;border-left:1px solid #3a4143;transform:translateX(105%);transition:transform .22s ease;padding:16px;overflow:auto}
+  .merchant-drawer.open{transform:translateX(0)}.merchant-drawer-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}.merchant-drawer-search{width:100%;background:#171a1c;border:1px solid #3a4143;border-radius:12px;padding:12px;color:#fff;margin-bottom:12px}
+  .merchant-menu-item{width:100%;display:flex;align-items:center;justify-content:space-between;text-align:right;background:transparent;color:#e8efed;border-bottom:1px solid #343a3d;border-radius:0;padding:14px 5px}.merchant-menu-item span:first-child{display:flex;gap:12px;align-items:center}.merchant-menu-item b{font-size:18px;color:#a8e4d9;width:24px;text-align:center}.merchant-menu-item small{display:block;color:#8e9a96;font-size:10px;margin-top:2px}
+  .merchant-status-pill{display:inline-flex;align-items:center;border-radius:999px;background:#2c3435;padding:4px 9px;font-size:11px;color:#d5e9e4}
+  .merchant-data-list{display:grid;gap:9px}.merchant-data-row{background:#222427;border:1px solid #373d40;border-radius:13px;padding:13px}.merchant-data-row strong{display:block}.merchant-data-row p{margin:5px 0;color:#aab4b1;font-size:12px}
+  .merchant-filter-row{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}.merchant-filter-row input,.merchant-filter-row select,.merchant-input{background:#171a1c;color:#f4f7f6;border:1px solid #3a4245;border-radius:11px;padding:11px;min-width:0}
+  .merchant-filter-row input{flex:1}.merchant-filter-row select{max-width:180px}
+  .merchant-btn{background:#a8e4d9;color:#143e38;border:0;border-radius:11px;padding:10px 13px;font-weight:800}.merchant-btn.secondary{background:#2b3032;color:#e9f4f0;border:1px solid #41494b}
+  .merchant-placeholder{background:#222427;border:1px dashed #495252;border-radius:15px;padding:18px;color:#aab4b1;line-height:1.8}
+  .merchant-steps{display:grid;gap:8px}.merchant-step{display:flex;align-items:center;gap:10px;padding:12px;background:#222427;border:1px solid #373d40;border-radius:12px}.merchant-step i{font-style:normal;width:28px;height:28px;display:grid;place-items:center;border-radius:50%;background:#30393a;color:#a8e4d9}
+  .merchant-modal-shade{position:fixed;inset:0;background:#000a;z-index:150;display:none;align-items:center;justify-content:center;padding:16px}.merchant-modal-shade.open{display:flex}.merchant-modal{width:min(550px,100%);background:#222629;border:1px solid #465052;border-radius:18px;padding:18px;max-height:85vh;overflow:auto}
+  .merchant-card-holder>.vendor-dashboard-card{margin:0 0 12px!important}.merchant-card-holder .vendor-dashboard-grid{display:block!important}
+  .merchant-view .vendor-dashboard-card{margin:0 0 12px!important}.merchant-view .vendor-dashboard-card h3{color:#a8e4d9!important}
+  .merchant-view .vendor-table-wrap{overflow-x:auto}.merchant-view .vendor-table{min-width:680px}
+  .merchant-goal-form{display:flex;gap:8px;flex-wrap:wrap}.merchant-goal-form input{width:130px}
+  .merchant-profile-panel{display:none;position:fixed;z-index:145;inset:0;background:#0009;align-items:flex-end}.merchant-profile-panel.open{display:flex}.merchant-profile-card{width:100%;max-height:85vh;overflow:auto;background:#202326;border-radius:25px 25px 0 0;padding:20px 16px calc(20px + env(safe-area-inset-bottom));border-top:1px solid #465052}
+  .merchant-profile-top{display:flex;align-items:center;gap:12px;margin-bottom:16px}.merchant-profile-top .merchant-brandlogo{width:58px;height:58px;flex-basis:58px}
+  @media(min-width:850px){.merchant-kpis-new{grid-template-columns:repeat(4,minmax(0,1fr))}.merchant-dashboard-layout{display:grid;grid-template-columns:220px minmax(0,1fr);gap:16px}.merchant-desktop-nav{display:block!important}.merchant-bottom-nav{display:none}.merchant-drawer{position:sticky;top:15px;transform:none;width:auto;height:calc(100vh - 30px);border-radius:17px}.merchant-drawer-shade{display:none!important}.merchant-app-body{min-width:0}.merchant-menu-item{font-size:13px}.merchant-desktop-nav .merchant-drawer{display:block}}
+  .merchant-desktop-nav{display:none}
+  @media(max-width:520px){body.vendor-portal-mode .wrap{padding:9px 10px calc(92px + env(safe-area-inset-bottom))!important}.merchant-brandline h2{font-size:16px}.merchant-brandlogo{width:43px;height:43px;flex-basis:43px}.merchant-kpis-new{grid-template-columns:repeat(2,minmax(0,1fr))}.merchant-kpi-new strong{font-size:18px}.merchant-shortcuts{gap:7px}.merchant-shortcut{padding:11px;font-size:12px}.merchant-periodbar{gap:7px}}
+  `;document.head.appendChild(s);
  }
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(setup,0),{once:true});else setTimeout(setup,0);
- const mo=new MutationObserver(()=>{if($('page-vendor-dashboard')&&!$('page-vendor-dashboard').classList.contains('hidden'))setup();});
- if(document.documentElement)mo.observe(document.documentElement,{subtree:true,attributes:true,attributeFilter:['class']});
+ function buildShell(page,workspace){
+  if($('merchantApp'))return;
+  const shell=document.createElement('div');shell.id='merchantApp';shell.className='merchant-app';
+  shell.innerHTML=`
+   <header class="merchant-header">
+    <div class="merchant-brandline"><div id="merchantHeaderLogo" class="merchant-brandlogo">Ù</div><div><h2 id="merchantHeaderName">ÙØ±Ø­Ø¨Ø§Ù Ø¨Ù ÙÙ ÙØªØ¬Ø±Ù</h2><p>Ø¨Ø§Ø±Ù Ø§ÙÙÙ ÙÙ ÙÙ Ø³Ø¹ÙÙ ÙØ±Ø²ÙÙ â¨</p></div></div>
+    <div class="merchant-header-actions"><button class="merchant-iconbtn" id="merchantNotifications" title="Ø§ÙØ¥Ø´Ø¹Ø§Ø±Ø§Øª">â§</button><button class="merchant-iconbtn" id="merchantProfile" title="ÙÙÙ Ø§ÙÙØªØ¬Ø±">â»</button></div>
+   </header>
+   <div class="merchant-searchbar"><input id="merchantQuickSearch" type="search" placeholder="Ø§Ø¨Ø­Ø« ÙÙ Ø§ÙØ·ÙØ¨Ø§Øª ÙØ§ÙÙÙØªØ¬Ø§Øª..." aria-label="Ø¨Ø­Ø« ÙÙ ÙÙØ­Ø© Ø§ÙØªØ§Ø¬Ø±"><button class="merchant-iconbtn" id="merchantSearchBtn">â</button></div>
+   <div class="merchant-periodbar"><strong id="merchantSummaryTitle">ÙÙØ®Øµ Ø§ÙÙÙÙ</strong><button class="active" data-period="day">ÙÙÙÙ</button><button data-period="month">Ø´ÙØ±Ù</button><span class="merchant-date" id="merchantToday"></span></div>
+   <div id="merchantAppStatus"></div>
+   <div id="merchantApplicationMount"></div>
+   <div id="merchantLegacyOrdersHolder" hidden></div>
+   <div class="merchant-views">
+    <section class="merchant-view active" data-view="home" id="merchantViewHome">
+     <div class="merchant-kpis-new" id="merchantKpis">
+      <div class="merchant-kpi-new"><span>Ø¥Ø¬ÙØ§ÙÙ Ø§ÙØ·ÙØ¨Ø§Øª</span><strong id="merchantOrdersKpi">â</strong><small>Ø·ÙØ¨Ø§Øª ÙØªØ¬Ø±Ù ÙÙ Ø§ÙÙØªØ±Ø©</small></div>
+      <div class="merchant-kpi-new"><span>ØµØ§ÙÙ Ø§ÙÙØ¨ÙØ¹Ø§Øª</span><strong id="merchantSalesKpi">â</strong><small>ÙØ¨Ù Ø§ÙØªØ³ÙÙØ©</small></div>
+      <div class="merchant-kpi-new"><span>Ø¹ÙÙÙØ© Ø§ÙÙÙØµØ©</span><strong id="merchantCommissionKpi">â</strong><small>Ø­Ø³Ø¨ Ø³Ø¬Ù Ø§ÙØ·ÙØ¨Ø§Øª</small></div>
+      <div class="merchant-kpi-new"><span>ØµØ§ÙÙ Ø§ÙØªØ§Ø¬Ø±</span><strong id="merchantNetKpi">â</strong><small>ÙÙÙØ© ÙØ¨Ø¯Ø¦ÙØ© ÙÙÙØ³Øª ØªØ­ÙÙÙÙØ§</small></div>
+      <div class="merchant-kpi-new"><span>Ø²ÙØ§Ø±Ø§Øª Ø§ÙÙØªØ¬Ø±</span><strong>â</strong><small>ØªØ­ØªØ§Ø¬ ØªÙØ¹ÙÙ ÙÙØ§Ø³ Ø§ÙØ²ÙØ§Ø±Ø§Øª</small></div>
+     </div>
+     <div class="merchant-panel"><div class="merchant-view-head"><div><h2>Ø£Ø¯Ø§Ø¡ Ø§ÙÙØ¨ÙØ¹Ø§Øª</h2><p id="merchantChartCaption">ØªÙØ²ÙØ¹ Ø§ÙØ·ÙØ¨Ø§Øª Ø®ÙØ§Ù Ø§ÙÙÙÙ</p></div><span class="merchant-status-pill">ØªÙÙÙØª Ø§ÙØ³Ø¹ÙØ¯ÙØ©</span></div><div id="merchantHomeChart" class="merchant-bars"></div></div>
+     <div class="merchant-panel"><div class="merchant-view-head"><div><h2>ÙØ¯Ù Ø§ÙÙØªØ¬Ø±</h2><p>Ø­Ø¯Ø¯ ÙØ¯Ù Ø§ÙÙØ¨ÙØ¹Ø§Øª Ø§ÙØ´ÙØ±Ù ÙØªØ§Ø¨Ø¹ ØªÙØ¯ÙÙ</p></div></div><div class="merchant-kpis-new"><div class="merchant-kpi-new"><span>Ø§ÙÙØ¯Ù Ø§ÙØ´ÙØ±Ù</span><strong id="merchantGoalValue">ØºÙØ± ÙØ­Ø¯Ø¯</strong></div><div class="merchant-kpi-new"><span>ÙØ³Ø¨Ø© Ø§ÙØ¥ÙØ¬Ø§Ø²</span><strong id="merchantGoalProgress">â</strong></div></div><form id="merchantGoalForm" class="merchant-goal-form"><input class="merchant-input" id="merchantGoalInput" type="number" min="1" step="1" placeholder="Ø§ÙÙØ¯Ù Ø¨Ø§ÙØ±ÙØ§Ù"><button class="merchant-btn" type="submit">Ø­ÙØ¸ Ø§ÙÙØ¯Ù</button></form><small style="color:#899692;display:block;margin-top:8px">ÙØ­ÙØ¸ Ø§ÙÙØ¯Ù Ø¹ÙÙ ÙØ°Ø§ Ø§ÙØ¬ÙØ§Ø² ÙÙØ· Ø¥ÙÙ Ø£Ù ØªØªÙÙØ± Ø¥Ø¹Ø¯Ø§Ø¯Ø§Øª Ø£ÙØ¯Ø§Ù ÙØ­ÙÙØ¸Ø© ÙÙ ÙØ§Ø¹Ø¯Ø© Ø§ÙØ¨ÙØ§ÙØ§Øª.</small></div>
+     <div class="merchant-shortcuts"><button class="merchant-shortcut" data-open-view="orders"><b>â£</b><span>Ø¹Ø±Ø¶ Ø§ÙØ·ÙØ¨Ø§Øª</span></button><button class="merchant-shortcut" data-open-view="products"><b>â§</b><span>Ø¥Ø¯Ø§Ø±Ø© Ø§ÙÙÙØªØ¬Ø§Øª</span></button><button class="merchant-shortcut" data-open-view="marketing"><b>â</b><span>Ø§ÙØªØ³ÙÙÙ ÙØ§ÙØªØ±ÙÙØ¬</span></button><button class="merchant-shortcut" data-open-view="reports"><b>â·</b><span>Ø§Ø³ØªØ¹Ø±Ø¶ Ø§ÙØªÙØ§Ø±ÙØ±</span></button></div>
+     <div class="merchant-panel"><div class="merchant-view-head"><div><h2>Ø£Ø­Ø¯Ø« Ø§ÙØ·ÙØ¨Ø§Øª</h2><p>Ø¢Ø®Ø± Ø§ÙØ·ÙØ¨Ø§Øª Ø§ÙÙØ³Ø¬ÙØ© ÙÙØªØ¬Ø±Ù</p></div><button class="merchant-btn secondary" data-open-view="orders">Ø¹Ø±Ø¶ Ø§ÙÙÙ</button></div><div id="merchantRecentOrders" class="merchant-data-list"><div class="merchant-placeholder">Ø¬Ø§Ø±Ù ØªØ­ÙÙÙ Ø§ÙØ·ÙØ¨Ø§Øª...</div></div></div>
+     <div class="merchant-panel"><div class="merchant-view-head"><div><h2>ØªØ¹ÙÙ Ø¥Ø¯Ø§Ø±Ø© Ø§ÙÙØªØ¬Ø±</h2><p>ÙØ±ÙØ² ØªØ¹ÙÙÙÙ Ø¯Ø§Ø®Ù Ø¨ÙØ§Ø¨Ø© Ø§ÙØªØ§Ø¬Ø±</p></div></div><div class="merchant-placeholder">Ø¯Ø±ÙØ³ ØªØ£Ø³ÙØ³ Ø§ÙÙØªØ¬Ø±Ø Ø¥Ø¯Ø§Ø±Ø© Ø§ÙÙÙØªØ¬Ø§ØªØ Ø§ÙØªØ³ÙÙÙ ÙØ§ÙÙÙÙØ ÙØ®Ø¯ÙØ© Ø§ÙØ¹ÙÙØ§Ø¡ Ø³ØªÙØ¶Ø§Ù Ø¨Ø¹Ø¯ ØªØ¬ÙÙØ² ÙÙØ§Ø¯ ØªØ¹ÙÙÙÙØ© Ø®Ø§ØµØ© Ø¨Ø³ÙÙ Ø§ÙÙÙÙÙÙ Ø§ÙØ³Ø¹ÙØ¯Ù.</div></div>
+    </section>
+    <section class="merchant-view" data-view="orders" id="merchantViewOrders"><div class="merchant-view-head"><div><h2>Ø§ÙØ·ÙØ¨Ø§Øª</h2><p>Ø·ÙØ¨Ø§Øª ÙØªØ¬Ø±Ù ÙÙØ·</p></div><button class="merchant-btn secondary" id="merchantRefreshOrders">ØªØ­Ø¯ÙØ«</button></div><div class="merchant-filter-row"><input id="merchantOrderSearch" placeholder="Ø§Ø¨Ø­Ø« Ø¨Ø±ÙÙ Ø§ÙØ·ÙØ¨ Ø£Ù Ø§ÙØ¹ÙÙÙ"><select id="merchantOrderStatus"><option value="all">ÙÙ Ø§ÙØ­Ø§ÙØ§Øª</option><option value="pending">Ø¨Ø§ÙØªØ¸Ø§Ø± Ø§ÙÙØ±Ø§Ø¬Ø¹Ø©</option><option value="paid">ÙØ¯ÙÙØ¹</option><option value="shipped">ØªÙ Ø§ÙØ´Ø­Ù</option><option value="cancelled">ÙÙØºÙ</option></select></div><div id="merchantOrdersList" class="merchant-data-list"><div class="merchant-placeholder">Ø¬Ø§Ø±Ù ØªØ­ÙÙÙ Ø§ÙØ·ÙØ¨Ø§Øª...</div></div></section>
+    <section class="merchant-view" data-view="products" id="merchantViewProducts"><div class="merchant-view-head"><div><h2>Ø§ÙÙÙØªØ¬Ø§Øª</h2><p>Ø¥Ø¶Ø§ÙØ© Ø§ÙÙÙØªØ¬Ø§Øª ÙØªØ¹Ø¯ÙÙÙØ§ ÙÙØªØ§Ø¨Ø¹Ø© Ø§ÙÙØ®Ø²ÙÙ</p></div></div><div id="merchantProductsHolder" class="merchant-card-holder"></div></section>
+    <section class="merchant-view" data-view="store" id="merchantViewStore"><div class="merchant-view-head"><div><h2>Ø¥Ø¯Ø§Ø±Ø© Ø§ÙÙØªØ¬Ø± Ø§ÙØ¥ÙÙØªØ±ÙÙÙ</h2><p>Ø¨ÙØ§ÙØ§Øª Ø§ÙÙÙÙØ© ÙØ§ÙØ±Ø§Ø¨Ø· ÙÙØ³Ø§Ø¦Ù Ø§ÙØªÙØ§ØµÙ</p></div></div><div id="merchantStoreHolder" class="merchant-card-holder"></div><div class="merchant-panel"><h3>Ø±Ø§Ø¨Ø· Ø§ÙÙØªØ¬Ø±</h3><p id="merchantStoreSlugText" style="color:#aab4b1">â</p><button class="merchant-btn secondary" id="merchantCopySlug">ÙØ³Ø® Ø±Ø§Ø¨Ø· Ø§ÙÙØªØ¬Ø±</button><small style="display:block;color:#899692;margin-top:8px">Ø±Ø§Ø¨Ø· Ø¹Ø§Ù ÙÙØªØ­ ØµÙØ­Ø© ÙØªØ¬Ø±Ù Ø¯Ø§Ø®Ù Ø§ÙØ³ÙÙ.</small></div></section>
+    <section class="merchant-view" data-view="marketing" id="merchantViewMarketing"><div class="merchant-view-head"><div><h2>Ø§ÙØªØ³ÙÙÙ</h2><p>Ø·ÙØ¨Ø§Øª ØªØ±ÙÙØ¬ Ø§ÙÙØªØ¬Ø± ÙØ§ÙÙÙØªØ¬Ø§Øª</p></div></div><div id="merchantMarketingHolder" class="merchant-card-holder"></div><div class="merchant-placeholder">ÙÙÙØ§Øª Ø§ÙØ­ÙÙØ§ØªØ ÙÙØ¨ÙÙØ§Øª Ø§ÙØ®ØµÙØ ÙØ§ÙØ³ÙØ§Øª Ø§ÙÙØªØ±ÙÙØ© ØªØ­ØªØ§Ø¬ Ø¬Ø¯Ø§ÙÙÙØ§ ÙØ¢ÙÙØ§Øª ØªØ´ØºÙÙÙØ§ ÙØ¨Ù ØªÙØ¹ÙÙÙØ§.</div></section>
+    <section class="merchant-view" data-view="reports" id="merchantViewReports"><div class="merchant-view-head"><div><h2>Ø§ÙØªÙØ§Ø±ÙØ±</h2><p>ØªÙØ§Ø±ÙØ± Ø§ÙÙØ¨ÙØ¹Ø§Øª ÙØ§ÙØ¹ÙÙÙØ§Øª ÙØµØ§ÙÙ Ø§ÙØªØ§Ø¬Ø±</p></div><button class="merchant-btn" id="merchantExportReport">ØªØµØ¯ÙØ± CSV</button></div><div class="merchant-panel"><div class="merchant-filter-row"><label>ÙÙ <input class="merchant-input" id="merchantReportFrom" type="date"></label><label>Ø¥ÙÙ <input class="merchant-input" id="merchantReportTo" type="date"></label><button class="merchant-btn secondary" id="merchantApplyReport">ØªØ·Ø¨ÙÙ Ø§ÙÙØªØ±Ø©</button></div><div id="merchantReportSummary" class="merchant-kpis-new"></div><div id="merchantReportChart" class="merchant-bars"></div></div><div id="merchantPerformanceHolder" class="merchant-card-holder"></div></section>
+    <section class="merchant-view" data-view="customers" id="merchantViewCustomers"><div class="merchant-view-head"><div><h2>Ø§ÙØ¹ÙÙØ§Ø¡</h2><p>ÙØ§Ø¦ÙØ© Ø§ÙØ¹ÙÙØ§Ø¡ Ø§ÙÙØ³ØªÙØªØ¬Ø© ÙÙ Ø·ÙØ¨Ø§Øª Ø§ÙÙØªØ¬Ø±</p></div></div><div id="merchantCustomersList" class="merchant-data-list"></div></section>
+    <section class="merchant-view" data-view="shipping" id="merchantViewShipping"><div class="merchant-view-head"><div><h2>Ø§ÙØ´Ø­Ù ÙØ§ÙØªÙØµÙÙ</h2><p>ÙØ³Ø§Ø± Ø§ÙØ´Ø­ÙØ© ÙÙ Ø§ÙØ·ÙØ¨ Ø­ØªÙ Ø§ÙØªØ³ÙÙÙ</p></div></div><div class="merchant-panel"><span class="merchant-status-pill">Ø§ÙØ±Ø¨Ø· ØºÙØ± ÙÙØ¹ÙÙ</span><h3 style="margin-top:12px">ÙØ±Ø§Ø­Ù Ø§ÙØ´Ø­ÙØ© Ø§ÙÙØ¹ØªÙØ¯Ø©</h3><div class="merchant-steps"><div class="merchant-step"><i>1</i>Ø·ÙØ¨ Ø¬Ø¯ÙØ¯ ÙÙØ¨ÙÙ Ø§ÙØªØ§Ø¬Ø±</div><div class="merchant-step"><i>2</i>ØªØ¬ÙÙØ² ÙØªØºÙÙÙ Ø§ÙØ·ÙØ¨</div><div class="merchant-step"><i>3</i>Ø§Ø®ØªÙØ§Ø± Ø´Ø±ÙØ© Ø§ÙØªÙØµÙÙ ÙØ¥Ø±Ø³Ø§Ù Ø·ÙØ¨ Ø§ÙØ´Ø­Ù</div><div class="merchant-step"><i>4</i>Ø¥ÙØ´Ø§Ø¡ Ø¨ÙÙÙØµØ© ÙØ±ÙÙ ØªØªØ¨Ø¹</div><div class="merchant-step"><i>5</i>Ø§Ø³ØªÙØ§Ù Ø§ÙÙÙØ¯ÙØ¨ ÙÙØ´Ø­ÙØ©</div><div class="merchant-step"><i>6</i>Ø§ÙØ´Ø­ÙØ© ÙÙ Ø§ÙØ·Ø±ÙÙ ÙØ§ÙØªØ­Ø¯ÙØ«Ø§Øª</div><div class="merchant-step"><i>7</i>Ø®Ø±Ø¬Øª ÙÙØªØ³ÙÙÙ Ø«Ù ØªÙ Ø§ÙØªØ³ÙÙÙ</div><div class="merchant-step"><i>8</i>ØªØ¹Ø°Ø± Ø§ÙØªØ³ÙÙÙ Ø£Ù Ø§ÙØ¥Ø±Ø¬Ø§Ø¹ ÙØ§ÙØ¥ØºÙØ§Ù</div></div></div><div class="merchant-placeholder">ÙØ¥Ø¶Ø§ÙØ© Ø´Ø±ÙØ© Ø´Ø­Ù ÙØ¹ÙÙÙØ§ ÙØ­ØªØ§Ø¬ Ø§ØªÙØ§ÙÙØ© Ø§ÙØªØ§Ø¬Ø± ÙØ¹ Ø§ÙØ´Ø±ÙØ©Ø ÙÙÙØ§ØªÙØ­ APIØ ÙØ¬Ø¯ÙÙ Ø§ÙØ´Ø­ÙØ§Øª ÙØ³ÙØ§Ø³Ø§Øª RLSØ Ø«Ù Ø§Ø®ØªØ¨Ø§Ø± Ø¥ÙØ´Ø§Ø¡ Ø§ÙØ¨ÙÙÙØµØ© ÙØ§ÙØªØªØ¨Ø¹. ÙÙ ÙØ¹Ø±Ø¶ Ø´Ø±ÙØ© Ø¹ÙÙ Ø£ÙÙØ§ ÙØ±ØªØ¨Ø·Ø© ÙØ¨Ù ÙØ¬Ø§Ø­ Ø§ÙØ§Ø®ØªØ¨Ø§Ø±.</div></section>
+    <section class="merchant-view" data-view="payments" id="merchantViewPayments"><div class="merchant-view-head"><div><h2>Ø§ÙØ¯ÙØ¹ ÙØ§ÙÙØ³ØªØ­ÙØ§Øª</h2><p>Ø§ÙØ³Ø¬ÙØ§Øª Ø§ÙÙØ§ÙÙØ© ÙØ§ÙØªØ³ÙÙØ§Øª Ø§ÙÙØ¤ÙØ¯Ø©</p></div></div><div id="merchantFinanceHolder" class="merchant-card-holder"></div><div class="merchant-placeholder">ÙØ§ ÙØªÙ ØªØ£ÙÙØ¯ Ø§ÙØ¯ÙØ¹ Ø£Ù Ø§ÙØªØ­ÙÙÙ ÙÙ Ø§ÙÙØªØµÙØ­. ÙÙØ²Ù ÙØ²ÙØ¯ Ø¯ÙØ¹ ÙØ¹ØªÙØ¯ ÙØ¹ÙÙÙØ§Øª ØªØ­ÙÙ Ø®Ø§Ø¯ÙÙØ© ÙØ¨Ù ØªÙØ¹ÙÙ Ø§ÙØ¯ÙØ¹ Ø§ÙØ¥ÙÙØªØ±ÙÙÙ.</div></section>
+    <section class="merchant-view" data-view="notifications" id="merchantViewNotifications"><div class="merchant-view-head"><div><h2>Ø§ÙØ¥Ø´Ø¹Ø§Ø±Ø§Øª</h2><p>ØªÙØ¨ÙÙØ§Øª Ø­Ø³Ø§Ø¨ Ø§ÙØªØ§Ø¬Ø±</p></div></div><div id="notificationsList" class="merchant-data-list"></div></section>
+    <section class="merchant-view" data-view="channels" id="merchantViewChannels"><div class="merchant-view-head"><div><h2>ÙÙÙØ§Øª Ø§ÙØ¨ÙØ¹</h2><p>Ø¥Ø¯Ø§Ø±Ø© ÙÙØ§ÙØ° Ø§ÙØ¨ÙØ¹ ÙØ§ÙØ±Ø¨Ø·</p></div></div><div class="merchant-placeholder">Ø¥Ø¶Ø§ÙØ© ÙÙÙØ§Øª Ø§ÙØ¨ÙØ¹ ÙØ«Ù Ø§ÙÙØªØ¬Ø± Ø§ÙØ¥ÙÙØªØ±ÙÙÙ ÙØ§ÙÙÙØµØ§Øª Ø§ÙØ®Ø§Ø±Ø¬ÙØ© ØªØªØ·ÙØ¨ ØªØ¹Ø±ÙÙ ÙÙ ÙÙØ§Ø© ÙÙÙØ§ØªÙØ­ÙØ§ ÙÙØ²Ø§ÙÙØ© Ø§ÙØ·ÙØ¨Ø§Øª. ÙØ§ ØªÙØ¬Ø¯ ÙÙØ§Ø© Ø®Ø§Ø±Ø¬ÙØ© ÙØ±Ø¨ÙØ·Ø© ÙÙ Ø§ÙÙØ³Ø®Ø© Ø§ÙØ­Ø§ÙÙØ©.</div></section>
+    <section class="merchant-view" data-view="employees" id="merchantViewEmployees"><div class="merchant-view-head"><div><h2>Ø§ÙÙÙØ¸ÙÙÙ</h2><p>Ø¥Ø¯Ø§Ø±Ø© Ø§ÙÙØ³ØªØ®Ø¯ÙÙÙ ÙØ§ÙØµÙØ§Ø­ÙØ§Øª</p></div></div><div class="merchant-placeholder">ÙØ³Ù Ø§ÙÙÙØ¸ÙÙÙ Ø¸Ø§ÙØ± Ø¶ÙÙ Ø§ÙÙØ§Ø¦ÙØ© ÙØ«Ù Ø§ÙÙÙØ¯ÙÙ. ØªÙØ¹ÙÙÙ ÙØªØ·ÙØ¨ Ø¬Ø¯ÙÙ Ø£Ø¹Ø¶Ø§Ø¡ Ø§ÙÙØªØ¬Ø± ÙØ¯Ø¹ÙØ§Øª ÙØµÙØ§Ø­ÙØ§Øª RLS ÙÙÙØµÙØ© Ø­ØªÙ ÙØ§ ÙØ·ÙÙØ¹ Ø§ÙÙÙØ¸Ù Ø¥ÙØ§ Ø¹ÙÙ Ø§ÙØµÙØ§Ø­ÙØ§Øª Ø§ÙÙÙÙÙØ­Ø© ÙÙ.</div></section>
+    <section class="merchant-view" data-view="support" id="merchantViewSupport"><div class="merchant-view-head"><div><h2>ÙØ±ÙØ² Ø§ÙØ¯Ø¹Ù</h2><p>Ø§ÙÙØ³Ø§Ø¹Ø¯Ø© ÙØ§ÙØ§ÙØªØ±Ø§Ø­Ø§Øª</p></div></div><div class="merchant-placeholder">Ø³ÙØªÙ Ø±Ø¨Ø· ØªØ°Ø§ÙØ± Ø§ÙØ¯Ø¹Ù ÙØ§ÙØ§ÙØªØ±Ø§Ø­Ø§Øª Ø¨ØµÙØ¯ÙÙ Ø¯Ø¹Ù Ø§ÙÙÙØµØ©. ÙÙ ÙØªÙ Ø¥Ø±Ø³Ø§Ù Ø£Ù ØªØ°ÙØ±Ø© ÙØ£Ù Ø®Ø¯ÙØ© Ø§ÙØ¯Ø¹Ù Ø§ÙØ®ÙÙÙØ© ØºÙØ± ÙÙÙØ£Ø© Ø¨Ø¹Ø¯.</div></section>
+    <section class="merchant-view" data-view="tools" id="merchantViewTools"><div class="merchant-view-head"><div><h2>Ø§ÙØ£Ø¯ÙØ§Øª Ø§ÙÙØ³Ø§Ø¹Ø¯Ø©</h2><p>Ø§Ø®ØªØµØ§Ø±Ø§Øª ØªØ´ØºÙÙÙØ© ÙÙØªØ§Ø¬Ø±</p></div></div><div class="merchant-shortcuts"><button class="merchant-shortcut" id="merchantPrint"><b>â</b>Ø·Ø¨Ø§Ø¹Ø© Ø§ÙØµÙØ­Ø©</button><button class="merchant-shortcut" id="merchantExportOrders"><b>â©</b>ØªØµØ¯ÙØ± Ø§ÙØ·ÙØ¨Ø§Øª</button><button class="merchant-shortcut" data-open-view="store"><b>â£</b>Ø¥Ø¯Ø§Ø±Ø© Ø¨ÙØ§ÙØ§Øª Ø§ÙÙØªØ¬Ø±</button><button class="merchant-shortcut" data-open-view="notifications"><b>â§</b>ÙØ±ÙØ² Ø§ÙØ¥Ø´Ø¹Ø§Ø±Ø§Øª</button></div></section>
+    <section class="merchant-view" data-view="settings" id="merchantViewSettings"><div class="merchant-view-head"><div><h2>Ø§ÙØ¥Ø¹Ø¯Ø§Ø¯Ø§Øª</h2><p>ØªÙØ¶ÙÙØ§Øª ÙÙØ­Ø© Ø§ÙØªØ§Ø¬Ø± Ø¹ÙÙ ÙØ°Ø§ Ø§ÙØ¬ÙØ§Ø²</p></div></div><div class="merchant-panel"><label style="display:block;margin-bottom:14px"><input type="checkbox" id="merchantCompactToggle"> Ø¹Ø±Ø¶ ÙØ¯ÙØ¬ ÙÙØ¨Ø·Ø§ÙØ§Øª</label><label style="display:block;margin-bottom:14px"><input type="checkbox" id="merchantNotificationToggle" checked> Ø¥Ø¸ÙØ§Ø± Ø§ÙØªÙØ¨ÙÙ Ø¹ÙØ¯ ØªØ­Ø¯ÙØ« Ø§ÙØ·ÙØ¨Ø§Øª</label><button class="merchant-btn" id="merchantSaveSettings">Ø­ÙØ¸ Ø§ÙØªÙØ¶ÙÙØ§Øª</button><p id="merchantSettingsMsg" style="color:#a8e4d9"></p><small style="color:#899692">ÙØ°Ù Ø§ÙØªÙØ¶ÙÙØ§Øª ÙØ­ÙÙØ© ÙÙØ°Ø§ Ø§ÙÙØªØµÙØ­ ÙÙØ§ ØªØºÙÙØ± Ø¥Ø¹Ø¯Ø§Ø¯Ø§Øª Ø§ÙØ­Ø³Ø§Ø¨ Ø£Ù ØµÙØ§Ø­ÙØ§Øª ÙØ§Ø¹Ø¯Ø© Ø§ÙØ¨ÙØ§ÙØ§Øª.</small></div></section>
+    <section class="merchant-view" data-view="profile" id="merchantViewProfile"><div class="merchant-view-head"><div><h2>ÙÙÙ Ø§ÙÙØªØ¬Ø± ÙØ§ÙØ­Ø³Ø§Ø¨</h2><p>ÙØ¹ÙÙÙØ§Øª Ø§ÙØ­Ø³Ø§Ø¨ ÙØ§ÙÙØªØ¬Ø±</p></div></div><div id="merchantProfileDetails" class="merchant-panel"></div><div class="merchant-shortcuts"><button class="merchant-shortcut" data-open-view="store"><b>â£</b>Ø¥Ø¯Ø§Ø±Ø© Ø¨ÙØ§ÙØ§Øª Ø§ÙÙØªØ¬Ø±</button><button class="merchant-shortcut" data-open-view="settings"><b>â</b>ØªÙØ¶ÙÙØ§Øª Ø§ÙØ¥Ø¹Ø¯Ø§Ø¯Ø§Øª</button><button class="merchant-shortcut" data-open-view="support"><b>Ø</b>ÙØ±ÙØ² Ø§ÙØ¯Ø¹Ù</button><button class="merchant-shortcut" id="merchantSignOut"><b>âª</b>ØªØ³Ø¬ÙÙ Ø§ÙØ®Ø±ÙØ¬</button></div></section>
+    <section class="merchant-view" data-view="subscriptions" id="merchantViewSubscriptions"><div class="merchant-view-head"><div><h2>Ø§ÙØ¨Ø§ÙØ© ÙØ§ÙØ§Ø´ØªØ±Ø§ÙØ§Øª</h2><p>Ø­Ø§ÙØ© Ø®Ø¯ÙØ§Øª Ø§ÙÙØªØ¬Ø±</p></div></div><div class="merchant-placeholder">ÙØ§ ØªÙØ¬Ø¯ Ø¨Ø§ÙØ§Øª Ø§Ø´ØªØ±Ø§Ù ÙÙØªØ¬Ø§Ø± ÙØ¹Ø±ÙØ© ÙÙ ÙØ§Ø¹Ø¯Ø© Ø§ÙØ¨ÙØ§ÙØ§Øª Ø§ÙØ­Ø§ÙÙØ©. Ø·ÙØ¨Ø§Øª ØªØ±ÙÙØ¬ Ø§ÙÙØªØ¬Ø± ÙÙÙØµÙØ© Ø¹Ù Ø§ÙØ§Ø´ØªØ±Ø§ÙØ§Øª.</div></section>
+   </div>
+  `;
+  const modal=document.createElement('div');modal.id='merchantOrderModal';modal.className='merchant-modal-shade';modal.addEventListener('click',e=>{if(e.target===modal)modal.classList.remove('open')});page.appendChild(modal);
+  const profilePanel=document.createElement('div');profilePanel.id='merchantProfilePanel';profilePanel.className='merchant-profile-panel';profilePanel.innerHTML='<div class="merchant-profile-card"><div style="display:flex;justify-content:center;margin-bottom:8px"><div style="width:42px;height:4px;border-radius:5px;background:#65706d"></div></div><div class="merchant-profile-top"><div class="merchant-brandlogo" id="merchantProfileLogo">Ù</div><div style="flex:1;min-width:0"><strong id="merchantProfileName">ÙØªØ¬Ø±Ù</strong><p id="merchantProfileEmail" style="margin:4px 0;color:#aab4b1;font-size:12px"></p></div><button class="merchant-iconbtn" id="merchantProfileClose">Ã</button></div><div class="merchant-steps"><button class="merchant-menu-item" data-profile-view="store">Ø¥Ø¯Ø§Ø±Ø© Ø§ÙÙØªØ¬Ø± <span>â¹</span></button><button class="merchant-menu-item" id="merchantProfileVisitStore">Ø²ÙØ§Ø±Ø© Ø§ÙÙØªØ¬Ø± <span>â</span></button><button class="merchant-menu-item" id="merchantProfileCopySlug">ÙØ³Ø® Ø±Ø§Ø¨Ø· Ø§ÙÙØªØ¬Ø± <span>â¢</span></button><button class="merchant-menu-item" data-profile-view="subscriptions">Ø§ÙØ¨Ø§ÙØ© ÙØ§ÙØ§Ø´ØªØ±Ø§ÙØ§Øª <span>â¹</span></button><button class="merchant-menu-item" data-profile-view="support">Ø®Ø¯ÙØ© Ø§ÙØ¹ÙÙØ§Ø¡ ÙØ§ÙÙÙØªØ±Ø­Ø§Øª <span>â¹</span></button><button class="merchant-menu-item" data-profile-view="settings">ØªÙØ¶ÙÙØ§Øª Ø§ÙØ¥Ø´Ø¹Ø§Ø±Ø§Øª <span>â¹</span></button><button class="merchant-menu-item" data-profile-view="home">Ø§ÙØ¹ÙØ¯Ø© Ø¥ÙÙ ÙÙØ­Ø© Ø§ÙØªØ­ÙÙ <span>â¹</span></button><button class="merchant-menu-item" data-profile-view="profile">Ø§ÙÙÙÙ Ø§ÙØ´Ø®ØµÙ <span>â¹</span></button><button class="merchant-menu-item" id="merchantProfileSignOut" style="color:#ff8994">ØªØ³Ø¬ÙÙ Ø§ÙØ®Ø±ÙØ¬ <span>âª</span></button></div></div>';document.body.appendChild(profilePanel);
+  profilePanel.addEventListener('click',e=>{if(e.target===profilePanel)profilePanel.classList.remove('open')});profilePanel.querySelector('#merchantProfileClose').addEventListener('click',()=>profilePanel.classList.remove('open'));profilePanel.querySelectorAll('[data-profile-view]').forEach(b=>b.addEventListener('click',()=>{profilePanel.classList.remove('open');showView(b.dataset.profileView)}));profilePanel.querySelector('#merchantProfileVisitStore').addEventListener('click',()=>visitPublicStore());profilePanel.querySelector('#merchantProfileCopySlug').addEventListener('click',()=>copyStoreLink());profilePanel.querySelector('#merchantProfileSignOut').addEventListener('click',()=>signOut());
+  const workspaceStatus=$('vendorWorkspaceStatus');
+  if(workspaceStatus)workspace.insertBefore(shell,workspaceStatus.nextSibling);else workspace.insertBefore(shell,workspace.firstChild);
+  const grid=workspace.querySelector('.vendor-dashboard-grid');
+  if(grid){
+   const cards=[...grid.children];
+   cards.forEach(card=>{
+    const title=card.querySelector('h3')?.textContent||'';
+    if(title.includes('Ø¨ÙØ§ÙØ§Øª ÙØªØ¬Ø±Ù')){$('merchantStoreHolder').appendChild(card);sectionCards.store=card;}
+    else if(title.includes('Ø¥Ø¶Ø§ÙØ© ÙÙØªØ¬')){$('merchantProductsHolder').appendChild(card);sectionCards.products=card;}
+    else if(title.includes('ÙÙØ®Øµ Ø£Ø¯Ø§Ø¡')){$('merchantPerformanceHolder').appendChild(card);sectionCards.performance=card;}
+    else if(title.includes('Ø·ÙØ¨Ø§Øª ÙØªØ¬Ø±Ù')){$('merchantLegacyOrdersHolder').appendChild(card);sectionCards.orders=card;}
+    else if(title.includes('ØªØ±ÙÙØ¬ Ø§ÙÙØªØ¬Ø±')){$('merchantMarketingHolder').appendChild(card);sectionCards.marketing=card;}
+    else if(title.includes('Ø§ÙÙØ¨ÙØ¹Ø§Øª ÙØ§ÙÙØ³ØªØ­ÙØ§Øª')){$('merchantFinanceHolder').appendChild(card);sectionCards.finance=card;}
+    else $('merchantViewTools').appendChild(card);
+   });
+   grid.classList.add('merchant-original-grid-hidden');
+  }
+  // Keep the application and authentication gates outside the workspace so they remain visible before a store exists.
+  // Move the application state and notices above the app content when there is no approved store.
+  createNavigation();
+  bindControls();
+  syncIdentity();
+ }
+ function createNavigation(){
+  if($('merchantBottomNav'))return;
+  const nav=document.createElement('nav');nav.id='merchantBottomNav';nav.className='merchant-bottom-nav';nav.setAttribute('aria-label','Ø§ÙØªÙÙÙ Ø¨ÙÙ Ø£ÙØ³Ø§Ù Ø§ÙØªØ§Ø¬Ø±');
+  [['home','â·','Ø§ÙØ±Ø¦ÙØ³ÙØ©'],['orders','â£','Ø§ÙØ·ÙØ¨Ø§Øª'],['products','â§','Ø§ÙÙÙØªØ¬Ø§Øª'],['reports','â´','Ø§ÙØªÙØ§Ø±ÙØ±'],['menu','â°','Ø§ÙÙØ²ÙØ¯']].forEach(([key,ico,label])=>{const b=document.createElement('button');b.type='button';b.dataset.merchantNav=key;b.innerHTML='<b>'+ico+'</b>'+label;nav.appendChild(b)});
+  document.body.appendChild(nav);
+  const shade=document.createElement('div');shade.id='merchantDrawerShade';shade.className='merchant-drawer-shade';
+  const drawer=document.createElement('aside');drawer.id='merchantDrawer';drawer.className='merchant-drawer';
+  const items=[['orders','â£','Ø§ÙØ·ÙØ¨Ø§Øª'],['products','â§','Ø§ÙÙÙØªØ¬Ø§Øª'],['marketing','â','Ø§ÙØªØ³ÙÙÙ'],['store','â£','Ø§ÙÙØªØ¬Ø± Ø§ÙØ¥ÙÙØªØ±ÙÙÙ'],['channels','â','ÙÙÙØ§Øª Ø§ÙØ¨ÙØ¹'],['customers','â','Ø§ÙØ¹ÙÙØ§Ø¡'],['employees','â§','Ø§ÙÙÙØ¸ÙÙÙ'],['reports','â´','Ø§ÙØªÙØ§Ø±ÙØ±'],['support','â»','ÙØ±ÙØ² Ø§ÙØ¯Ø¹Ù'],['shipping','â±','Ø§ÙØ´Ø­Ù ÙØ§ÙØªÙØµÙÙ'],['payments','ï¼','Ø§ÙØ¯ÙØ¹'],['tools','â','Ø§ÙØ£Ø¯ÙØ§Øª Ø§ÙÙØ³Ø§Ø¹Ø¯Ø©'],['settings','â','Ø§ÙØ¥Ø¹Ø¯Ø§Ø¯Ø§Øª'],['notifications','â§','Ø§ÙØ¥Ø´Ø¹Ø§Ø±Ø§Øª'],['profile','â»','ÙÙÙ Ø§ÙÙØªØ¬Ø± ÙØ§ÙØ­Ø³Ø§Ø¨'],['subscriptions','â','Ø§ÙØ¨Ø§ÙØ© ÙØ§ÙØ§Ø´ØªØ±Ø§ÙØ§Øª']];
+  drawer.innerHTML='<div class="merchant-drawer-head"><strong>Ø¬ÙÙØ¹ Ø§ÙØ£ÙØ³Ø§Ù</strong><button class="merchant-iconbtn" id="merchantCloseDrawer">Ã</button></div><input class="merchant-drawer-search" id="merchantDrawerSearch" placeholder="Ø§Ø¨Ø­Ø« ÙÙ Ø§ÙØ£ÙØ³Ø§Ù"><div id="merchantMenuItems">'+items.map(([key,ico,label])=>`<button class="merchant-menu-item" data-menu-view="${key}"><span><b>${ico}</b><span>${label}<small>${menuDescription(key)}</small></span></span><span>â¹</span></button>`).join('')+'</div>';
+  document.body.append(shade,drawer);
+  shade.addEventListener('click',closeDrawer);$('merchantCloseDrawer').addEventListener('click',closeDrawer);
+  drawer.querySelectorAll('[data-menu-view]').forEach(b=>b.addEventListener('click',()=>{closeDrawer();showView(b.dataset.menuView)}));
+  $('merchantDrawerSearch').addEventListener('input',()=>{const q=$('merchantDrawerSearch').value.trim().toLowerCase();drawer.querySelectorAll('[data-menu-view]').forEach(b=>b.classList.toggle('merchant-menu-filtered',!!q&&!b.textContent.toLowerCase().includes(q)));});
+  nav.addEventListener('click',e=>{const b=e.target.closest('[data-merchant-nav]');if(!b)return;if(b.dataset.merchantNav==='menu'){openDrawer();return;}showView(b.dataset.merchantNav)});
+ }
+ function menuDescription(key){return ({orders:'Ø¹Ø±Ø¶ ÙÙØªØ§Ø¨Ø¹Ø© Ø§ÙØ·ÙØ¨Ø§Øª',products:'Ø¥Ø¶Ø§ÙØ© ÙØªØ¹Ø¯ÙÙ Ø§ÙÙØ®Ø²ÙÙ',marketing:'Ø§ÙØªØ±ÙÙØ¬ ÙØ§ÙØ­ÙÙØ§Øª',store:'ÙÙÙØ© Ø§ÙÙØªØ¬Ø± ÙØ±Ø§Ø¨Ø·Ù',channels:'ÙÙÙØ§Øª Ø§ÙØ¨ÙØ¹ ÙØ§ÙØ±Ø¨Ø·',customers:'Ø¨ÙØ§ÙØ§Øª Ø¹ÙÙØ§Ø¡ Ø§ÙØ·ÙØ¨Ø§Øª',employees:'Ø§ÙÙÙØ¸ÙÙÙ ÙØ§ÙØµÙØ§Ø­ÙØ§Øª',reports:'Ø§ÙÙØ¨ÙØ¹Ø§Øª ÙØ§ÙØ£Ø¯Ø§Ø¡',support:'Ø§ÙÙØ³Ø§Ø¹Ø¯Ø© ÙØ§ÙØ§ÙØªØ±Ø§Ø­Ø§Øª',shipping:'Ø§ÙØ¨ÙØ§ÙØµ ÙØ§ÙØªØªØ¨Ø¹',payments:'Ø§ÙÙØ³ØªØ­ÙØ§Øª ÙØ§ÙØªØ³ÙÙØ§Øª',tools:'Ø§ÙØªØµØ¯ÙØ± ÙØ§ÙØ·Ø¨Ø§Ø¹Ø©',settings:'ØªÙØ¶ÙÙØ§Øª Ø§ÙÙÙØ­Ø©',notifications:'ØªÙØ¨ÙÙØ§Øª Ø§ÙØ­Ø³Ø§Ø¨',profile:'Ø¨ÙØ§ÙØ§Øª Ø§ÙÙØªØ¬Ø± ÙØ§ÙØ­Ø³Ø§Ø¨',subscriptions:'Ø§ÙØ¨Ø§ÙØ© ÙØ§ÙØ®Ø¯ÙØ§Øª'})[key]||''}
+ function openDrawer(){drawerOpen=true;$('merchantDrawerShade')?.classList.add('open');$('merchantDrawer')?.classList.add('open')}
+ function closeDrawer(){drawerOpen=false;$('merchantDrawerShade')?.classList.remove('open');$('merchantDrawer')?.classList.remove('open')}
+ function showView(key){
+  currentView=key;
+  document.querySelectorAll('#merchantApp .merchant-view').forEach(v=>v.classList.toggle('active',v.dataset.view===key));
+  document.querySelectorAll('[data-merchant-nav]').forEach(b=>b.classList.toggle('active',b.dataset.merchantNav===key));
+  if(key==='orders')renderOrders();if(key==='customers')renderCustomers();if(key==='reports')renderReport();if(key==='notifications'&&typeof loadNotifications==='function')void loadNotifications();if(key==='profile')renderProfile();
+  if(key==='products'&&typeof window.refreshMerchantProducts==='function')window.refreshMerchantProducts();
+  window.scrollTo({top:0,behavior:'smooth'});
+ }
+ async function fetchOrders(){
+  if(!user())return;
+  const list=$('merchantOrdersList');if(list)list.innerHTML='<div class="merchant-placeholder">Ø¬Ø§Ø±Ù ØªØ­Ø¯ÙØ« Ø§ÙØ·ÙØ¨Ø§Øª...</div>';
+  try{
+   const {data,error}=await sb.from('vendor_orders').select('id,checkout_group_id,subtotal_amount,commission_amount,vendor_net_amount,order_status,payment_status,created_at,vendor_checkout_groups(customer_name,customer_phone,customer_city,customer_address)').eq('vendor_owner_id',user().id).order('created_at',{ascending:false}).limit(500);
+   if(error)throw error;orders=data||[];renderDashboardData();renderOrders();renderCustomers();renderReport();
+  }catch(err){
+   const msg='ØªØ¹Ø°Ø± ØªØ­ÙÙÙ Ø¨ÙØ§ÙØ§Øª Ø§ÙØ·ÙØ¨Ø§Øª: '+(err?.message||'Ø®Ø·Ø£ ØºÙØ± ÙØ¹Ø±ÙÙ');
+   if(list)list.innerHTML='<div class="merchant-placeholder">'+escM(msg)+'</div>';
+   $('merchantRecentOrders').innerHTML='<div class="merchant-placeholder">'+escM(msg)+'</div>';
+  }
+ }
+ function inCurrentPeriod(rows,period){const now=new Date(),today=dateKey(now);return rows.filter(o=>period==='month'?dateKey(o.created_at).slice(0,7)===today.slice(0,7):dateKey(o.created_at)===today)}
+ function renderDashboardData(){
+  const rows=inCurrentPeriod(orders,reportPeriod);const total=k=>rows.reduce((a,o)=>a+Number(o[k]||0),0);
+  $('merchantSummaryTitle').textContent=reportPeriod==='day'?'ÙÙØ®Øµ Ø§ÙÙÙÙ':'ÙÙØ®Øµ Ø§ÙØ´ÙØ±';
+  $('merchantToday').textContent=new Intl.DateTimeFormat('ar-SA',{timeZone:'Asia/Riyadh',weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(new Date());
+  $('merchantOrdersKpi').textContent=rows.length.toLocaleString('ar-SA');$('merchantSalesKpi').textContent=cash(total('subtotal_amount'));$('merchantCommissionKpi').textContent=cash(total('commission_amount'));$('merchantNetKpi').textContent=cash(total('vendor_net_amount'));
+  const bars=$('merchantHomeChart');if(bars){let points=[],labels=[];if(reportPeriod==='day'){for(let h=0;h<24;h++){const n=rows.filter(o=>Number(new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Riyadh',hour:'2-digit',hourCycle:'h23'}).format(new Date(o.created_at)))===h).reduce((a,o)=>a+Number(o.subtotal_amount||0),0);points.push(n);labels.push(h%3===0?(h+''): '');}}else{for(let d=0;d<6;d++){const dt=new Date();dt.setMonth(dt.getMonth()-(5-d),1);const key=dateKey(dt).slice(0,7);points.push(orders.filter(o=>dateKey(o.created_at).slice(0,7)===key).reduce((a,o)=>a+Number(o.subtotal_amount||0),0));labels.push(new Intl.DateTimeFormat('ar-SA',{month:'short'}).format(dt));}}
+   const max=Math.max(1,...points);bars.style.gridTemplateColumns=`repeat(${points.length},minmax(0,1fr))`;bars.innerHTML=points.map((v,i)=>`<div class="merchant-bar-col"><small>${v?Math.round(v).toLocaleString('ar-SA'):''}</small><div class="merchant-bar" title="${escM(labels[i])}: ${cash(v)}" style="height:${Math.max(4,v/max*90)}px"></div><small>${escM(labels[i])}</small></div>`).join('');$('merchantChartCaption').textContent=reportPeriod==='day'?'Ø§ÙÙØ¨ÙØ¹Ø§Øª Ø­Ø³Ø¨ Ø§ÙØ³Ø§Ø¹Ø© â Ø§ÙÙÙÙ':'Ø§ÙÙØ¨ÙØ¹Ø§Øª Ø­Ø³Ø¨ Ø§ÙØ´ÙØ± â Ø¢Ø®Ø± 6 Ø£Ø´ÙØ±';}
+  const goal=readGoal(),monthRows=inCurrentPeriod(orders,'month'),monthSales=monthRows.reduce((a,o)=>a+Number(o.subtotal_amount||0),0);$('merchantGoalValue').textContent=goal?cash(goal):'ØºÙØ± ÙØ­Ø¯Ø¯';$('merchantGoalProgress').textContent=goal?Math.min(100,Math.round(monthSales/goal*100))+'%':'â';
+  $('merchantRecentOrders').innerHTML=orders.slice(0,3).map(orderCard).join('')||'<div class="merchant-placeholder">ÙØ§ ØªÙØ¬Ø¯ Ø·ÙØ¨Ø§Øª Ø­ØªÙ Ø§ÙØ¢Ù.</div>';
+ }
+ function readGoal(){try{return Number(localStorage.getItem('merchant_goal_'+(user()?.id||'guest')))||0}catch{return 0}}
+ function statusLabel(s){return ({pending:'Ø¨Ø§ÙØªØ¸Ø§Ø± Ø§ÙÙØ±Ø§Ø¬Ø¹Ø©',pending_review:'Ø¨Ø§ÙØªØ¸Ø§Ø± Ø§ÙÙØ±Ø§Ø¬Ø¹Ø©',awaiting_payment:'Ø¨Ø§ÙØªØ¸Ø§Ø± Ø§ÙØ¯ÙØ¹',paid:'ÙØ¯ÙÙØ¹',processing:'ÙÙØ¯ Ø§ÙØªØ¬ÙÙØ²',shipped:'ØªÙ Ø§ÙØ´Ø­Ù',delivered:'ØªÙ Ø§ÙØªØ³ÙÙÙ',cancelled:'ÙÙØºÙ',refunded:'ÙØ³ØªØ±Ø¬Ø¹',failed:'ÙØ´Ù Ø§ÙØ¯ÙØ¹'})[s]||s||'ØºÙØ± ÙØ­Ø¯Ø¯'}
+ function orderCustomer(o){const g=o.vendor_checkout_groups||{};return g.customer_name||'Ø¹ÙÙÙ'}
+ function orderCard(o){const g=o.vendor_checkout_groups||{};return `<div class="merchant-data-row"><div style="display:flex;justify-content:space-between;gap:10px"><strong>Ø·ÙØ¨ #${escM(String(o.id).slice(0,10))}</strong><span class="merchant-status-pill">${escM(statusLabel(o.order_status))}</span></div><p>${escM(orderCustomer(o))} Â· ${escM(g.customer_city||'')}</p><div style="display:flex;justify-content:space-between;gap:10px;align-items:center"><strong>${cash(o.subtotal_amount)}</strong><small style="color:#aab4b1">${new Date(o.created_at).toLocaleDateString('ar-SA')}</small></div><div style="display:flex;gap:7px;margin-top:9px"><button class="merchant-btn secondary" data-order-detail="${escM(o.id)}">ØªÙØ§ØµÙÙ Ø§ÙØ·ÙØ¨</button><span class="merchant-status-pill">Ø§ÙØ¯ÙØ¹: ${escM(statusLabel(o.payment_status))}</span></div></div>`}
+ function renderOrders(){const box=$('merchantOrdersList');if(!box)return;const q=($('merchantOrderSearch')?.value||'').toLowerCase().trim(),st=$('merchantOrderStatus')?.value||'all';const rows=orders.filter(o=>{const text=[o.id,orderCustomer(o),o.vendor_checkout_groups?.customer_phone].join(' ').toLowerCase();const match=!q||text.includes(q);const status=o.order_status||'';const statusMatch=st==='all'||(st==='pending'&&['pending','pending_review','awaiting_payment'].includes(status))||(st==='paid'&&o.payment_status==='paid')||(st==='shipped'&&status==='shipped')||(st==='cancelled'&&status==='cancelled');return match&&statusMatch});box.innerHTML=rows.map(orderCard).join('')||'<div class="merchant-placeholder">ÙØ§ ØªÙØ¬Ø¯ Ø·ÙØ¨Ø§Øª ÙØ·Ø§Ø¨ÙØ© ÙÙØ¨Ø­Ø« Ø£Ù Ø§ÙØ­Ø§ÙØ© Ø§ÙÙØ®ØªØ§Ø±Ø©.</div>'}
+ function renderCustomers(){const box=$('merchantCustomersList');if(!box)return;const map=new Map();orders.forEach(o=>{const g=o.vendor_checkout_groups||{},key=g.customer_phone||g.customer_name||String(o.id);const x=map.get(key)||{name:g.customer_name||'Ø¹ÙÙÙ',phone:g.customer_phone||'â',city:g.customer_city||'â',orders:0,total:0};x.orders++;x.total+=Number(o.subtotal_amount||0);map.set(key,x)});box.innerHTML=[...map.values()].sort((a,b)=>b.total-a.total).map(c=>`<div class="merchant-data-row"><strong>${escM(c.name)}</strong><p>${escM(c.phone)} Â· ${escM(c.city)}</p><div>${c.orders.toLocaleString('ar-SA')} Ø·ÙØ¨ Â· Ø¥Ø¬ÙØ§ÙÙ ${cash(c.total)}</div></div>`).join('')||'<div class="merchant-placeholder">ÙØ§ ØªÙØ¬Ø¯ Ø¨ÙØ§ÙØ§Øª Ø¹ÙÙØ§Ø¡ Ø¶ÙÙ Ø·ÙØ¨Ø§Øª ÙØªØ¬Ø±Ù Ø­Ø§ÙÙÙØ§.</div>'}
+ function dateRangeRows(){let from=$('merchantReportFrom')?.value||'',to=$('merchantReportTo')?.value||'';return orders.filter(o=>{const d=dateKey(o.created_at);return(!from||d>=from)&&(!to||d<=to)})}
+ function renderReport(){const rows=dateRangeRows(),sum=k=>rows.reduce((a,o)=>a+Number(o[k]||0),0);const box=$('merchantReportSummary');if(box)box.innerHTML=[['Ø§ÙØ·ÙØ¨Ø§Øª',rows.length.toLocaleString('ar-SA')],['Ø§ÙÙØ¨ÙØ¹Ø§Øª',cash(sum('subtotal_amount'))],['Ø§ÙØ¹ÙÙÙØ§Øª',cash(sum('commission_amount'))],['ØµØ§ÙÙ Ø§ÙØªØ§Ø¬Ø±',cash(sum('vendor_net_amount'))]].map(([l,v])=>`<div class="merchant-kpi-new"><span>${l}</span><strong>${v}</strong></div>`).join('');const chart=$('merchantReportChart');if(chart){const groups=new Map();rows.forEach(o=>{const k=dateKey(o.created_at);groups.set(k,(groups.get(k)||0)+Number(o.subtotal_amount||0))});const entries=[...groups.entries()].sort((a,b)=>a[0].localeCompare(b[0])).slice(-10),max=Math.max(1,...entries.map(x=>x[1]));chart.style.gridTemplateColumns=`repeat(${Math.max(1,entries.length)},minmax(0,1fr))`;chart.innerHTML=entries.map(([d,v])=>`<div class="merchant-bar-col"><small>${Math.round(v).toLocaleString('ar-SA')}</small><div class="merchant-bar" style="height:${Math.max(4,v/max*90)}px"></div><small>${dateLabel(d)}</small></div>`).join('')||'<div class="merchant-placeholder">ÙØ§ ØªÙØ¬Ø¯ Ø¨ÙØ§ÙØ§Øª ÙÙÙØªØ±Ø© Ø§ÙÙØ­Ø¯Ø¯Ø©.</div>'}}
+ function exportCsv(rows,filename){const headers=['Ø±ÙÙ Ø§ÙØ·ÙØ¨','Ø§ÙØ¹ÙÙÙ','Ø§ÙØ¬ÙØ§Ù','Ø§ÙÙØ¯ÙÙØ©','Ø§ÙÙØ¨ÙØº','Ø§ÙØ¹ÙÙÙØ©','ØµØ§ÙÙ Ø§ÙØªØ§Ø¬Ø±','Ø­Ø§ÙØ© Ø§ÙØ¯ÙØ¹','Ø­Ø§ÙØ© Ø§ÙØ·ÙØ¨','Ø§ÙØªØ§Ø±ÙØ®'];const lines=[headers,...rows.map(o=>{const g=o.vendor_checkout_groups||{};return [o.id,g.customer_name,g.customer_phone,g.customer_city,o.subtotal_amount,o.commission_amount,o.vendor_net_amount,o.payment_status,o.order_status,o.created_at]})];const csv='\ufeff'+lines.map(row=>row.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=filename;a.click();setTimeout(()=>URL.revokeObjectURL(url),1200)}
+ function showOrderDetail(id){const o=orders.find(x=>String(x.id)===String(id));if(!o)return;const g=o.vendor_checkout_groups||{};selectedOrder=o;const modal=$('merchantOrderModal');modal.innerHTML=`<div class="merchant-modal"><div style="display:flex;justify-content:space-between;align-items:center"><h2>ØªÙØ§ØµÙÙ Ø§ÙØ·ÙØ¨ #${escM(String(o.id).slice(0,12))}</h2><button class="merchant-iconbtn" id="merchantCloseOrder">Ã</button></div><div class="merchant-data-list"><div class="merchant-data-row"><strong>Ø¨ÙØ§ÙØ§Øª Ø§ÙØ¹ÙÙÙ</strong><p>${escM(g.customer_name||'â')} Â· ${escM(g.customer_phone||'â')}</p><p>${escM(g.customer_city||'â')}</p><p>${escM(g.customer_address||'ÙÙ ÙØ­Ø¯Ø¯ Ø§ÙØ¹ÙÙØ§Ù')}</p></div><div class="merchant-data-row"><strong>Ø§ÙÙÙÙ Ø§ÙÙØ§ÙÙØ©</strong><p>Ø§ÙØ¥Ø¬ÙØ§ÙÙ: ${cash(o.subtotal_amount)}</p><p>Ø§ÙØ¹ÙÙÙØ©: ${cash(o.commission_amount)}</p><p>ØµØ§ÙÙ Ø§ÙØªØ§Ø¬Ø± Ø§ÙÙØ¨Ø¯Ø¦Ù: ${cash(o.vendor_net_amount)}</p></div><div class="merchant-data-row"><strong>Ø­Ø§ÙØ© Ø§ÙØ·ÙØ¨</strong><p>Ø§ÙØ¯ÙØ¹: ${escM(statusLabel(o.payment_status))}</p><p>Ø§ÙØ·ÙØ¨: ${escM(statusLabel(o.order_status))}</p><p>ØªØ§Ø±ÙØ® Ø§ÙØ¥ÙØ´Ø§Ø¡: ${new Date(o.created_at).toLocaleString('ar-SA')}</p></div></div><div class="merchant-placeholder" style="margin-top:12px">Ø¨ÙØ§ÙØ§Øª Ø¨ÙÙÙØµØ© Ø§ÙØ´Ø­Ù ÙØ§ÙØªØªØ¨Ø¹ ÙØ§ ØªØ¸ÙØ± Ø­ØªÙ ÙØªÙ Ø±Ø¨Ø· Ø´Ø±ÙØ© Ø´Ø­Ù ÙØ¥ÙØ´Ø§Ø¡ Ø³Ø¬Ù Ø´Ø­ÙØ© ÙØ¹ÙÙ ÙÙØ·ÙØ¨.</div></div>`;modal.classList.add('open');$('merchantCloseOrder').addEventListener('click',()=>modal.classList.remove('open'))}
+ function syncIdentity(){const name=storeName();$('merchantHeaderName').textContent='Ø­ÙØ§Ù Ø§ÙÙÙØ '+name;const logo=storeLogo();$('merchantHeaderLogo').innerHTML=logo?`<img src="${escM(logo)}" alt="Ø´Ø¹Ø§Ø± Ø§ÙÙØªØ¬Ø±">`:escM(name.trim().charAt(0)||'Ù');$('merchantStoreSlugText').textContent=$('vendorEditSlug')?.value||'ÙÙ ÙØ­Ø¯Ø¯ Ø±Ø§Ø¨Ø· ÙØ®ØªØµØ±';$('merchantProfileDetails').innerHTML=`<div class="merchant-profile-top"><div class="merchant-brandlogo">${logo?`<img src="${escM(logo)}" alt="">`:escM(name.trim().charAt(0)||'Ù')}</div><div><strong>${escM(name)}</strong><p style="margin:3px 0;color:#aab4b1">${escM(user()?.email||'')}</p></div></div><p style="color:#aab4b1">${escM($('vendorEditCity')?.value||'')}</p><span class="merchant-status-pill">${escM(($('vendorWorkspaceStatus')?.textContent||'Ø­Ø§ÙØ© Ø§ÙÙØªØ¬Ø± ØºÙØ± ÙØ­Ø¯Ø¯Ø©').slice(0,100))}</span>`}
+ function renderProfile(){syncIdentity()}
+ function openProfilePanel(){syncIdentity();$('merchantProfileName').textContent=storeName();$('merchantProfileEmail').textContent=user()?.email||'';const logo=storeLogo();$('merchantProfileLogo').innerHTML=logo?`<img src="${escM(logo)}" alt="">`:escM(storeName().charAt(0)||'Ù');$('merchantProfilePanel').classList.add('open')}
+ async function getPublicStoreUrl(){const who=user();if(!who)throw new Error('Ø³Ø¬ÙÙ Ø§ÙØ¯Ø®ÙÙ Ø£ÙÙØ§Ù.');const {data,error}=await sb.from('vendor_stores').select('id,slug').eq('owner_id',who.id).maybeSingle();if(error||!data)throw new Error(error?.message||'ÙÙ ÙØ¹Ø«Ø± Ø¹ÙÙ ÙØªØ¬Ø±Ù.');const url=new URL('/',location.origin);url.searchParams.set('vendor',data.id);return url.toString()}
+ async function copyStoreLink(){try{const url=await getPublicStoreUrl();await navigator.clipboard.writeText(url);alert('ØªÙ ÙØ³Ø® Ø±Ø§Ø¨Ø· Ø§ÙÙØªØ¬Ø±.')}catch(e){alert(e.message||'ØªØ¹Ø°Ø± ÙØ³Ø® Ø§ÙØ±Ø§Ø¨Ø·.')}}
+ async function visitPublicStore(){const tab=window.open('about:blank','_blank');try{const url=await getPublicStoreUrl();if(tab)tab.location.href=url;else alert('Ø§ÙØªØ­ Ø§ÙØ±Ø§Ø¨Ø· ÙÙ Ø®ÙØ§Ø± ÙØ³Ø® Ø±Ø§Ø¨Ø· Ø§ÙÙØªØ¬Ø±: '+url)}catch(e){if(tab)tab.close();alert(e.message||'ØªØ¹Ø°Ø± ÙØªØ­ Ø§ÙÙØªØ¬Ø±.')}}
+ async function signOut(){if(!confirm('ÙÙ ØªØ±ÙØ¯ ØªØ³Ø¬ÙÙ Ø§ÙØ®Ø±ÙØ¬Ø'))return;const {error}=await sb.auth.signOut();if(error)alert('ØªØ¹Ø°Ø± ØªØ³Ø¬ÙÙ Ø§ÙØ®Ø±ÙØ¬: '+error.message);else location.reload()}
+ function bindControls(){
+  $('merchantBottomNav')?.querySelectorAll('[data-merchant-nav]').forEach(()=>{});
+  document.querySelectorAll('[data-open-view]').forEach(b=>b.addEventListener('click',()=>showView(b.dataset.openView)));
+  $('merchantNotifications').addEventListener('click',()=>showView('notifications'));$('merchantProfile').addEventListener('click',()=>openProfilePanel());
+  document.querySelectorAll('[data-period]').forEach(b=>b.addEventListener('click',()=>{reportPeriod=b.dataset.period;document.querySelectorAll('[data-period]').forEach(x=>x.classList.toggle('active',x===b));renderDashboardData()}));
+  $('merchantRefreshOrders').addEventListener('click',fetchOrders);$('merchantOrderSearch').addEventListener('input',renderOrders);$('merchantOrderStatus').addEventListener('change',renderOrders);
+  $('merchantOrdersList').addEventListener('click',e=>{const b=e.target.closest('[data-order-detail]');if(b)showOrderDetail(b.dataset.orderDetail)});$('merchantRecentOrders').addEventListener('click',e=>{const b=e.target.closest('[data-order-detail]');if(b)showOrderDetail(b.dataset.orderDetail)});
+  $('merchantApplyReport').addEventListener('click',renderReport);$('merchantExportReport').addEventListener('click',()=>exportCsv(dateRangeRows(),'merchant-report.csv'));$('merchantExportOrders').addEventListener('click',()=>exportCsv(orders,'merchant-orders.csv'));$('merchantPrint').addEventListener('click',()=>window.print());
+  $('merchantGoalForm').addEventListener('submit',e=>{e.preventDefault();const value=Number($('merchantGoalInput').value);if(!value||value<1)return alert('Ø£Ø¯Ø®Ù ÙØ¯ÙÙØ§ ØµØ­ÙØ­ÙØ§ Ø¨Ø§ÙØ±ÙØ§Ù.');try{localStorage.setItem('merchant_goal_'+(user()?.id||'guest'),String(value));$('merchantGoalInput').value='';renderDashboardData()}catch{alert('ØªØ¹Ø°Ø± Ø­ÙØ¸ Ø§ÙÙØ¯Ù Ø¹ÙÙ ÙØ°Ø§ Ø§ÙØ¬ÙØ§Ø².')}});
+  $('merchantCopySlug').addEventListener('click',copyStoreLink);
+  $('merchantSaveSettings').addEventListener('click',()=>{const v={compact:$('merchantCompactToggle').checked,notify:$('merchantNotificationToggle').checked};try{localStorage.setItem('merchant_settings_'+(user()?.id||'guest'),JSON.stringify(v));$('merchantSettingsMsg').textContent='ØªÙ Ø­ÙØ¸ Ø§ÙØªÙØ¶ÙÙØ§Øª Ø¹ÙÙ ÙØ°Ø§ Ø§ÙØ¬ÙØ§Ø².';document.body.classList.toggle('merchant-compact',v.compact)}catch{$('merchantSettingsMsg').textContent='ØªØ¹Ø°Ø± Ø­ÙØ¸ Ø§ÙØªÙØ¶ÙÙØ§Øª.'}});
+  $('merchantSignOut').addEventListener('click',signOut);
+  $('merchantSearchBtn').addEventListener('click',runQuickSearch);$('merchantQuickSearch').addEventListener('keydown',e=>{if(e.key==='Enter')runQuickSearch()});
+  $('merchantDrawerSearch')?.addEventListener('input',()=>{});
+ }
+ function runQuickSearch(){const q=$('merchantQuickSearch').value.trim().toLowerCase();if(!q)return;showView('orders');$('merchantOrderSearch').value=q;renderOrders();if(!orders.some(o=>[o.id,orderCustomer(o),o.vendor_checkout_groups?.customer_phone].join(' ').toLowerCase().includes(q)))showView('products');}
+ function init(){const page=$('page-vendor-dashboard'),ws=$('vendorWorkspace');if(!page||!ws)return;addStyles();if(!initialized){buildShell(page,ws);initialized=true;const st=localStorage.getItem('merchant_settings_'+(user()?.id||'guest'));if(st){try{const v=JSON.parse(st);$('merchantCompactToggle').checked=!!v.compact;$('merchantNotificationToggle').checked=v.notify!==false;document.body.classList.toggle('merchant-compact',!!v.compact)}catch{}}}
+  const visible=!ws.classList.contains('hidden');
+  if(visible){syncIdentity();if(!workspaceWasVisible){workspaceWasVisible=true;const today=dateKey(new Date());if(!$('merchantReportFrom').value)$('merchantReportFrom').value=today.slice(0,8)+'01';if(!$('merchantReportTo').value)$('merchantReportTo').value=today;void fetchOrders();}}else{workspaceWasVisible=false;}
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(init,0),{once:true});else setTimeout(init,0);
+ const observer=new MutationObserver(()=>{if($('vendorWorkspace')&&!$('vendorWorkspace').classList.contains('hidden'))init();});
+ observer.observe(document.documentElement,{subtree:true,attributes:true,attributeFilter:['class']});
+ try{sb.auth.onAuthStateChange((_event,session)=>{if(session?.user){setTimeout(init,50);setTimeout(fetchOrders,200)}else{orders=[]}})}catch(e){console.warn('Merchant dashboard auth listener not attached',e)}
+ window.addEventListener('focus',()=>{if(currentView==='orders'&&user())void fetchOrders()});
 })();
 </script>
+
 
 </body>
 </html>
