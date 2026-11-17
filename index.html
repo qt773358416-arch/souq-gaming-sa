@@ -817,48 +817,6 @@ body.store-view .top,body.store-view .searchrow{display:none!important}
 @media(max-width:600px){.souq-side-float{width:62px!important;min-height:62px!important;border-radius:19px!important}.souq-side-float .float-icon{width:30px;height:30px;font-size:19px!important}#souqNewsPanel .sc-feed{padding:10px 10px calc(14px + env(safe-area-inset-bottom))!important}#souqNewsPanel .sc-composer{margin:8px 10px!important;width:auto!important}}
 </style>
 
-
-<style id="souq-gaming-marketplace-redesign-v1">
-/* متجر القيمنق: واجهة اكتشاف مركزة */
-.souq-store-discovery-intro{padding:16px 18px!important;margin:8px 0 10px!important;background:linear-gradient(125deg,#153746,#172536 75%,#1b2639)!important;border-color:#31515f!important}
-.souq-store-discovery-intro h1{font-size:clamp(23px,4vw,31px)!important;color:var(--brand)!important;margin:5px 0!important}
-.souq-store-discovery-intro p{font-size:13px!important;margin:0!important;color:var(--muted)!important}
-.souq-store-search-only{display:block!important;margin:10px 0 16px!important}
-.souq-store-search-only .field{min-height:54px!important;font-size:16px!important}
-#vendorDirectoryRefresh{display:none!important}
-#vendorSelectedStore .vendor-cart-box,#vendorSelectedStore #vendorCheckoutForm{display:none!important}
-.vendor-campaign-featured{margin:14px 0 18px;padding:15px;border:1px solid #31515f;border-radius:18px;background:linear-gradient(130deg,#142d3a,#172333);box-shadow:var(--shadow)}
-.vendor-campaign-featured.hidden{display:none!important}
-.vendor-campaign-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
-.vendor-campaign-head h2{margin:3px 0;color:var(--brand);font-size:19px}
-.vendor-campaign-head p{margin:0;color:var(--muted);font-size:11px}
-.vendor-campaign-eyebrow{color:#f2ce81;font-size:10px;font-weight:900}
-.vendor-campaign-count{white-space:nowrap;border:1px solid #3c6372;background:#1b3946;color:#d9f7fb;border-radius:999px;padding:6px 9px;font-size:11px}
-.vendor-campaign-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
-.vendor-campaign-card{display:flex;align-items:center;gap:9px;min-width:0;padding:10px;text-align:right;border:1px solid #345263;border-radius:13px;background:#1a303d;color:var(--text)}
-.vendor-campaign-logo{display:grid;place-items:center;width:46px;height:46px;flex:0 0 46px;border-radius:13px;background:#223d4b;overflow:hidden;font-size:21px}
-.vendor-campaign-logo img{width:100%;height:100%;object-fit:cover}
-.vendor-campaign-info{min-width:0;flex:1}.vendor-campaign-info strong{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13px}.vendor-campaign-info small{display:block;color:var(--muted);font-size:10px;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.vendor-campaign-label{font-size:10px;color:#f5d78f;font-weight:900}
-#vendorCircleRail{display:flex!important;visibility:visible!important;height:auto!important;min-height:0!important;overflow-x:auto!important}
-#vendorCircleRail[hidden]{display:flex!important}
-#vendorCircleSection{display:block!important}
-/* صفحة المتجر: معلومات المتجر ومنتجاته فقط */
-#vendorSelectedStore .vendor-cart-box{display:none!important}
-/* تفاصيل الإعلان: ترتيب قيمنق واضح ومتجاوب */
-.souq-gaming-ad-detail{display:flex!important;flex-direction:column!important;gap:14px!important}
-.souq-detail-reviews{order:1!important;margin:0!important;padding:16px!important;border:1px solid var(--line)!important;border-radius:16px!important;background:var(--panel2)!important}
-.souq-detail-heading{order:2!important;padding:17px;border:1px solid #31515f;border-radius:16px;background:linear-gradient(125deg,#173443,#172536)}
-.souq-detail-kicker{font-size:11px;color:var(--brand);font-weight:900}.souq-detail-heading h1{font-size:clamp(22px,5vw,31px);line-height:1.45;margin:6px 0;color:var(--text)}
-.souq-detail-heading .price{font-size:26px;color:var(--brand)!important;margin:4px 0}.souq-detail-gallery{order:3!important;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
-.souq-detail-gallery img{width:100%!important;height:clamp(170px,38vw,310px)!important;max-height:none!important;object-fit:contain!important;background:#0c1721!important;border:1px solid var(--line);border-radius:14px;margin:0!important}
-.souq-detail-gallery video{grid-column:1/-1;width:100%;max-height:360px;border-radius:14px;background:#000}
-.souq-detail-specs{order:4!important;padding:16px;border:1px solid var(--line);border-radius:16px;background:var(--panel)}
-.souq-detail-specs h2{margin:0 0 9px;color:var(--brand);font-size:19px}.souq-detail-description{white-space:pre-wrap;line-height:1.9;margin:0}
-.souq-spec-chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:13px}.souq-spec-chips span{padding:7px 10px;border:1px solid var(--line);border-radius:10px;background:var(--panel2);font-size:12px;color:var(--muted)}
-.souq-detail-pledge{order:5!important}.souq-detail-seller{order:6!important;padding:15px;border:1px solid var(--line);border-radius:15px;background:var(--panel)}.souq-detail-seller h3{margin:0 0 5px;color:var(--brand)}.souq-detail-comments{order:7!important;margin:0!important}
-@media(max-width:600px){.vendor-campaign-grid{grid-template-columns:1fr}.vendor-campaign-featured{padding:12px}.souq-detail-gallery{grid-template-columns:1fr}.souq-detail-gallery img{height:250px!important}.souq-detail-heading{padding:14px}.souq-detail-reviews,.souq-detail-specs{padding:13px}}
-</style>
 </head>
 <body class="theme-dark">
 <div class="wrap">
@@ -909,7 +867,6 @@ body.store-view .top,body.store-view .searchrow{display:none!important}
   <button class="vendor-category-circle" type="button" data-vendor-category="إكسسوارات القيمنق"><span class="vendor-category-circle-icon"><img src="https://cdn.simpleicons.org/razer/ffffff" alt="Gaming accessories" loading="lazy"></span><b>إكسسوارات</b></button>
  </div>
  <div class="vendor-circle-rail" id="vendorCircleRail"><div class="muted">جارٍ تحميل المتاجر...</div></div>
- <section id="homeCampaignFeatured" class="vendor-campaign-featured hidden" aria-label="متاجر مميزة ضمن الحملات التسويقية"></section>
 </div>
 <div class="home-browse-combined" aria-label="تصفح وتصنيف الإعلانات">
 <div class="home-personal-categories" aria-label="تصنيفات إعلانات الأفراد">
@@ -999,15 +956,19 @@ body.store-view .top,body.store-view .searchrow{display:none!important}
 </section>
 
 <section id="page-vendors" class="hidden">
- <div class="vendor-page-intro souq-store-discovery-intro">
-  <div class="vendor-pill">🎮 سوق القيمنق السعودي</div>
-  <h1>اكتشف متاجر القيمنق</h1>
-  <p>متاجر متخصصة في أجهزة الألعاب والكمبيوتر وقطع القيمنق — اختر متجرك وابدأ التصفح.</p>
+ <div class="vendor-page-intro">
+  <div class="vendor-pill">متاجر مستقلة داخل السوق</div>
+  <h1>متاجر القيمنق</h1>
+  <p>تصفح متاجر التجار المعتمدة ومنتجاتهم. لكل تاجر متجره وصفحته وإدارته المستقلة.</p>
+  <div class="actions">
+   <button class="primary" type="button" data-vendor-dashboard>افتح متجرك / إدارة متجري</button>
+   <button class="secondary" type="button" data-go="home">العودة للسوق الرئيسي</button>
+  </div>
  </div>
- <div class="vendor-toolbar souq-store-search-only">
-  <input id="vendorDirectorySearch" class="field" type="search" placeholder="ابحث عن متجر، مدينة أو تخصص..." aria-label="ابحث عن متجر أو مدينة أو تخصص">
+ <div class="vendor-toolbar">
+  <input id="vendorDirectorySearch" class="field" type="search" placeholder="ابحث عن متجر أو مدينة أو تصنيف...">
+  <button class="secondary" id="vendorDirectoryRefresh" type="button">تحديث المتاجر</button>
  </div>
- <section id="vendorCampaignFeatured" class="vendor-campaign-featured hidden" aria-label="المتاجر المميزة بالحملات التسويقية"></section>
  <div id="vendorDirectoryGrid" class="vendor-directory-grid"><div class="empty">جارٍ تحميل المتاجر...</div></div>
  <section id="vendorSelectedStore" class="hidden">
   <div class="vendor-detail-head">
@@ -1281,15 +1242,7 @@ async function openAdDetail(id){
  if(error||!a){box.innerHTML='<div class="empty">تعذر تحميل الإعلان أو أنه لم يعد متاحًا.</div>';return;}
  const images=Array.isArray(a.image_urls)?a.image_urls:[];currentDetailAd=a;
  const mediaMarkup=(images.length?images.map(u=>`<img src="${esc(u)}" alt="صورة الإعلان" style="width:100%;max-height:300px;object-fit:contain;background:#0e172a;border-radius:12px;margin-bottom:8px">`).join(''):'<div class="detail-placeholder" aria-label="لا توجد صورة">لا توجد صورة</div>')+(a.video_url?`<video controls playsinline src="${esc(a.video_url)}" style="width:100%;max-height:340px;border-radius:12px;background:#000;margin-top:8px"></video>`:'');
- box.innerHTML=`<div class="ad-detail-grid souq-gaming-ad-detail">
-  <section id="reviewsPanel" class="souq-detail-reviews"><h3>⭐ تقييمات البائع</h3><div class="empty">جارٍ تحميل التقييمات...</div></section>
-  <header class="souq-detail-heading"><div class="souq-detail-kicker">🎮 تفاصيل إعلان قيمنق</div><h1>${esc(a.title)}</h1><div class="price">${Number(a.price||0).toLocaleString('ar-SA')} <small>ر.س</small></div><div class="meta">${esc([a.category,a.condition,a.city||a.location].filter(Boolean).join(' · '))}</div></header>
-  <section class="souq-detail-gallery" aria-label="صور الإعلان">${mediaMarkup}</section>
-  <section class="souq-detail-specs"><h2>تفاصيل ومواصفات المنتج</h2><p class="souq-detail-description">${esc(a.description||'لا يوجد وصف تفصيلي.')}</p><div class="souq-spec-chips"><span>التصنيف: ${esc(a.category||'—')}</span><span>الحالة: ${esc(a.condition||'—')}</span><span>المدينة: ${esc(a.city||a.location||'—')}</span>${a.model_year?`<span>سنة الصنع: ${esc(a.model_year)}</span>`:''}</div>${a.ad_type==='marketing'&&a.external_product_url?`<a class="ad-external-link" href="${esc(a.external_product_url)}" target="_blank" rel="noopener noreferrer">↗ زيارة المنتج في المنصة الأصلية</a>`:''}</section>
-  <section class="ad-pledge-panel souq-detail-pledge"><h3>إقرار البائع بحالة المنتج</h3>${a.product_terms_accepted?`<span class="ad-pledge-badge ${a.product_condition_status==='defect'?'defect':''}">${a.product_condition_status==='defect'?'⚠ أفصح البائع عن وجود خلل':'✓ تعهّد البائع بأن المنتج سليم'}</span>${a.product_condition_status==='defect'?`<p><strong>الخلل أو الملاحظة المعلنة:</strong> ${esc(a.product_issue||'لم يضف البائع تفاصيل.')}</p>`:'<p class="muted">هذا إقرار من البائع وليس فحصًا فنيًا صادرًا عن المنصة.</p>'}`:'<p class="muted">لم يسجل هذا الإعلان إقرار حالة المنتج.</p>'}</section>
-  <section class="souq-detail-seller"><h3>البائع</h3><p>${esc(a.seller_name||'بائع سوق القيمنق')}</p><div class="actions"><button class="primary" onclick="contactWhatsApp('${esc(a.seller_phone||'')}','${esc(a.title)}')">واتساب البائع</button><button class="secondary" onclick="contactCall('${esc(a.seller_phone||'')}')">اتصال</button><button class="secondary" onclick="startConversation('${a.id}','${esc(a.title)}','${a.seller_id||''}')">مراسلة خاصة</button><button class="fav-button" onclick="toggleFavorite('${a.id}')">♡ حفظ بالمفضلة</button><button class="secondary" onclick="shareAd('${a.id}','${esc(a.title)}')">↗ مشاركة الإعلان</button><button class="danger" onclick="openReport('${a.id}')">إبلاغ</button></div></section>
-  <section id="adCommentsPanel" class="panel souq-detail-comments"><h3>💬 التعليقات والأسئلة</h3><p class="muted">اسأل عن توافق القطع، المواصفات، الضمان أو حالة المنتج.</p><form id="adCommentForm" class="stack"><textarea id="adCommentText" class="field" rows="3" maxlength="1500" placeholder="اكتب سؤالك أو تعليقك عن المنتج..." required></textarea><button class="primary" type="submit">إرسال التعليق</button><div id="adCommentMsg" class="muted"></div></form><div id="adCommentsList" class="stack" style="margin-top:16px">جارٍ تحميل التعليقات...</div></section>
- </div>`;
+ box.innerHTML=`<div class="ad-detail-grid"><div>${mediaMarkup}</div><div><h2>${esc(a.title)}</h2><div class="price">${Number(a.price||0).toLocaleString('ar-SA')} ر.س</div><div class="meta">${esc(a.category||'')} · ${esc(a.condition||'')}</div><p style="white-space:pre-wrap">${esc(a.description||'لا يوجد وصف.')}</p>${a.ad_type==='marketing'&&a.external_product_url?`<a class="ad-external-link" href="${esc(a.external_product_url)}" target="_blank" rel="noopener noreferrer">↗ زيارة المنتج في المنصة الأصلية</a>`:''}<section class="ad-pledge-panel"><h3>إقرار البائع بحالة المنتج</h3>${a.product_terms_accepted?`<span class="ad-pledge-badge ${a.product_condition_status==='defect'?'defect':''}">${a.product_condition_status==='defect'?'⚠ أفصح البائع عن وجود خلل':'✓ تعهّد البائع بأن المنتج سليم'}</span>${a.product_condition_status==='defect'?`<p><strong>الخلل أو الملاحظة المعلنة:</strong> ${esc(a.product_issue||'لم يضف البائع تفاصيل.')}</p>`:'<p class="muted">هذا إقرار من البائع وليس فحصًا فنيًا صادرًا عن المنصة.</p>'}`:'<p class="muted">لم يسجل هذا الإعلان إقرار حالة المنتج.</p>'}</section><p class="muted">البائع: ${esc(a.seller_name||'')}</p><div class="actions"><button class="primary" onclick="openAdDetail('${a.id}')">التفاصيل</button><button class="primary" onclick="contactWhatsApp('${esc(a.seller_phone||'')}','${esc(a.title)}')">واتساب البائع</button><button class="secondary" onclick="contactCall('${esc(a.seller_phone||'')}')">اتصال</button><button class="secondary" onclick="startConversation('${a.id}','${esc(a.title)}','${a.seller_id||''}')">مراسلة خاصة</button><button class="fav-button" onclick="toggleFavorite('${a.id}')">♡ حفظ بالمفضلة</button><button class="secondary" onclick="shareAd('${a.id}','${esc(a.title)}')">↗ مشاركة الإعلان</button><button class="danger" onclick="openReport('${a.id}')">إبلاغ</button></div><section id="adCommentsPanel" class="panel" style="margin-top:18px"><h3>النقاش العام لهذا المنتج</h3><p class="muted">اكتب تعليقًا متعلقًا بالإعلان، ويمكن للبائع الرد تحته. المحادثات الخاصة لها صفحة مستقلة.</p><form id="adCommentForm" class="stack"><textarea id="adCommentText" class="field" rows="3" maxlength="1500" placeholder="اكتب سؤالًا أو تعليقًا عن المنتج..." required></textarea><button class="primary" type="submit">إرسال التعليق</button><div id="adCommentMsg" class="muted"></div></form><div id="adCommentsList" class="stack" style="margin-top:16px">جارٍ تحميل التعليقات...</div></section><section id="reviewsPanel"><h3>تقييمات البائع</h3><div class="empty">جارٍ تحميل التقييمات...</div></section></div></div>`;
  const commentForm=$('adCommentForm');if(commentForm)commentForm.onsubmit=async e=>{e.preventDefault();if(!needAuth())return;const body=$('adCommentText').value.trim();if(!body)return;const payload={ad_id:a.id,user_id:currentUser.id,author_name:profile?.display_name||currentUser.email,body,parent_id:null};const {error}=await sb.from('ad_comments').insert(payload);if(error){msg('adCommentMsg','تعذر إرسال التعليق. تحقق من تطبيق ملف SQL.');return;}$('adCommentText').value='';msg('adCommentMsg','تم نشر تعليقك.');await loadAdComments(a);};await loadAdComments(a);await loadReviews(a);
 }
 
@@ -2050,12 +2003,6 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   scheduled:'مجدول', expired:'منتهي'
  }[status] || status || 'غير محدد');
 
- function renderCampaignFeaturedStores(){
-  const stores=(vState.stores||[]).filter(store=>vState.promotedStores.has(String(store.id)));
-  const render=(box)=>{if(!box)return;if(!stores.length){box.classList.add('hidden');box.innerHTML='';return;}box.classList.remove('hidden');box.innerHTML=`<div class="vendor-campaign-head"><div><span class="vendor-campaign-eyebrow">حملات تسويقية نشطة</span><h2>⭐ المتاجر المميزة</h2><p>متاجر مشاركة في حملات ترويج مدفوعة وفعّالة</p></div><span class="vendor-campaign-count">${stores.length.toLocaleString('ar-SA')} متجر</span></div><div class="vendor-campaign-grid">${stores.slice(0,8).map(store=>`<button type="button" class="vendor-campaign-card" data-campaign-vendor="${vEsc(store.id)}"><span class="vendor-campaign-logo">${vendorLogoMarkup(store)}</span><span class="vendor-campaign-info"><strong>${vEsc(store.store_name)}</strong><small>${vEsc([store.category,store.city].filter(Boolean).join(' · ')||'متجر قيمنق')}</small></span><span class="vendor-campaign-label">مميز</span></button>`).join('')}</div>`;};
-  render(v$('homeCampaignFeatured'));render(v$('vendorCampaignFeatured'));
- }
- document.addEventListener('click',e=>{const card=e.target.closest('[data-campaign-vendor]');if(card)window.openVendorStore(card.dataset.campaignVendor);});
  async function loadVendorDirectory() {
   const grid=v$('vendorDirectoryGrid'), rail=v$('vendorCircleRail');
   if(!grid && !rail) return;
@@ -2076,7 +2023,6 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   });
   renderVendorCircles();
   renderVendorDirectory();
-  renderCampaignFeaturedStores();
   const sharedVendorId=new URLSearchParams(location.search).get('vendor');
   if(sharedVendorId&&!vState.sharedVendorHandled){
    const sharedStore=vState.stores.find(store=>String(store.id)===String(sharedVendorId)||String(store.slug)===String(sharedVendorId));
@@ -2094,7 +2040,10 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
  }
  function renderVendorCircles() {
   const rail=v$('vendorCircleRail'); if(!rail) return;
-  rail.removeAttribute('hidden');
+  // لا تعرض المتاجر المعتمدة في الرئيسية؛ تظهر فقط بعد اختيار تصنيف المتاجر.
+  rail.innerHTML='';
+  rail.setAttribute('hidden','');
+  return;
   const categories=[
    {name:'بلايستيشن',aliases:['بلايستيشن','playstation','ps5','ps4','ps']},
    {name:'إكس بوكس',aliases:['إكس بوكس','اكس بوكس','xbox']},
@@ -2200,7 +2149,7 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   vState.selectedProducts=data||[];
   v$('vendorSelectedProductCount').textContent=vState.selectedProducts.length.toLocaleString('ar-SA')+' منتج';
   renderSelectedVendorProducts();
-  v$('vendorSelectedStore').querySelector('.vendor-cart-box')?.remove();
+  renderVendorCart();
   v$('vendorSelectedStore').scrollIntoView({behavior:'smooth',block:'start'});
  };
  function renderSelectedVendorProducts(){
@@ -2261,7 +2210,7 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   vState.selectedProducts=[];
  });
  v$('vendorDirectorySearch').addEventListener('input',renderVendorDirectory);
- // تحديث دليل المتاجر يتم تلقائياً عند فتح الصفحة أو تغيير البحث.
+ v$('vendorDirectoryRefresh').addEventListener('click',()=>{vState.selectedCategory='';const h=v$('page-vendors')?.querySelector('.vendor-page-intro h1');if(h)h.textContent='متاجر القيمنق';loadVendorDirectory();});
  v$('vendorCategoryCircleRail')?.addEventListener('click',event=>{
   const button=event.target.closest('[data-vendor-category]');if(!button)return;
   vState.selectedCategory=button.dataset.vendorCategory||'';
@@ -2528,8 +2477,6 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
    if(p.target_type==='product')vState.promotedProducts.add(String(p.target_id));
    if(p.target_type==='ad')vState.promotedAds.add(String(p.target_id));
   });
-  renderVendorCircles();
-  renderCampaignFeaturedStores();
  }
  function applyPromotedAdOrdering(){
   const box=v$('ads');if(!box||!vState.promotedAds.size)return;
@@ -4032,7 +3979,12 @@ window.__souqVendorContext={state:vState,money:vMoney,safeUrl:vSafeUrl,esc:vEsc,
 </style>
 
 
-
+<style id="souq-hide-home-store-list-show-by-category-only">
+#vendorCircleRail[hidden],
+#vendorCircleRail{display:none!important;height:0!important;min-height:0!important;margin:0!important;padding:0!important;border:0!important}
+#vendorCircleSection{display:block!important}
+#vendorCategoryCircleRail{display:flex!important}
+</style>
 
 <style id="souq-storefront-customization-css">
 #souqStorefrontPublic{--souq-shop-color:#e8dce8;background:#fff;border:1px solid #eadfe8;border-radius:18px;padding:14px;margin:12px 0 18px;color:#252129;overflow:hidden}
