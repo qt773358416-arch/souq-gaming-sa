@@ -2022,6 +2022,16 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   });
   renderVendorCircles();
   renderVendorDirectory();
+  const sharedVendorId=new URLSearchParams(location.search).get('vendor');
+  if(sharedVendorId&&!vState.sharedVendorHandled){
+   const sharedStore=vState.stores.find(store=>String(store.id)===String(sharedVendorId)||String(store.slug)===String(sharedVendorId));
+   if(sharedStore&&typeof window.openVendorStore==='function'){
+    vState.sharedVendorHandled=true;
+    document.querySelectorAll('main>section').forEach(section=>section.classList.add('hidden'));
+    v$('page-vendors')?.classList.remove('hidden');
+    await window.openVendorStore(sharedStore.id);
+   }
+  }
  }
  function vendorLogoMarkup(store, klass='') {
   const url=vSafeUrl(store.logo_url);
