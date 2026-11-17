@@ -822,8 +822,9 @@ body.store-view .top,body.store-view .searchrow{display:none!important}
 body.vendor-portal-mode{background:#0b1420!important;color:#eef7fa!important}
 body.vendor-portal-mode .top,body.vendor-portal-mode .bottom,body.vendor-portal-mode .footer,body.vendor-portal-mode #sideDrawer,body.vendor-portal-mode #drawerBackdrop{display:none!important}
 body.vendor-portal-mode .wrap{max-width:1440px;padding:22px 26px 40px}
-body.vendor-portal-mode main>section{display:none!important}
+body.vendor-portal-mode main>section:not(#page-vendor-dashboard){display:none!important}
 body.vendor-portal-mode main>#page-vendor-dashboard{display:block!important}
+body.vendor-portal-mode #page-vendor-dashboard.hidden{display:block!important}
 body.vendor-portal-mode .vendor-page-intro{padding:24px 28px;border-radius:22px;background:linear-gradient(120deg,#142e43,#172638 65%,#14202d);border:1px solid #31566a;box-shadow:0 15px 40px #0003}
 body.vendor-portal-mode .vendor-page-intro:before{content:'SOUQ GAMING  /  MERCHANT CENTER';display:block;color:#70d9f0;font-size:10px;letter-spacing:2px;font-weight:900;margin-bottom:9px}
 body.vendor-portal-mode .vendor-page-intro h1{font-size:clamp(27px,4vw,38px);color:#f2fbff}
@@ -4042,9 +4043,13 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
  const tz='Asia/Riyadh';
  function updateClock(){const el=document.getElementById('vendorPortalClock');if(el)el.textContent=new Intl.DateTimeFormat('en-GB',{timeZone:tz,day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:true}).format(new Date())+' · توقيت السعودية';}
  function mount(){
+  document.body.classList.add('vendor-portal-mode');
+  const page=document.getElementById('page-vendor-dashboard');
+  if(page){page.classList.remove('hidden');page.style.display='block';}
   if(!document.getElementById('vendorPortalTopline')){const h=document.createElement('div');h.id='vendorPortalTopline';h.className='vendor-portal-topline';h.innerHTML='<div class="vendor-portal-brand">SOUQ GAMING <span style="color:#a9bac7;font-weight:500">/ بوابة التاجر</span></div><div id="vendorPortalClock" class="vendor-portal-date"></div>';const main=document.querySelector('main');if(main)main.insertBefore(h,main.firstChild);}
   updateClock();
   if(typeof window.showPage==='function')window.showPage('vendor-dashboard');
+  if(page)page.classList.remove('hidden');
  }
  async function boot(){
   mount();
@@ -4072,6 +4077,17 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   }
  }
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+ setTimeout(()=>{
+  const page=document.getElementById('page-vendor-dashboard');
+  const auth=document.getElementById('vendorDashboardAuth');
+  const app=document.getElementById('vendorApplicationBox');
+  const workspace=document.getElementById('vendorWorkspace');
+  const shell=document.getElementById('vendorProShell');
+  if(page){page.classList.remove('hidden');page.style.display='block';}
+  const anyVisible=[auth,app,workspace,shell].some(el=>el&&!el.classList.contains('hidden'));
+  if(!anyVisible&&auth){auth.classList.remove('hidden');auth.innerHTML='لم تظهر لوحة المتجر بعد. أعد المحاولة، وإذا استمرت المشكلة افتح وحدة التحكم لمعرفة خطأ التحميل.';}
+  if(workspace&&!workspace.classList.contains('hidden')&&shell)shell.classList.remove('hidden');
+ },4500);
  setInterval(updateClock,1000);
  sb.auth.onAuthStateChange((_event,session)=>{
   currentUser=session?.user||null;
