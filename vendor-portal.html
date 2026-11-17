@@ -4039,18 +4039,45 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
 
 <script id="vendor-portal-boot">
 (function(){
- document.body.classList.add('vendor-portal-mode');
  const tz='Asia/Riyadh';
  function updateClock(){const el=document.getElementById('vendorPortalClock');if(el)el.textContent=new Intl.DateTimeFormat('en-GB',{timeZone:tz,day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:true}).format(new Date())+' · توقيت السعودية';}
  function mount(){
   if(!document.getElementById('vendorPortalTopline')){const h=document.createElement('div');h.id='vendorPortalTopline';h.className='vendor-portal-topline';h.innerHTML='<div class="vendor-portal-brand">SOUQ GAMING <span style="color:#a9bac7;font-weight:500">/ بوابة التاجر</span></div><div id="vendorPortalClock" class="vendor-portal-date"></div>';const main=document.querySelector('main');if(main)main.insertBefore(h,main.firstChild);}
   updateClock();
   if(typeof window.showPage==='function')window.showPage('vendor-dashboard');
-  if(typeof window.openVendorDashboard==='function'&&window.currentUser)window.openVendorDashboard();
  }
- document.addEventListener('DOMContentLoaded',mount);
- const timer=setInterval(()=>{mount();const ws=document.getElementById('vendorWorkspace');const app=document.getElementById('vendorApplicationBox');if((ws&&!ws.classList.contains('hidden'))||(app&&!app.classList.contains('hidden')))clearInterval(timer);},700);
- setTimeout(()=>clearInterval(timer),15000);
+ async function boot(){
+  mount();
+  const authBox=document.getElementById('vendorDashboardAuth');
+  const appBox=document.getElementById('vendorApplicationBox');
+  const workspace=document.getElementById('vendorWorkspace');
+  if(authBox){authBox.classList.remove('hidden');authBox.innerHTML='جارٍ التحقق من تسجيل الدخول... <span class="muted">يرجى الانتظار</span>';}
+  try{
+   const result=await sb.auth.getSession();
+   if(result.error)throw result.error;
+   const session=result.data?.session||null;
+   currentUser=session?.user||null;
+   if(!currentUser){
+    if(authBox){authBox.classList.remove('hidden');authBox.innerHTML='يجب تسجيل الدخول أولاً لإدارة متجرك.<br><button type="button" class="primary" id="vendorPortalLoginBtn" style="margin-top:12px">تسجيل الدخول</button>';}
+    if(appBox)appBox.classList.add('hidden');if(workspace)workspace.classList.add('hidden');
+    document.getElementById('vendorPortalLoginBtn')?.addEventListener('click',()=>{const gate=document.getElementById('authGate');if(gate)gate.classList.remove('hidden');else if(typeof showPage==='function')showPage('account');});
+    return;
+   }
+   if(authBox){authBox.classList.add('hidden');authBox.textContent='';}
+   if(typeof loadProfile==='function'){try{await loadProfile();}catch(e){console.warn('Profile load:',e);}}
+   if(typeof loadVendorStoreWorkspace==='function')await loadVendorStoreWorkspace();
+  }catch(err){
+   console.error('Vendor portal boot failed:',err);
+   if(authBox){authBox.classList.remove('hidden');authBox.innerHTML='تعذر تحميل بوابة التاجر. تحقق من اتصال الإنترنت وإعدادات Supabase ثم أعد تحميل الصفحة.<br><small>'+String(err?.message||err).replace(/[<>&]/g,'')+'</small><br><button type="button" class="secondary" onclick="location.reload()" style="margin-top:12px">إعادة المحاولة</button>';}
+  }
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+ setInterval(updateClock,1000);
+ sb.auth.onAuthStateChange((_event,session)=>{
+  currentUser=session?.user||null;
+  if(currentUser){const authBox=document.getElementById('vendorDashboardAuth');if(authBox)authBox.classList.add('hidden');setTimeout(()=>{if(typeof loadVendorStoreWorkspace==='function')loadVendorStoreWorkspace().catch(e=>console.error('Vendor workspace refresh:',e));},0);}
+  else{const authBox=document.getElementById('vendorDashboardAuth');if(authBox){authBox.classList.remove('hidden');authBox.textContent='يجب تسجيل الدخول أولاً لإدارة متجرك.';}document.getElementById('vendorWorkspace')?.classList.add('hidden');document.getElementById('vendorProShell')?.classList.add('hidden');}
+ });
 })();
 </script>
 
