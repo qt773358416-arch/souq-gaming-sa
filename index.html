@@ -1097,10 +1097,9 @@ html.app-ready #souqSplash{opacity:0;visibility:hidden;pointer-events:none}
    <div style="min-width:0;flex:1"><h2 id="vendorSelectedName" style="margin:0;color:var(--brand)">المتجر</h2><p id="vendorSelectedMeta" class="muted" style="margin:2px 0"></p></div>
   </div>
   <p id="vendorSelectedDescription" class="muted"></p>
-  <div class="row space"><h2>منتجات المتجر</h2><span id="vendorSelectedProductCount" class="vendor-pill">0 منتج</span></div>
-  <div id="vendorSelectedProducts" class="vendor-product-grid"><div class="empty">اختر متجراً لعرض منتجاته.</div></div>
-  <div class="vendor-cart-box">
-   <div class="row space"><h3 style="margin:0">🛒 سلة متاجر التجار</h3><strong id="vendorCartTotal">0.00 ر.س</strong></div>
+  <div class="vendor-store-cart-launch"><button type="button" class="primary" id="vendorCartToggle" aria-expanded="false">🛒 سلة هذا المتجر <span id="vendorCartBadge">0</span></button><span class="vendor-cart-launch-total" id="vendorCartLaunchTotal">0.00 ر.س</span></div>
+  <div class="vendor-cart-box hidden" id="vendorStoreCartPanel">
+   <div class="row space"><h3 style="margin:0">🛒 سلة هذا المتجر</h3><strong id="vendorCartTotal">0.00 ر.س</strong></div>
    <div id="vendorCartRows" class="vendor-muted-note">السلة فارغة.</div>
    <form id="vendorCheckoutForm" class="vendor-cart-form">
     <label>اسم المستلم<input id="vendorCheckoutName" class="field" required maxlength="100"></label>
@@ -1303,6 +1302,7 @@ html.app-ready #souqSplash{opacity:0;visibility:hidden;pointer-events:none}
   <button class="drawer-link" data-drawer-page="messages"><span>✉ المحادثات الخاصة<small>مراسلة البائعين والمشترين</small></span><span>‹</span></button>
   <button class="drawer-link" data-drawer-page="notifications"><span>♟ الإشعارات<small>تنبيهات الحساب</small></span><span>‹</span></button>
   <button class="drawer-link" type="button" data-drawer-page="vendors"><span>🏬 متاجر التجار<small>تصفح المتاجر المعتمدة</small></span><span>‹</span></button>
+  <button class="drawer-link" type="button" data-vendor-dashboard><span>🛍️ إدارة وفتح المتجر<small>تقديم طلب متجر أو إدارة متجرك المعتمد</small></span><span>‹</span></button>
   <button class="drawer-link" data-drawer-page="settings"><span>⚙ الإعدادات<small>تفضيلات الموقع والخصوصية</small></span><span>‹</span></button>
 </aside>
 
@@ -2436,6 +2436,9 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
  window.addVendorCart=id=>{
   const p=vState.selectedProducts.find(x=>String(x.id)===String(id));
   if(!p || Number(p.stock_quantity)<1){alert('المنتج غير متوفر حالياً.');return;}
+  const existing=selectedCartItems();
+  const otherStore=existing.some(item=>String(item.product.store_id)!==String(vState.selectedStore?.id));
+  if(otherStore){if(!confirm('السلة تحتوي منتجات من متجر آخر. هل تريد إفراغها والبدء بسلة هذا المتجر؟'))return;vState.cart={};vState.cartProducts={};}
   const next=(vState.cart[id]||0)+1;
   if(next>Number(p.stock_quantity)){alert('الكمية المطلوبة تتجاوز المخزون المتاح.');return;}
   vState.cart[id]=next;
@@ -2465,7 +2468,15 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   rows.innerHTML=items.map(({product,quantity})=>`
    <div class="vendor-cart-row"><span>${vEsc(product.title)} × ${quantity}<small style="display:block">${vEsc(vState.stores.find(s=>String(s.id)===String(product.store_id))?.store_name||'متجر')}</small></span><span>${vMoney(product.price*quantity)} <button class="linkbtn" type="button" onclick="changeVendorCart('${product.id}',-1)">−</button> <button class="linkbtn" type="button" onclick="changeVendorCart('${product.id}',1)">＋</button></span></div>`).join('');
   if(profile){if(!v$('vendorCheckoutName').value)v$('vendorCheckoutName').value=profile.display_name||'';if(!v$('vendorCheckoutPhone').value)v$('vendorCheckoutPhone').value=profile.phone||'';if(!v$('vendorCheckoutCity').value)v$('vendorCheckoutCity').value=profile.city||'';}
+  const count=items.reduce((n,item)=>n+item.quantity,0);
+  const badge=v$('vendorCartBadge');if(badge)badge.textContent=count.toLocaleString('ar-SA');
+  const launchTotal=v$('vendorCartLaunchTotal');if(launchTotal)launchTotal.textContent=vMoney(total);
  }
+ v$('vendorCartToggle')?.addEventListener('click',()=>{
+  const panel=v$('vendorStoreCartPanel'),button=v$('vendorCartToggle');if(!panel||!button)return;
+  const opening=panel.classList.contains('hidden');panel.classList.toggle('hidden',!opening);button.setAttribute('aria-expanded',String(opening));button.innerHTML=`🛒 ${opening?'إخفاء سلة هذا المتجر':'سلة هذا المتجر'} <span id="vendorCartBadge">${selectedCartItems().reduce((n,item)=>n+item.quantity,0).toLocaleString('ar-SA')}</span>`;
+  if(opening)panel.scrollIntoView({behavior:'smooth',block:'nearest'});
+ });
  v$('vendorBackToDirectory').addEventListener('click',()=>{
   v$('page-vendors')?.classList.remove('vendor-store-detail-mode');
   v$('vendorSelectedStore').classList.add('hidden');
@@ -4449,7 +4460,12 @@ body.vendors-directory-view #page-vendors{padding-top:14px;padding-bottom:110px;
 #page-vendors .vendor-detail-head{display:flex;align-items:center;gap:12px;padding:14px;margin:0 0 14px;border:1px solid var(--line);border-radius:16px;background:var(--panel)}
 #page-vendors .vendor-detail-logo{width:58px;height:58px;flex:0 0 58px;display:grid;place-items:center;overflow:hidden;border-radius:15px;background:var(--panel2)}
 #page-vendors .vendor-detail-logo img{width:100%;height:100%;object-fit:cover}
-#page-vendors .vendor-cart-box{margin-top:18px}
+#page-vendors .vendor-store-cart-launch{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:14px 0;padding:12px;border:1px solid var(--line);border-radius:15px;background:var(--panel)}
+#page-vendors .vendor-store-cart-launch button{display:flex;align-items:center;gap:9px}
+#page-vendors #vendorCartBadge{display:inline-grid;place-items:center;min-width:23px;height:23px;padding:0 6px;border-radius:99px;background:#0d2530;color:#70e6f2;font-size:12px}
+#page-vendors .vendor-cart-launch-total{font-weight:900;color:var(--brand);white-space:nowrap}
+#page-vendors .vendor-cart-box{margin-top:0;padding:15px;border:1px solid var(--line);border-radius:16px;background:var(--panel)}
+#page-vendors .vendor-cart-box.hidden{display:none!important}
 @media(max-width:600px){
  body.vendors-directory-view #page-vendors{padding-top:10px}
  #page-vendors .vendor-toolbar{grid-template-columns:1fr}
