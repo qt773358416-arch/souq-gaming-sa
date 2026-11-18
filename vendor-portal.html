@@ -899,6 +899,16 @@ body.vendor-portal-mode .merchant-menu-filtered{display:none!important}
 body.vendor-portal-mode.merchant-compact .merchant-data-row{padding:8px!important}
 @media print{.merchant-bottom-nav,.merchant-drawer,.merchant-drawer-shade,.merchant-header-actions{display:none!important}body.vendor-portal-mode{background:#fff!important;color:#111!important}.merchant-panel,.merchant-data-row{break-inside:avoid}}
 </style>
+
+<style>
+.vendor-media-editor{padding:14px;border:1px solid var(--line);border-radius:14px;background:var(--panel2)}
+.vendor-media-editor h4{margin:0 0 12px;color:var(--brand)}
+.vendor-media-remove{display:flex;align-items:center;gap:8px;margin-top:10px;color:var(--muted)}
+.vendor-media-remove input{width:18px;height:18px;accent-color:var(--brand)}
+.media-preview{display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap;margin-top:10px}
+.media-preview img,.media-preview video{width:min(220px,100%);max-height:180px;object-fit:contain;border-radius:12px;background:#07111a;border:1px solid var(--line)}
+.media-preview small{display:block;width:100%;color:var(--muted)}
+</style>
 </head>
 <body class="theme-dark">
 <div class="wrap">
@@ -1126,7 +1136,19 @@ body.vendor-portal-mode.merchant-compact .merchant-data-row{padding:8px!importan
      <div><label>السعر بالريال *</label><input id="vendorProductPrice" class="field" type="number" min=".01" step=".01" required></div>
      <div><label>الكمية المتاحة *</label><input id="vendorProductStock" class="field" type="number" min="0" step="1" value="1" required></div>
      <div><label>نوع المنتج</label><select id="vendorProductType" class="field"><option value="physical">مادي</option><option value="digital">رقمي</option></select></div>
-     <div><label>صورة المنتج من جهازك</label><input id="vendorProductImageFile" class="field" type="file" accept="image/jpeg,image/png,image/webp,image/avif"><small class="vendor-muted-note">JPG أو PNG أو WEBP — حتى 5 ميجابايت</small><div id="vendorProductImagePreview" class="media-preview"></div></div>
+     <div class="full vendor-media-editor">
+      <h4>وسائط المنتج</h4>
+      <label>صورة المنتج</label>
+      <input id="vendorProductImageFile" class="field" type="file" accept="image/jpeg,image/png,image/webp,image/avif">
+      <small class="vendor-muted-note">JPG أو PNG أو WEBP أو AVIF — حتى 5 ميجابايت</small>
+      <div id="vendorProductImagePreview" class="media-preview"></div>
+      <label class="vendor-media-remove"><input id="vendorProductRemoveImage" type="checkbox"> إزالة صورة المنتج الحالية</label>
+      <label style="margin-top:14px">فيديو قصير للمنتج (اختياري)</label>
+      <input id="vendorProductVideoFile" class="field" type="file" accept="video/mp4,video/webm,video/quicktime">
+      <small class="vendor-muted-note">MP4 أو WEBM أو MOV — حتى 30 ميجابايت، ومدة لا تتجاوز 30 ثانية</small>
+      <div id="vendorProductVideoPreview" class="media-preview"></div>
+      <label class="vendor-media-remove"><input id="vendorProductRemoveVideo" type="checkbox"> إزالة فيديو المنتج الحالي</label>
+     </div>
      <div class="full"><label>الوصف</label><textarea id="vendorProductDescription" class="field" rows="3" maxlength="3000"></textarea></div>
      <div class="full row"><button class="primary" type="submit" id="vendorProductSave">حفظ المنتج للمراجعة</button><button class="secondary" type="button" id="vendorProductReset">منتج جديد</button><span id="vendorProductMsg" class="muted"></span></div>
     </form>
@@ -2322,19 +2344,34 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
  });
 
  function resetVendorProductForm(){
-  v$('vendorProductForm').reset();v$('vendorProductId').value='';v$('vendorProductStock').value=1;v$('vendorProductImagePreview').innerHTML='';
+  v$('vendorProductForm').reset();v$('vendorProductId').value='';v$('vendorProductStock').value=1;
+  v$('vendorProductImagePreview').innerHTML='';v$('vendorProductVideoPreview').innerHTML='';
+  v$('vendorProductRemoveImage').checked=false;v$('vendorProductRemoveVideo').checked=false;
   v$('vendorProductSave').textContent='حفظ المنتج للمراجعة';
  }
  v$('vendorProductReset').addEventListener('click',resetVendorProductForm);
-  v$('vendorProductImageFile').addEventListener('change',()=>{
-   const file=v$('vendorProductImageFile').files?.[0],box=v$('vendorProductImagePreview');
-   if(!box)return;
-   if(!file){box.innerHTML='';return;}
-   if(!file.type.startsWith('image/')||file.size>5*1024*1024){
-    v$('vendorProductImageFile').value='';box.textContent='اختر صورة صالحة لا تتجاوز 5 ميجابايت.';return;
-   }
-   const reader=new FileReader();reader.onload=()=>{box.innerHTML=`<img src="${reader.result}" alt="معاينة صورة المنتج">`};reader.readAsDataURL(file);
-  });
+ const vendorMediaBucket='vendor-product-media';
+ const vendorMediaPath=(kind,file)=>`${currentUser.id}/${kind}/${Date.now()}-${crypto.randomUUID?crypto.randomUUID():Math.random().toString(36).slice(2)}.${(file.name.split('.').pop()|| (kind==='images'?'jpg':'mp4')).toLowerCase().replace(/[^a-z0-9]/g,'')}`;
+ function previewVendorFile(file,kind,box){
+  if(!box)return;
+  if(!file){box.innerHTML='';return;}
+  const isImage=kind==='image';
+  const valid=isImage?file.type.startsWith('image/'):file.type.startsWith('video/');
+  const max=isImage?5*1024*1024:30*1024*1024;
+  if(!valid||file.size>max){box.textContent=isImage?'اختر صورة صحيحة لا تتجاوز 5 ميجابايت.':'اختر فيديو صحيحاً لا يتجاوز 30 ميجابايت.';return false;}
+  const url=URL.createObjectURL(file);
+  box.innerHTML=isImage?`<img src="${url}" alt="معاينة صورة المنتج">`:`<video src="${url}" controls playsinline preload="metadata"></video>`;
+  if(!isImage){const v=box.querySelector('video');v.addEventListener('loadedmetadata',()=>{if(v.duration>30){v$('vendorProductVideoFile').value='';box.textContent='مدة الفيديو يجب ألا تتجاوز 30 ثانية.';URL.revokeObjectURL(url);}} ,{once:true});}
+  return true;
+ }
+ v$('vendorProductImageFile').addEventListener('change',()=>{
+  const f=v$('vendorProductImageFile').files?.[0];if(!previewVendorFile(f,'image',v$('vendorProductImagePreview'))&&f)v$('vendorProductImageFile').value='';
+  if(f)v$('vendorProductRemoveImage').checked=false;
+ });
+ v$('vendorProductVideoFile').addEventListener('change',()=>{
+  const f=v$('vendorProductVideoFile').files?.[0];if(!previewVendorFile(f,'video',v$('vendorProductVideoPreview'))&&f)v$('vendorProductVideoFile').value='';
+  if(f)v$('vendorProductRemoveVideo').checked=false;
+ });
  async function loadMyVendorProducts(){
   if(!vState.myStore)return;
   const {data,error}=await sb.from('vendor_store_products').select('*')
@@ -2345,7 +2382,8 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
    <div class="vendor-state">
     <div class="row space"><strong>${vEsc(p.title)}</strong><span class="vendor-pill">${vEsc(vStatusLabel(p.status))}</span></div>
     <div class="vendor-muted-note">${vMoney(p.price)} · المخزون ${Number(p.stock_quantity)||0} · ${vEsc(p.category||'')}</div>
-    <div class="actions"><button class="secondary" type="button" onclick="editMyVendorProduct('${p.id}')">تعديل</button><button class="danger" type="button" onclick="deleteMyVendorProduct('${p.id}')">حذف</button></div>
+    <div class="row">${p.image_url?'<span class="vendor-pill">📷 صورة</span>':''}${p.video_url?'<span class="vendor-pill">🎬 فيديو</span>':''}</div>
+    <div class="actions"><button class="secondary" type="button" onclick="editMyVendorProduct('${p.id}')">تعديل الوسائط والمنتج</button><button class="danger" type="button" onclick="deleteMyVendorProduct('${p.id}')">حذف</button></div>
    </div>`).join('')||'<div class="empty">لم تضف منتجات بعد.</div>';
  }
  window.editMyVendorProduct=id=>{
@@ -2353,44 +2391,73 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   v$('vendorProductId').value=p.id;v$('vendorProductName').value=p.title;
   v$('vendorProductCategory').value=p.category||'';v$('vendorProductPrice').value=p.price;
   v$('vendorProductStock').value=p.stock_quantity;v$('vendorProductType').value=p.product_type||'physical';
-  v$('vendorProductImageFile').value='';v$('vendorProductImagePreview').innerHTML=p.image_url?`<img src="${vEsc(p.image_url)}" alt="صورة المنتج الحالية"><small>الصورة الحالية — اختر صورة جديدة لاستبدالها</small>`:'';v$('vendorProductDescription').value=p.description||'';
+  v$('vendorProductImageFile').value='';v$('vendorProductVideoFile').value='';
+  v$('vendorProductImagePreview').innerHTML=p.image_url?`<img src="${vEsc(p.image_url)}" alt="صورة المنتج الحالية"><small>الصورة الحالية — اختر صورة جديدة للاستبدال أو فعّل خيار الإزالة</small>`:'';
+  v$('vendorProductVideoPreview').innerHTML=p.video_url?`<video src="${vEsc(p.video_url)}" controls playsinline preload="metadata"></video><small>الفيديو الحالي — اختر فيديو جديداً للاستبدال أو فعّل خيار الإزالة</small>`:'';
+  v$('vendorProductRemoveImage').checked=false;v$('vendorProductRemoveVideo').checked=false;
+  v$('vendorProductDescription').value=p.description||'';
   v$('vendorProductSave').textContent='حفظ التعديل وإعادة المراجعة';
   v$('vendorProductForm').scrollIntoView({behavior:'smooth',block:'center'});
  };
+ async function removeVendorStorageObject(path){if(!path)return;const {error}=await sb.storage.from(vendorMediaBucket).remove([path]);if(error)console.warn('Could not remove old vendor media:',error.message);}
  window.deleteMyVendorProduct=async id=>{
   if(!confirm('تأكيد حذف هذا المنتج؟'))return;
-  const {error}=await sb.from('vendor_store_products').delete().eq('id',id);
-  if(error)alert('تعذر حذف المنتج: '+error.message);else loadMyVendorProducts();
+  const p=vState.myProducts.find(x=>String(x.id)===String(id));
+  const {error}=await sb.from('vendor_store_products').delete().eq('id',id).eq('store_id',vState.myStore.id);
+  if(error){alert('تعذر حذف المنتج: '+error.message);return;}
+  await Promise.all([removeVendorStorageObject(p?.image_storage_path),removeVendorStorageObject(p?.video_storage_path)]);
+  await loadMyVendorProducts();
  };
+ async function uploadVendorMedia(file,kind){
+  if(!file)return null;
+  const path=vendorMediaPath(kind==='image'?'images':'videos',file);
+  const {error}=await sb.storage.from(vendorMediaBucket).upload(path,file,{upsert:false,contentType:file.type});
+  if(error)throw new Error(`تعذر رفع ${kind==='image'?'الصورة':'الفيديو'}: ${error.message}. تحقق من إعداد bucket vendor-product-media وسياساته.`);
+  const {data}=sb.storage.from(vendorMediaBucket).getPublicUrl(path);
+  if(!data?.publicUrl)throw new Error('تم رفع الملف لكن تعذر إنشاء رابط عرضه.');
+  return {path,url:data.publicUrl};
+ }
  v$('vendorProductForm').addEventListener('submit',async e=>{
   e.preventDefault();
   if(!vState.myStore||!currentUser)return;
   const id=v$('vendorProductId').value;
-  const row={
-   title:v$('vendorProductName').value.trim(),category:v$('vendorProductCategory').value.trim(),
-   price:Number(v$('vendorProductPrice').value),stock_quantity:Number(v$('vendorProductStock').value),
-   product_type:v$('vendorProductType').value,
-   image_url:(id?vState.myProducts.find(p=>String(p.id)===String(id))?.image_url:null)||null,
-   description:v$('vendorProductDescription').value.trim()
-  };
+  const old=id?vState.myProducts.find(p=>String(p.id)===String(id)):null;
+  const imageFile=v$('vendorProductImageFile').files?.[0],videoFile=v$('vendorProductVideoFile').files?.[0];
+  if(imageFile&&(!imageFile.type.startsWith('image/')||imageFile.size>5*1024*1024)){vMsg('vendorProductMsg','الصورة يجب أن تكون صحيحة ولا تتجاوز 5 ميجابايت.');return;}
+  if(videoFile&&(!videoFile.type.startsWith('video/')||videoFile.size>30*1024*1024)){vMsg('vendorProductMsg','الفيديو يجب أن يكون صحيحاً ولا يتجاوز 30 ميجابايت.');return;}
   const button=v$('vendorProductSave');button.disabled=true;
+  let newImage=null,newVideo=null;
   try{
-   const imageFile=v$('vendorProductImageFile').files?.[0];
-   if(imageFile){
-    if(!imageFile.type.startsWith('image/')||imageFile.size>5*1024*1024)throw new Error('الصورة يجب أن تكون صورة فعلية ولا تتجاوز 5 ميجابايت.');
-    const ext=(imageFile.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'')||'jpg';
-    const path=`vendor-products/${currentUser.id}/${Date.now()}-${Math.random().toString(36).slice(2,8)}.${ext}`;
-    const {error:uploadError}=await sb.storage.from('marketplace-assets').upload(path,imageFile,{upsert:false,contentType:imageFile.type});
-    if(uploadError)throw new Error('تعذر رفع الصورة إلى التخزين. تحقق من bucket marketplace-assets وسياساته: '+uploadError.message);
-    row.image_url=sb.storage.from('marketplace-assets').getPublicUrl(path).data.publicUrl;
-   }
+   if(videoFile){const duration=await new Promise((resolve,reject)=>{const u=URL.createObjectURL(videoFile),v=document.createElement('video');v.preload='metadata';v.onloadedmetadata=()=>{const d=v.duration;URL.revokeObjectURL(u);resolve(d)};v.onerror=()=>{URL.revokeObjectURL(u);reject(new Error('تعذر قراءة مدة الفيديو.'))};v.src=u});if(!Number.isFinite(duration)||duration>30)throw new Error('مدة الفيديو يجب ألا تتجاوز 30 ثانية.');}
+   if(imageFile)newImage=await uploadVendorMedia(imageFile,'image');
+   if(videoFile)newVideo=await uploadVendorMedia(videoFile,'video');
+   const removeImage=v$('vendorProductRemoveImage').checked&&!imageFile;
+   const removeVideo=v$('vendorProductRemoveVideo').checked&&!videoFile;
+   const row={
+    title:v$('vendorProductName').value.trim(),category:v$('vendorProductCategory').value.trim(),
+    price:Number(v$('vendorProductPrice').value),stock_quantity:Number(v$('vendorProductStock').value),
+    product_type:v$('vendorProductType').value,
+    image_url:newImage?.url||(removeImage?null:(old?.image_url||null)),
+    image_storage_path:newImage?.path||(removeImage?null:(old?.image_storage_path||null)),
+    video_url:newVideo?.url||(removeVideo?null:(old?.video_url||null)),
+    video_storage_path:newVideo?.path||(removeVideo?null:(old?.video_storage_path||null)),
+    description:v$('vendorProductDescription').value.trim()
+   };
    const query=id?sb.from('vendor_store_products').update(row).eq('id',id).eq('store_id',vState.myStore.id):
     sb.from('vendor_store_products').insert({...row,store_id:vState.myStore.id,owner_id:currentUser.id});
    const {error}=await query;if(error)throw error;
-   resetVendorProductForm();vMsg('vendorProductMsg',id?'تم حفظ التعديل وإرسال المنتج للمراجعة من جديد.':'تم استلام المنتج وسيظهر بعد موافقة الإدارة.');
+   if(old){
+    if(newImage||removeImage)await removeVendorStorageObject(old.image_storage_path);
+    if(newVideo||removeVideo)await removeVendorStorageObject(old.video_storage_path);
+   }
+   resetVendorProductForm();
+   vMsg('vendorProductMsg',id?'تم حفظ التعديل وإرسال المنتج للمراجعة من جديد.':'تم حفظ المنتج وإرساله للمراجعة.');
    await loadMyVendorProducts();
-  }catch(error){vMsg('vendorProductMsg','تعذر حفظ المنتج: '+error.message);}
-  finally{button.disabled=false;}
+  }catch(error){
+   if(newImage?.path)await removeVendorStorageObject(newImage.path);
+   if(newVideo?.path)await removeVendorStorageObject(newVideo.path);
+   vMsg('vendorProductMsg','تعذر حفظ المنتج: '+error.message);
+  }finally{button.disabled=false;}
  });
 
  async function loadVendorStoreWorkspace(){
