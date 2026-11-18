@@ -909,6 +909,12 @@ body.vendor-portal-mode.merchant-compact .merchant-data-row{padding:8px!importan
 .media-preview img,.media-preview video{width:min(220px,100%);max-height:180px;object-fit:contain;border-radius:12px;background:#07111a;border:1px solid var(--line)}
 .media-preview small{display:block;width:100%;color:var(--muted)}
 </style>
+
+<style id="souq-store-logo-upload-ui">
+#vendorApplyLogoPreview img,#vendorEditLogoPreview img{width:88px;height:88px;object-fit:contain;border-radius:14px;background:#fff;padding:5px;border:1px solid var(--line)}
+#vendorOpenPublicStore{white-space:nowrap}
+</style>
+
 </head>
 <body class="theme-dark">
 <div class="wrap">
@@ -1103,7 +1109,7 @@ body.vendor-portal-mode.merchant-compact .merchant-data-row{padding:8px!importan
    <div><label for="vendorApplySlug">رابط مختصر بالإنجليزية (اختياري)</label><input id="vendorApplySlug" class="field" maxlength="70" placeholder="my-gaming-store" pattern="[a-zA-Z0-9-]+"></div>
    <div><label for="vendorApplyCategory">التصنيف</label><select id="vendorApplyCategory" class="field"><option>أجهزة الكمبيوتر والقيمنق</option><option>قطع الكمبيوتر</option><option>أجهزة الكونسول</option><option>ملحقات القيمنق</option><option>الألعاب الرقمية</option><option>كروت الشحن</option><option>إلكترونيات أخرى</option></select></div>
    <div><label for="vendorApplyCity">المدينة</label><input id="vendorApplyCity" class="field" maxlength="80"></div>
-   <div class="full"><label for="vendorApplyLogo">رابط شعار المتجر (اختياري)</label><input id="vendorApplyLogo" class="field" type="url" placeholder="https://..."></div>
+   <div class="full"><label for="vendorApplyLogoFile">شعار المتجر (اختياري — اختر من الصور أو الملفات)</label><input id="vendorApplyLogoFile" class="field" type="file" accept="image/png,image/jpeg,image/webp,image/avif"><div id="vendorApplyLogoPreview" class="media-preview"></div></div>
    <div class="full"><label for="vendorApplyDescription">نبذة عن المتجر *</label><textarea id="vendorApplyDescription" class="field" rows="3" required maxlength="1200"></textarea></div>
    <div><label for="vendorApplyWhatsapp">رقم واتساب المتجر (اختياري)</label><input id="vendorApplyWhatsapp" class="field" type="tel" maxlength="20"></div>
    <div class="full"><label class="pledge-check"><input id="vendorApplyAgree" type="checkbox" required> أقر بصحة بيانات المتجر والتزامي بالأنظمة وسياسات المنصة.</label></div>
@@ -1113,6 +1119,10 @@ body.vendor-portal-mode.merchant-compact .merchant-data-row{padding:8px!importan
 
  <div id="vendorWorkspace" class="hidden">
   <div id="vendorWorkspaceStatus" class="vendor-state"></div>
+  <div class="vendor-state row space" style="gap:10px;flex-wrap:wrap">
+   <div><strong>واجهة متجري العامة</strong><div class="vendor-muted-note">تعرض المنتجات المعتمدة وهوية المتجر المحفوظة في قاعدة البيانات.</div></div>
+   <button type="button" class="primary" id="vendorOpenPublicStore">فتح متجري المستقل ↗</button>
+  </div>
   <div class="vendor-dashboard-grid">
    <section class="vendor-dashboard-card full">
     <h3>بيانات متجري</h3>
@@ -2478,19 +2488,43 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   v$('vendorEditDescription').value=data.description||'';
   await Promise.all([loadMyVendorProducts(),loadMyVendorOrders(),loadVendorPromotables(),loadVendorFinance(),loadVendorPromotionHistory()]);
  }
+
+  async function uploadVendorStoreLogo(file){
+   if(!file)return null;
+   if(!/^image\/(png|jpeg|webp|avif)$/.test(file.type)||file.size>5*1024*1024)throw new Error('الشعار يجب أن يكون PNG أو JPG أو WEBP أو AVIF وبحجم لا يتجاوز 5 ميجابايت.');
+   const ext=(file.name.split('.').pop()||'png').toLowerCase().replace(/[^a-z0-9]/g,'')||'png';
+   const path=`${currentUser.id}/store-brand/${Date.now()}-${crypto.randomUUID?crypto.randomUUID():Math.random().toString(36).slice(2)}.${ext}`;
+   const {error}=await sb.storage.from('vendor-product-media').upload(path,file,{upsert:false,contentType:file.type});
+   if(error)throw new Error('تعذر رفع الشعار إلى vendor-product-media: '+error.message);
+   const {data}=sb.storage.from('vendor-product-media').getPublicUrl(path);
+   if(!data?.publicUrl)throw new Error('تم رفع الشعار لكن تعذر إنشاء رابط عرضه.');
+   return {path,url:data.publicUrl};
+  }
+  function bindLogoPreview(inputId,previewId){
+   const input=v$(inputId),preview=v$(previewId);if(!input||!preview)return;
+   input.addEventListener('change',()=>{
+    preview.innerHTML='';const file=input.files?.[0];if(!file)return;
+    if(!/^image\/(png|jpeg|webp|avif)$/.test(file.type)||file.size>5*1024*1024){preview.textContent='اختر صورة مناسبة لا تتجاوز 5 ميجابايت.';input.value='';return;}
+    const img=document.createElement('img');img.alt='معاينة شعار المتجر';img.src=URL.createObjectURL(file);preview.appendChild(img);
+   });
+  }
+  bindLogoPreview('vendorApplyLogoFile','vendorApplyLogoPreview');
+
  v$('vendorApplicationForm').addEventListener('submit',async e=>{
   e.preventDefault();if(!needAuth())return;
   const button=v$('vendorApplySubmit');button.disabled=true;
   const autoSlug='vendor-'+currentUser.id.replace(/-/g,'').slice(0,10);
   const slug=(v$('vendorApplySlug').value.trim().toLowerCase()||autoSlug).replace(/[^a-z0-9-]/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
-  const row={
-   owner_id:currentUser.id,store_name:v$('vendorApplyName').value.trim(),slug,
-   category:v$('vendorApplyCategory').value,city:v$('vendorApplyCity').value.trim(),
-   logo_url:vSafeUrl(v$('vendorApplyLogo').value)||null,
-   description:v$('vendorApplyDescription').value.trim(),
-   contact_whatsapp:v$('vendorApplyWhatsapp').value.trim()||null
-  };
   try{
+   const logoFile=v$('vendorApplyLogoFile')?.files?.[0];
+   const uploadedLogo=logoFile?await uploadVendorStoreLogo(logoFile):null;
+   const row={
+    owner_id:currentUser.id,store_name:v$('vendorApplyName').value.trim(),slug,
+    category:v$('vendorApplyCategory').value,city:v$('vendorApplyCity').value.trim(),
+    logo_url:uploadedLogo?.url||null,
+    description:v$('vendorApplyDescription').value.trim(),
+    contact_whatsapp:v$('vendorApplyWhatsapp').value.trim()||null
+   };
    const {data,error}=await sb.from('vendor_stores').insert(row).select('*').single();
    if(error)throw error;
    vState.myStore=data;vMsg('vendorApplyMsg','تم إرسال طلب فتح المتجر بنجاح. حالته الآن بانتظار مراجعة الإدارة.');
