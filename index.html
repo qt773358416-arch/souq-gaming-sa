@@ -817,6 +817,75 @@ body.store-view .top,body.store-view .searchrow{display:none!important}
 @media(max-width:600px){.souq-side-float{width:62px!important;min-height:62px!important;border-radius:19px!important}.souq-side-float .float-icon{width:30px;height:30px;font-size:19px!important}#souqNewsPanel .sc-feed{padding:10px 10px calc(14px + env(safe-area-inset-bottom))!important}#souqNewsPanel .sc-composer{margin:8px 10px!important;width:auto!important}}
 </style>
 
+
+<style id="ad-detail-page-refresh">
+/* تنسيق صفحة تفاصيل الإعلان فقط */
+#page-detail>.panel{padding:0!important;overflow:visible;background:transparent!important;border:0!important;box-shadow:none!important}
+#page-detail>.panel>.pagehead{padding:14px 18px;margin:0 0 12px;background:var(--panel);border:1px solid var(--line);border-radius:15px}
+#page-detail #adDetailContent{padding:0!important;background:transparent!important;border:0!important}
+#page-detail .ad-detail-layout{display:grid;gap:14px;max-width:1000px;margin:0 auto}
+#page-detail .detail-rating-section,
+#page-detail .detail-summary,
+#page-detail .detail-media-section,
+#page-detail .detail-description-section,
+#page-detail .detail-comments-section,
+#page-detail .detail-seller-section{min-width:0;padding:18px;background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}
+#page-detail .detail-rating-section{order:0;margin:0}
+#page-detail .detail-rating-section>h3{margin:0 0 8px}
+#page-detail .detail-summary{order:1}
+#page-detail .detail-title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap}
+#page-detail .detail-title-copy{min-width:0;flex:1}
+#page-detail .detail-eyebrow{font-size:12px;color:var(--brand);font-weight:800;margin-bottom:5px}
+#page-detail .detail-title-row h2{margin:0;font-size:clamp(21px,3vw,29px);line-height:1.45;overflow-wrap:anywhere}
+#page-detail .detail-price{flex:0 0 auto;color:var(--brand);font-size:25px;font-weight:900;white-space:nowrap}
+#page-detail .detail-price small{font-size:13px}
+#page-detail .detail-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+#page-detail .detail-meta span{padding:7px 10px;border:1px solid var(--line);border-radius:9px;background:var(--panel2);font-size:12px;color:var(--muted)}
+#page-detail .detail-media-section{order:2}
+#page-detail .detail-section-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+#page-detail .detail-section-heading h3,
+#page-detail .detail-description-section>h3,
+#page-detail .detail-comments-section h3{margin:0;font-size:18px}
+#page-detail .detail-section-heading p{margin:4px 0 0}
+#page-detail .detail-media-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+#page-detail .detail-media-image{display:block;width:100%;height:260px;object-fit:contain;background:#0e1a26;border:1px solid var(--line);border-radius:12px}
+#page-detail .detail-media-video{display:block;width:100%;max-height:360px;grid-column:1/-1;border-radius:12px;background:#000}
+#page-detail .detail-placeholder{min-height:220px;grid-column:1/-1;font-size:14px!important}
+#page-detail .detail-description-section{order:3}
+#page-detail .detail-description{margin:10px 0 0;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.9;color:var(--text)}
+#page-detail .detail-description-section .ad-pledge-panel{margin:16px 0 0}
+#page-detail .detail-comments-section{order:4}
+#page-detail .detail-comments-section #adCommentForm{margin-top:12px}
+#page-detail .detail-comment-submit{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+#page-detail .detail-comments-list{margin-top:16px}
+#page-detail .detail-seller-section{order:5;display:grid;gap:12px}
+#page-detail .detail-seller-section>div:first-child{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+#page-detail .detail-seller-section>div:first-child strong{font-size:15px}
+#page-detail .detail-actions{display:flex;gap:8px;flex-wrap:wrap}
+#page-detail .detail-actions button{flex:1 1 145px;min-height:42px}
+#page-detail #reviewsPanel .rating-summary{margin:10px 0}
+@media(max-width:600px){
+ #page-detail>.panel>.pagehead{padding:12px;margin-bottom:9px}
+ #page-detail .detail-rating-section,
+ #page-detail .detail-summary,
+ #page-detail .detail-media-section,
+ #page-detail .detail-description-section,
+ #page-detail .detail-comments-section,
+ #page-detail .detail-seller-section{padding:13px;border-radius:13px}
+ #page-detail .detail-title-row{gap:8px}
+ #page-detail .detail-title-row h2{font-size:20px}
+ #page-detail .detail-price{font-size:21px}
+ #page-detail .detail-meta{gap:6px;margin-top:11px}
+ #page-detail .detail-meta span{font-size:11px;padding:6px 8px}
+ #page-detail .detail-media-grid{grid-template-columns:1fr}
+ #page-detail .detail-media-image{height:240px}
+ #page-detail .detail-media-video{grid-column:auto}
+ #page-detail .detail-actions{display:grid;grid-template-columns:1fr 1fr}
+ #page-detail .detail-actions button{min-width:0;padding:9px 6px;font-size:12px}
+ #page-detail .detail-comment-submit{align-items:stretch}
+}
+</style>
+
 </head>
 <body class="theme-dark">
 <div class="wrap">
@@ -1237,15 +1306,107 @@ async function loadFavorites(){
  box.innerHTML=data.map(a=>`<article class="card"><div class="adbody"><h3>${esc(a.title)}</h3><div class="price">${Number(a.price||0).toLocaleString('ar-SA')} ر.س</div><div class="meta">${esc(a.category||'')} · ${esc(a.condition||'')}</div><div class="actions"><button class="primary" onclick="openAdDetail('${a.id}')">تفاصيل الإعلان</button><button class="secondary" onclick="toggleFavorite('${a.id}')">إزالة من المفضلة</button></div></div></article>`).join('');
 }
 async function openAdDetail(id){
- const box=$('adDetailContent');box.innerHTML='<div class="empty">جارٍ تحميل تفاصيل الإعلان...</div>';showPage('detail');
- const {data:a,error}=await sb.from('ads').select('*').eq('id',id).maybeSingle();
- if(error||!a){box.innerHTML='<div class="empty">تعذر تحميل الإعلان أو أنه لم يعد متاحًا.</div>';return;}
- const images=Array.isArray(a.image_urls)?a.image_urls:[];currentDetailAd=a;
- const mediaMarkup=(images.length?images.map(u=>`<img src="${esc(u)}" alt="صورة الإعلان" style="width:100%;max-height:300px;object-fit:contain;background:#0e172a;border-radius:12px;margin-bottom:8px">`).join(''):'<div class="detail-placeholder" aria-label="لا توجد صورة">لا توجد صورة</div>')+(a.video_url?`<video controls playsinline src="${esc(a.video_url)}" style="width:100%;max-height:340px;border-radius:12px;background:#000;margin-top:8px"></video>`:'');
- box.innerHTML=`<div class="ad-detail-grid"><div>${mediaMarkup}</div><div><h2>${esc(a.title)}</h2><div class="price">${Number(a.price||0).toLocaleString('ar-SA')} ر.س</div><div class="meta">${esc(a.category||'')} · ${esc(a.condition||'')}</div><p style="white-space:pre-wrap">${esc(a.description||'لا يوجد وصف.')}</p>${a.ad_type==='marketing'&&a.external_product_url?`<a class="ad-external-link" href="${esc(a.external_product_url)}" target="_blank" rel="noopener noreferrer">↗ زيارة المنتج في المنصة الأصلية</a>`:''}<section class="ad-pledge-panel"><h3>إقرار البائع بحالة المنتج</h3>${a.product_terms_accepted?`<span class="ad-pledge-badge ${a.product_condition_status==='defect'?'defect':''}">${a.product_condition_status==='defect'?'⚠ أفصح البائع عن وجود خلل':'✓ تعهّد البائع بأن المنتج سليم'}</span>${a.product_condition_status==='defect'?`<p><strong>الخلل أو الملاحظة المعلنة:</strong> ${esc(a.product_issue||'لم يضف البائع تفاصيل.')}</p>`:'<p class="muted">هذا إقرار من البائع وليس فحصًا فنيًا صادرًا عن المنصة.</p>'}`:'<p class="muted">لم يسجل هذا الإعلان إقرار حالة المنتج.</p>'}</section><p class="muted">البائع: ${esc(a.seller_name||'')}</p><div class="actions"><button class="primary" onclick="openAdDetail('${a.id}')">التفاصيل</button><button class="primary" onclick="contactWhatsApp('${esc(a.seller_phone||'')}','${esc(a.title)}')">واتساب البائع</button><button class="secondary" onclick="contactCall('${esc(a.seller_phone||'')}')">اتصال</button><button class="secondary" onclick="startConversation('${a.id}','${esc(a.title)}','${a.seller_id||''}')">مراسلة خاصة</button><button class="fav-button" onclick="toggleFavorite('${a.id}')">♡ حفظ بالمفضلة</button><button class="secondary" onclick="shareAd('${a.id}','${esc(a.title)}')">↗ مشاركة الإعلان</button><button class="danger" onclick="openReport('${a.id}')">إبلاغ</button></div><section id="adCommentsPanel" class="panel" style="margin-top:18px"><h3>النقاش العام لهذا المنتج</h3><p class="muted">اكتب تعليقًا متعلقًا بالإعلان، ويمكن للبائع الرد تحته. المحادثات الخاصة لها صفحة مستقلة.</p><form id="adCommentForm" class="stack"><textarea id="adCommentText" class="field" rows="3" maxlength="1500" placeholder="اكتب سؤالًا أو تعليقًا عن المنتج..." required></textarea><button class="primary" type="submit">إرسال التعليق</button><div id="adCommentMsg" class="muted"></div></form><div id="adCommentsList" class="stack" style="margin-top:16px">جارٍ تحميل التعليقات...</div></section><section id="reviewsPanel"><h3>تقييمات البائع</h3><div class="empty">جارٍ تحميل التقييمات...</div></section></div></div>`;
- const commentForm=$('adCommentForm');if(commentForm)commentForm.onsubmit=async e=>{e.preventDefault();if(!needAuth())return;const body=$('adCommentText').value.trim();if(!body)return;const payload={ad_id:a.id,user_id:currentUser.id,author_name:profile?.display_name||currentUser.email,body,parent_id:null};const {error}=await sb.from('ad_comments').insert(payload);if(error){msg('adCommentMsg','تعذر إرسال التعليق. تحقق من تطبيق ملف SQL.');return;}$('adCommentText').value='';msg('adCommentMsg','تم نشر تعليقك.');await loadAdComments(a);};await loadAdComments(a);await loadReviews(a);
-}
+ const box=$('adDetailContent');
+ box.innerHTML='<div class="empty">جارٍ تحميل تفاصيل الإعلان...</div>';
+ showPage('detail');
 
+ const {data:a,error}=await sb.from('ads').select('*').eq('id',id).maybeSingle();
+ if(error||!a){
+  box.innerHTML='<div class="empty">تعذر تحميل الإعلان أو أنه لم يعد متاحًا.</div>';
+  return;
+ }
+
+ const images=Array.isArray(a.image_urls)?a.image_urls:[];
+ currentDetailAd=a;
+ const city=a.city||a.location||'الموقع غير محدد';
+ const added=a.created_at?new Date(a.created_at).toLocaleDateString('ar-SA'):'';
+ const mediaMarkup=(images.length
+  ?images.map((u,i)=>`<img class="detail-media-image" src="${esc(u)}" alt="صورة الإعلان ${i+1}" loading="${i===0?'eager':'lazy'}">`).join('')
+  :'<div class="detail-placeholder" aria-label="لا توجد صورة">لا توجد صورة مرفقة</div>')
+  +(a.video_url?`<video class="detail-media-video" controls playsinline preload="metadata" src="${esc(a.video_url)}"></video>`:'');
+
+ box.innerHTML=`
+  <div class="ad-detail-layout">
+   <section id="reviewsPanel" class="detail-rating-section">
+    <h3>تقييمات البائع</h3>
+    <div class="empty">جارٍ تحميل التقييمات...</div>
+   </section>
+
+   <header class="detail-summary">
+    <div class="detail-title-row">
+     <div class="detail-title-copy">
+      <div class="detail-eyebrow">تفاصيل الإعلان</div>
+      <h2>${esc(a.title||'إعلان بدون عنوان')}</h2>
+     </div>
+     <div class="detail-price">${Number(a.price||0).toLocaleString('ar-SA')} <small>ر.س</small></div>
+    </div>
+    <div class="detail-meta">
+     <span>📂 ${esc(a.category||'غير مصنف')}</span>
+     <span>🏷️ ${esc(a.condition||'الحالة غير محددة')}</span>
+     <span>📍 ${esc(city)}</span>
+     ${added?`<span>🗓️ ${esc(added)}</span>`:''}
+    </div>
+   </header>
+
+   <section class="detail-media-section" aria-label="صور وفيديو الإعلان">
+    <div class="detail-section-heading"><h3>صور وفيديو المنتج</h3><span class="muted">${images.length} صورة${a.video_url?' · يوجد فيديو':''}</span></div>
+    <div class="detail-media-grid">${mediaMarkup}</div>
+   </section>
+
+   <section class="detail-description-section">
+    <h3>وصف المنتج ومواصفاته</h3>
+    <p class="detail-description">${esc(a.description||'لم يضف البائع وصفًا لهذا المنتج.')}</p>
+    ${a.ad_type==='marketing'&&a.external_product_url?`<a class="ad-external-link" href="${esc(a.external_product_url)}" target="_blank" rel="noopener noreferrer">↗ زيارة المنتج في المنصة الأصلية</a>`:''}
+    <section class="ad-pledge-panel">
+     <h3>إقرار البائع بحالة المنتج</h3>
+     ${a.product_terms_accepted
+      ?`<span class="ad-pledge-badge ${a.product_condition_status==='defect'?'defect':''}">${a.product_condition_status==='defect'?'⚠ أفصح البائع عن وجود خلل':'✓ تعهّد البائع بأن المنتج سليم'}</span>
+        ${a.product_condition_status==='defect'?`<p><strong>الخلل أو الملاحظة المعلنة:</strong> ${esc(a.product_issue||'لم يضف البائع تفاصيل.')}</p>`:'<p class="muted">هذا إقرار من البائع وليس فحصًا فنيًا صادرًا عن المنصة.</p>'}`
+      :'<p class="muted">لم يسجل هذا الإعلان إقرار حالة المنتج.</p>'}
+    </section>
+   </section>
+
+   <section id="adCommentsPanel" class="detail-comments-section">
+    <div class="detail-section-heading"><div><h3>النقاش العام</h3><p class="muted">اكتب سؤالًا أو تعليقًا متعلقًا بالإعلان، ويمكن للبائع الرد تحته.</p></div></div>
+    <form id="adCommentForm" class="stack">
+     <textarea id="adCommentText" class="field" rows="3" maxlength="1500" placeholder="اكتب سؤالك أو تعليقك عن المنتج..." required></textarea>
+     <div class="detail-comment-submit"><button class="primary" type="submit">إرسال التعليق</button><div id="adCommentMsg" class="muted" role="status"></div></div>
+    </form>
+    <div id="adCommentsList" class="stack detail-comments-list">جارٍ تحميل التعليقات...</div>
+   </section>
+
+   <section class="detail-seller-section">
+    <div><span class="muted">صاحب الإعلان</span><strong>${esc(a.seller_name||'بائع سوق القيمنق')}</strong></div>
+    <div class="detail-actions">
+     <button class="primary" type="button" onclick="contactWhatsApp('${esc(a.seller_phone||'')}','${esc(a.title||'')}')">واتساب البائع</button>
+     <button class="secondary" type="button" onclick="contactCall('${esc(a.seller_phone||'')}')">اتصال</button>
+     <button class="secondary" type="button" onclick="startConversation('${a.id}','${esc(a.title||'')}','${a.seller_id||''}')">مراسلة خاصة</button>
+     <button class="fav-button" type="button" onclick="toggleFavorite('${a.id}')">♡ حفظ بالمفضلة</button>
+     <button class="secondary" type="button" onclick="shareAd('${a.id}','${esc(a.title||'')}')">↗ مشاركة الإعلان</button>
+     <button class="danger" type="button" onclick="openReport('${a.id}')">إبلاغ عن الإعلان</button>
+    </div>
+   </section>
+  </div>`;
+
+ const commentForm=$('adCommentForm');
+ if(commentForm)commentForm.onsubmit=async e=>{
+  e.preventDefault();
+  if(!needAuth())return;
+  const body=$('adCommentText').value.trim();
+  if(!body)return;
+  const payload={ad_id:a.id,user_id:currentUser.id,author_name:profile?.display_name||currentUser.email,body,parent_id:null};
+  const {error}=await sb.from('ad_comments').insert(payload);
+  if(error){
+   msg('adCommentMsg','تعذر إرسال التعليق. تحقق من تطبيق ملف SQL.');
+   return;
+  }
+  $('adCommentText').value='';
+  msg('adCommentMsg','تم نشر تعليقك.');
+  await loadAdComments(a);
+ };
+ await loadReviews(a);
+ await loadAdComments(a);
+}
 // مشاركة المتجر والإعلانات عبر قائمة المشاركة أو نسخ الرابط
 async function shareLink(title,url){try{if(navigator.share){await navigator.share({title,text:title,url});return;}if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(url);alert('تم نسخ الرابط، يمكنك مشاركته الآن.');return;}const t=document.createElement('textarea');t.value=url;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove();alert('تم نسخ الرابط، يمكنك مشاركته الآن.');}catch(e){if(e?.name!=='AbortError')alert('تعذرت المشاركة تلقائيًا. انسخ الرابط يدويًا: '+url);}}
 window.shareAd=(id,title)=>shareLink('إعلان: '+title,location.origin+location.pathname+'?ad='+encodeURIComponent(id));
