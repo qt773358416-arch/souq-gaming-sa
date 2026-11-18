@@ -913,6 +913,21 @@ body.store-view .top,body.store-view .searchrow{display:none!important}
 #page-doctor .doctor-admin-row{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 0;border-bottom:1px solid var(--line)}
 @media(max-width:600px){#page-doctor .doctor-hero{padding:16px}#page-doctor .doctor-toolbar{grid-template-columns:1fr}#page-doctor .doctor-toolbar button{width:100%}#page-doctor .doctor-question{padding:13px}}
 </style>
+<style id="doctor-chat-premium-style">
+#page-doctor{padding:0!important;margin:0 auto!important;max-width:900px!important}
+#page-doctor .doctor-chat-shell{height:min( calc(100dvh - 112px), 980px);min-height:620px;display:flex;flex-direction:column;overflow:hidden;border:1px solid #244455;border-radius:24px;background:radial-gradient(ellipse at 15% 30%,#06263a 0%,#071923 48%,#08131d 100%);box-shadow:0 18px 50px #0005;position:relative}
+#page-doctor .doctor-chat-header{display:flex;align-items:center;gap:11px;padding:13px 15px;background:#071722ed;border-bottom:1px solid #234354;flex:0 0 auto}
+#page-doctor .doctor-head-icon{width:42px;height:42px;flex:0 0 42px;padding:0;border-radius:50%;display:grid;place-items:center;background:#102735;border:1px solid #2b4b5c;color:#e8f8ff;font-size:23px}
+#page-doctor .doctor-avatar{width:58px;height:58px;flex:0 0 58px;border-radius:50%;display:grid;place-items:center;font-size:30px;color:#7deaff;border:2px solid #00aaff;box-shadow:0 0 18px #00baff77,inset 0 0 14px #00baff44;background:#082b3b}
+#page-doctor .doctor-head-info{min-width:0;flex:1}.doctor-head-title{font-weight:900;font-size:18px;color:#f4fbff}.doctor-verified{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:50%;font-size:12px;background:#078fdb;color:#fff}.doctor-head-sub{font-size:12px;color:#22d7e8;margin-top:3px}.doctor-head-sub i{display:inline-block;width:9px;height:9px;border-radius:50%;background:#12d66b;margin-left:5px}
+#page-doctor .doctor-chat-tools{padding:11px 16px 7px;background:#071722aa;flex:0 0 auto}.doctor-chat-kicker{font-size:12px;color:#17d2e7;font-weight:900}.doctor-chat-intro{font-size:13px;color:#a8c0cc;margin:2px 0 8px}#page-doctor #doctorSearch{width:100%;min-height:39px;border-radius:20px;padding:8px 14px;background:#102330!important;border-color:#24495a!important;font-size:13px}
+#page-doctor .doctor-chat-feed{flex:1 1 auto;min-height:0;overflow-y:auto;padding:18px 13px 22px;display:flex;flex-direction:column;gap:13px;scrollbar-width:thin;scrollbar-color:#28556a transparent;background-image:radial-gradient(#1a526522 1px,transparent 1px);background-size:22px 22px}
+#page-doctor .doctor-day-divider{align-self:center;padding:5px 15px;border-radius:20px;background:#1a3342;border:1px solid #315469;color:#c6dce6;font-size:12px;margin:0 0 3px}
+#page-doctor .doctor-chat-item{max-width:88%;display:flex;flex-direction:column;gap:5px;align-self:flex-start}.doctor-chat-item.mine{align-self:flex-end}.doctor-chat-bubble{padding:12px 14px;border-radius:18px 18px 18px 5px;background:linear-gradient(145deg,#203746,#1b2b38);border:1px solid #355367;color:#f1f8fb;box-shadow:0 5px 16px #0002;overflow-wrap:anywhere}.doctor-chat-item.mine .doctor-chat-bubble{border-radius:18px 18px 5px 18px;background:linear-gradient(145deg,#075d67,#064c59);border-color:#08c4d2}.doctor-chat-author{font-size:11px;color:#59ddeb;font-weight:900;margin-bottom:4px}.doctor-chat-item.mine .doctor-chat-author{color:#a9f4ef}.doctor-chat-text{white-space:pre-wrap;line-height:1.8;font-size:14px}.doctor-chat-meta{display:flex;align-items:center;gap:7px;justify-content:flex-end;color:#a8c0cc;font-size:10px;margin-top:5px}.doctor-chat-tick{color:#26e5ed;font-weight:900}.doctor-quoted{border-right:3px solid #16cbdc;border-radius:8px;background:#071c2a88;padding:7px 9px;margin-bottom:8px;display:grid;gap:3px}.doctor-quoted b{font-size:11px;color:#44e1eb}.doctor-quoted span{font-size:12px;color:#c5d6df;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.doctor-chat-photo{display:block;max-width:min(100%,330px);max-height:260px;object-fit:contain;border-radius:11px;margin-top:7px;border:1px solid #3b7182;background:#07131c}.doctor-chat-actions{display:flex;gap:6px;padding:0 5px}.doctor-chat-actions button{padding:5px 9px;font-size:11px;border-radius:20px;background:#102b3b;border:1px solid #294b5d;color:#cde7ef}.doctor-chat-actions button:hover{border-color:#16cbdc;color:#fff}
+#page-doctor .doctor-composer{display:flex;align-items:flex-end;gap:8px;padding:12px 13px;background:#071722f2;border-top:1px solid #234354;flex:0 0 auto}.doctor-attach,.doctor-send{width:48px;height:48px;flex:0 0 48px;border-radius:50%;padding:0;display:grid;place-items:center;font-size:26px}.doctor-attach{background:#142c3a;border:1px solid #345367;color:#e4f8ff}.doctor-send{background:#13c5d8;color:#06212b;font-size:23px}.doctor-compose-main{flex:1;min-width:0;border:1px solid #315568;border-radius:22px;background:#102330;padding:7px 12px}.doctor-compose-main textarea{display:block;width:100%;resize:none;max-height:110px;min-height:31px;border:0!important;outline:0!important;background:transparent!important;color:#f1f8fb!important;padding:5px 2px!important;box-shadow:none!important;font-size:14px}.doctor-compose-main textarea::placeholder{color:#91a9b7}.doctor-reply-preview{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:5px 8px;margin-bottom:5px;border-right:3px solid #13d3e2;background:#1b3a49;border-radius:8px}.doctor-reply-preview span{min-width:0;display:grid}.doctor-reply-preview b{font-size:11px;color:#42e1ec}.doctor-reply-preview small{font-size:11px;color:#d2e2e9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.doctor-reply-preview button{background:transparent;color:#d8f5fa;padding:2px 7px}.doctor-image-preview{display:flex;align-items:center;gap:8px;padding:5px}.doctor-image-preview img{width:55px;height:55px;object-fit:cover;border-radius:8px}.doctor-image-preview button{background:#4b2530;color:#fff;padding:5px 8px;font-size:11px}.doctor-chat-foot{text-align:center;color:#7893a2;font-size:10px;padding:4px 8px 7px;background:#071722;flex:0 0 auto}
+#page-doctor .doctor-admin-drawer,#page-doctor .doctor-apply-drawer{margin:8px 12px;padding:14px;border:1px solid #315568;border-radius:14px;background:#132632;max-height:40%;overflow:auto;flex:0 0 auto}.doctor-admin-drawer h3{margin-top:0}.doctor-admin-row{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid #315568}.doctor-apply-drawer label{display:block;margin:8px 0;color:#b8ccd6}.doctor-apply-drawer .field{margin-top:5px}
+@media(max-width:600px){#page-doctor{margin:0 -10px!important;width:calc(100% + 20px)!important}#page-doctor .doctor-chat-shell{height:calc(100dvh - 91px - env(safe-area-inset-bottom));min-height:540px;border-radius:0;border-left:0;border-right:0}#page-doctor .doctor-chat-header{padding:9px 10px;gap:8px}.doctor-avatar{width:49px;height:49px;flex-basis:49px}.doctor-head-title{font-size:16px}.doctor-head-sub{font-size:10px}#page-doctor .doctor-chat-tools{padding:8px 11px 5px}#page-doctor .doctor-chat-feed{padding:13px 9px 18px}.doctor-chat-item{max-width:91%}.doctor-chat-bubble{padding:10px 11px}.doctor-chat-text{font-size:13px}#page-doctor .doctor-composer{padding:9px 8px calc(9px + env(safe-area-inset-bottom));gap:6px}.doctor-attach,.doctor-send{width:43px;height:43px;flex-basis:43px}.doctor-compose-main{padding:5px 9px}.doctor-compose-main textarea{font-size:13px}}
+</style>
 
 <style id="souq-premium-splash">
 #souqSplash{position:fixed;inset:0;z-index:100000;display:grid;place-items:center;overflow:hidden;background:radial-gradient(ellipse at 50% 35%,#183d50 0%,#101d2b 48%,#080f18 100%);color:#f4fbff;opacity:1;visibility:visible;transition:opacity .55s ease,visibility .55s ease}
@@ -931,8 +946,6 @@ html.app-ready #souqSplash{opacity:0;visibility:hidden;pointer-events:none}
 @media(prefers-reduced-motion:reduce){#souqSplash:before,#souqSplash:after,#souqSplash .splash-mark,#souqSplash .splash-loader:after{animation:none!important}}
 </style>
 
-
-<style>.vendor-media-editor{padding:14px;border:1px solid var(--line);border-radius:14px;background:var(--panel2)}.vendor-media-editor h4{margin:0 0 12px;color:var(--brand)}.vendor-media-remove{display:flex;align-items:center;gap:8px;margin-top:10px;color:var(--muted)}.vendor-media-remove input{width:18px;height:18px;accent-color:var(--brand)}.media-preview{display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap;margin-top:10px}.media-preview img,.media-preview video{width:min(220px,100%);max-height:180px;object-fit:contain;border-radius:12px;background:#07111a;border:1px solid var(--line)}</style>
 </head>
 <body class="theme-dark">
 <div id="souqSplash" role="status" aria-label="جاري تجهيز سوق القيمنق السعودي">
@@ -1170,15 +1183,7 @@ html.app-ready #souqSplash{opacity:0;visibility:hidden;pointer-events:none}
      <div><label>السعر بالريال *</label><input id="vendorProductPrice" class="field" type="number" min=".01" step=".01" required></div>
      <div><label>الكمية المتاحة *</label><input id="vendorProductStock" class="field" type="number" min="0" step="1" value="1" required></div>
      <div><label>نوع المنتج</label><select id="vendorProductType" class="field"><option value="physical">مادي</option><option value="digital">رقمي</option></select></div>
-     <div class="full vendor-media-editor">
-      <h4>وسائط المنتج</h4>
-      <label>صورة المنتج</label><input id="vendorProductImageFile" class="field" type="file" accept="image/jpeg,image/png,image/webp,image/avif">
-      <small class="vendor-muted-note">JPG أو PNG أو WEBP أو AVIF — حتى 5 ميجابايت</small><div id="vendorProductImagePreview" class="media-preview"></div>
-      <label class="vendor-media-remove"><input id="vendorProductRemoveImage" type="checkbox"> إزالة صورة المنتج الحالية</label>
-      <label style="margin-top:14px">فيديو قصير للمنتج (اختياري)</label><input id="vendorProductVideoFile" class="field" type="file" accept="video/mp4,video/webm,video/quicktime">
-      <small class="vendor-muted-note">MP4 أو WEBM أو MOV — حتى 30 ميجابايت، ومدة لا تتجاوز 30 ثانية</small><div id="vendorProductVideoPreview" class="media-preview"></div>
-      <label class="vendor-media-remove"><input id="vendorProductRemoveVideo" type="checkbox"> إزالة فيديو المنتج الحالي</label>
-     </div>
+     <div><label>صورة المنتج من جهازك</label><input id="vendorProductImageFile" class="field" type="file" accept="image/jpeg,image/png,image/webp,image/avif"><small class="vendor-muted-note">JPG أو PNG أو WEBP — حتى 5 ميجابايت</small><div id="vendorProductImagePreview" class="media-preview"></div></div>
      <div class="full"><label>الوصف</label><textarea id="vendorProductDescription" class="field" rows="3" maxlength="3000"></textarea></div>
      <div class="full row"><button class="primary" type="submit" id="vendorProductSave">حفظ المنتج للمراجعة</button><button class="secondary" type="button" id="vendorProductReset">منتج جديد</button><span id="vendorProductMsg" class="muted"></span></div>
     </form>
@@ -1274,33 +1279,27 @@ html.app-ready #souqSplash{opacity:0;visibility:hidden;pointer-events:none}
 </div><div id="authBox"><h3>تسجيل الدخول أو إنشاء حساب</h3><p class="muted">التسجيل غير ظاهر في الصفحة الرئيسية؛ يظهر هنا أو عند تنفيذ إجراء يحتاج حسابًا.</p><form id="authForm" class="stack"><label>البريد الإلكتروني<input id="authEmail" type="email" class="field" required autocomplete="email" placeholder="name@example.com"></label><button class="primary" type="submit" id="sendEmailCodeBtn">إرسال رمز الدخول إلى البريد</button><label id="emailOtpWrap" class="hidden">رمز التحقق المكوّن من 6 أرقام<input id="emailOtpCode" class="field" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" placeholder="123456"></label><button class="primary hidden" type="button" id="verifyEmailCodeBtn">تأكيد الرمز وتسجيل الدخول</button><button class="google-auth" type="button" id="googleAuthBtn"><span aria-hidden="true">G</span> المتابعة باستخدام Google</button><div id="authMsg" class="muted" role="status"></div><small class="muted">لن يتم تسجيل الدخول إلا بعد التحقق من الرمز أو إكمال تسجيل Google بنجاح.</small></form></div><div id="profileBox" class="hidden"><h3>البيانات الشخصية</h3><p class="muted" style="margin-top:-8px">حدّث بياناتك ثم اضغط حفظ. ستبقى القيم ظاهرة بعد نجاح الحفظ.</p><form id="profileForm" class="stack"><label>الاسم الظاهر<input id="profileName" class="field" maxlength="80" required></label><label>رقم الجوال<input id="profilePhone" class="field" inputmode="tel" placeholder="05xxxxxxxx"></label><label>المدينة<input id="profileCity" class="field" maxlength="80" placeholder="جدة"></label><button class="primary">حفظ الإعدادات</button><div id="profileMsg" class="muted"></div></form><div class="account-actions"><button class="secondary" data-go="profile" type="button">الملف الشخصي</button><button class="secondary" data-go="settings" type="button">تفضيلات العرض</button><button class="secondary" id="signoutBtn" type="button">تسجيل الخروج</button></div><div id="myAds" style="margin-top:18px"></div></div></div></section>
 <section id="page-myads" class="hidden"><div class="panel"><div class="row space"><h2>إعلاناتي</h2><button class="secondary" data-go="add">＋ إعلان جديد</button></div><div id="myAdsPage"></div></div></section>
 
-<section id="page-doctor" class="hidden">
- <div class="doctor-hero">
-  <div class="doctor-kicker">🎮 مركز المعرفة والخبرة</div>
-  <h1>دكتور القيمنق</h1>
-  <p>اسأل المختص، شارك خبرتك، واحصل على إجابات تساعدك في عالم الألعاب والأجهزة.</p>
-  <div class="doctor-hero-actions"><button class="primary" id="doctorAskTop">＋ اسأل المختص</button><button class="secondary" id="doctorApplyTop">🎓 انضم كمختص</button></div>
-  <div class="doctor-stats"><span><b id="doctorQuestionsCount">—</b> سؤال</span><span><b id="doctorAnswersCount">—</b> إجابة</span><span><b id="doctorExpertsCount">—</b> مختص موثّق</span></div>
+<section id="page-doctor" class="hidden doctor-chat-page">
+ <div class="doctor-chat-shell">
+  <header class="doctor-chat-header">
+   <button type="button" class="doctor-head-icon" id="doctorBack" aria-label="رجوع">‹</button>
+   <div class="doctor-avatar">🎮</div>
+   <div class="doctor-head-info"><div class="doctor-head-title">دكتور القيمنق <span class="doctor-verified">✓</span></div><div class="doctor-head-sub"><i></i> مختص في أجهزة الألعاب والكمبيوتر</div></div>
+   <button type="button" class="doctor-head-icon" id="doctorApplyTop" aria-label="الانضمام كمختص">♙</button>
+   <button type="button" class="doctor-head-icon" id="doctorMenu" aria-label="خيارات المحادثة">⋮</button>
+  </header>
+  <div class="doctor-chat-tools"><div class="doctor-chat-kicker">مركز المعرفة والخبرة</div><div class="doctor-chat-intro">اسأل عن مشكلتك، أرسل صورة، وخذ الحل خطوة بخطوة.</div><input id="doctorSearch" class="field" placeholder="ابحث في المحادثات..." aria-label="ابحث في المحادثات"></div>
+  <div id="doctorChatFeed" class="doctor-chat-feed" aria-live="polite"><div class="empty">جارٍ تحميل المحادثات...</div></div>
+  <div id="doctorAdminPanel" class="doctor-admin-drawer hidden"><h3>إدارة المختصين والبلاغات</h3><div id="doctorPendingExperts">جارٍ التحميل...</div><div id="doctorReports">جارٍ التحميل...</div></div>
+  <div id="doctorApplyPanel" class="doctor-apply-drawer hidden"><div class="row space"><strong>طلب الانضمام كمختص</strong><button type="button" class="secondary" id="doctorApplyClose">إغلاق</button></div><p class="muted">تتم مراجعة الطلب قبل ظهور شارة المختص الموثّق.</p><form id="doctorApplyForm" class="stack"><label>الاسم الظاهر<input id="doctorExpertName" class="field" maxlength="100" required></label><label>مجال التخصص<input id="doctorExpertField" class="field" maxlength="120" required placeholder="مثال: صيانة الكمبيوتر وتجميع PC"></label><label>نبذة وخبراتك<textarea id="doctorExpertBio" class="field" rows="3" maxlength="1500" required></textarea></label><button class="primary">إرسال طلب الاعتماد</button><div id="doctorApplyMsg" class="muted"></div></form></div>
+  <form id="doctorComposeForm" class="doctor-composer">
+   <button type="button" class="doctor-attach" id="doctorAttachBtn" aria-label="إرفاق صورة">＋</button>
+   <input id="doctorImageFile" type="file" accept="image/jpeg,image/png,image/webp" hidden>
+   <div class="doctor-compose-main"><div id="doctorReplyPreview" class="doctor-reply-preview hidden"><span><b>الرد على</b><small id="doctorReplyText"></small></span><button type="button" id="doctorCancelReply" aria-label="إلغاء الرد">×</button></div><textarea id="doctorMessageText" rows="1" maxlength="3000" placeholder="اكتب رسالتك هنا..." aria-label="اكتب رسالتك"></textarea><div id="doctorImagePreview" class="doctor-image-preview hidden"><img id="doctorImagePreviewImg" alt="معاينة الصورة"><button type="button" id="doctorRemoveImage">إزالة الصورة</button></div></div>
+   <button type="submit" class="doctor-send" id="doctorSendBtn" aria-label="إرسال">➤</button>
+  </form>
+  <div class="doctor-chat-foot">تأكد من عدم مشاركة كلمات المرور أو بياناتك الخاصة.</div>
  </div>
- <div class="doctor-toolbar"><input id="doctorSearch" class="field" placeholder="ابحث في الأسئلة والنقاشات..."><button class="primary" id="doctorAskBtn">اسأل المختص</button></div>
- <div class="doctor-categories" id="doctorCategories">
-  <button class="selected" data-doctor-category="">الكل</button><button data-doctor-category="كمبيوتر وقطع PC">💻 كمبيوتر وقطع PC</button><button data-doctor-category="بلايستيشن">🎮 بلايستيشن</button><button data-doctor-category="إكس بوكس">🕹️ إكس بوكس</button><button data-doctor-category="الألعاب">🏆 الألعاب</button><button data-doctor-category="كروت الشحن">🎟️ كروت الشحن</button><button data-doctor-category="ملحقات">🎧 ملحقات</button>
- </div>
- <div id="doctorAskPanel" class="panel hidden"><h2>اطرح سؤالك</h2><form id="doctorQuestionForm" class="stack">
-  <label>عنوان السؤال<input class="field" id="doctorQuestionTitle" maxlength="180" required placeholder="مثال: ما أفضل كرت شاشة للألعاب؟"></label>
-  <label>التصنيف<select class="field" id="doctorQuestionCategory" required><option value="">اختر التصنيف</option><option>كمبيوتر وقطع PC</option><option>بلايستيشن</option><option>إكس بوكس</option><option>الألعاب</option><option>كروت الشحن</option><option>ملحقات</option></select></label>
-  <label>تفاصيل السؤال<textarea class="field" id="doctorQuestionBody" rows="5" maxlength="5000" required placeholder="اكتب تفاصيل المشكلة أو الاستفسار..."></textarea></label>
-  <div class="row"><button class="primary">نشر السؤال</button><button type="button" class="secondary" id="doctorAskCancel">إلغاء</button></div><div id="doctorQuestionMsg" class="muted"></div>
- </form></div>
- <div id="doctorApplyPanel" class="panel hidden"><h2>طلب الانضمام كمختص</h2><p class="muted">تتم مراجعة الطلب من إدارة المنصة قبل ظهور شارة المختص الموثّق.</p><form id="doctorApplyForm" class="stack">
-  <label>الاسم الظاهر<input id="doctorExpertName" class="field" maxlength="100" required></label>
-  <label>مجال التخصص<input id="doctorExpertField" class="field" maxlength="120" required placeholder="مثال: صيانة الكمبيوتر وتجميع PC"></label>
-  <label>نبذة وخبراتك<textarea id="doctorExpertBio" class="field" rows="4" maxlength="1500" required></textarea></label>
-  <button class="primary">إرسال طلب الاعتماد</button><div id="doctorApplyMsg" class="muted"></div>
- </form></div>
- <div class="doctor-feed-heading"><h2>الأسئلة والنقاشات</h2><span class="muted" id="doctorFeedCount"></span></div>
- <div id="doctorAdminPanel" class="panel hidden"><h3>إدارة المختصين</h3><p class="muted">طلبات الاعتماد بانتظار مراجعة الإدارة.</p><div id="doctorPendingExperts">جارٍ التحميل...</div><h3>البلاغات</h3><div id="doctorReports">جارٍ التحميل...</div></div>
- <div id="doctorFeed" class="stack"><div class="empty">جارٍ تحميل الأسئلة...</div></div>
 </section>
 
 </main>
@@ -2419,7 +2418,7 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   v$('vendorSelectedLogo').innerHTML=vendorLogoMarkup(store);
   v$('vendorDirectoryGrid').classList.add('hidden');
   const {data,error}=await sb.from('vendor_store_products')
-   .select('id,store_id,title,description,price,stock_quantity,category,image_url,video_url,product_type,status,created_at')
+   .select('id,store_id,title,description,price,stock_quantity,category,image_url,product_type,status,created_at')
    .eq('store_id',store.id).eq('status','active')
    .order('created_at',{ascending:false}).limit(100);
   if(error){v$('vendorSelectedProducts').innerHTML='<div class="empty">تعذر تحميل منتجات هذا المتجر.</div>';return;}
@@ -2434,7 +2433,7 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   if(!vState.selectedProducts.length){grid.innerHTML='<div class="empty" style="grid-column:1/-1">لا توجد منتجات منشورة في هذا المتجر حالياً.</div>';return;}
   grid.innerHTML=vState.selectedProducts.map(p=>`
    <article class="vendor-product-card">
-    <div class="vendor-product-image">${vSafeUrl(p.image_url)?`<img src="${vEsc(vSafeUrl(p.image_url))}" alt="${vEsc(p.title)}" loading="lazy">`:'🎮'}${vSafeUrl(p.video_url)?`<video src="${vEsc(vSafeUrl(p.video_url))}" controls playsinline preload="metadata" aria-label="فيديو ${vEsc(p.title)}" style="width:100%;max-height:180px;object-fit:contain"></video>`:''}</div>
+    <div class="vendor-product-image">${vSafeUrl(p.image_url)?`<img src="${vEsc(vSafeUrl(p.image_url))}" alt="${vEsc(p.title)}" loading="lazy">`:'🎮'}</div>
     <div class="vendor-product-content">
      ${vState.promotedProducts.has(String(p.id))?'<span class="vendor-pill">منتج مروّج</span>':''}<h3>${vEsc(p.title)}</h3><div class="vendor-muted-note">${vEsc(p.category||'')}</div>
      <div class="vendor-product-price">${vMoney(p.price)}</div>
@@ -2527,34 +2526,19 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
  });
 
  function resetVendorProductForm(){
-  v$('vendorProductForm').reset();v$('vendorProductId').value='';v$('vendorProductStock').value=1;
-  v$('vendorProductImagePreview').innerHTML='';v$('vendorProductVideoPreview').innerHTML='';
-  v$('vendorProductRemoveImage').checked=false;v$('vendorProductRemoveVideo').checked=false;
+  v$('vendorProductForm').reset();v$('vendorProductId').value='';v$('vendorProductStock').value=1;v$('vendorProductImagePreview').innerHTML='';
   v$('vendorProductSave').textContent='حفظ المنتج للمراجعة';
  }
  v$('vendorProductReset').addEventListener('click',resetVendorProductForm);
- const vendorMediaBucket='vendor-product-media';
- const vendorMediaPath=(kind,file)=>`${currentUser.id}/${kind}/${Date.now()}-${crypto.randomUUID?crypto.randomUUID():Math.random().toString(36).slice(2)}.${(file.name.split('.').pop()|| (kind==='images'?'jpg':'mp4')).toLowerCase().replace(/[^a-z0-9]/g,'')}`;
- function previewVendorFile(file,kind,box){
-  if(!box)return;
-  if(!file){box.innerHTML='';return;}
-  const isImage=kind==='image';
-  const valid=isImage?file.type.startsWith('image/'):file.type.startsWith('video/');
-  const max=isImage?5*1024*1024:30*1024*1024;
-  if(!valid||file.size>max){box.textContent=isImage?'اختر صورة صحيحة لا تتجاوز 5 ميجابايت.':'اختر فيديو صحيحاً لا يتجاوز 30 ميجابايت.';return false;}
-  const url=URL.createObjectURL(file);
-  box.innerHTML=isImage?`<img src="${url}" alt="معاينة صورة المنتج">`:`<video src="${url}" controls playsinline preload="metadata"></video>`;
-  if(!isImage){const v=box.querySelector('video');v.addEventListener('loadedmetadata',()=>{if(v.duration>30){v$('vendorProductVideoFile').value='';box.textContent='مدة الفيديو يجب ألا تتجاوز 30 ثانية.';URL.revokeObjectURL(url);}} ,{once:true});}
-  return true;
- }
- v$('vendorProductImageFile').addEventListener('change',()=>{
-  const f=v$('vendorProductImageFile').files?.[0];if(!previewVendorFile(f,'image',v$('vendorProductImagePreview'))&&f)v$('vendorProductImageFile').value='';
-  if(f)v$('vendorProductRemoveImage').checked=false;
- });
- v$('vendorProductVideoFile').addEventListener('change',()=>{
-  const f=v$('vendorProductVideoFile').files?.[0];if(!previewVendorFile(f,'video',v$('vendorProductVideoPreview'))&&f)v$('vendorProductVideoFile').value='';
-  if(f)v$('vendorProductRemoveVideo').checked=false;
- });
+  v$('vendorProductImageFile').addEventListener('change',()=>{
+   const file=v$('vendorProductImageFile').files?.[0],box=v$('vendorProductImagePreview');
+   if(!box)return;
+   if(!file){box.innerHTML='';return;}
+   if(!file.type.startsWith('image/')||file.size>5*1024*1024){
+    v$('vendorProductImageFile').value='';box.textContent='اختر صورة صالحة لا تتجاوز 5 ميجابايت.';return;
+   }
+   const reader=new FileReader();reader.onload=()=>{box.innerHTML=`<img src="${reader.result}" alt="معاينة صورة المنتج">`};reader.readAsDataURL(file);
+  });
  async function loadMyVendorProducts(){
   if(!vState.myStore)return;
   const {data,error}=await sb.from('vendor_store_products').select('*')
@@ -2565,8 +2549,7 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
    <div class="vendor-state">
     <div class="row space"><strong>${vEsc(p.title)}</strong><span class="vendor-pill">${vEsc(vStatusLabel(p.status))}</span></div>
     <div class="vendor-muted-note">${vMoney(p.price)} · المخزون ${Number(p.stock_quantity)||0} · ${vEsc(p.category||'')}</div>
-    <div class="row">${p.image_url?'<span class="vendor-pill">📷 صورة</span>':''}${p.video_url?'<span class="vendor-pill">🎬 فيديو</span>':''}</div>
-    <div class="actions"><button class="secondary" type="button" onclick="editMyVendorProduct('${p.id}')">تعديل الوسائط والمنتج</button><button class="danger" type="button" onclick="deleteMyVendorProduct('${p.id}')">حذف</button></div>
+    <div class="actions"><button class="secondary" type="button" onclick="editMyVendorProduct('${p.id}')">تعديل</button><button class="danger" type="button" onclick="deleteMyVendorProduct('${p.id}')">حذف</button></div>
    </div>`).join('')||'<div class="empty">لم تضف منتجات بعد.</div>';
  }
  window.editMyVendorProduct=id=>{
@@ -2574,73 +2557,44 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   v$('vendorProductId').value=p.id;v$('vendorProductName').value=p.title;
   v$('vendorProductCategory').value=p.category||'';v$('vendorProductPrice').value=p.price;
   v$('vendorProductStock').value=p.stock_quantity;v$('vendorProductType').value=p.product_type||'physical';
-  v$('vendorProductImageFile').value='';v$('vendorProductVideoFile').value='';
-  v$('vendorProductImagePreview').innerHTML=p.image_url?`<img src="${vEsc(p.image_url)}" alt="صورة المنتج الحالية"><small>الصورة الحالية — اختر صورة جديدة للاستبدال أو فعّل خيار الإزالة</small>`:'';
-  v$('vendorProductVideoPreview').innerHTML=p.video_url?`<video src="${vEsc(p.video_url)}" controls playsinline preload="metadata"></video><small>الفيديو الحالي — اختر فيديو جديداً للاستبدال أو فعّل خيار الإزالة</small>`:'';
-  v$('vendorProductRemoveImage').checked=false;v$('vendorProductRemoveVideo').checked=false;
-  v$('vendorProductDescription').value=p.description||'';
+  v$('vendorProductImageFile').value='';v$('vendorProductImagePreview').innerHTML=p.image_url?`<img src="${vEsc(p.image_url)}" alt="صورة المنتج الحالية"><small>الصورة الحالية — اختر صورة جديدة لاستبدالها</small>`:'';v$('vendorProductDescription').value=p.description||'';
   v$('vendorProductSave').textContent='حفظ التعديل وإعادة المراجعة';
   v$('vendorProductForm').scrollIntoView({behavior:'smooth',block:'center'});
  };
- async function removeVendorStorageObject(path){if(!path)return;const {error}=await sb.storage.from(vendorMediaBucket).remove([path]);if(error)console.warn('Could not remove old vendor media:',error.message);}
  window.deleteMyVendorProduct=async id=>{
   if(!confirm('تأكيد حذف هذا المنتج؟'))return;
-  const p=vState.myProducts.find(x=>String(x.id)===String(id));
-  const {error}=await sb.from('vendor_store_products').delete().eq('id',id).eq('store_id',vState.myStore.id);
-  if(error){alert('تعذر حذف المنتج: '+error.message);return;}
-  await Promise.all([removeVendorStorageObject(p?.image_storage_path),removeVendorStorageObject(p?.video_storage_path)]);
-  await loadMyVendorProducts();
+  const {error}=await sb.from('vendor_store_products').delete().eq('id',id);
+  if(error)alert('تعذر حذف المنتج: '+error.message);else loadMyVendorProducts();
  };
- async function uploadVendorMedia(file,kind){
-  if(!file)return null;
-  const path=vendorMediaPath(kind==='image'?'images':'videos',file);
-  const {error}=await sb.storage.from(vendorMediaBucket).upload(path,file,{upsert:false,contentType:file.type});
-  if(error)throw new Error(`تعذر رفع ${kind==='image'?'الصورة':'الفيديو'}: ${error.message}. تحقق من إعداد bucket vendor-product-media وسياساته.`);
-  const {data}=sb.storage.from(vendorMediaBucket).getPublicUrl(path);
-  if(!data?.publicUrl)throw new Error('تم رفع الملف لكن تعذر إنشاء رابط عرضه.');
-  return {path,url:data.publicUrl};
- }
  v$('vendorProductForm').addEventListener('submit',async e=>{
   e.preventDefault();
   if(!vState.myStore||!currentUser)return;
   const id=v$('vendorProductId').value;
-  const old=id?vState.myProducts.find(p=>String(p.id)===String(id)):null;
-  const imageFile=v$('vendorProductImageFile').files?.[0],videoFile=v$('vendorProductVideoFile').files?.[0];
-  if(imageFile&&(!imageFile.type.startsWith('image/')||imageFile.size>5*1024*1024)){vMsg('vendorProductMsg','الصورة يجب أن تكون صحيحة ولا تتجاوز 5 ميجابايت.');return;}
-  if(videoFile&&(!videoFile.type.startsWith('video/')||videoFile.size>30*1024*1024)){vMsg('vendorProductMsg','الفيديو يجب أن يكون صحيحاً ولا يتجاوز 30 ميجابايت.');return;}
+  const row={
+   title:v$('vendorProductName').value.trim(),category:v$('vendorProductCategory').value.trim(),
+   price:Number(v$('vendorProductPrice').value),stock_quantity:Number(v$('vendorProductStock').value),
+   product_type:v$('vendorProductType').value,
+   image_url:(id?vState.myProducts.find(p=>String(p.id)===String(id))?.image_url:null)||null,
+   description:v$('vendorProductDescription').value.trim()
+  };
   const button=v$('vendorProductSave');button.disabled=true;
-  let newImage=null,newVideo=null;
   try{
-   if(videoFile){const duration=await new Promise((resolve,reject)=>{const u=URL.createObjectURL(videoFile),v=document.createElement('video');v.preload='metadata';v.onloadedmetadata=()=>{const d=v.duration;URL.revokeObjectURL(u);resolve(d)};v.onerror=()=>{URL.revokeObjectURL(u);reject(new Error('تعذر قراءة مدة الفيديو.'))};v.src=u});if(!Number.isFinite(duration)||duration>30)throw new Error('مدة الفيديو يجب ألا تتجاوز 30 ثانية.');}
-   if(imageFile)newImage=await uploadVendorMedia(imageFile,'image');
-   if(videoFile)newVideo=await uploadVendorMedia(videoFile,'video');
-   const removeImage=v$('vendorProductRemoveImage').checked&&!imageFile;
-   const removeVideo=v$('vendorProductRemoveVideo').checked&&!videoFile;
-   const row={
-    title:v$('vendorProductName').value.trim(),category:v$('vendorProductCategory').value.trim(),
-    price:Number(v$('vendorProductPrice').value),stock_quantity:Number(v$('vendorProductStock').value),
-    product_type:v$('vendorProductType').value,
-    image_url:newImage?.url||(removeImage?null:(old?.image_url||null)),
-    image_storage_path:newImage?.path||(removeImage?null:(old?.image_storage_path||null)),
-    video_url:newVideo?.url||(removeVideo?null:(old?.video_url||null)),
-    video_storage_path:newVideo?.path||(removeVideo?null:(old?.video_storage_path||null)),
-    description:v$('vendorProductDescription').value.trim()
-   };
+   const imageFile=v$('vendorProductImageFile').files?.[0];
+   if(imageFile){
+    if(!imageFile.type.startsWith('image/')||imageFile.size>5*1024*1024)throw new Error('الصورة يجب أن تكون صورة فعلية ولا تتجاوز 5 ميجابايت.');
+    const ext=(imageFile.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'')||'jpg';
+    const path=`vendor-products/${currentUser.id}/${Date.now()}-${Math.random().toString(36).slice(2,8)}.${ext}`;
+    const {error:uploadError}=await sb.storage.from('marketplace-assets').upload(path,imageFile,{upsert:false,contentType:imageFile.type});
+    if(uploadError)throw new Error('تعذر رفع الصورة إلى التخزين. تحقق من bucket marketplace-assets وسياساته: '+uploadError.message);
+    row.image_url=sb.storage.from('marketplace-assets').getPublicUrl(path).data.publicUrl;
+   }
    const query=id?sb.from('vendor_store_products').update(row).eq('id',id).eq('store_id',vState.myStore.id):
     sb.from('vendor_store_products').insert({...row,store_id:vState.myStore.id,owner_id:currentUser.id});
    const {error}=await query;if(error)throw error;
-   if(old){
-    if(newImage||removeImage)await removeVendorStorageObject(old.image_storage_path);
-    if(newVideo||removeVideo)await removeVendorStorageObject(old.video_storage_path);
-   }
-   resetVendorProductForm();
-   vMsg('vendorProductMsg',id?'تم حفظ التعديل وإرسال المنتج للمراجعة من جديد.':'تم حفظ المنتج وإرساله للمراجعة.');
+   resetVendorProductForm();vMsg('vendorProductMsg',id?'تم حفظ التعديل وإرسال المنتج للمراجعة من جديد.':'تم استلام المنتج وسيظهر بعد موافقة الإدارة.');
    await loadMyVendorProducts();
-  }catch(error){
-   if(newImage?.path)await removeVendorStorageObject(newImage.path);
-   if(newVideo?.path)await removeVendorStorageObject(newVideo.path);
-   vMsg('vendorProductMsg','تعذر حفظ المنتج: '+error.message);
-  }finally{button.disabled=false;}
+  }catch(error){vMsg('vendorProductMsg','تعذر حفظ المنتج: '+error.message);}
+  finally{button.disabled=false;}
  });
 
  async function loadVendorStoreWorkspace(){
@@ -4367,7 +4321,7 @@ window.__souqVendorContext={state:vState,money:vMoney,safeUrl:vSafeUrl,esc:vEsc,
  }
  function renderProducts(){const grid=$('vendorSelectedProducts');if(!grid)return;const f=shopPublic.storefront||{};let products=[...((window.__souqVendorContext?.state?.selectedProducts||[])||[])];if(f.hide_out_of_stock)products=products.filter(p=>Number(p.stock_quantity)>0);if(filterCategory!=='all')products=products.filter(p=>String(p.category||'')===filterCategory);if(filterQuery)products=products.filter(p=>[p.title,p.category,p.description].join(' ').toLowerCase().includes(filterQuery));const sort=$('souqStoreProductSort')?.value||f.sort_mode||'newest';products.sort((a,b)=>sort==='price_low'?Number(a.price)-Number(b.price):sort==='price_high'?Number(b.price)-Number(a.price):sort==='name'?String(a.title).localeCompare(String(b.title),'ar'):sort==='newest'?new Date(b.created_at||0)-new Date(a.created_at||0):0);
   if(!products.length){grid.innerHTML='<div class="empty" style="grid-column:1/-1">لا توجد منتجات مطابقة لاختياراتك.</div>';return}
-  grid.innerHTML=products.map(p=>`<article class="vendor-product-card"><div class="vendor-product-image">${window.__souqVendorContext.safeUrl(p.image_url)?`<img src="${esc(window.__souqVendorContext.safeUrl(p.image_url))}" alt="${esc(p.title)}" loading="lazy">`:'🎮'}${window.__souqVendorContext.safeUrl(p.video_url)?`<video src="${esc(window.__souqVendorContext.safeUrl(p.video_url))}" controls playsinline preload="metadata" aria-label="فيديو ${esc(p.title)}" style="width:100%;max-height:180px;object-fit:contain"></video>`:''}</div><div class="vendor-product-content">${window.__souqVendorContext?.state?.promotedProducts.has(String(p.id))?'<span class="vendor-pill">منتج مروّج</span>':''}<h3>${esc(p.title)}</h3><div class="vendor-muted-note">${esc(p.category||'')}</div><div class="vendor-product-price">${window.__souqVendorContext.money(p.price)}</div>${f.show_stock?`<div class="vendor-muted-note">${Number(p.stock_quantity)>0?'متوفر · الكمية '+Number(p.stock_quantity):'غير متوفر'}</div>`:''}<div class="vendor-product-actions"><button class="primary" type="button" onclick="addVendorCart('${esc(p.id)}')" ${Number(p.stock_quantity)<1?'disabled':''}>أضف للسلة</button><button class="secondary" type="button" onclick="showVendorProductDetails('${esc(p.id)}')">التفاصيل</button></div></div></article>`).join('');
+  grid.innerHTML=products.map(p=>`<article class="vendor-product-card"><div class="vendor-product-image">${window.__souqVendorContext.safeUrl(p.image_url)?`<img src="${esc(window.__souqVendorContext.safeUrl(p.image_url))}" alt="${esc(p.title)}" loading="lazy">`:'🎮'}</div><div class="vendor-product-content">${window.__souqVendorContext?.state?.promotedProducts.has(String(p.id))?'<span class="vendor-pill">منتج مروّج</span>':''}<h3>${esc(p.title)}</h3><div class="vendor-muted-note">${esc(p.category||'')}</div><div class="vendor-product-price">${window.__souqVendorContext.money(p.price)}</div>${f.show_stock?`<div class="vendor-muted-note">${Number(p.stock_quantity)>0?'متوفر · الكمية '+Number(p.stock_quantity):'غير متوفر'}</div>`:''}<div class="vendor-product-actions"><button class="primary" type="button" onclick="addVendorCart('${esc(p.id)}')" ${Number(p.stock_quantity)<1?'disabled':''}>أضف للسلة</button><button class="secondary" type="button" onclick="showVendorProductDetails('${esc(p.id)}')">التفاصيل</button></div></div></article>`).join('');
  }
  async function apply(id){const store=window.__souqVendorContext?.state?.selectedStore;if(!store||String(store.id)!==String(id))return;filterCategory='all';filterQuery='';await loadPublic(id);renderHeader(store);renderTools();renderProducts();}
  const baseOpen=window.openVendorStore;
@@ -4381,95 +4335,56 @@ window.__souqVendorContext={state:vState,money:vMoney,safeUrl:vSafeUrl,esc:vEsc,
 
 <script id="doctor-gaming-section-logic">
 (()=>{
- const $d=id=>document.getElementById(id);
- if(!$d('page-doctor')||typeof sb==='undefined')return;
- let doctorCategory='',doctorRows=[];
- const adminCheck=()=>!!(currentUser&&(currentUser.app_metadata?.role==='platform_admin'||currentUser.app_metadata?.platform_admin===true||currentUser.app_metadata?.is_platform_admin===true));
- const doctorMsg=(id,t)=>{const e=$d(id);if(e)e.textContent=t};
- const safeDate=v=>v?new Date(v).toLocaleDateString('ar-SA'):'';
- const togglePanel=(id)=>$d(id)?.classList.toggle('hidden');
- async function doctorLoad(){
-  const feed=$d('doctorFeed');feed.innerHTML='<div class="empty">جارٍ تحميل الأسئلة...</div>';
-  const {data:qs,error}=await sb.from('doctor_questions').select('id,user_id,title,body,category,status,views,created_at').eq('status','published').order('created_at',{ascending:false}).limit(100);
-  if(error){feed.innerHTML='<div class="notice">تعذر تحميل القسم. تأكد من تنفيذ ملف SQL الخاص بدكتور القيمنق.</div>';return;}
-  doctorRows=qs||[];
-  const [ans,experts,likes,follows]=await Promise.all([
-   sb.from('doctor_answers').select('id,question_id,user_id,body,is_expert,created_at').in('question_id',doctorRows.map(q=>q.id).length?doctorRows.map(q=>q.id):['00000000-0000-0000-0000-000000000000']).order('created_at'),
-   sb.from('doctor_specialists').select('user_id,display_name,specialty,is_verified').eq('is_verified',true),
-   sb.from('doctor_question_likes').select('question_id,user_id'),
-   sb.from('doctor_question_follows').select('question_id,user_id')
+ 'use strict';const $=id=>document.getElementById(id);if(!$('page-doctor')||typeof sb==='undefined')return;
+ let rows=[],replyTarget=null,selectedImage=null,verified=[];const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const isAdmin=()=>!!(currentUser&&(currentUser.app_metadata?.role==='platform_admin'||currentUser.app_metadata?.platform_admin===true||currentUser.app_metadata?.is_platform_admin===true));
+ const time=v=>v?new Date(v).toLocaleTimeString('ar-SA',{hour:'numeric',minute:'2-digit'}):'';
+ const dateKey=v=>v?new Date(v).toLocaleDateString('ar-SA'):'اليوم';
+ const feed=$('doctorChatFeed');
+ function setReply(id,text){replyTarget={id,text};$('doctorReplyText').textContent=text;$('doctorReplyPreview').classList.remove('hidden');$('doctorMessageText').focus()}
+ function clearReply(){replyTarget=null;$('doctorReplyPreview').classList.add('hidden');$('doctorReplyText').textContent=''}
+ function render(){const q=($('doctorSearch').value||'').trim().toLowerCase();const filtered=rows.filter(x=>!q||[x.title,x.body,x.category,x.message?.body].some(v=>String(v||'').toLowerCase().includes(q)));
+  if(!filtered.length){feed.innerHTML='<div class="empty">لا توجد محادثات بعد. ابدأ بإرسال سؤالك من الأسفل.</div>';return;}
+  let last='';feed.innerHTML=filtered.map(item=>{const d=dateKey(item.created_at),day=d!==last?(last=d,`<div class="doctor-day-divider">${esc(d)}</div>`):'';const author=item.user_id===currentUser?.id,ex=verified.find(v=>v.user_id===item.user_id),label=author?'أنت':(ex?.display_name||'عضو المجتمع');const body=item.body||'';const quote=item.reply_to_message_id?rows.find(x=>x.id===item.reply_to_message_id):null;
+   return `${day}<article class="doctor-chat-item ${author?'mine':''}" data-message-id="${esc(item.id)}"><div class="doctor-chat-bubble">${!author?`<div class="doctor-chat-author">${esc(label)} ${ex?'<span class="doctor-verified">✓</span>':''}</div>`:''}${quote?`<div class="doctor-quoted"><b>${esc(quote.user_id===currentUser?.id?'أنت':(verified.find(v=>v.user_id===quote.user_id)?.display_name||'رسالة سابقة'))}</b><span>${esc(quote.body||'صورة مرفقة')}</span></div>`:''}${body?`<div class="doctor-chat-text">${esc(body)}</div>`:''}${item.attachment_url?`<a href="${esc(item.attachment_url)}" target="_blank" rel="noopener"><img class="doctor-chat-photo" src="${esc(item.attachment_url)}" alt="صورة مرفقة" loading="lazy"></a>`:''}<div class="doctor-chat-meta"><span>${time(item.created_at)}</span>${author?'<span class="doctor-chat-tick">✓✓</span>':''}</div></div><div class="doctor-chat-actions"><button type="button" data-doctor-reply="${esc(item.id)}">↩ رد</button>${author?'<span class="muted">رسالتك</span>':''}</div></article>`;
+  }).join('');feed.scrollTop=feed.scrollHeight;
+ }
+ async function load(){feed.innerHTML='<div class="empty">جارٍ تحميل المحادثات...</div>';
+  const {data:questions,error}=await sb.from('doctor_questions').select('id,user_id,title,body,category,status,created_at').eq('status','published').order('created_at',{ascending:true}).limit(100);
+  if(error){feed.innerHTML='<div class="notice">تعذر تحميل المحادثات. تحقق من صلاحيات قاعدة البيانات.</div>';return;}
+  const ids=(questions||[]).map(x=>x.id);const [messages,legacyAnswers,experts]=await Promise.all([
+   sb.from('doctor_messages').select('id,question_id,user_id,body,attachment_url,reply_to_message_id,created_at').in('question_id',ids.length?ids:['00000000-0000-0000-0000-000000000000']).order('created_at',{ascending:true}).limit(500),
+   sb.from('doctor_answers').select('id,question_id,user_id,body,created_at').in('question_id',ids.length?ids:['00000000-0000-0000-0000-000000000000']).order('created_at',{ascending:true}),
+   sb.from('doctor_specialists').select('user_id,display_name,specialty,is_verified').eq('is_verified',true)
   ]);
-  const answers=ans.data||[],verified=experts.data||[],likeRows=likes.data||[],followRows=follows.data||[];
-  const visible=doctorRows.filter(q=>(!doctorCategory||q.category===doctorCategory)&&(!($d('doctorSearch').value||'').trim()||(q.title+' '+q.body).includes($d('doctorSearch').value.trim())));
-  $d('doctorQuestionsCount').textContent=doctorRows.length;
-  $d('doctorAnswersCount').textContent=answers.length;
-  $d('doctorExpertsCount').textContent=verified.length;
-  $d('doctorFeedCount').textContent=visible.length+' موضوع';
-  feed.innerHTML=visible.length?visible.map(q=>{
-   const qa=answers.filter(a=>a.question_id===q.id),liked=likeRows.some(x=>x.question_id===q.id&&x.user_id===currentUser?.id),following=followRows.some(x=>x.question_id===q.id&&x.user_id===currentUser?.id);
-   const author=verified.find(x=>x.user_id===q.user_id);
-   return `<article class="doctor-question"><div class="doctor-question-meta"><span>${esc(q.category)}</span><span>🗓 ${safeDate(q.created_at)}</span><span>👁 ${Number(q.views||0)}</span><span>💬 ${qa.length} إجابة</span></div><h3>${esc(q.title)}</h3><div class="doctor-question-body">${esc(q.body)}</div><div class="doctor-question-actions"><button class="secondary" data-dlike="${q.id}">${liked?'♥':'♡'} إعجاب (${likeRows.filter(x=>x.question_id===q.id).length})</button><button class="secondary" data-dreport="${q.id}">⚑ إبلاغ</button><button class="secondary" data-dfollow="${q.id}">${following?'✓ تتابع النقاش':'＋ متابعة النقاش'}</button></div><div class="doctor-answer-list">${qa.map(a=>{const ex=verified.find(x=>x.user_id===a.user_id);return `<div class="doctor-answer"><div class="doctor-question-meta"><strong>${esc(ex?.display_name||'عضو المجتمع')}</strong>${ex?'<span class="doctor-expert-badge">✓ مختص موثّق</span>':''}<span>${safeDate(a.created_at)}</span></div><p class="doctor-question-body">${esc(a.body)}</p></div>`}).join('')}</div>${currentUser?`<form class="doctor-answer-form" data-danswer="${q.id}"><textarea class="field" name="body" maxlength="3000" required placeholder="اكتب إجابتك أو خبرتك..."></textarea><button class="primary">إرسال الإجابة</button></form>`:'<p class="muted">سجّل الدخول للمشاركة والإجابة.</p>'}</article>`;
-  }).join(''):'<div class="empty">لا توجد أسئلة في هذا التصنيف حتى الآن. كن أول من يطرح سؤالًا.</div>';
-  if(adminCheck()){doctorLoadPending();doctorLoadReports();}
+  if(messages.error){feed.innerHTML='<div class="notice">تم تحديث واجهة المحادثة. لتفعيل الرسائل نفّذ ملف SQL المرفق مع هذه النسخة.</div>';return;}
+  verified=experts.data||[];rows=[];(questions||[]).forEach(q=>{rows.push({id:'question-'+q.id,question_id:q.id,user_id:q.user_id,body:q.title+'\n'+q.body,created_at:q.created_at,category:q.category,is_question:true});});
+  // Preserve answers posted before the chat update, then append new chat messages.
+  (legacyAnswers.data||[]).forEach(a=>rows.push({id:'legacy-'+a.id,question_id:a.question_id,user_id:a.user_id,body:a.body,created_at:a.created_at,legacy:true}));
+  const msgRows=messages.data||[];rows=[...rows,...msgRows];rows.sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));render();
+  if(isAdmin())loadAdmin();
  }
- async function doctorLoadReports(){
-  const box=$d('doctorReports');if(!box)return;
-  const {data,error}=await sb.from('doctor_reports').select('id,question_id,reporter_id,reason,status,created_at,doctor_questions(title)').eq('status','pending').order('created_at',{ascending:false});
-  if(error){box.textContent='تعذر تحميل البلاغات.';return;}
-  box.innerHTML=(data||[]).length?data.map(r=>`<div class="doctor-admin-row"><div><b>${esc(r.doctor_questions?.title||'سؤال محذوف')}</b><div class="muted">${esc(r.reason)}</div></div><button class="secondary" data-dreportdone="${r.id}">تمت المراجعة</button></div>`).join(''):'<div class="empty">لا توجد بلاغات معلّقة.</div>';
+ async function loadAdmin(){const panel=$('doctorAdminPanel');panel.classList.remove('hidden');const [pending,reports]=await Promise.all([
+  sb.from('doctor_specialists').select('user_id,display_name,specialty,bio').eq('is_verified',false).order('created_at'),
+  sb.from('doctor_reports').select('id,question_id,reason,status,doctor_questions(title)').eq('status','pending').order('created_at',{ascending:false})
+ ]);$('doctorPendingExperts').innerHTML=(pending.data||[]).map(x=>`<div class="doctor-admin-row"><span>${esc(x.display_name)} — ${esc(x.specialty)}</span><button class="primary" data-doctor-approve="${esc(x.user_id)}">اعتماد</button></div>`).join('')||'<p class="muted">لا توجد طلبات معلّقة.</p>';$('doctorReports').innerHTML=(reports.data||[]).map(x=>`<div class="doctor-admin-row"><span>${esc(x.doctor_questions?.title||'بلاغ')}</span><button class="secondary" data-doctor-report-done="${esc(x.id)}">تمت المراجعة</button></div>`).join('')||'<p class="muted">لا توجد بلاغات.</p>';
  }
- async function doctorLoadPending(){
-  $d('doctorAdminPanel').classList.remove('hidden');
-  const box=$d('doctorPendingExperts');
-  const {data,error}=await sb.from('doctor_specialists').select('user_id,display_name,specialty,bio,created_at').eq('is_verified',false).order('created_at');
-  if(error){box.textContent='تعذر تحميل الطلبات.';return;}
-  box.innerHTML=(data||[]).length?data.map(x=>`<div class="doctor-admin-row"><div><b>${esc(x.display_name)}</b><div class="muted">${esc(x.specialty)} — ${esc(x.bio||'')}</div></div><button class="primary" data-dapprove="${x.user_id}">اعتماد المختص</button></div>`).join(''):'<div class="empty">لا توجد طلبات معلّقة.</div>';
- }
- $d('doctorAskTop').onclick=$d('doctorAskBtn').onclick=()=>{if(!needAuth())return;$d('doctorAskPanel').classList.remove('hidden');$d('doctorQuestionTitle').focus()};
- $d('doctorAskCancel').onclick=()=>togglePanel('doctorAskPanel');
- $d('doctorApplyTop').onclick=()=>{if(!needAuth())return;$d('doctorApplyPanel').classList.remove('hidden')};
- $d('doctorQuestionForm').onsubmit=async e=>{
-  e.preventDefault();if(!needAuth())return;
-  const payload={user_id:currentUser.id,title:$d('doctorQuestionTitle').value.trim(),category:$d('doctorQuestionCategory').value,body:$d('doctorQuestionBody').value.trim(),status:'published'};
-  const {data,error}=await sb.from('doctor_questions').insert(payload).select('id').single();
-  if(error){doctorMsg('doctorQuestionMsg','تعذر نشر السؤال: '+error.message);return;}
-  doctorMsg('doctorQuestionMsg','تم نشر السؤال بنجاح.');
-  // Invoke a secured Edge Function; it owns the private recipient address and mail provider secret.
-  sb.functions.invoke('doctor-question-notify',{body:{question_id:data.id}}).catch(()=>{});
-  e.target.reset();$d('doctorAskPanel').classList.add('hidden');await doctorLoad();
- };
- $d('doctorApplyForm').onsubmit=async e=>{
-  e.preventDefault();if(!needAuth())return;
-  const payload={user_id:currentUser.id,display_name:$d('doctorExpertName').value.trim(),specialty:$d('doctorExpertField').value.trim(),bio:$d('doctorExpertBio').value.trim(),is_verified:false};
-  const {error}=await sb.from('doctor_specialists').upsert(payload,{onConflict:'user_id'});
-  doctorMsg('doctorApplyMsg',error?'تعذر إرسال الطلب: '+error.message:'وصل طلبك للإدارة للمراجعة.');
-  if(!error)e.target.reset();
- };
- $d('doctorSearch').addEventListener('input',doctorLoad);
- $d('doctorCategories').addEventListener('click',e=>{const b=e.target.closest('[data-doctor-category]');if(!b)return;doctorCategory=b.dataset.doctorCategory;$d('doctorCategories').querySelectorAll('button').forEach(x=>x.classList.toggle('selected',x===b));doctorLoad()});
- $d('doctorFeed').addEventListener('submit',async e=>{
-  const f=e.target.closest('[data-danswer]');if(!f)return;e.preventDefault();if(!needAuth())return;
-  const {error}=await sb.from('doctor_answers').insert({question_id:f.dataset.danswer,user_id:currentUser.id,body:new FormData(f).get('body').toString().trim()});
-  if(error)alert('تعذر إرسال الإجابة: '+error.message);else doctorLoad();
- });
- $d('doctorFeed').addEventListener('click',async e=>{
-  const like=e.target.closest('[data-dlike]'),follow=e.target.closest('[data-dfollow]');
-  if(!like&&!follow)return;if(!needAuth())return;
-  const table=like?'doctor_question_likes':'doctor_question_follows',qid=(like||follow).dataset[like?'dlike':'dfollow'];
-  const {data:old}=await sb.from(table).select('question_id').eq('question_id',qid).eq('user_id',currentUser.id).maybeSingle();
-  const r=old?await sb.from(table).delete().eq('question_id',qid).eq('user_id',currentUser.id):await sb.from(table).insert({question_id:qid,user_id:currentUser.id});
-  if(r.error)alert(r.error.message);doctorLoad();
- });
- $d('doctorReports').addEventListener('click',async e=>{const b=e.target.closest('[data-dreportdone]');if(!b||!adminCheck())return;const {error}=await sb.from('doctor_reports').update({status:'reviewed'}).eq('id',b.dataset.dreportdone);if(error)alert(error.message);else doctorLoadReports();});
- $d('doctorPendingExperts').addEventListener('click',async e=>{
-  const b=e.target.closest('[data-dapprove]');if(!b||!adminCheck())return;
-  const {error}=await sb.from('doctor_specialists').update({is_verified:true,verified_at:new Date().toISOString()}).eq('user_id',b.dataset.dapprove);
-  if(error)alert(error.message);else doctorLoad();
- });
- const originalShowPage=window.showPage;
- // Navigation uses the existing global function declaration; refresh the doctor feed on entry.
- document.querySelectorAll('[data-page="doctor"]').forEach(b=>b.addEventListener('click',()=>{if(!currentUser){/* browsing remains public */}doctorLoad()}));
- if(currentUser&&adminCheck())$d('doctorAdminPanel').classList.remove('hidden');
+ async function uploadImage(file){if(!file)return null;if(!/^image\/(jpeg|png|webp)$/.test(file.type)||file.size>5*1024*1024)throw new Error('اختر صورة JPG أو PNG أو WEBP لا تتجاوز 5 ميجابايت.');const ext=file.type==='image/png'?'png':file.type==='image/webp'?'webp':'jpg';const path=`${currentUser.id}/${crypto.randomUUID()}.${ext}`;const {error}=await sb.storage.from('doctor-media').upload(path,file,{upsert:false,contentType:file.type});if(error)throw error;const {data}=sb.storage.from('doctor-media').getPublicUrl(path);return data.publicUrl;}
+ $('doctorAttachBtn').onclick=()=>{if(!needAuth())return;$('doctorImageFile').click()};$('doctorImageFile').onchange=e=>{selectedImage=e.target.files?.[0]||null;if(!selectedImage){$('doctorImagePreview').classList.add('hidden');return}const url=URL.createObjectURL(selectedImage);$('doctorImagePreviewImg').src=url;$('doctorImagePreview').classList.remove('hidden')};$('doctorRemoveImage').onclick=()=>{selectedImage=null;$('doctorImageFile').value='';$('doctorImagePreview').classList.add('hidden')};$('doctorCancelReply').onclick=clearReply;
+ $('doctorComposeForm').onsubmit=async e=>{e.preventDefault();if(!needAuth())return;const body=$('doctorMessageText').value.trim();if(!body&&!selectedImage)return;const btn=$('doctorSendBtn');btn.disabled=true;try{
+  // Each new top-level message opens a question thread; replies remain in the same thread.
+  let questionId=replyTarget?.question_id||null;
+  if(!questionId&&replyTarget?.id){const target=rows.find(x=>x.id===replyTarget.id);questionId=target?.question_id||null;}
+  if(!questionId){const title=body.split('\n')[0].slice(0,120)||'استفسار مع صورة';const category='عام';const q=await sb.from('doctor_questions').insert({user_id:currentUser.id,title,category,body,status:'published'}).select('id').single();if(q.error)throw q.error;questionId=q.data.id;sb.functions.invoke('doctor-question-notify',{body:{question_id:questionId}}).catch(()=>{});}
+  let attachment_url=null;if(selectedImage)attachment_url=await uploadImage(selectedImage);
+  const payload={question_id:questionId,user_id:currentUser.id,body,attachment_url,reply_to_message_id:replyTarget?.id||null};const {error}=await sb.from('doctor_messages').insert(payload);if(error)throw error;
+  $('doctorMessageText').value='';selectedImage=null;$('doctorImageFile').value='';$('doctorImagePreview').classList.add('hidden');clearReply();await load();
+ }catch(err){alert('تعذر إرسال الرسالة: '+(err.message||String(err)));}finally{btn.disabled=false;}};
+ feed.addEventListener('click',e=>{const b=e.target.closest('[data-doctor-reply]');if(!b)return;const item=rows.find(x=>x.id===b.dataset.doctorReply);if(!item)return;let questionId=item.question_id;if(item.is_question)questionId=item.id.replace('question-','');replyTarget={id:(item.is_question||item.legacy)?null:item.id,question_id:questionId};$('doctorReplyText').textContent=item.body.slice(0,140);$('doctorReplyPreview').classList.remove('hidden');$('doctorMessageText').focus();});
+ $('doctorSearch').addEventListener('input',render);$('doctorApplyTop').onclick=()=>{$('doctorApplyPanel').classList.toggle('hidden')};$('doctorApplyClose').onclick=()=>$('doctorApplyPanel').classList.add('hidden');$('doctorMenu').onclick=()=>{if(isAdmin())$('doctorAdminPanel').classList.toggle('hidden');else $('doctorApplyPanel').classList.toggle('hidden')};$('doctorBack').onclick=()=>{if(typeof showPage==='function')showPage('home')};
+ $('doctorApplyForm').onsubmit=async e=>{e.preventDefault();if(!needAuth())return;const payload={user_id:currentUser.id,display_name:$('doctorExpertName').value.trim(),specialty:$('doctorExpertField').value.trim(),bio:$('doctorExpertBio').value.trim(),is_verified:false};const {error}=await sb.from('doctor_specialists').upsert(payload,{onConflict:'user_id'});$('doctorApplyMsg').textContent=error?'تعذر إرسال الطلب: '+error.message:'وصل طلبك للإدارة للمراجعة.';if(!error)e.target.reset()};
+ $('doctorAdminPanel').addEventListener('click',async e=>{const a=e.target.closest('[data-doctor-approve]'),r=e.target.closest('[data-doctor-report-done]');if(a&&isAdmin()){const {error}=await sb.from('doctor_specialists').update({is_verified:true,verified_at:new Date().toISOString()}).eq('user_id',a.dataset.doctorApprove);if(error)alert(error.message);else loadAdmin();}if(r&&isAdmin()){const {error}=await sb.from('doctor_reports').update({status:'reviewed'}).eq('id',r.dataset.doctorReportDone);if(error)alert(error.message);else loadAdmin();}});
+ document.querySelectorAll('[data-page="doctor"]').forEach(b=>b.addEventListener('click',load));sb.auth.onAuthStateChange(()=>{if(!$('page-doctor').classList.contains('hidden'))load()});load();
 })();
 </script>
 
