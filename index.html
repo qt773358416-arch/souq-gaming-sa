@@ -931,6 +931,8 @@ html.app-ready #souqSplash{opacity:0;visibility:hidden;pointer-events:none}
 @media(prefers-reduced-motion:reduce){#souqSplash:before,#souqSplash:after,#souqSplash .splash-mark,#souqSplash .splash-loader:after{animation:none!important}}
 </style>
 
+
+<style>.vendor-media-editor{padding:14px;border:1px solid var(--line);border-radius:14px;background:var(--panel2)}.vendor-media-editor h4{margin:0 0 12px;color:var(--brand)}.vendor-media-remove{display:flex;align-items:center;gap:8px;margin-top:10px;color:var(--muted)}.vendor-media-remove input{width:18px;height:18px;accent-color:var(--brand)}.media-preview{display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap;margin-top:10px}.media-preview img,.media-preview video{width:min(220px,100%);max-height:180px;object-fit:contain;border-radius:12px;background:#07111a;border:1px solid var(--line)}</style>
 </head>
 <body class="theme-dark">
 <div id="souqSplash" role="status" aria-label="جاري تجهيز سوق القيمنق السعودي">
@@ -1084,6 +1086,10 @@ html.app-ready #souqSplash{opacity:0;visibility:hidden;pointer-events:none}
   <div class="vendor-pill">متاجر مستقلة داخل السوق</div>
   <h1>متاجر القيمنق</h1>
   <p>تصفح متاجر التجار المعتمدة ومنتجاتهم. لكل تاجر متجره وصفحته وإدارته المستقلة.</p>
+  <div class="actions">
+   <button class="primary" type="button" data-vendor-dashboard>افتح متجرك / إدارة متجري</button>
+   <button class="secondary" type="button" data-go="home">العودة للسوق الرئيسي</button>
+  </div>
  </div>
  <div class="vendor-toolbar">
   <input id="vendorDirectorySearch" class="field" type="search" placeholder="ابحث عن متجر أو مدينة أو تصنيف...">
@@ -1097,9 +1103,10 @@ html.app-ready #souqSplash{opacity:0;visibility:hidden;pointer-events:none}
    <div style="min-width:0;flex:1"><h2 id="vendorSelectedName" style="margin:0;color:var(--brand)">المتجر</h2><p id="vendorSelectedMeta" class="muted" style="margin:2px 0"></p></div>
   </div>
   <p id="vendorSelectedDescription" class="muted"></p>
-  <div class="vendor-store-cart-launch"><button type="button" class="primary" id="vendorCartToggle" aria-expanded="false">🛒 سلة هذا المتجر <span id="vendorCartBadge">0</span></button><span class="vendor-cart-launch-total" id="vendorCartLaunchTotal">0.00 ر.س</span></div>
-  <div class="vendor-cart-box hidden" id="vendorStoreCartPanel">
-   <div class="row space"><h3 style="margin:0">🛒 سلة هذا المتجر</h3><strong id="vendorCartTotal">0.00 ر.س</strong></div>
+  <div class="row space"><h2>منتجات المتجر</h2><span id="vendorSelectedProductCount" class="vendor-pill">0 منتج</span></div>
+  <div id="vendorSelectedProducts" class="vendor-product-grid"><div class="empty">اختر متجراً لعرض منتجاته.</div></div>
+  <div class="vendor-cart-box">
+   <div class="row space"><h3 style="margin:0">🛒 سلة متاجر التجار</h3><strong id="vendorCartTotal">0.00 ر.س</strong></div>
    <div id="vendorCartRows" class="vendor-muted-note">السلة فارغة.</div>
    <form id="vendorCheckoutForm" class="vendor-cart-form">
     <label>اسم المستلم<input id="vendorCheckoutName" class="field" required maxlength="100"></label>
@@ -1163,7 +1170,15 @@ html.app-ready #souqSplash{opacity:0;visibility:hidden;pointer-events:none}
      <div><label>السعر بالريال *</label><input id="vendorProductPrice" class="field" type="number" min=".01" step=".01" required></div>
      <div><label>الكمية المتاحة *</label><input id="vendorProductStock" class="field" type="number" min="0" step="1" value="1" required></div>
      <div><label>نوع المنتج</label><select id="vendorProductType" class="field"><option value="physical">مادي</option><option value="digital">رقمي</option></select></div>
-     <div><label>صورة المنتج من جهازك</label><input id="vendorProductImageFile" class="field" type="file" accept="image/jpeg,image/png,image/webp,image/avif"><small class="vendor-muted-note">JPG أو PNG أو WEBP — حتى 5 ميجابايت</small><div id="vendorProductImagePreview" class="media-preview"></div></div>
+     <div class="full vendor-media-editor">
+      <h4>وسائط المنتج</h4>
+      <label>صورة المنتج</label><input id="vendorProductImageFile" class="field" type="file" accept="image/jpeg,image/png,image/webp,image/avif">
+      <small class="vendor-muted-note">JPG أو PNG أو WEBP أو AVIF — حتى 5 ميجابايت</small><div id="vendorProductImagePreview" class="media-preview"></div>
+      <label class="vendor-media-remove"><input id="vendorProductRemoveImage" type="checkbox"> إزالة صورة المنتج الحالية</label>
+      <label style="margin-top:14px">فيديو قصير للمنتج (اختياري)</label><input id="vendorProductVideoFile" class="field" type="file" accept="video/mp4,video/webm,video/quicktime">
+      <small class="vendor-muted-note">MP4 أو WEBM أو MOV — حتى 30 ميجابايت، ومدة لا تتجاوز 30 ثانية</small><div id="vendorProductVideoPreview" class="media-preview"></div>
+      <label class="vendor-media-remove"><input id="vendorProductRemoveVideo" type="checkbox"> إزالة فيديو المنتج الحالي</label>
+     </div>
      <div class="full"><label>الوصف</label><textarea id="vendorProductDescription" class="field" rows="3" maxlength="3000"></textarea></div>
      <div class="full row"><button class="primary" type="submit" id="vendorProductSave">حفظ المنتج للمراجعة</button><button class="secondary" type="button" id="vendorProductReset">منتج جديد</button><span id="vendorProductMsg" class="muted"></span></div>
     </form>
@@ -1302,7 +1317,7 @@ html.app-ready #souqSplash{opacity:0;visibility:hidden;pointer-events:none}
   <button class="drawer-link" data-drawer-page="messages"><span>✉ المحادثات الخاصة<small>مراسلة البائعين والمشترين</small></span><span>‹</span></button>
   <button class="drawer-link" data-drawer-page="notifications"><span>♟ الإشعارات<small>تنبيهات الحساب</small></span><span>‹</span></button>
   <button class="drawer-link" type="button" data-drawer-page="vendors"><span>🏬 متاجر التجار<small>تصفح المتاجر المعتمدة</small></span><span>‹</span></button>
-  <button class="drawer-link" type="button" data-vendor-dashboard><span>🛍️ إدارة وفتح المتجر<small>تقديم طلب متجر أو إدارة متجرك المعتمد</small></span><span>‹</span></button>
+  <button class="drawer-link" type="button" data-vendor-dashboard><span>＋ افتح متجرك<small>تقديم طلب متجر وإدارة المنتجات</small></span><span>‹</span></button>
   <button class="drawer-link" data-drawer-page="settings"><span>⚙ الإعدادات<small>تفضيلات الموقع والخصوصية</small></span><span>‹</span></button>
 </aside>
 
@@ -2397,7 +2412,6 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   const store=vState.stores.find(x=>String(x.id)===String(id));
   if(!store){vMsg('vendorCheckoutMsg','تعذر العثور على المتجر. حدّث قائمة المتاجر.');return;}
   vState.selectedStore=store;
-  v$('page-vendors')?.classList.add('vendor-store-detail-mode');
   v$('vendorSelectedStore').classList.remove('hidden');
   v$('vendorSelectedName').textContent=store.store_name;
   v$('vendorSelectedMeta').textContent=[store.category,store.city].filter(Boolean).join(' · ');
@@ -2405,7 +2419,7 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   v$('vendorSelectedLogo').innerHTML=vendorLogoMarkup(store);
   v$('vendorDirectoryGrid').classList.add('hidden');
   const {data,error}=await sb.from('vendor_store_products')
-   .select('id,store_id,title,description,price,stock_quantity,category,image_url,product_type,status,created_at')
+   .select('id,store_id,title,description,price,stock_quantity,category,image_url,video_url,product_type,status,created_at')
    .eq('store_id',store.id).eq('status','active')
    .order('created_at',{ascending:false}).limit(100);
   if(error){v$('vendorSelectedProducts').innerHTML='<div class="empty">تعذر تحميل منتجات هذا المتجر.</div>';return;}
@@ -2420,7 +2434,7 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   if(!vState.selectedProducts.length){grid.innerHTML='<div class="empty" style="grid-column:1/-1">لا توجد منتجات منشورة في هذا المتجر حالياً.</div>';return;}
   grid.innerHTML=vState.selectedProducts.map(p=>`
    <article class="vendor-product-card">
-    <div class="vendor-product-image">${vSafeUrl(p.image_url)?`<img src="${vEsc(vSafeUrl(p.image_url))}" alt="${vEsc(p.title)}" loading="lazy">`:'🎮'}</div>
+    <div class="vendor-product-image">${vSafeUrl(p.image_url)?`<img src="${vEsc(vSafeUrl(p.image_url))}" alt="${vEsc(p.title)}" loading="lazy">`:'🎮'}${vSafeUrl(p.video_url)?`<video src="${vEsc(vSafeUrl(p.video_url))}" controls playsinline preload="metadata" aria-label="فيديو ${vEsc(p.title)}" style="width:100%;max-height:180px;object-fit:contain"></video>`:''}</div>
     <div class="vendor-product-content">
      ${vState.promotedProducts.has(String(p.id))?'<span class="vendor-pill">منتج مروّج</span>':''}<h3>${vEsc(p.title)}</h3><div class="vendor-muted-note">${vEsc(p.category||'')}</div>
      <div class="vendor-product-price">${vMoney(p.price)}</div>
@@ -2436,9 +2450,6 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
  window.addVendorCart=id=>{
   const p=vState.selectedProducts.find(x=>String(x.id)===String(id));
   if(!p || Number(p.stock_quantity)<1){alert('المنتج غير متوفر حالياً.');return;}
-  const existing=selectedCartItems();
-  const otherStore=existing.some(item=>String(item.product.store_id)!==String(vState.selectedStore?.id));
-  if(otherStore){if(!confirm('السلة تحتوي منتجات من متجر آخر. هل تريد إفراغها والبدء بسلة هذا المتجر؟'))return;vState.cart={};vState.cartProducts={};}
   const next=(vState.cart[id]||0)+1;
   if(next>Number(p.stock_quantity)){alert('الكمية المطلوبة تتجاوز المخزون المتاح.');return;}
   vState.cart[id]=next;
@@ -2468,23 +2479,12 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   rows.innerHTML=items.map(({product,quantity})=>`
    <div class="vendor-cart-row"><span>${vEsc(product.title)} × ${quantity}<small style="display:block">${vEsc(vState.stores.find(s=>String(s.id)===String(product.store_id))?.store_name||'متجر')}</small></span><span>${vMoney(product.price*quantity)} <button class="linkbtn" type="button" onclick="changeVendorCart('${product.id}',-1)">−</button> <button class="linkbtn" type="button" onclick="changeVendorCart('${product.id}',1)">＋</button></span></div>`).join('');
   if(profile){if(!v$('vendorCheckoutName').value)v$('vendorCheckoutName').value=profile.display_name||'';if(!v$('vendorCheckoutPhone').value)v$('vendorCheckoutPhone').value=profile.phone||'';if(!v$('vendorCheckoutCity').value)v$('vendorCheckoutCity').value=profile.city||'';}
-  const count=items.reduce((n,item)=>n+item.quantity,0);
-  const badge=v$('vendorCartBadge');if(badge)badge.textContent=count.toLocaleString('ar-SA');
-  const launchTotal=v$('vendorCartLaunchTotal');if(launchTotal)launchTotal.textContent=vMoney(total);
  }
- v$('vendorCartToggle')?.addEventListener('click',()=>{
-  const panel=v$('vendorStoreCartPanel'),button=v$('vendorCartToggle');if(!panel||!button)return;
-  const opening=panel.classList.contains('hidden');panel.classList.toggle('hidden',!opening);button.setAttribute('aria-expanded',String(opening));button.innerHTML=`🛒 ${opening?'إخفاء سلة هذا المتجر':'سلة هذا المتجر'} <span id="vendorCartBadge">${selectedCartItems().reduce((n,item)=>n+item.quantity,0).toLocaleString('ar-SA')}</span>`;
-  if(opening)panel.scrollIntoView({behavior:'smooth',block:'nearest'});
- });
  v$('vendorBackToDirectory').addEventListener('click',()=>{
-  v$('page-vendors')?.classList.remove('vendor-store-detail-mode');
   v$('vendorSelectedStore').classList.add('hidden');
   v$('vendorDirectoryGrid').classList.remove('hidden');
   vState.selectedStore=null;
   vState.selectedProducts=[];
-  renderVendorDirectory();
-  window.scrollTo({top:0,behavior:'smooth'});
  });
  v$('vendorDirectorySearch').addEventListener('input',renderVendorDirectory);
  v$('vendorDirectoryRefresh').addEventListener('click',()=>{vState.selectedCategory='';const h=v$('page-vendors')?.querySelector('.vendor-page-intro h1');if(h)h.textContent='متاجر القيمنق';loadVendorDirectory();});
@@ -2527,19 +2527,34 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
  });
 
  function resetVendorProductForm(){
-  v$('vendorProductForm').reset();v$('vendorProductId').value='';v$('vendorProductStock').value=1;v$('vendorProductImagePreview').innerHTML='';
+  v$('vendorProductForm').reset();v$('vendorProductId').value='';v$('vendorProductStock').value=1;
+  v$('vendorProductImagePreview').innerHTML='';v$('vendorProductVideoPreview').innerHTML='';
+  v$('vendorProductRemoveImage').checked=false;v$('vendorProductRemoveVideo').checked=false;
   v$('vendorProductSave').textContent='حفظ المنتج للمراجعة';
  }
  v$('vendorProductReset').addEventListener('click',resetVendorProductForm);
-  v$('vendorProductImageFile').addEventListener('change',()=>{
-   const file=v$('vendorProductImageFile').files?.[0],box=v$('vendorProductImagePreview');
-   if(!box)return;
-   if(!file){box.innerHTML='';return;}
-   if(!file.type.startsWith('image/')||file.size>5*1024*1024){
-    v$('vendorProductImageFile').value='';box.textContent='اختر صورة صالحة لا تتجاوز 5 ميجابايت.';return;
-   }
-   const reader=new FileReader();reader.onload=()=>{box.innerHTML=`<img src="${reader.result}" alt="معاينة صورة المنتج">`};reader.readAsDataURL(file);
-  });
+ const vendorMediaBucket='vendor-product-media';
+ const vendorMediaPath=(kind,file)=>`${currentUser.id}/${kind}/${Date.now()}-${crypto.randomUUID?crypto.randomUUID():Math.random().toString(36).slice(2)}.${(file.name.split('.').pop()|| (kind==='images'?'jpg':'mp4')).toLowerCase().replace(/[^a-z0-9]/g,'')}`;
+ function previewVendorFile(file,kind,box){
+  if(!box)return;
+  if(!file){box.innerHTML='';return;}
+  const isImage=kind==='image';
+  const valid=isImage?file.type.startsWith('image/'):file.type.startsWith('video/');
+  const max=isImage?5*1024*1024:30*1024*1024;
+  if(!valid||file.size>max){box.textContent=isImage?'اختر صورة صحيحة لا تتجاوز 5 ميجابايت.':'اختر فيديو صحيحاً لا يتجاوز 30 ميجابايت.';return false;}
+  const url=URL.createObjectURL(file);
+  box.innerHTML=isImage?`<img src="${url}" alt="معاينة صورة المنتج">`:`<video src="${url}" controls playsinline preload="metadata"></video>`;
+  if(!isImage){const v=box.querySelector('video');v.addEventListener('loadedmetadata',()=>{if(v.duration>30){v$('vendorProductVideoFile').value='';box.textContent='مدة الفيديو يجب ألا تتجاوز 30 ثانية.';URL.revokeObjectURL(url);}} ,{once:true});}
+  return true;
+ }
+ v$('vendorProductImageFile').addEventListener('change',()=>{
+  const f=v$('vendorProductImageFile').files?.[0];if(!previewVendorFile(f,'image',v$('vendorProductImagePreview'))&&f)v$('vendorProductImageFile').value='';
+  if(f)v$('vendorProductRemoveImage').checked=false;
+ });
+ v$('vendorProductVideoFile').addEventListener('change',()=>{
+  const f=v$('vendorProductVideoFile').files?.[0];if(!previewVendorFile(f,'video',v$('vendorProductVideoPreview'))&&f)v$('vendorProductVideoFile').value='';
+  if(f)v$('vendorProductRemoveVideo').checked=false;
+ });
  async function loadMyVendorProducts(){
   if(!vState.myStore)return;
   const {data,error}=await sb.from('vendor_store_products').select('*')
@@ -2550,7 +2565,8 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
    <div class="vendor-state">
     <div class="row space"><strong>${vEsc(p.title)}</strong><span class="vendor-pill">${vEsc(vStatusLabel(p.status))}</span></div>
     <div class="vendor-muted-note">${vMoney(p.price)} · المخزون ${Number(p.stock_quantity)||0} · ${vEsc(p.category||'')}</div>
-    <div class="actions"><button class="secondary" type="button" onclick="editMyVendorProduct('${p.id}')">تعديل</button><button class="danger" type="button" onclick="deleteMyVendorProduct('${p.id}')">حذف</button></div>
+    <div class="row">${p.image_url?'<span class="vendor-pill">📷 صورة</span>':''}${p.video_url?'<span class="vendor-pill">🎬 فيديو</span>':''}</div>
+    <div class="actions"><button class="secondary" type="button" onclick="editMyVendorProduct('${p.id}')">تعديل الوسائط والمنتج</button><button class="danger" type="button" onclick="deleteMyVendorProduct('${p.id}')">حذف</button></div>
    </div>`).join('')||'<div class="empty">لم تضف منتجات بعد.</div>';
  }
  window.editMyVendorProduct=id=>{
@@ -2558,44 +2574,73 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   v$('vendorProductId').value=p.id;v$('vendorProductName').value=p.title;
   v$('vendorProductCategory').value=p.category||'';v$('vendorProductPrice').value=p.price;
   v$('vendorProductStock').value=p.stock_quantity;v$('vendorProductType').value=p.product_type||'physical';
-  v$('vendorProductImageFile').value='';v$('vendorProductImagePreview').innerHTML=p.image_url?`<img src="${vEsc(p.image_url)}" alt="صورة المنتج الحالية"><small>الصورة الحالية — اختر صورة جديدة لاستبدالها</small>`:'';v$('vendorProductDescription').value=p.description||'';
+  v$('vendorProductImageFile').value='';v$('vendorProductVideoFile').value='';
+  v$('vendorProductImagePreview').innerHTML=p.image_url?`<img src="${vEsc(p.image_url)}" alt="صورة المنتج الحالية"><small>الصورة الحالية — اختر صورة جديدة للاستبدال أو فعّل خيار الإزالة</small>`:'';
+  v$('vendorProductVideoPreview').innerHTML=p.video_url?`<video src="${vEsc(p.video_url)}" controls playsinline preload="metadata"></video><small>الفيديو الحالي — اختر فيديو جديداً للاستبدال أو فعّل خيار الإزالة</small>`:'';
+  v$('vendorProductRemoveImage').checked=false;v$('vendorProductRemoveVideo').checked=false;
+  v$('vendorProductDescription').value=p.description||'';
   v$('vendorProductSave').textContent='حفظ التعديل وإعادة المراجعة';
   v$('vendorProductForm').scrollIntoView({behavior:'smooth',block:'center'});
  };
+ async function removeVendorStorageObject(path){if(!path)return;const {error}=await sb.storage.from(vendorMediaBucket).remove([path]);if(error)console.warn('Could not remove old vendor media:',error.message);}
  window.deleteMyVendorProduct=async id=>{
   if(!confirm('تأكيد حذف هذا المنتج؟'))return;
-  const {error}=await sb.from('vendor_store_products').delete().eq('id',id);
-  if(error)alert('تعذر حذف المنتج: '+error.message);else loadMyVendorProducts();
+  const p=vState.myProducts.find(x=>String(x.id)===String(id));
+  const {error}=await sb.from('vendor_store_products').delete().eq('id',id).eq('store_id',vState.myStore.id);
+  if(error){alert('تعذر حذف المنتج: '+error.message);return;}
+  await Promise.all([removeVendorStorageObject(p?.image_storage_path),removeVendorStorageObject(p?.video_storage_path)]);
+  await loadMyVendorProducts();
  };
+ async function uploadVendorMedia(file,kind){
+  if(!file)return null;
+  const path=vendorMediaPath(kind==='image'?'images':'videos',file);
+  const {error}=await sb.storage.from(vendorMediaBucket).upload(path,file,{upsert:false,contentType:file.type});
+  if(error)throw new Error(`تعذر رفع ${kind==='image'?'الصورة':'الفيديو'}: ${error.message}. تحقق من إعداد bucket vendor-product-media وسياساته.`);
+  const {data}=sb.storage.from(vendorMediaBucket).getPublicUrl(path);
+  if(!data?.publicUrl)throw new Error('تم رفع الملف لكن تعذر إنشاء رابط عرضه.');
+  return {path,url:data.publicUrl};
+ }
  v$('vendorProductForm').addEventListener('submit',async e=>{
   e.preventDefault();
   if(!vState.myStore||!currentUser)return;
   const id=v$('vendorProductId').value;
-  const row={
-   title:v$('vendorProductName').value.trim(),category:v$('vendorProductCategory').value.trim(),
-   price:Number(v$('vendorProductPrice').value),stock_quantity:Number(v$('vendorProductStock').value),
-   product_type:v$('vendorProductType').value,
-   image_url:(id?vState.myProducts.find(p=>String(p.id)===String(id))?.image_url:null)||null,
-   description:v$('vendorProductDescription').value.trim()
-  };
+  const old=id?vState.myProducts.find(p=>String(p.id)===String(id)):null;
+  const imageFile=v$('vendorProductImageFile').files?.[0],videoFile=v$('vendorProductVideoFile').files?.[0];
+  if(imageFile&&(!imageFile.type.startsWith('image/')||imageFile.size>5*1024*1024)){vMsg('vendorProductMsg','الصورة يجب أن تكون صحيحة ولا تتجاوز 5 ميجابايت.');return;}
+  if(videoFile&&(!videoFile.type.startsWith('video/')||videoFile.size>30*1024*1024)){vMsg('vendorProductMsg','الفيديو يجب أن يكون صحيحاً ولا يتجاوز 30 ميجابايت.');return;}
   const button=v$('vendorProductSave');button.disabled=true;
+  let newImage=null,newVideo=null;
   try{
-   const imageFile=v$('vendorProductImageFile').files?.[0];
-   if(imageFile){
-    if(!imageFile.type.startsWith('image/')||imageFile.size>5*1024*1024)throw new Error('الصورة يجب أن تكون صورة فعلية ولا تتجاوز 5 ميجابايت.');
-    const ext=(imageFile.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'')||'jpg';
-    const path=`vendor-products/${currentUser.id}/${Date.now()}-${Math.random().toString(36).slice(2,8)}.${ext}`;
-    const {error:uploadError}=await sb.storage.from('marketplace-assets').upload(path,imageFile,{upsert:false,contentType:imageFile.type});
-    if(uploadError)throw new Error('تعذر رفع الصورة إلى التخزين. تحقق من bucket marketplace-assets وسياساته: '+uploadError.message);
-    row.image_url=sb.storage.from('marketplace-assets').getPublicUrl(path).data.publicUrl;
-   }
+   if(videoFile){const duration=await new Promise((resolve,reject)=>{const u=URL.createObjectURL(videoFile),v=document.createElement('video');v.preload='metadata';v.onloadedmetadata=()=>{const d=v.duration;URL.revokeObjectURL(u);resolve(d)};v.onerror=()=>{URL.revokeObjectURL(u);reject(new Error('تعذر قراءة مدة الفيديو.'))};v.src=u});if(!Number.isFinite(duration)||duration>30)throw new Error('مدة الفيديو يجب ألا تتجاوز 30 ثانية.');}
+   if(imageFile)newImage=await uploadVendorMedia(imageFile,'image');
+   if(videoFile)newVideo=await uploadVendorMedia(videoFile,'video');
+   const removeImage=v$('vendorProductRemoveImage').checked&&!imageFile;
+   const removeVideo=v$('vendorProductRemoveVideo').checked&&!videoFile;
+   const row={
+    title:v$('vendorProductName').value.trim(),category:v$('vendorProductCategory').value.trim(),
+    price:Number(v$('vendorProductPrice').value),stock_quantity:Number(v$('vendorProductStock').value),
+    product_type:v$('vendorProductType').value,
+    image_url:newImage?.url||(removeImage?null:(old?.image_url||null)),
+    image_storage_path:newImage?.path||(removeImage?null:(old?.image_storage_path||null)),
+    video_url:newVideo?.url||(removeVideo?null:(old?.video_url||null)),
+    video_storage_path:newVideo?.path||(removeVideo?null:(old?.video_storage_path||null)),
+    description:v$('vendorProductDescription').value.trim()
+   };
    const query=id?sb.from('vendor_store_products').update(row).eq('id',id).eq('store_id',vState.myStore.id):
     sb.from('vendor_store_products').insert({...row,store_id:vState.myStore.id,owner_id:currentUser.id});
    const {error}=await query;if(error)throw error;
-   resetVendorProductForm();vMsg('vendorProductMsg',id?'تم حفظ التعديل وإرسال المنتج للمراجعة من جديد.':'تم استلام المنتج وسيظهر بعد موافقة الإدارة.');
+   if(old){
+    if(newImage||removeImage)await removeVendorStorageObject(old.image_storage_path);
+    if(newVideo||removeVideo)await removeVendorStorageObject(old.video_storage_path);
+   }
+   resetVendorProductForm();
+   vMsg('vendorProductMsg',id?'تم حفظ التعديل وإرسال المنتج للمراجعة من جديد.':'تم حفظ المنتج وإرساله للمراجعة.');
    await loadMyVendorProducts();
-  }catch(error){vMsg('vendorProductMsg','تعذر حفظ المنتج: '+error.message);}
-  finally{button.disabled=false;}
+  }catch(error){
+   if(newImage?.path)await removeVendorStorageObject(newImage.path);
+   if(newVideo?.path)await removeVendorStorageObject(newVideo.path);
+   vMsg('vendorProductMsg','تعذر حفظ المنتج: '+error.message);
+  }finally{button.disabled=false;}
  });
 
  async function loadVendorStoreWorkspace(){
@@ -2796,13 +2841,7 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
  if(typeof originalShowPage==='function'){
   window.showPage=function(page){
    originalShowPage(page);
-   document.body.classList.toggle('vendors-directory-view',page==='vendors');
-   if(page==='vendors'){
-    v$('page-vendors')?.classList.remove('vendor-store-detail-mode');
-    v$('vendorSelectedStore')?.classList.add('hidden');
-    v$('vendorDirectoryGrid')?.classList.remove('hidden');
-    void loadVendorDirectory();
-   }
+   if(page==='vendors')void loadVendorDirectory();
   };
  }
  // إعدادات البنر محفوظة في جدول مستقل حتى لا تتغير إعدادات المتجر أو المنتجات.
@@ -4328,7 +4367,7 @@ window.__souqVendorContext={state:vState,money:vMoney,safeUrl:vSafeUrl,esc:vEsc,
  }
  function renderProducts(){const grid=$('vendorSelectedProducts');if(!grid)return;const f=shopPublic.storefront||{};let products=[...((window.__souqVendorContext?.state?.selectedProducts||[])||[])];if(f.hide_out_of_stock)products=products.filter(p=>Number(p.stock_quantity)>0);if(filterCategory!=='all')products=products.filter(p=>String(p.category||'')===filterCategory);if(filterQuery)products=products.filter(p=>[p.title,p.category,p.description].join(' ').toLowerCase().includes(filterQuery));const sort=$('souqStoreProductSort')?.value||f.sort_mode||'newest';products.sort((a,b)=>sort==='price_low'?Number(a.price)-Number(b.price):sort==='price_high'?Number(b.price)-Number(a.price):sort==='name'?String(a.title).localeCompare(String(b.title),'ar'):sort==='newest'?new Date(b.created_at||0)-new Date(a.created_at||0):0);
   if(!products.length){grid.innerHTML='<div class="empty" style="grid-column:1/-1">لا توجد منتجات مطابقة لاختياراتك.</div>';return}
-  grid.innerHTML=products.map(p=>`<article class="vendor-product-card"><div class="vendor-product-image">${window.__souqVendorContext.safeUrl(p.image_url)?`<img src="${esc(window.__souqVendorContext.safeUrl(p.image_url))}" alt="${esc(p.title)}" loading="lazy">`:'🎮'}</div><div class="vendor-product-content">${window.__souqVendorContext?.state?.promotedProducts.has(String(p.id))?'<span class="vendor-pill">منتج مروّج</span>':''}<h3>${esc(p.title)}</h3><div class="vendor-muted-note">${esc(p.category||'')}</div><div class="vendor-product-price">${window.__souqVendorContext.money(p.price)}</div>${f.show_stock?`<div class="vendor-muted-note">${Number(p.stock_quantity)>0?'متوفر · الكمية '+Number(p.stock_quantity):'غير متوفر'}</div>`:''}<div class="vendor-product-actions"><button class="primary" type="button" onclick="addVendorCart('${esc(p.id)}')" ${Number(p.stock_quantity)<1?'disabled':''}>أضف للسلة</button><button class="secondary" type="button" onclick="showVendorProductDetails('${esc(p.id)}')">التفاصيل</button></div></div></article>`).join('');
+  grid.innerHTML=products.map(p=>`<article class="vendor-product-card"><div class="vendor-product-image">${window.__souqVendorContext.safeUrl(p.image_url)?`<img src="${esc(window.__souqVendorContext.safeUrl(p.image_url))}" alt="${esc(p.title)}" loading="lazy">`:'🎮'}${window.__souqVendorContext.safeUrl(p.video_url)?`<video src="${esc(window.__souqVendorContext.safeUrl(p.video_url))}" controls playsinline preload="metadata" aria-label="فيديو ${esc(p.title)}" style="width:100%;max-height:180px;object-fit:contain"></video>`:''}</div><div class="vendor-product-content">${window.__souqVendorContext?.state?.promotedProducts.has(String(p.id))?'<span class="vendor-pill">منتج مروّج</span>':''}<h3>${esc(p.title)}</h3><div class="vendor-muted-note">${esc(p.category||'')}</div><div class="vendor-product-price">${window.__souqVendorContext.money(p.price)}</div>${f.show_stock?`<div class="vendor-muted-note">${Number(p.stock_quantity)>0?'متوفر · الكمية '+Number(p.stock_quantity):'غير متوفر'}</div>`:''}<div class="vendor-product-actions"><button class="primary" type="button" onclick="addVendorCart('${esc(p.id)}')" ${Number(p.stock_quantity)<1?'disabled':''}>أضف للسلة</button><button class="secondary" type="button" onclick="showVendorProductDetails('${esc(p.id)}')">التفاصيل</button></div></div></article>`).join('');
  }
  async function apply(id){const store=window.__souqVendorContext?.state?.selectedStore;if(!store||String(store.id)!==String(id))return;filterCategory='all';filterQuery='';await loadPublic(id);renderHeader(store);renderTools();renderProducts();}
  const baseOpen=window.openVendorStore;
@@ -4433,53 +4472,6 @@ window.__souqVendorContext={state:vState,money:vMoney,safeUrl:vSafeUrl,esc:vEsc,
  if(currentUser&&adminCheck())$d('doctorAdminPanel').classList.remove('hidden');
 })();
 </script>
-
-
-<style id="souq-independent-vendor-directory">
-body.vendors-directory-view .top{display:none!important}
-body.vendors-directory-view #page-vendors{padding-top:14px;padding-bottom:110px;min-height:calc(100vh - 90px)}
-#page-vendors .vendor-page-intro{margin:0 0 14px;padding:8px 2px 12px;background:transparent;border:0;box-shadow:none}
-#page-vendors .vendor-page-intro h1{margin:0;color:var(--brand);font-size:clamp(22px,4vw,30px)}
-#page-vendors .vendor-page-intro p{margin:4px 0 0;color:var(--muted);font-size:13px}
-#page-vendors .vendor-toolbar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:9px;margin:12px 0 16px}
-#page-vendors .vendor-directory-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:13px!important}
-#page-vendors .vendor-directory-card{min-width:0;overflow:hidden;border:1px solid var(--line);border-radius:16px;background:var(--panel);box-shadow:var(--shadow)}
-#page-vendors .vendor-directory-cover{height:clamp(72px,15vw,150px);overflow:hidden;background:linear-gradient(135deg,#173443,#1b2939);display:grid;place-items:center}
-#page-vendors .vendor-directory-cover img{width:100%;height:100%;object-fit:cover}
-#page-vendors .vendor-directory-content{position:relative;padding:13px;min-width:0}
-#page-vendors .vendor-directory-logo{width:46px;height:46px;margin-top:-35px;margin-bottom:7px;border-radius:13px;border:2px solid var(--panel);background:var(--panel2);display:grid;place-items:center;overflow:hidden}
-#page-vendors .vendor-directory-logo img{width:100%;height:100%;object-fit:cover}
-#page-vendors .vendor-directory-content h3{margin:5px 0;font-size:clamp(12px,2vw,17px);overflow-wrap:anywhere}
-#page-vendors .vendor-directory-content .vendor-muted-note{font-size:clamp(9px,1.5vw,12px);overflow-wrap:anywhere}
-#page-vendors .vendor-directory-content p{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.8em}
-#page-vendors .vendor-directory-content button{font-size:clamp(10px,1.6vw,13px);padding:9px 6px}
-#page-vendors.vendor-store-detail-mode .vendor-page-intro,
-#page-vendors.vendor-store-detail-mode .vendor-toolbar,
-#page-vendors.vendor-store-detail-mode #vendorDirectoryGrid{display:none!important}
-#page-vendors #vendorSelectedStore{margin:0;padding:0}
-#page-vendors .vendor-detail-head{display:flex;align-items:center;gap:12px;padding:14px;margin:0 0 14px;border:1px solid var(--line);border-radius:16px;background:var(--panel)}
-#page-vendors .vendor-detail-logo{width:58px;height:58px;flex:0 0 58px;display:grid;place-items:center;overflow:hidden;border-radius:15px;background:var(--panel2)}
-#page-vendors .vendor-detail-logo img{width:100%;height:100%;object-fit:cover}
-#page-vendors .vendor-store-cart-launch{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:14px 0;padding:12px;border:1px solid var(--line);border-radius:15px;background:var(--panel)}
-#page-vendors .vendor-store-cart-launch button{display:flex;align-items:center;gap:9px}
-#page-vendors #vendorCartBadge{display:inline-grid;place-items:center;min-width:23px;height:23px;padding:0 6px;border-radius:99px;background:#0d2530;color:#70e6f2;font-size:12px}
-#page-vendors .vendor-cart-launch-total{font-weight:900;color:var(--brand);white-space:nowrap}
-#page-vendors .vendor-cart-box{margin-top:0;padding:15px;border:1px solid var(--line);border-radius:16px;background:var(--panel)}
-#page-vendors .vendor-cart-box.hidden{display:none!important}
-@media(max-width:600px){
- body.vendors-directory-view #page-vendors{padding-top:10px}
- #page-vendors .vendor-toolbar{grid-template-columns:1fr}
- #page-vendors .vendor-directory-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:7px!important}
- #page-vendors .vendor-directory-cover{height:76px}
- #page-vendors .vendor-directory-content{padding:8px 7px}
- #page-vendors .vendor-directory-logo{width:34px;height:34px;margin-top:-26px;margin-bottom:5px;border-radius:10px}
- #page-vendors .vendor-directory-content h3{font-size:11px;line-height:1.4}
- #page-vendors .vendor-directory-content .vendor-muted-note{font-size:9px;line-height:1.4}
- #page-vendors .vendor-directory-content p{display:none}
- #page-vendors .vendor-directory-content button{font-size:10px;padding:7px 3px;margin-top:7px!important}
- #page-vendors .vendor-pill{font-size:8px;padding:2px 5px}
-}
-</style>
 
 </body>
 </html>
