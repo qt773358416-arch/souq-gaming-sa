@@ -913,8 +913,36 @@ body.store-view .top,body.store-view .searchrow{display:none!important}
 #page-doctor .doctor-admin-row{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 0;border-bottom:1px solid var(--line)}
 @media(max-width:600px){#page-doctor .doctor-hero{padding:16px}#page-doctor .doctor-toolbar{grid-template-columns:1fr}#page-doctor .doctor-toolbar button{width:100%}#page-doctor .doctor-question{padding:13px}}
 </style>
+
+<style id="souq-premium-splash">
+#souqSplash{position:fixed;inset:0;z-index:100000;display:grid;place-items:center;overflow:hidden;background:radial-gradient(ellipse at 50% 35%,#183d50 0%,#101d2b 48%,#080f18 100%);color:#f4fbff;opacity:1;visibility:visible;transition:opacity .55s ease,visibility .55s ease}
+#souqSplash:before,#souqSplash:after{content:"";position:absolute;width:70vmax;height:70vmax;border:1px solid #62d9f322;border-radius:50%;animation:souqOrbit 8s linear infinite}
+#souqSplash:after{width:48vmax;height:48vmax;border-color:#8b79ff22;animation-direction:reverse;animation-duration:11s}
+#souqSplash .splash-content{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;padding:24px}
+#souqSplash .splash-mark{width:104px;height:104px;display:grid;place-items:center;border-radius:30px;background:linear-gradient(145deg,#1b5268,#17263d);border:1px solid #65d8ed88;box-shadow:0 0 55px #22c8e955,inset 0 0 25px #5ad8ed22;font-size:54px;animation:souqPulse 2s ease-in-out infinite}
+#souqSplash h1{font-size:clamp(24px,5vw,36px);margin:20px 0 5px;letter-spacing:-.5px}
+#souqSplash p{margin:0;color:#a9c5d2;font-size:13px}
+#souqSplash .splash-loader{width:150px;height:3px;border-radius:9px;background:#ffffff20;margin-top:28px;overflow:hidden}
+#souqSplash .splash-loader:after{content:"";display:block;width:42%;height:100%;background:#61d8ee;border-radius:9px;animation:souqLoading 1.25s ease-in-out infinite}
+html.app-ready #souqSplash{opacity:0;visibility:hidden;pointer-events:none}
+@keyframes souqPulse{50%{transform:translateY(-5px);box-shadow:0 0 75px #22c8e977,inset 0 0 25px #5ad8ed33}}
+@keyframes souqOrbit{to{transform:rotate(360deg)}}
+@keyframes souqLoading{from{transform:translateX(-150%)}to{transform:translateX(350%)}}
+@media(prefers-reduced-motion:reduce){#souqSplash:before,#souqSplash:after,#souqSplash .splash-mark,#souqSplash .splash-loader:after{animation:none!important}}
+</style>
+
 </head>
 <body class="theme-dark">
+<div id="souqSplash" role="status" aria-label="جاري تجهيز سوق القيمنق السعودي">
+ <div class="splash-content">
+  <div class="splash-mark" aria-hidden="true">🎮</div>
+  <h1>سوق القيمنق السعودي</h1>
+  <p>وجهتك للبيع والشراء في عالم الألعاب</p>
+  <div class="splash-loader" aria-hidden="true"></div>
+ </div>
+</div>
+<script>window.setTimeout(()=>document.documentElement.classList.add('app-ready'),8500);</script>
+
 <div class="wrap">
 <header class="top">
   <div class="brand"><div class="logo">🎮</div><div>سوق القيمنق السعودي<div class="muted" style="font-size:11px;font-weight:500">إعلانات الكمبيوترات وأجهزة الألعاب في السعودية</div></div></div>
@@ -1545,24 +1573,44 @@ function renderAdsFromCache(){
  box.classList.toggle('list-view',document.body.dataset.viewMode==='list');
  box.innerHTML=rows.map(a=>{const img=Array.isArray(a.image_urls)&&a.image_urls.length?a.image_urls[0]:'';const added=a.created_at?new Date(a.created_at).toLocaleDateString('ar-SA'):'—';const city=a.city||a.location||'السعودية';return `<article class="card ad-square-card ${activePromotedAdIds.has(String(a.id))?'is-paid-promoted':''}" data-ad-card-id="${esc(a.id)}" role="link" tabindex="0" aria-label="عرض تفاصيل ${esc(a.title||'الإعلان')}">${activePromotedAdIds.has(String(a.id))?'<span class="paid-promotion-badge">⭐ مميز مدفوع</span>':''}<div class="ad-image-wrap"><button class="ad-share-top" type="button" aria-label="مشاركة الإعلان" title="مشاركة الإعلان" onclick="shareAd('${a.id}','${esc(a.title)}')">↗</button>${img?`<img class="adimg" src="${esc(img)}" alt="${esc(a.title)}" loading="lazy" onerror="this.style.display='none'">`:`<div class="adimg ad-placeholder" aria-label="لا توجد صورة">لا توجد صورة</div>`}</div><div class="adbody ad-square-body"><h3 title="${esc(a.title)}">${esc(a.title||'إعلان')}</h3><div class="price ad-square-price">${Number(a.price||0).toLocaleString('ar-SA')} <small>ر.س</small></div>${a.product_terms_accepted?`<span class="ad-pledge-badge ${a.product_condition_status==='defect'?'defect':''}">${a.product_condition_status==='defect'?'⚠ تم الإفصاح عن خلل':'✓ تعهّد البائع بسلامة المنتج'}</span>`:''}<div class="ad-square-meta"><span>📍 ${esc(city)}</span><span>🗓 ${esc(added)}</span></div><button class="primary ad-square-open" type="button" onclick="openAdDetail('${a.id}')" aria-label="عرض التفاصيل">＋</button></div></article>`}).join('');
 }
-async function loadAds(){
+let adsLoadPromise=null;
+let adsLastLoadedAt=0;
+const ADS_CACHE_TTL=20000;
+async function loadAds(force=false){
  const box=$('ads');
  if(!box)return;
- box.innerHTML='<div class="empty">جارٍ تحميل الإعلانات...</div>';
- try{
-  let q=sb.from('ads').select('*').eq('status','published').order('created_at',{ascending:false}).limit(200);
-  const {data,error}=await q;
-  if(error){console.error('Ads query error:',error);box.innerHTML='<div class="empty">تعذر تحميل الإعلانات. تحقق من اتصال Supabase وصلاحية قراءة الإعلانات.</div>';return;}
-  adsCache=Array.isArray(data)?data:[];
-  const promoResult=await sb.from('ad_promotions').select('ad_id').eq('status','active').eq('payment_status','paid').lte('starts_at',new Date().toISOString()).gt('ends_at',new Date().toISOString());
-  activePromotedAdIds=new Set((promoResult.data||[]).map(x=>String(x.ad_id)));
+ if(!force&&adsCache.length&&Date.now()-adsLastLoadedAt<ADS_CACHE_TTL){
   renderAdsFromCache();
   if(!$('page-store').classList.contains('hidden'))renderStoreProducts();
- }catch(err){
-  console.error('Ads loading failed:',err);
-  box.innerHTML='<div class="empty">تعذر الاتصال بخدمة الإعلانات. تحقق من الإنترنت ثم أعد المحاولة.</div>';
+  return;
  }
+ if(adsLoadPromise)return adsLoadPromise;
+ if(!adsCache.length)box.innerHTML='<div class="empty">جارٍ تحميل الإعلانات...</div>';
+ adsLoadPromise=(async()=>{
+  try{
+   const nowIso=new Date().toISOString();
+   const [adsResult,promoResult]=await Promise.all([
+    sb.from('ads').select('*').eq('status','published').order('created_at',{ascending:false}).limit(200),
+    sb.from('ad_promotions').select('ad_id').eq('status','active').eq('payment_status','paid').lte('starts_at',nowIso).gt('ends_at',nowIso)
+   ]);
+   if(adsResult.error)throw adsResult.error;
+   adsCache=Array.isArray(adsResult.data)?adsResult.data:[];
+   activePromotedAdIds=new Set((promoResult.data||[]).map(x=>String(x.ad_id)));
+   adsLastLoadedAt=Date.now();
+   renderAdsFromCache();
+   if(!$('page-store').classList.contains('hidden'))renderStoreProducts();
+  }catch(err){
+   console.error('Ads loading failed:',err);
+   if(!adsCache.length)box.innerHTML='<div class="empty">تعذر تحميل الإعلانات. تحقق من اتصال الإنترنت ثم أعد المحاولة.</div>';
+   else renderAdsFromCache();
+  }finally{
+   adsLoadPromise=null;
+   document.documentElement.classList.add('app-ready');
+  }
+ })();
+ return adsLoadPromise;
 }
+
 let selectedStoreCategory='';
 function normalizeStoreText(value){
  return String(value||'').toLocaleLowerCase('ar-SA').normalize('NFKC')
@@ -1753,7 +1801,7 @@ let image_urls=(removeExistingImages?[]:(editingAd?.image_urls||[]).filter(u=>!r
 let video_url=removeExistingVideo?'':(editingAd?.video_url||'');const videoFile=$('adVideo').files?.[0];if(videoFile){if(!videoFile.type.startsWith('video/')){msg('adFormMsg','اختر ملف فيديو صحيحًا.');$('saveAd').disabled=false;return;}if(videoFile.size>50*1024*1024){msg('adFormMsg','حجم الفيديو يجب ألا يتجاوز 50 ميغابايت.');$('saveAd').disabled=false;return;}const path=`${currentUser.id}/${Date.now()}-${Math.random().toString(36).slice(2)}-${videoFile.name.replace(/[^a-zA-Z0-9._-]/g,'_')}`;const {error:upErr}=await sb.storage.from('ad-videos').upload(path,videoFile,{upsert:false});if(upErr){msg('adFormMsg','تعذر رفع الفيديو. أنشئ bucket باسم ad-videos واضبط سياساته في Supabase.');$('saveAd').disabled=false;return;}video_url=sb.storage.from('ad-videos').getPublicUrl(path).data.publicUrl;}
 const nowIso=new Date().toISOString();const payload={title,price,category,description,seller_name,seller_phone,condition:$('adCondition').value,model_year:$('adModelYear').value?Number($('adModelYear').value):null,city:$('adCity').value.trim(),image_urls,video_url,ad_type:adType,external_product_url:adType==='marketing'?externalProductUrl:null,product_condition_status:productConditionStatus,product_issue:productTermsAccepted&&productConditionStatus==='defect'?productIssue:null,product_terms_accepted:productTermsAccepted,product_terms_accepted_at:productTermsAccepted?nowIso:null,status:editingAd?(editingAd.status||'pending'):'pending',seller_id:currentUser.id,commission_rate:COMMISSION_RATE,commission_terms_accepted:true,commission_terms_accepted_at:nowIso};
 let result;if(editingAd){result=await sb.from('ads').update(payload).eq('id',editingAd.id).eq('seller_id',currentUser.id);}else{result=await sb.from('ads').insert(payload);}
-$('saveAd').disabled=false;if(result.error){msg('adFormMsg','تعذر الحفظ. تأكد من تشغيل ملف SQL المرفق: '+result.error.message);return;}msg('adFormMsg','تم الحفظ. الإعلان بانتظار المراجعة.');resetAdForm();await loadAds();await loadMyAds('myAds');await loadMyAds('myAdsPage');showPage('myads');};
+$('saveAd').disabled=false;if(result.error){msg('adFormMsg','تعذر الحفظ. تأكد من تشغيل ملف SQL المرفق: '+result.error.message);return;}msg('adFormMsg','تم الحفظ. الإعلان بانتظار المراجعة.');resetAdForm();await loadAds(true);await loadMyAds('myAds');await loadMyAds('myAdsPage');showPage('myads');};
 $('removeAdImages')?.addEventListener('click',()=>{removeExistingImages=true;removedExistingImageUrls=new Set();if($('adImages'))$('adImages').value='';renderMediaPreviews();$('imageStatus').textContent='ستُزال جميع الصور الحالية عند حفظ التعديل.';});
 $('removeAdVideo')?.addEventListener('click',()=>{removeExistingVideo=true;if($('adVideo'))$('adVideo').value='';renderMediaPreviews();$('videoStatus').textContent='ستتم إزالة الفيديو الحالي عند الحفظ.';});
 $('adImages')?.addEventListener('change',()=>{const box=$('adImagePreview');if(box){box.innerHTML='';[...$('adImages').files].slice(0,5).forEach(file=>{const img=document.createElement('img');img.alt='معاينة صورة جديدة';img.src=URL.createObjectURL(file);box.appendChild(img);});}if($('adImages').files.length)removeExistingImages=false;});
