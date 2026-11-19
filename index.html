@@ -1509,11 +1509,6 @@ async function openAdDetail(id){
 
  box.innerHTML=`
   <div class="ad-detail-layout">
-   <section id="reviewsPanel" class="detail-rating-section">
-    <h3>تقييمات البائع</h3>
-    <div class="empty">جارٍ تحميل التقييمات...</div>
-   </section>
-
    <header class="detail-summary">
     <div class="detail-title-row">
      <div class="detail-title-copy">
@@ -1523,50 +1518,62 @@ async function openAdDetail(id){
      <div class="detail-price">${Number(a.price||0).toLocaleString('ar-SA')} <small>ر.س</small></div>
     </div>
     <div class="detail-meta">
-     <span>📂 ${esc(a.category||'غير مصنف')}</span>
-     <span>🏷️ ${esc(a.condition||'الحالة غير محددة')}</span>
-     <span>📍 ${esc(city)}</span>
-     ${added?`<span>🗓️ ${esc(added)}</span>`:''}
+     <span>📂 الفئة: ${esc(a.category||'غير مصنف')}</span>
+     <span>🏷️ الحالة: ${esc(a.condition||'غير محددة')}</span>
+     <span>📍 المدينة: ${esc(city)}</span>
+     ${added?`<span>🗓️ تاريخ النشر: ${esc(added)}</span>`:''}
     </div>
    </header>
 
    <section class="detail-media-section" aria-label="صور وفيديو الإعلان">
-    <div class="detail-section-heading"><h3>صور وفيديو المنتج</h3><span class="muted">${images.length} صورة${a.video_url?' · يوجد فيديو':''}</span></div>
     <div class="detail-media-grid">${mediaMarkup}</div>
    </section>
 
    <section class="detail-description-section">
-    <h3>وصف المنتج ومواصفاته</h3>
+    <h3>▤ وصف المنتج ومواصفاته</h3>
     <p class="detail-description">${esc(a.description||'لم يضف البائع وصفًا لهذا المنتج.')}</p>
     ${a.ad_type==='marketing'&&a.external_product_url?`<a class="ad-external-link" href="${esc(a.external_product_url)}" target="_blank" rel="noopener noreferrer">↗ زيارة المنتج في المنصة الأصلية</a>`:''}
-    <section class="ad-pledge-panel">
+   </section>
+
+   <section class="ad-pledge-panel detail-pledge-section">
+    <div class="pledge-icon" aria-hidden="true">✓</div>
+    <div class="pledge-copy">
      <h3>إقرار البائع بحالة المنتج</h3>
      ${a.product_terms_accepted
-      ?`<span class="ad-pledge-badge ${a.product_condition_status==='defect'?'defect':''}">${a.product_condition_status==='defect'?'⚠ أفصح البائع عن وجود خلل':'✓ تعهّد البائع بأن المنتج سليم'}</span>
-        ${a.product_condition_status==='defect'?`<p><strong>الخلل أو الملاحظة المعلنة:</strong> ${esc(a.product_issue||'لم يضف البائع تفاصيل.')}</p>`:'<p class="muted">هذا إقرار من البائع وليس فحصًا فنيًا صادرًا عن المنصة.</p>'}`
+      ?`<span class="ad-pledge-badge ${a.product_condition_status==='defect'?'defect':''}">${a.product_condition_status==='defect'?'⚠ أفصح البائع عن وجود خلل':'✓ أتعهد بأن المنتج سليم'}</span>
+        ${a.product_condition_status==='defect'?`<p><strong>الخلل أو الملاحظة المعلنة:</strong> ${esc(a.product_issue||'لم يضف البائع تفاصيل.')}</p>`:'<p class="muted">أتعهد بأن المنتج سليم وخالٍ من العيوب الرئيسية.</p>'}`
       :'<p class="muted">لم يسجل هذا الإعلان إقرار حالة المنتج.</p>'}
-    </section>
+    </div>
    </section>
 
    <section id="adCommentsPanel" class="detail-comments-section">
-    <div class="detail-section-heading"><div><h3>النقاش العام</h3><p class="muted">اكتب سؤالًا أو تعليقًا متعلقًا بالإعلان، ويمكن للبائع الرد تحته.</p></div></div>
-    <form id="adCommentForm" class="stack">
-     <textarea id="adCommentText" class="field" rows="3" maxlength="1500" placeholder="اكتب سؤالك أو تعليقك عن المنتج..." required></textarea>
-     <div class="detail-comment-submit"><button class="primary" type="submit">إرسال التعليق</button><div id="adCommentMsg" class="muted" role="status"></div></div>
+    <div class="detail-section-heading"><div><h3>◉ النقاش العام</h3><p class="muted">اكتب سؤالًا أو تعليقًا متعلقًا بالإعلان، ويمكن للبائع الرد تحته.</p></div></div>
+    <form id="adCommentForm" class="detail-comment-form">
+     <textarea id="adCommentText" class="field" rows="2" maxlength="1500" placeholder="اكتب تعليقًا أو سؤالًا..." required></textarea>
+     <div class="detail-comment-submit"><button class="primary" type="submit" aria-label="إرسال التعليق">➤</button><div id="adCommentMsg" class="muted" role="status"></div></div>
     </form>
     <div id="adCommentsList" class="stack detail-comments-list">جارٍ تحميل التعليقات...</div>
    </section>
 
    <section class="detail-seller-section">
-    <div><span class="muted">صاحب الإعلان</span><strong>${esc(a.seller_name||'بائع سوق القيمنق')}</strong></div>
-    <div class="detail-actions">
-     <button class="primary" type="button" onclick="contactWhatsApp('${esc(a.seller_phone||'')}','${esc(a.title||'')}')">واتساب البائع</button>
-     <button class="secondary" type="button" onclick="contactCall('${esc(a.seller_phone||'')}')">اتصال</button>
-     <button class="secondary" type="button" onclick="startConversation('${a.id}','${esc(a.title||'')}','${a.seller_id||''}')">مراسلة خاصة</button>
-     <button class="fav-button" type="button" onclick="toggleFavorite('${a.id}')">♡ حفظ بالمفضلة</button>
-     <button class="secondary" type="button" onclick="shareAd('${a.id}','${esc(a.title||'')}')">↗ مشاركة الإعلان</button>
-     <button class="danger" type="button" onclick="openReport('${a.id}')">إبلاغ عن الإعلان</button>
+    <div class="seller-profile-row">
+     <div class="seller-avatar" aria-hidden="true">${esc((a.seller_name||'ب').trim().slice(0,1))}</div>
+     <div class="seller-profile-copy"><strong>${esc(a.seller_name||'بائع سوق القيمنق')}</strong><span>صاحب الإعلان · تواصل مباشرة مع البائع</span></div>
+     <div class="seller-rating-mark">★ <b>بائع</b></div>
     </div>
+    <div class="detail-actions">
+     <button class="primary seller-whatsapp" type="button" onclick="contactWhatsApp('${esc(a.seller_phone||'')}','${esc(a.title||'')}')">◉ واتساب</button>
+     <button class="secondary" type="button" onclick="contactCall('${esc(a.seller_phone||'')}')">☎ اتصال</button>
+     <button class="secondary" type="button" onclick="startConversation('${a.id}','${esc(a.title||'')}','${a.seller_id||''}')">▢ رسالة خاصة</button>
+     <button class="fav-button" type="button" onclick="toggleFavorite('${a.id}')">♡ حفظ</button>
+     <button class="danger" type="button" onclick="openReport('${a.id}')">⚠ إبلاغ</button>
+     <button class="secondary" type="button" onclick="shareAd('${a.id}','${esc(a.title||'')}')">↗ مشاركة</button>
+    </div>
+   </section>
+
+   <section id="reviewsPanel" class="detail-rating-section">
+    <h3>☆ تقييم البائع</h3>
+    <div class="empty">جارٍ تحميل التقييمات...</div>
    </section>
   </div>`;
 
@@ -5128,5 +5135,200 @@ body.vendors-page-active #page-vendors .vendor-directory-grid{
  #page-detail #reviewsPanel .review-form>button[type="submit"]{grid-column:1!important;grid-row:auto!important;width:100%!important;max-width:none!important}
 }
 </style>
+
+<style id="souq-detail-reference-match-v2">
+/* مطابقة صفحة تفاصيل الإعلان للتصميم المرجعي: واجهة قيمنق داكنة ونيون */
+#page-detail{
+ position:relative!important;isolation:isolate;
+ padding:10px 10px 112px!important;
+ color:#e9f7ff!important;
+ background:
+  radial-gradient(ellipse at 48% 0%,rgba(0,211,255,.19),transparent 38%),
+  radial-gradient(ellipse at 0% 42%,rgba(20,91,190,.13),transparent 34%),
+  radial-gradient(ellipse at 100% 82%,rgba(0,205,240,.11),transparent 32%),
+  linear-gradient(180deg,#061421 0%,#0a1c2b 55%,#061522 100%)!important;
+}
+#page-detail>.panel{background:transparent!important}
+#page-detail>.panel>.pagehead{
+ display:flex!important;align-items:center!important;justify-content:space-between!important;
+ gap:10px;padding:9px 12px!important;margin:0 0 12px!important;
+ border:1px solid rgba(29,190,225,.25)!important;border-radius:14px!important;
+ background:linear-gradient(110deg,rgba(7,32,49,.96),rgba(11,48,67,.88))!important;
+ box-shadow:0 0 22px rgba(0,190,255,.08)!important;
+}
+#page-detail>.panel>.pagehead h2{font-size:19px!important;margin:0!important;color:#f1fbff!important}
+#page-detail>.panel>.pagehead p{display:none!important}
+#page-detail .ad-detail-layout{
+ display:grid!important;grid-template-columns:minmax(0,1fr)!important;
+ gap:11px!important;max-width:900px!important;margin:0 auto!important
+}
+#page-detail .ad-detail-layout>header,
+#page-detail .ad-detail-layout>section{
+ min-width:0;padding:13px!important;border-radius:17px!important;
+ border:1px solid rgba(59,154,194,.42)!important;
+ background:linear-gradient(145deg,rgba(19,43,60,.97),rgba(9,27,43,.98))!important;
+ box-shadow:0 7px 22px rgba(0,0,0,.22),inset 0 1px rgba(255,255,255,.035),0 0 13px rgba(0,183,232,.045)!important;
+ overflow:hidden;
+}
+#page-detail .detail-summary{order:1!important;position:relative}
+#page-detail .detail-summary:after{
+ content:"";position:absolute;inset:auto 8% 0;height:1px;
+ background:linear-gradient(90deg,transparent,#16c9e8,transparent);opacity:.55
+}
+#page-detail .detail-title-row{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:nowrap}
+#page-detail .detail-title-copy{min-width:0;flex:1}
+#page-detail .detail-eyebrow{font-size:12px;font-weight:900;color:#22d6e9;margin-bottom:3px}
+#page-detail .detail-title-row h2{font-size:clamp(19px,4.8vw,27px)!important;line-height:1.35;color:#f1fbff;margin:0;overflow-wrap:anywhere}
+#page-detail .detail-price{
+ flex:0 0 auto;padding:7px 10px;border:1px solid rgba(0,218,238,.65);
+ border-radius:13px;background:rgba(0,111,139,.16);color:#20e0ef;
+ font-size:22px;text-shadow:0 0 12px rgba(0,218,255,.3)
+}
+#page-detail .detail-price small{font-size:12px}
+#page-detail .detail-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:11px}
+#page-detail .detail-meta span{
+ min-width:0;padding:7px 9px;border:1px solid #31566d;border-radius:10px;
+ background:linear-gradient(110deg,#18394e,#102b3d);color:#d2e6f0;
+ font-size:11px;line-height:1.4;overflow-wrap:anywhere
+}
+#page-detail .detail-media-section{order:2!important;padding:9px!important}
+#page-detail .detail-media-section .detail-section-heading{display:none!important}
+#page-detail .detail-media-grid{display:grid;grid-template-columns:1fr!important;gap:8px}
+#page-detail .detail-media-image{
+ width:100%;height:clamp(230px,70vw,420px)!important;object-fit:contain;
+ border:1px solid #315a72!important;border-radius:14px!important;
+ background:radial-gradient(circle at 50% 50%,#18364e,#071725 78%)!important;
+}
+#page-detail .detail-media-video{width:100%;max-height:380px;border:1px solid #315a72;border-radius:14px}
+#page-detail .detail-description-section{order:3!important}
+#page-detail .detail-description-section>h3,
+#page-detail .detail-comments-section h3,
+#page-detail .detail-rating-section>h3{margin:0 0 8px!important;font-size:17px!important;color:#eafaff!important}
+#page-detail .detail-description{margin:5px 0 0!important;color:#d9e9f1!important;font-size:14px;line-height:1.8}
+#page-detail .detail-pledge-section{
+ order:4!important;display:flex;align-items:center;gap:12px;
+ padding:12px!important;border:1px solid rgba(22,202,222,.55)!important;
+ background:linear-gradient(110deg,rgba(10,75,88,.62),rgba(15,43,60,.94))!important
+}
+#page-detail .pledge-icon{
+ flex:0 0 38px;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;
+ color:#071c27;background:linear-gradient(145deg,#24e2df,#08a9b8);
+ font-size:24px;font-weight:900;box-shadow:0 0 18px rgba(0,220,230,.24)
+}
+#page-detail .pledge-copy{min-width:0;flex:1}
+#page-detail .ad-pledge-panel h3{margin:0 0 4px!important;color:#5fe3ef!important;font-size:15px!important}
+#page-detail .ad-pledge-badge{display:inline-flex;padding:5px 9px;border-radius:30px;border:1px solid #27899c;background:#103c4c;color:#b5f5fa;font-size:11px;font-weight:800}
+#page-detail .detail-pledge-section p{margin:5px 0 0!important;font-size:12px;line-height:1.55;color:#b9d0dc!important}
+#page-detail .detail-comments-section{order:5!important}
+#page-detail .detail-section-heading{margin:0 0 8px!important}
+#page-detail .detail-section-heading p{font-size:12px!important;line-height:1.5;margin:3px 0 0!important;color:#a9c2d0!important}
+#page-detail .detail-comment-form{
+ display:grid!important;grid-template-columns:minmax(0,1fr) 46px!important;
+ align-items:stretch;gap:7px;margin-top:9px!important
+}
+#page-detail #adCommentText{
+ min-width:0;min-height:49px!important;height:49px!important;max-height:90px;
+ padding:11px!important;resize:vertical;border-radius:12px!important;
+ background:#071725!important;border:1px solid #365d73!important;color:#effaff!important;font-size:13px
+}
+#page-detail .detail-comment-submit{display:flex;align-items:center;justify-content:center}
+#page-detail .detail-comment-submit .primary{
+ width:46px!important;min-width:46px!important;height:49px!important;min-height:49px!important;
+ padding:0!important;border-radius:12px!important;background:linear-gradient(145deg,#19d7e6,#0aa9c5)!important;
+ color:#03222d!important;font-size:22px!important
+}
+#page-detail #adCommentMsg{grid-column:1/-1;font-size:11px}
+#page-detail .detail-comments-list{margin-top:10px!important;gap:7px!important}
+#page-detail .detail-comments-list .listitem{
+ background:rgba(7,26,42,.78)!important;border:1px solid #2b4c62!important;border-radius:12px!important;
+ color:#e4f4fa!important
+}
+#page-detail .detail-seller-section{order:6!important;display:grid;gap:11px}
+#page-detail .seller-profile-row{display:flex;align-items:center;gap:10px;min-width:0}
+#page-detail .seller-avatar{
+ flex:0 0 46px;width:46px;height:46px;display:grid;place-items:center;border-radius:50%;
+ background:linear-gradient(145deg,#244d6b,#10293d);border:1px solid #2e91b1;
+ color:#e7fbff;font-size:20px;font-weight:900
+}
+#page-detail .seller-profile-copy{display:grid;gap:3px;min-width:0;flex:1}
+#page-detail .seller-profile-copy strong{color:#f1fbff;font-size:16px}
+#page-detail .seller-profile-copy span{font-size:11px;color:#a8c1ce}
+#page-detail .seller-rating-mark{color:#ffd04d;font-size:20px;white-space:nowrap}
+#page-detail .seller-rating-mark b{font-size:11px;color:#b8d0dc}
+#page-detail .detail-actions{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:7px!important}
+#page-detail .detail-actions button{
+ min-width:0!important;min-height:40px!important;padding:7px 5px!important;
+ border-radius:11px!important;font-size:11px!important;font-weight:800!important
+}
+#page-detail .detail-actions .primary{background:linear-gradient(135deg,#19d3df,#0ba9c4)!important;color:#03242d!important}
+#page-detail .detail-actions .seller-whatsapp{background:linear-gradient(135deg,#0f9e68,#08794e)!important;color:#fff!important;border:1px solid #1cce8b!important}
+#page-detail .detail-actions .danger{background:rgba(130,27,51,.35)!important;border:1px solid #a83b58!important;color:#ffd5dd!important}
+#page-detail .detail-rating-section{order:7!important;padding:12px!important}
+#page-detail #reviewsPanel .rating-summary{
+ display:flex!important;align-items:center;justify-content:space-between;gap:8px;
+ margin:0 0 8px!important;padding:8px 10px!important;border:1px solid rgba(0,205,230,.35)!important;
+ border-radius:12px!important;background:rgba(9,53,68,.58)!important
+}
+#page-detail #reviewsPanel .rating-number{font-size:22px!important;color:#4eddeb!important;white-space:nowrap}
+#page-detail #reviewsPanel .rating-summary .muted{font-size:10px!important;color:#a9c2d0!important}
+#page-detail #reviewsPanel .stars{font-size:16px!important;letter-spacing:1px!important;color:#ffbd32!important}
+#page-detail #reviewsPanel .review-form{
+ display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;align-items:center;gap:7px;
+ margin:8px 0 0!important;padding:9px!important;border:1px solid #31566c!important;
+ border-radius:13px!important;background:rgba(6,25,40,.72)!important
+}
+#page-detail #reviewsPanel .review-form>strong{grid-column:1/-1;font-size:13px;color:#effaff}
+#page-detail #reviewsPanel .rating-pick{grid-column:1/-1;display:flex!important;flex-direction:row-reverse!important;justify-content:flex-start!important;gap:3px!important;margin:0!important}
+#page-detail #reviewsPanel .rating-pick button{width:30px!important;height:30px!important;min-width:30px!important;padding:0!important;background:transparent!important;color:#718797!important;font-size:22px!important}
+#page-detail #reviewsPanel .rating-pick button.selected{color:#ffbf36!important;text-shadow:0 0 8px rgba(255,191,54,.35)}
+#page-detail #reviewsPanel #reviewComment{
+ grid-column:1!important;min-width:0;min-height:43px!important;height:43px!important;max-height:70px;
+ padding:9px!important;border-radius:10px!important;background:#071725!important;border:1px solid #365d73!important;
+ color:#effaff!important;font-size:11px!important
+}
+#page-detail #reviewsPanel .review-form>button[type="submit"]{
+ grid-column:2!important;grid-row:3!important;align-self:stretch!important;width:auto!important;
+ min-width:98px!important;max-width:116px!important;min-height:43px!important;padding:7px 9px!important;
+ margin:0!important;border-radius:10px!important;font-size:11px!important;white-space:nowrap;
+ background:linear-gradient(135deg,#19d3df,#0ba9c4)!important;color:#03242d!important
+}
+#page-detail #reviewsPanel #reviewMsg{grid-column:1/-1;font-size:10px}
+#page-detail #reviewsPanel .review-list{margin-top:8px}
+#page-detail #reviewsPanel .review-item{padding:8px 3px!important;border-bottom:1px solid rgba(67,111,135,.35)!important}
+#page-detail #reviewsPanel .review-item p{font-size:12px!important;line-height:1.5;margin:4px 0!important}
+#page-detail #reviewsPanel .notice{margin-top:7px;border-radius:10px;font-size:11px}
+@media(min-width:680px){
+ #page-detail .ad-detail-layout{grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr)!important}
+ #page-detail .detail-summary{grid-column:1/-1}
+ #page-detail .detail-media-section{grid-column:1}
+ #page-detail .detail-description-section,
+ #page-detail .detail-pledge-section,
+ #page-detail .detail-comments-section,
+ #page-detail .detail-seller-section,
+ #page-detail .detail-rating-section{grid-column:1/-1}
+}
+@media(max-width:480px){
+ #page-detail{padding:8px 8px 105px!important}
+ #page-detail>.panel>.pagehead{padding:8px 10px!important;margin-bottom:9px!important}
+ #page-detail .ad-detail-layout{gap:9px!important}
+ #page-detail .ad-detail-layout>header,
+ #page-detail .ad-detail-layout>section{padding:11px!important;border-radius:15px!important}
+ #page-detail .detail-meta{grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}
+ #page-detail .detail-meta span{font-size:10px;padding:6px 7px}
+ #page-detail .detail-media-section{padding:7px!important}
+ #page-detail .detail-media-image{height:clamp(210px,64vw,310px)!important}
+ #page-detail .detail-actions{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+ #page-detail .detail-actions button{font-size:10px!important;padding:6px 3px!important}
+ #page-detail #reviewsPanel .review-form{grid-template-columns:minmax(0,1fr) auto!important}
+ #page-detail #reviewsPanel .review-form>button[type="submit"]{min-width:95px!important}
+}
+@media(max-width:350px){
+ #page-detail .detail-actions{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ #page-detail #reviewsPanel .review-form{grid-template-columns:1fr!important}
+ #page-detail #reviewsPanel #reviewComment,
+ #page-detail #reviewsPanel .review-form>button[type="submit"]{grid-column:1!important;grid-row:auto!important;width:100%!important;max-width:none!important}
+}
+</style>
+
 </body>
 </html>
