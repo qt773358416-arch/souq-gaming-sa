@@ -909,6 +909,150 @@ body.vendor-portal-mode.merchant-compact .merchant-data-row{padding:8px!importan
 .media-preview img,.media-preview video{width:min(220px,100%);max-height:180px;object-fit:contain;border-radius:12px;background:#07111a;border:1px solid var(--line)}
 .media-preview small{display:block;width:100%;color:var(--muted)}
 </style>
+
+<style id="souq-platform-matching-dashboard-theme">
+/* توحيد خلفية بوابة التاجر مع هوية سوق القيمنق: كحلي + أزرق سماوي */
+:root{
+  --bg:#101820;
+  --panel:#17232d;
+  --panel2:#202f3a;
+  --text:#eef7fa;
+  --muted:#a4b5c0;
+  --line:#30414d;
+  --brand:#70d9f0;
+  --green:#70d9f0;
+  --danger:#ef476f;
+  --header:#111c25;
+  --accent-soft:#18343d;
+  --shadow:0 8px 26px rgba(0,0,0,.22);
+}
+html.vendor-portal-document,
+html.vendor-portal-document body,
+body.vendor-portal-mode{
+  background:#101820!important;
+  color:#eef7fa!important;
+  color-scheme:dark;
+}
+body.vendor-portal-mode{
+  --m-bg:#101820;
+  --m-card:#17232d;
+  --m-card2:#202f3a;
+  --m-line:#30414d;
+  --m-text:#eef7fa;
+  --m-muted:#a4b5c0;
+  --m-accent:#70d9f0;
+  background:#101820!important;
+}
+body.vendor-portal-mode .wrap,
+body.vendor-portal-mode main,
+body.vendor-portal-mode #page-vendor-dashboard{
+  background:transparent!important;
+  color:#eef7fa!important;
+}
+body.vendor-portal-mode .vendor-dashboard-card,
+body.vendor-portal-mode .merchant-chart,
+body.vendor-portal-mode .merchant-kpi,
+body.vendor-portal-mode .vendor-state,
+body.vendor-portal-mode .merchant-search input,
+body.vendor-portal-mode .merchant-search button,
+body.vendor-portal-mode .merchant-empty-note,
+body.vendor-portal-mode .vendor-cart-box,
+body.vendor-portal-mode .vendor-promo-plan{
+  background:#17232d!important;
+  color:#eef7fa!important;
+  border-color:#30414d!important;
+  box-shadow:0 8px 26px rgba(0,0,0,.18)!important;
+}
+body.vendor-portal-mode .vendor-state,
+body.vendor-portal-mode .vendor-promo-plan{
+  background:#202f3a!important;
+}
+body.vendor-portal-mode .vendor-page-intro h1,
+body.vendor-portal-mode .merchant-welcome h2,
+body.vendor-portal-mode .merchant-kpi strong,
+body.vendor-portal-mode .merchant-section-title{
+  color:#eef7fa!important;
+}
+body.vendor-portal-mode .vendor-page-intro p,
+body.vendor-portal-mode .merchant-welcome p,
+body.vendor-portal-mode .merchant-period,
+body.vendor-portal-mode .merchant-kpi span,
+body.vendor-portal-mode label,
+body.vendor-portal-mode .vendor-muted-note{
+  color:#a4b5c0!important;
+}
+body.vendor-portal-mode .vendor-dashboard-card h3,
+body.vendor-portal-mode .merchant-period strong,
+body.vendor-portal-mode .vendor-table th{
+  color:#70d9f0!important;
+}
+body.vendor-portal-mode .field,
+body.vendor-portal-mode input,
+body.vendor-portal-mode select,
+body.vendor-portal-mode textarea{
+  background:#101820!important;
+  color:#eef7fa!important;
+  border:1px solid #30414d!important;
+}
+body.vendor-portal-mode .field:focus,
+body.vendor-portal-mode input:focus,
+body.vendor-portal-mode select:focus,
+body.vendor-portal-mode textarea:focus{
+  border-color:#70d9f0!important;
+  box-shadow:0 0 0 3px #70d9f022!important;
+  outline:none!important;
+}
+body.vendor-portal-mode .primary,
+body.vendor-portal-mode button.primary{
+  background:#16c7d9!important;
+  color:#071820!important;
+  border:1px solid #16c7d9!important;
+}
+body.vendor-portal-mode .primary:hover,
+body.vendor-portal-mode button.primary:hover{
+  background:#70d9f0!important;
+}
+body.vendor-portal-mode .secondary,
+body.vendor-portal-mode button.secondary{
+  background:#202f3a!important;
+  color:#eef7fa!important;
+  border:1px solid #30414d!important;
+}
+body.vendor-portal-mode .merchant-avatar{
+  background:#18343d!important;
+  color:#70d9f0!important;
+  border:2px solid #315766!important;
+}
+body.vendor-portal-mode .merchant-bottom-nav{
+  background:#111c25f5!important;
+  border-top:1px solid #30414d!important;
+  box-shadow:0 -8px 24px #0004!important;
+}
+body.vendor-portal-mode .merchant-bottom-nav button{
+  color:#a4b5c0!important;
+}
+body.vendor-portal-mode .merchant-bottom-nav button.active{
+  background:#18343d!important;
+  color:#70d9f0!important;
+  border:1px solid #315766!important;
+}
+body.vendor-portal-mode .vendor-pill{
+  background:#172b38!important;
+  color:#dceff5!important;
+  border:1px solid #2c4c5a!important;
+}
+body.vendor-portal-mode .vendor-table th,
+body.vendor-portal-mode .vendor-table td{
+  border-color:#30414d!important;
+}
+@media(max-width:760px){
+  body.vendor-portal-mode .merchant-bottom-nav{
+    background:#111c25f5!important;
+    border-top-color:#30414d!important;
+  }
+}
+</style>
+
 </head>
 <body class="theme-dark">
 <div class="wrap">
