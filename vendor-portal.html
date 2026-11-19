@@ -1053,6 +1053,135 @@ body.vendor-portal-mode .vendor-table td{
 }
 </style>
 
+
+<style id="souq-merchant-dashboard-premium-2026">
+/* لوحة التاجر: دمج بصري مع النظام الحالي دون استبدال وظائفه أو مصادر بياناته */
+body.vendor-portal-mode{
+ --m-bg:#0d1722;--m-card:#142332;--m-card2:#1a2c3b;--m-line:#2a4658;
+ --m-text:#eff8fc;--m-muted:#a7bdc9;--m-accent:#55d5e8;
+ background:var(--m-bg)!important;color:var(--m-text)!important;
+}
+body.vendor-portal-mode .wrap{max-width:1500px!important;padding:18px 22px calc(100px + env(safe-area-inset-bottom))!important}
+body.vendor-portal-mode #merchantApp{max-width:none!important;width:100%;margin:0 auto}
+body.vendor-portal-mode .merchant-dashboard-layout{
+ display:grid!important;grid-template-columns:245px minmax(0,1fr)!important;gap:18px!important;
+ align-items:start!important;direction:rtl;
+}
+body.vendor-portal-mode .merchant-desktop-nav{display:block!important;min-width:0}
+body.vendor-portal-mode .merchant-desktop-nav .merchant-drawer{
+ position:sticky!important;top:16px!important;transform:none!important;width:auto!important;
+ height:calc(100dvh - 32px)!important;max-height:900px;overflow:auto;
+ border:1px solid var(--m-line)!important;border-radius:19px!important;
+ background:linear-gradient(180deg,#142638,#101d2a)!important;
+ box-shadow:0 12px 35px #0003!important;padding:16px!important;
+}
+body.vendor-portal-mode .merchant-app-body{min-width:0!important}
+body.vendor-portal-mode .merchant-header{
+ padding:14px 16px!important;border:1px solid var(--m-line)!important;border-radius:18px!important;
+ background:linear-gradient(110deg,#172f42,#132231)!important;margin-bottom:12px;
+}
+body.vendor-portal-mode .merchant-brandlogo{
+ background:#123c4b!important;color:#85edf4!important;border:1px solid #34788a!important;
+ box-shadow:0 0 0 4px #55d5e811;
+}
+body.vendor-portal-mode .merchant-brandline h2{color:var(--m-text)!important;font-size:20px!important}
+body.vendor-portal-mode .merchant-brandline p{color:var(--m-muted)!important}
+body.vendor-portal-mode .merchant-iconbtn{
+ background:#1b3445!important;border:1px solid #31566a!important;color:#9beaf2!important;
+}
+body.vendor-portal-mode .merchant-searchbar input,
+body.vendor-portal-mode .merchant-input,
+body.vendor-portal-mode .merchant-filter-row input,
+body.vendor-portal-mode .merchant-filter-row select{
+ background:#0c1924!important;color:var(--m-text)!important;border:1px solid var(--m-line)!important;
+ border-radius:12px!important;
+}
+body.vendor-portal-mode .merchant-periodbar{padding:10px 4px 14px!important;color:var(--m-muted)!important}
+body.vendor-portal-mode .merchant-periodbar strong,
+body.vendor-portal-mode .merchant-periodbar button.active{color:var(--m-accent)!important}
+body.vendor-portal-mode .merchant-periodbar button.active{border-color:var(--m-accent)!important}
+body.vendor-portal-mode .merchant-kpi-new,
+body.vendor-portal-mode .merchant-panel,
+body.vendor-portal-mode .merchant-data-row,
+body.vendor-portal-mode .vendor-dashboard-card,
+body.vendor-portal-mode .vendor-state{
+ background:linear-gradient(155deg,#172b3b,#12212f)!important;
+ border:1px solid var(--m-line)!important;border-radius:16px!important;
+ color:var(--m-text)!important;box-shadow:0 7px 22px #0002!important;
+}
+body.vendor-portal-mode .merchant-kpi-new{padding:16px!important}
+body.vendor-portal-mode .merchant-kpi-new span,
+body.vendor-portal-mode .merchant-kpi-new small,
+body.vendor-portal-mode .merchant-panel p,
+body.vendor-portal-mode .vendor-muted-note{color:var(--m-muted)!important}
+body.vendor-portal-mode .merchant-kpi-new strong{color:var(--m-text)!important;font-size:23px!important}
+body.vendor-portal-mode .merchant-panel h3,
+body.vendor-portal-mode .merchant-view-head h2,
+body.vendor-portal-mode .vendor-dashboard-card h3{color:var(--m-accent)!important}
+body.vendor-portal-mode .merchant-shortcut{
+ background:#1a3040!important;border:1px solid #315166!important;color:var(--m-text)!important;
+ border-radius:14px!important;min-height:62px;transition:.18s ease;
+}
+body.vendor-portal-mode .merchant-shortcut:hover{border-color:var(--m-accent)!important;transform:translateY(-2px)}
+body.vendor-portal-mode .merchant-shortcut b{color:var(--m-accent)!important}
+body.vendor-portal-mode .merchant-menu-item{
+ color:var(--m-text)!important;border-color:#294354!important;border-radius:10px!important;
+ padding:12px 10px!important;margin:3px 0;
+}
+body.vendor-portal-mode .merchant-menu-item:hover,
+body.vendor-portal-mode .merchant-menu-item.active{
+ background:#173b4b!important;color:#a5f1f5!important;
+}
+body.vendor-portal-mode .merchant-menu-item b{color:var(--m-accent)!important}
+body.vendor-portal-mode .merchant-status-pill{
+ background:#123b43!important;border:1px solid #23616a!important;color:#9cebf0!important;
+}
+body.vendor-portal-mode .merchant-btn,
+body.vendor-portal-mode .primary{
+ background:#22bfd1!important;color:#06202a!important;border:1px solid #36d0df!important;
+ border-radius:11px!important;font-weight:900!important;
+}
+body.vendor-portal-mode .merchant-btn.secondary,
+body.vendor-portal-mode .secondary{
+ background:#203647!important;color:var(--m-text)!important;border:1px solid #35566a!important;
+}
+body.vendor-portal-mode .field,
+body.vendor-portal-mode input,
+body.vendor-portal-mode select,
+body.vendor-portal-mode textarea{
+ background:#0c1924!important;color:var(--m-text)!important;border:1px solid var(--m-line)!important;
+ border-radius:11px!important;
+}
+body.vendor-portal-mode .merchant-bottom-nav{
+ background:#101e2bF5!important;border-top:1px solid var(--m-line)!important;
+ box-shadow:0 -8px 25px #0004!important;
+}
+body.vendor-portal-mode .merchant-bottom-nav button{color:var(--m-muted)!important}
+body.vendor-portal-mode .merchant-bottom-nav button.active{
+ background:#164453!important;color:#a5f1f5!important;border:1px solid #2b7888!important;
+}
+body.vendor-portal-mode .merchant-drawer-shade{background:#020910bb!important}
+body.vendor-portal-mode .merchant-placeholder,
+body.vendor-portal-mode .merchant-empty-note{
+ background:#132535!important;border:1px dashed #36586a!important;color:var(--m-muted)!important;
+}
+body.vendor-portal-mode .vendor-table-wrap{overflow-x:auto}
+body.vendor-portal-mode .vendor-table{min-width:680px}
+@media(max-width:849px){
+ body.vendor-portal-mode .wrap{padding:10px 10px calc(95px + env(safe-area-inset-bottom))!important}
+ body.vendor-portal-mode .merchant-dashboard-layout{display:block!important}
+ body.vendor-portal-mode .merchant-desktop-nav{display:none!important}
+ body.vendor-portal-mode .merchant-app-body{width:100%!important}
+ body.vendor-portal-mode .merchant-header{padding:11px!important}
+ body.vendor-portal-mode .merchant-kpi-new{padding:12px!important}
+ body.vendor-portal-mode .merchant-kpi-new strong{font-size:19px!important}
+}
+@media(min-width:850px){
+ body.vendor-portal-mode .merchant-bottom-nav{display:none!important}
+ body.vendor-portal-mode .merchant-app-body{padding-bottom:25px}
+}
+</style>
+
 </head>
 <body class="theme-dark">
 <div class="wrap">
@@ -1214,7 +1343,6 @@ body.vendor-portal-mode .vendor-table td{
   </div>
   <p id="vendorSelectedDescription" class="muted"></p>
   <div class="row space"><h2>منتجات المتجر</h2><span id="vendorSelectedProductCount" class="vendor-pill">0 منتج</span></div>
-  <div id="vendorSelectedCategories" class="categories" aria-label="تصنيفات المتجر"></div>
   <div id="vendorSelectedProducts" class="vendor-product-grid"><div class="empty">اختر متجراً لعرض منتجاته.</div></div>
   <div class="vendor-cart-box">
    <div class="row space"><h3 style="margin:0">🛒 سلة متاجر التجار</h3><strong id="vendorCartTotal">0.00 ر.س</strong></div>
@@ -1273,20 +1401,11 @@ body.vendor-portal-mode .vendor-table td{
     </form>
    </section>
    <section class="vendor-dashboard-card full">
-    <div class="row space"><div><h3>تصنيفات متجري</h3><p class="vendor-muted-note">أنشئ أقسام متجرك وعدّلها أو احذفها. تظهر التصنيفات في واجهة متجرك تلقائياً.</p></div><span id="vendorCategoryCount" class="vendor-pill">0 تصنيف</span></div>
-    <form id="vendorCategoryForm" class="formgrid">
-     <input id="vendorCategoryId" type="hidden">
-     <div><label>اسم التصنيف *</label><input id="vendorCategoryName" class="field" required maxlength="100" placeholder="مثال: كروت الشاشة"></div>
-     <div class="row" style="align-items:end"><button class="primary" id="vendorCategorySave" type="submit">إضافة التصنيف</button><button class="secondary" id="vendorCategoryReset" type="button">إلغاء</button><span id="vendorCategoryMsg" class="muted" role="status"></span></div>
-    </form>
-    <div id="vendorMyCategories" class="stack"><div class="empty">جارٍ تحميل التصنيفات...</div></div>
-   </section>
-   <section class="vendor-dashboard-card full">
     <h3>إضافة منتج إلى متجري</h3>
     <form id="vendorProductForm" class="formgrid">
      <input id="vendorProductId" type="hidden">
      <div><label>اسم المنتج *</label><input id="vendorProductName" class="field" required maxlength="160"></div>
-     <div><label>التصنيف *</label><select id="vendorProductCategory" class="field" required><option value="">أضف تصنيفاً أولاً</option></select></div>
+     <div><label>التصنيف *</label><input id="vendorProductCategory" class="field" required maxlength="100"></div>
      <div><label>السعر بالريال *</label><input id="vendorProductPrice" class="field" type="number" min=".01" step=".01" required></div>
      <div><label>الكمية المتاحة *</label><input id="vendorProductStock" class="field" type="number" min="0" step="1" value="1" required></div>
      <div><label>نوع المنتج</label><select id="vendorProductType" class="field"><option value="physical">مادي</option><option value="digital">رقمي</option></select></div>
@@ -1304,7 +1423,7 @@ body.vendor-portal-mode .vendor-table td{
       <label class="vendor-media-remove"><input id="vendorProductRemoveVideo" type="checkbox"> إزالة فيديو المنتج الحالي</label>
      </div>
      <div class="full"><label>الوصف</label><textarea id="vendorProductDescription" class="field" rows="3" maxlength="3000"></textarea></div>
-     <div class="full row"><button class="primary" type="submit" id="vendorProductSave">نشر المنتج في المتجر</button><button class="secondary" type="button" id="vendorProductReset">منتج جديد</button><span id="vendorProductMsg" class="muted"></span></div>
+     <div class="full row"><button class="primary" type="submit" id="vendorProductSave">حفظ المنتج للمراجعة</button><button class="secondary" type="button" id="vendorProductReset">منتج جديد</button><span id="vendorProductMsg" class="muted"></span></div>
     </form>
     <h3 style="margin-top:22px">منتجاتي</h3>
     <div id="vendorMyProducts" class="stack"><div class="empty">جارٍ التحميل...</div></div>
@@ -2243,7 +2362,7 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
  'use strict';
  const vState = {
   stores: [], selectedStore: null, selectedProducts: [], selectedCategory: '',
-  myStore: null, myProducts: [], myCategories: [], storeCategories: [], cart: {}, cartProducts: {},
+  myStore: null, myProducts: [], cart: {}, cartProducts: {},
   promotedStores: new Set(), promotedProducts: new Set(), promotedAds: new Set()
  };
  const v$ = id => document.getElementById(id);
@@ -2395,34 +2514,15 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
    .order('created_at',{ascending:false}).limit(100);
   if(error){v$('vendorSelectedProducts').innerHTML='<div class="empty">تعذر تحميل منتجات هذا المتجر.</div>';return;}
   vState.selectedProducts=data||[];
-  vState.selectedCategory='';
-  const cats=await sb.from('vendor_store_categories').select('id,name').eq('store_id',store.id).order('sort_order',{ascending:true}).order('name',{ascending:true});
-  vState.storeCategories=cats.error?[]:(cats.data||[]);
-  renderVendorStoreCategoryFilters();
+  v$('vendorSelectedProductCount').textContent=vState.selectedProducts.length.toLocaleString('ar-SA')+' منتج';
   renderSelectedVendorProducts();
   renderVendorCart();
   v$('vendorSelectedStore').scrollIntoView({behavior:'smooth',block:'start'});
  };
- function renderVendorStoreCategoryFilters(){
-  const box=v$('vendorSelectedCategories');if(!box)return;
-  const names=[...new Set(vState.storeCategories.map(c=>c.name).concat(vState.selectedProducts.map(p=>p.category).filter(Boolean)))];
-  box.innerHTML=[`<button type="button" class="chip ${!vState.selectedCategory?'selected':''}" data-vendor-category="">الكل</button>`,
-   ...names.map(name=>`<button type="button" class="chip ${vState.selectedCategory===name?'selected':''}" data-vendor-category="${vEsc(name)}">${vEsc(name)}</button>`)].join('');
-  box.querySelectorAll('[data-vendor-category]').forEach(button=>{
-   button.addEventListener('click',()=>window.filterVendorStoreCategory(button.dataset.vendorCategory||''));
-  });
- }
- window.filterVendorStoreCategory=name=>{
-  vState.selectedCategory=name||'';
-  renderVendorStoreCategoryFilters();
-  renderSelectedVendorProducts();
- };
  function renderSelectedVendorProducts(){
   const grid=v$('vendorSelectedProducts');if(!grid)return;
-  const rows=vState.selectedProducts.filter(p=>!vState.selectedCategory||p.category===vState.selectedCategory);
-  v$('vendorSelectedProductCount').textContent=rows.length.toLocaleString('ar-SA')+' منتج';
-  if(!rows.length){grid.innerHTML='<div class="empty" style="grid-column:1/-1">لا توجد منتجات منشورة في هذا التصنيف حالياً.</div>';return;}
-  grid.innerHTML=rows.map(p=>`
+  if(!vState.selectedProducts.length){grid.innerHTML='<div class="empty" style="grid-column:1/-1">لا توجد منتجات منشورة في هذا المتجر حالياً.</div>';return;}
+  grid.innerHTML=vState.selectedProducts.map(p=>`
    <article class="vendor-product-card">
     <div class="vendor-product-image">${vSafeUrl(p.image_url)?`<img src="${vEsc(vSafeUrl(p.image_url))}" alt="${vEsc(p.title)}" loading="lazy">`:'🎮'}</div>
     <div class="vendor-product-content">
@@ -2520,7 +2620,7 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   v$('vendorProductForm').reset();v$('vendorProductId').value='';v$('vendorProductStock').value=1;
   v$('vendorProductImagePreview').innerHTML='';v$('vendorProductVideoPreview').innerHTML='';
   v$('vendorProductRemoveImage').checked=false;v$('vendorProductRemoveVideo').checked=false;
-  v$('vendorProductSave').textContent='نشر المنتج في المتجر';
+  v$('vendorProductSave').textContent='حفظ المنتج للمراجعة';
  }
  v$('vendorProductReset').addEventListener('click',resetVendorProductForm);
  const vendorMediaBucket='vendor-product-media';
@@ -2545,70 +2645,6 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   const f=v$('vendorProductVideoFile').files?.[0];if(!previewVendorFile(f,'video',v$('vendorProductVideoPreview'))&&f)v$('vendorProductVideoFile').value='';
   if(f)v$('vendorProductRemoveVideo').checked=false;
  });
-
- function resetVendorCategoryForm(){
-  v$('vendorCategoryForm').reset();v$('vendorCategoryId').value='';
-  v$('vendorCategorySave').textContent='إضافة التصنيف';
- }
- v$('vendorCategoryReset').addEventListener('click',resetVendorCategoryForm);
-
- async function loadVendorCategories(){
-  if(!vState.myStore)return;
-  const {data,error}=await sb.from('vendor_store_categories').select('*')
-   .eq('store_id',vState.myStore.id).order('sort_order',{ascending:true}).order('name',{ascending:true});
-  if(error){
-   v$('vendorMyCategories').innerHTML='<div class="empty">تعذر تحميل التصنيفات: '+vEsc(error.message)+' — تحقق من تنفيذ تحديث قاعدة البيانات.</div>';
-   return;
-  }
-  vState.myCategories=data||[];
-  v$('vendorCategoryCount').textContent=vState.myCategories.length.toLocaleString('ar-SA')+' تصنيف';
-  v$('vendorMyCategories').innerHTML=vState.myCategories.map(c=>`
-   <div class="vendor-state row space">
-    <strong>${vEsc(c.name)}</strong>
-    <div class="actions">
-     <button class="secondary" type="button" onclick="editVendorCategory('${c.id}')">تعديل</button>
-     <button class="danger" type="button" onclick="deleteVendorCategory('${c.id}')">حذف</button>
-    </div>
-   </div>`).join('')||'<div class="empty">لا توجد تصنيفات بعد. أضف أول تصنيف لمتجرك.</div>';
-  const select=v$('vendorProductCategory'),previous=select.value;
-  select.innerHTML='<option value="">اختر تصنيف المنتج</option>'+vState.myCategories.map(c=>`<option value="${vEsc(c.name)}">${vEsc(c.name)}</option>`).join('');
-  if(previous&&!vState.myCategories.some(c=>c.name===previous)){
-   select.insertAdjacentHTML('beforeend',`<option value="${vEsc(previous)}">${vEsc(previous)} (تصنيف قديم)</option>`);
-  }
-  if(previous)select.value=previous;
- }
- v$('vendorCategoryForm').addEventListener('submit',async e=>{
-  e.preventDefault();if(!vState.myStore||!currentUser)return;
-  const id=v$('vendorCategoryId').value,name=v$('vendorCategoryName').value.trim();
-  if(!name)return;
-  if(vState.myCategories.some(c=>c.name.toLocaleLowerCase()===name.toLocaleLowerCase()&&String(c.id)!==String(id))){
-   vMsg('vendorCategoryMsg','هذا التصنيف موجود بالفعل.');return;
-  }
-  const button=v$('vendorCategorySave');button.disabled=true;
-  try{
-   const row={name,store_id:vState.myStore.id,owner_id:currentUser.id,updated_at:new Date().toISOString()};
-   const query=id?sb.from('vendor_store_categories').update({name,updated_at:row.updated_at}).eq('id',id).eq('store_id',vState.myStore.id):
-    sb.from('vendor_store_categories').insert(row);
-   const {error}=await query;if(error)throw error;
-   vMsg('vendorCategoryMsg',id?'تم تعديل التصنيف.':'تمت إضافة التصنيف.');
-   resetVendorCategoryForm();await loadVendorCategories();
-  }catch(error){vMsg('vendorCategoryMsg','تعذر حفظ التصنيف: '+error.message);}
-  finally{button.disabled=false;}
- });
- window.editVendorCategory=id=>{
-  const c=vState.myCategories.find(x=>String(x.id)===String(id));if(!c)return;
-  v$('vendorCategoryId').value=c.id;v$('vendorCategoryName').value=c.name;
-  v$('vendorCategorySave').textContent='حفظ التعديل';
-  v$('vendorCategoryForm').scrollIntoView({behavior:'smooth',block:'center'});
- };
- window.deleteVendorCategory=async id=>{
-  const c=vState.myCategories.find(x=>String(x.id)===String(id));if(!c)return;
-  if(!confirm('حذف التصنيف "'+c.name+'"؟ المنتجات المرتبطة به ستبقى محفوظة، ويمكنك إعادة تصنيفها لاحقاً.'))return;
-  const {error}=await sb.from('vendor_store_categories').delete().eq('id',id).eq('store_id',vState.myStore.id);
-  if(error){alert('تعذر حذف التصنيف: '+error.message);return;}
-  await loadVendorCategories();
- };
-
  async function loadMyVendorProducts(){
   if(!vState.myStore)return;
   const {data,error}=await sb.from('vendor_store_products').select('*')
@@ -2617,7 +2653,7 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   vState.myProducts=data||[];
   v$('vendorMyProducts').innerHTML=vState.myProducts.map(p=>`
    <div class="vendor-state">
-    <div class="row space"><strong>${vEsc(p.title)}</strong><span class="vendor-pill">${vEsc(p.status==='active'?'منشور في المتجر':vStatusLabel(p.status))}</span></div>
+    <div class="row space"><strong>${vEsc(p.title)}</strong><span class="vendor-pill">${vEsc(vStatusLabel(p.status))}</span></div>
     <div class="vendor-muted-note">${vMoney(p.price)} · المخزون ${Number(p.stock_quantity)||0} · ${vEsc(p.category||'')}</div>
     <div class="row">${p.image_url?'<span class="vendor-pill">📷 صورة</span>':''}${p.video_url?'<span class="vendor-pill">🎬 فيديو</span>':''}</div>
     <div class="actions"><button class="secondary" type="button" onclick="editMyVendorProduct('${p.id}')">تعديل الوسائط والمنتج</button><button class="danger" type="button" onclick="deleteMyVendorProduct('${p.id}')">حذف</button></div>
@@ -2626,9 +2662,6 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
  window.editMyVendorProduct=id=>{
   const p=vState.myProducts.find(x=>String(x.id)===String(id));if(!p)return;
   v$('vendorProductId').value=p.id;v$('vendorProductName').value=p.title;
-  if(p.category&&!Array.from(v$('vendorProductCategory').options).some(o=>o.value===p.category)){
-   v$('vendorProductCategory').insertAdjacentHTML('beforeend',`<option value="${vEsc(p.category)}">${vEsc(p.category)} (تصنيف قديم)</option>`);
-  }
   v$('vendorProductCategory').value=p.category||'';v$('vendorProductPrice').value=p.price;
   v$('vendorProductStock').value=p.stock_quantity;v$('vendorProductType').value=p.product_type||'physical';
   v$('vendorProductImageFile').value='';v$('vendorProductVideoFile').value='';
@@ -2636,7 +2669,7 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   v$('vendorProductVideoPreview').innerHTML=p.video_url?`<video src="${vEsc(p.video_url)}" controls playsinline preload="metadata"></video><small>الفيديو الحالي — اختر فيديو جديداً للاستبدال أو فعّل خيار الإزالة</small>`:'';
   v$('vendorProductRemoveImage').checked=false;v$('vendorProductRemoveVideo').checked=false;
   v$('vendorProductDescription').value=p.description||'';
-  v$('vendorProductSave').textContent='حفظ التعديل ونشره';
+  v$('vendorProductSave').textContent='حفظ التعديل وإعادة المراجعة';
   v$('vendorProductForm').scrollIntoView({behavior:'smooth',block:'center'});
  };
  async function removeVendorStorageObject(path){if(!path)return;const {error}=await sb.storage.from(vendorMediaBucket).remove([path]);if(error)console.warn('Could not remove old vendor media:',error.message);}
@@ -2681,8 +2714,7 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
     image_storage_path:newImage?.path||(removeImage?null:(old?.image_storage_path||null)),
     video_url:newVideo?.url||(removeVideo?null:(old?.video_url||null)),
     video_storage_path:newVideo?.path||(removeVideo?null:(old?.video_storage_path||null)),
-    description:v$('vendorProductDescription').value.trim(),
-    status:'active'
+    description:v$('vendorProductDescription').value.trim()
    };
    const query=id?sb.from('vendor_store_products').update(row).eq('id',id).eq('store_id',vState.myStore.id):
     sb.from('vendor_store_products').insert({...row,store_id:vState.myStore.id,owner_id:currentUser.id});
@@ -2692,7 +2724,7 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
     if(newVideo||removeVideo)await removeVendorStorageObject(old.video_storage_path);
    }
    resetVendorProductForm();
-   vMsg('vendorProductMsg',id?'تم حفظ التعديل ونشر المنتج مباشرة في متجرك.':'تم نشر المنتج مباشرة في متجرك بنجاح.');
+   vMsg('vendorProductMsg',id?'تم حفظ التعديل وإرسال المنتج للمراجعة من جديد.':'تم حفظ المنتج وإرساله للمراجعة.');
    await loadMyVendorProducts();
   }catch(error){
    if(newImage?.path)await removeVendorStorageObject(newImage.path);
@@ -2717,7 +2749,7 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   v$('vendorEditCategory').value=data.category||'';v$('vendorEditCity').value=data.city||'';
   v$('vendorEditLogo').value=data.logo_url||'';v$('vendorEditWhatsapp').value=data.contact_whatsapp||'';
   v$('vendorEditDescription').value=data.description||'';
-  await Promise.all([loadVendorCategories(),loadMyVendorProducts(),loadMyVendorOrders(),loadVendorPromotables(),loadVendorFinance(),loadVendorPromotionHistory()]);
+  await Promise.all([loadMyVendorProducts(),loadMyVendorOrders(),loadVendorPromotables(),loadVendorFinance(),loadVendorPromotionHistory()]);
  }
  v$('vendorApplicationForm').addEventListener('submit',async e=>{
   e.preventDefault();if(!needAuth())return;
@@ -2844,7 +2876,7 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
    .eq('owner_id',currentUser.id).order('created_at',{ascending:false}).limit(100);
   const box=v$('vendorPromotionHistory');if(!box)return;
   if(error){box.innerHTML='<div class="vendor-muted-note">تعذر تحميل طلبات الترويج.</div>';return;}
-  box.innerHTML=(data||[]).map(p=>`<div class="vendor-state"><strong>${vEsc(p.target_type)} · ${vEsc(p.package_code)}</strong><div class="vendor-muted-note">${vMoney(p.amount_sar)} · ${p.duration_days} يوم · ${vEsc(p.status==='active'?'منشور في المتجر':vStatusLabel(p.status))} · ${vEsc(vStatusLabel(p.payment_status))}</div></div>`).join('')||'<div class="vendor-muted-note">لا توجد طلبات ترويج.</div>';
+  box.innerHTML=(data||[]).map(p=>`<div class="vendor-state"><strong>${vEsc(p.target_type)} · ${vEsc(p.package_code)}</strong><div class="vendor-muted-note">${vMoney(p.amount_sar)} · ${p.duration_days} يوم · ${vEsc(vStatusLabel(p.status))} · ${vEsc(vStatusLabel(p.payment_status))}</div></div>`).join('')||'<div class="vendor-muted-note">لا توجد طلبات ترويج.</div>';
  }
  async function loadVendorFinance(){
   if(!currentUser)return;
