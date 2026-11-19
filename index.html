@@ -1437,6 +1437,7 @@ const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&
 const msg=(id,t)=>$(id).textContent=t;
 function showPage(page){
  if(page!=='vendors' && document.body.classList.contains('vendor-store-open'))document.body.classList.remove('vendor-store-open');
+ document.body.classList.toggle('vendors-page-active',page==='vendors');
  document.body.classList.toggle('store-view',page==='store');
  document.querySelectorAll('main>section').forEach(s=>s.classList.add('hidden'));
  const el=$('page-'+page); if(el)el.classList.remove('hidden');
@@ -4950,6 +4951,53 @@ applyTheme(STORE.theme||{});renderIdentity();renderNavigation();renderHero();ren
 #page-vendors #vendorSelectedStore{position:relative;z-index:2;padding:12px;border:1px solid rgba(0,195,255,.45);border-radius:20px;background:#071b2a}
 @media(min-width:760px){#page-vendors .vendor-directory-stage{padding:22px 26px 28px}#page-vendors .vendor-directory-grid{gap:26px 20px!important}#page-vendors .vendor-round-avatar{width:142px!important;height:142px!important}}
 @media(max-width:390px){#page-vendors .vendor-directory-stage{padding:12px 8px 16px;border-radius:22px}#page-vendors .vendor-directory-grid{gap:15px 5px!important}#page-vendors .vendor-round-avatar{width:24vw!important;height:24vw!important;min-width:62px!important;min-height:62px!important}#page-vendors .vendor-round-meta{font-size:9px;padding:3px 6px}}
+</style>
+
+
+<style id="souq-vendors-clean-screen">
+/* صفحة المتاجر: إزالة الإطار الخارجي ومحتوى التذييل والعناصر العائمة فقط */
+body.vendors-page-active #siteFooter,
+body.vendors-page-active #souqAiFloat,
+body.vendors-page-active #souqNewsFloat,
+body.vendors-page-active #souqAiPanel,
+body.vendors-page-active #souqNewsPanel{
+ display:none!important;
+}
+body.vendors-page-active #page-vendors{
+ padding-top:8px!important;
+ padding-bottom:24px!important;
+ min-height:calc(100vh - 210px)!important;
+ background:transparent!important;
+}
+body.vendors-page-active #page-vendors::before,
+body.vendors-page-active #page-vendors::after{
+ display:none!important;
+ content:none!important;
+}
+body.vendors-page-active #page-vendors .vendor-directory-stage{
+ margin:0!important;
+ padding:8px 0 18px!important;
+ border:0!important;
+ border-radius:0!important;
+ background:transparent!important;
+ box-shadow:none!important;
+ overflow:visible!important;
+}
+body.vendors-page-active #page-vendors .vendor-directory-stage::before,
+body.vendors-page-active #page-vendors .vendor-directory-stage::after{
+ display:none!important;
+ content:none!important;
+}
+body.vendors-page-active #page-vendors .vendor-directory-heading{
+ margin:0 0 18px!important;
+ padding:8px 0 13px!important;
+ border-bottom:1px solid rgba(0,205,255,.42)!important;
+ background:transparent!important;
+ box-shadow:none!important;
+}
+body.vendors-page-active #page-vendors .vendor-directory-grid{
+ margin-top:12px!important;
+}
 </style>
 
 </body>
