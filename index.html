@@ -640,9 +640,6 @@ body.store-view .top,body.store-view .searchrow{display:none!important}
 .vendor-directory-content h3,.vendor-product-content h3{margin:0 0 5px;font-size:15px;color:var(--brand)}
 .vendor-product-image{width:100%;aspect-ratio:1/1;display:grid;place-items:center;background:var(--panel2);overflow:hidden}
 .vendor-product-image img{width:100%;height:100%;object-fit:cover}
-.vendor-product-image{position:relative}
-.vendor-product-share{position:absolute;top:8px;left:8px;width:37px;height:37px;padding:0!important;border-radius:50%!important;background:#fff!important;color:#142330!important;border:1px solid #ffffffaa!important;display:grid;place-items:center;font-size:21px;box-shadow:0 2px 9px #0004}
-
 .vendor-product-content{display:flex;flex-direction:column;gap:6px}
 .vendor-product-content h3{min-height:2.7em;line-height:1.4}
 .vendor-product-price{font-size:18px;font-weight:900;color:var(--brand)}
@@ -1014,48 +1011,6 @@ body.vendor-store-open #vendorSelectedStore .vendor-detail-head,body.vendor-stor
 @media(max-width:650px){body.vendor-store-open #vendorSelectedStore{padding:0!important}body.vendor-store-open #vendorSelectedStore #souqMerchantTemplateHost{border-radius:0}body.vendor-store-open #vendorSelectedStore #souqMerchantTemplateFrame{height:calc(100dvh - 52px);min-height:600px}}
 </style>
 
-
-<style id="ad-detail-single-page-layout">
-/* صفحة تفاصيل الإعلان: مساحة واحدة متصلة بدلاً من بطاقات منفصلة */
-#page-detail>.panel{width:100%;max-width:none}
-#page-detail .ad-detail-layout{
- max-width:1120px;width:100%;margin:0 auto;gap:0;padding:clamp(14px,2.5vw,28px);
- background:var(--panel);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);
-}
-#page-detail .detail-rating-section,
-#page-detail .detail-summary,
-#page-detail .detail-media-section,
-#page-detail .detail-description-section,
-#page-detail .detail-comments-section,
-#page-detail .detail-seller-section{
- background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important;
- padding:clamp(14px,2vw,22px) 0!important;margin:0!important;
-}
-#page-detail .detail-rating-section,
-#page-detail .detail-summary,
-#page-detail .detail-media-section,
-#page-detail .detail-description-section,
-#page-detail .detail-comments-section{border-bottom:1px solid var(--line)!important}
-#page-detail .detail-summary{padding-top:4px!important}
-#page-detail .detail-seller-section{padding-bottom:4px!important}
-#page-detail .detail-media-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))}
-#page-detail .detail-media-image{height:clamp(220px,34vw,390px);background:var(--panel2)}
-#page-detail .detail-description{font-size:15px}
-#page-detail .detail-section-heading h3,
-#page-detail .detail-description-section>h3,
-#page-detail .detail-comments-section h3{font-size:19px}
-@media(max-width:600px){
- #page-detail .ad-detail-layout{padding:12px;border-radius:14px}
- #page-detail .detail-rating-section,
- #page-detail .detail-summary,
- #page-detail .detail-media-section,
- #page-detail .detail-description-section,
- #page-detail .detail-comments-section,
- #page-detail .detail-seller-section{padding:14px 0!important}
- #page-detail .detail-media-image{height:260px}
-}
-</style>
-
 </head>
 <body class="theme-dark">
 <div id="souqSplash" role="status" aria-label="جاري تجهيز سوق القيمنق السعودي">
@@ -1227,6 +1182,7 @@ body.vendor-store-open #vendorSelectedStore .vendor-detail-head,body.vendor-stor
   </div>
   <p id="vendorSelectedDescription" class="muted"></p>
   <div class="row space"><h2>منتجات المتجر</h2><span id="vendorSelectedProductCount" class="vendor-pill">0 منتج</span></div>
+  <div id="vendorSelectedCategories" class="categories" aria-label="تصنيفات المتجر"></div>
   <div id="vendorSelectedProducts" class="vendor-product-grid"><div class="empty">اختر متجراً لعرض منتجاته.</div></div>
   <div class="vendor-cart-box">
    <div class="row space"><h3 style="margin:0">🛒 سلة المتجر</h3><strong id="vendorCartTotal">0.00 ر.س</strong></div>
@@ -1285,17 +1241,26 @@ body.vendor-store-open #vendorSelectedStore .vendor-detail-head,body.vendor-stor
     </form>
    </section>
    <section class="vendor-dashboard-card full">
+    <div class="row space"><div><h3>تصنيفات متجري</h3><p class="vendor-muted-note">أنشئ أقسام متجرك وعدّلها أو احذفها. تظهر التصنيفات في واجهة متجرك تلقائياً.</p></div><span id="vendorCategoryCount" class="vendor-pill">0 تصنيف</span></div>
+    <form id="vendorCategoryForm" class="formgrid">
+     <input id="vendorCategoryId" type="hidden">
+     <div><label>اسم التصنيف *</label><input id="vendorCategoryName" class="field" required maxlength="100" placeholder="مثال: كروت الشاشة"></div>
+     <div class="row" style="align-items:end"><button class="primary" id="vendorCategorySave" type="submit">إضافة التصنيف</button><button class="secondary" id="vendorCategoryReset" type="button">إلغاء</button><span id="vendorCategoryMsg" class="muted" role="status"></span></div>
+    </form>
+    <div id="vendorMyCategories" class="stack"><div class="empty">جارٍ تحميل التصنيفات...</div></div>
+   </section>
+   <section class="vendor-dashboard-card full">
     <h3>إضافة منتج إلى متجري</h3>
     <form id="vendorProductForm" class="formgrid">
      <input id="vendorProductId" type="hidden">
      <div><label>اسم المنتج *</label><input id="vendorProductName" class="field" required maxlength="160"></div>
-     <div><label>التصنيف *</label><input id="vendorProductCategory" class="field" required maxlength="100"></div>
+     <div><label>التصنيف *</label><select id="vendorProductCategory" class="field" required><option value="">أضف تصنيفاً أولاً</option></select></div>
      <div><label>السعر بالريال *</label><input id="vendorProductPrice" class="field" type="number" min=".01" step=".01" required></div>
      <div><label>الكمية المتاحة *</label><input id="vendorProductStock" class="field" type="number" min="0" step="1" value="1" required></div>
      <div><label>نوع المنتج</label><select id="vendorProductType" class="field"><option value="physical">مادي</option><option value="digital">رقمي</option></select></div>
      <div><label>صورة المنتج من جهازك</label><input id="vendorProductImageFile" class="field" type="file" accept="image/jpeg,image/png,image/webp,image/avif"><small class="vendor-muted-note">JPG أو PNG أو WEBP — حتى 5 ميجابايت</small><div id="vendorProductImagePreview" class="media-preview"></div></div>
      <div class="full"><label>الوصف</label><textarea id="vendorProductDescription" class="field" rows="3" maxlength="3000"></textarea></div>
-     <div class="full row"><button class="primary" type="submit" id="vendorProductSave">حفظ المنتج للمراجعة</button><button class="secondary" type="button" id="vendorProductReset">منتج جديد</button><span id="vendorProductMsg" class="muted"></span></div>
+     <div class="full row"><button class="primary" type="submit" id="vendorProductSave">نشر المنتج في المتجر</button><button class="secondary" type="button" id="vendorProductReset">منتج جديد</button><span id="vendorProductMsg" class="muted"></span></div>
     </form>
     <h3 style="margin-top:22px">منتجاتي</h3>
     <div id="vendorMyProducts" class="stack"><div class="empty">جارٍ التحميل...</div></div>
@@ -2376,7 +2341,7 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
  'use strict';
  const vState = {
   stores: [], selectedStore: null, selectedProducts: [], selectedCategory: '',
-  myStore: null, myProducts: [], cart: {}, cartProducts: {},
+  myStore: null, myProducts: [], myCategories: [], storeCategories: [], cart: {}, cartProducts: {},
   promotedStores: new Set(), promotedProducts: new Set(), promotedAds: new Set()
  };
  const v$ = id => document.getElementById(id);
@@ -2539,15 +2504,34 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
    .order('created_at',{ascending:false}).limit(100);
   if(error){v$('vendorSelectedProducts').innerHTML='<div class="empty">تعذر تحميل منتجات هذا المتجر.</div>';return;}
   vState.selectedProducts=data||[];
-  v$('vendorSelectedProductCount').textContent=vState.selectedProducts.length.toLocaleString('ar-SA')+' منتج';
+  vState.selectedCategory='';
+  const cats=await sb.from('vendor_store_categories').select('id,name').eq('store_id',store.id).order('sort_order',{ascending:true}).order('name',{ascending:true});
+  vState.storeCategories=cats.error?[]:(cats.data||[]);
+  renderVendorStoreCategoryFilters();
   renderSelectedVendorProducts();
   renderVendorCart();
   v$('vendorSelectedStore').scrollIntoView({behavior:'smooth',block:'start'});
  };
+ function renderVendorStoreCategoryFilters(){
+  const box=v$('vendorSelectedCategories');if(!box)return;
+  const names=[...new Set(vState.storeCategories.map(c=>c.name).concat(vState.selectedProducts.map(p=>p.category).filter(Boolean)))];
+  box.innerHTML=[`<button type="button" class="chip ${!vState.selectedCategory?'selected':''}" data-vendor-category="">الكل</button>`,
+   ...names.map(name=>`<button type="button" class="chip ${vState.selectedCategory===name?'selected':''}" data-vendor-category="${vEsc(name)}">${vEsc(name)}</button>`)].join('');
+  box.querySelectorAll('[data-vendor-category]').forEach(button=>{
+   button.addEventListener('click',()=>window.filterVendorStoreCategory(button.dataset.vendorCategory||''));
+  });
+ }
+ window.filterVendorStoreCategory=name=>{
+  vState.selectedCategory=name||'';
+  renderVendorStoreCategoryFilters();
+  renderSelectedVendorProducts();
+ };
  function renderSelectedVendorProducts(){
   const grid=v$('vendorSelectedProducts');if(!grid)return;
-  if(!vState.selectedProducts.length){grid.innerHTML='<div class="empty" style="grid-column:1/-1">لا توجد منتجات منشورة في هذا المتجر حالياً.</div>';return;}
-  grid.innerHTML=vState.selectedProducts.map(p=>`
+  const rows=vState.selectedProducts.filter(p=>!vState.selectedCategory||p.category===vState.selectedCategory);
+  v$('vendorSelectedProductCount').textContent=rows.length.toLocaleString('ar-SA')+' منتج';
+  if(!rows.length){grid.innerHTML='<div class="empty" style="grid-column:1/-1">لا توجد منتجات منشورة في هذا التصنيف حالياً.</div>';return;}
+  grid.innerHTML=rows.map(p=>`
    <article class="vendor-product-card">
     <div class="vendor-product-image">${vSafeUrl(p.image_url)?`<img src="${vEsc(vSafeUrl(p.image_url))}" alt="${vEsc(p.title)}" loading="lazy">`:'🎮'}</div>
     <div class="vendor-product-content">
@@ -2644,7 +2628,7 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
 
  function resetVendorProductForm(){
   v$('vendorProductForm').reset();v$('vendorProductId').value='';v$('vendorProductStock').value=1;v$('vendorProductImagePreview').innerHTML='';
-  v$('vendorProductSave').textContent='حفظ المنتج للمراجعة';
+  v$('vendorProductSave').textContent='نشر المنتج في المتجر';
  }
  v$('vendorProductReset').addEventListener('click',resetVendorProductForm);
   v$('vendorProductImageFile').addEventListener('change',()=>{
@@ -2656,6 +2640,67 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
    }
    const reader=new FileReader();reader.onload=()=>{box.innerHTML=`<img src="${reader.result}" alt="معاينة صورة المنتج">`};reader.readAsDataURL(file);
   });
+
+ function resetVendorCategoryForm(){
+  v$('vendorCategoryForm').reset();v$('vendorCategoryId').value='';
+  v$('vendorCategorySave').textContent='إضافة التصنيف';
+ }
+ v$('vendorCategoryReset').addEventListener('click',resetVendorCategoryForm);
+
+ async function loadVendorCategories(){
+  if(!vState.myStore)return;
+  const {data,error}=await sb.from('vendor_store_categories').select('*')
+   .eq('store_id',vState.myStore.id).order('sort_order',{ascending:true}).order('name',{ascending:true});
+  if(error){
+   v$('vendorMyCategories').innerHTML='<div class="empty">تعذر تحميل التصنيفات: '+vEsc(error.message)+' — تحقق من تنفيذ تحديث قاعدة البيانات.</div>';
+   return;
+  }
+  vState.myCategories=data||[];
+  v$('vendorCategoryCount').textContent=vState.myCategories.length.toLocaleString('ar-SA')+' تصنيف';
+  v$('vendorMyCategories').innerHTML=vState.myCategories.map(c=>`
+   <div class="vendor-state row space">
+    <strong>${vEsc(c.name)}</strong>
+    <div class="actions">
+     <button class="secondary" type="button" onclick="editVendorCategory('${c.id}')">تعديل</button>
+     <button class="danger" type="button" onclick="deleteVendorCategory('${c.id}')">حذف</button>
+    </div>
+   </div>`).join('')||'<div class="empty">لا توجد تصنيفات بعد. أضف أول تصنيف لمتجرك.</div>';
+  const select=v$('vendorProductCategory'),previous=select.value;
+  select.innerHTML='<option value="">اختر تصنيف المنتج</option>'+vState.myCategories.map(c=>`<option value="${vEsc(c.name)}">${vEsc(c.name)}</option>`).join('');
+  if(vState.myCategories.some(c=>c.name===previous))select.value=previous;
+ }
+ v$('vendorCategoryForm').addEventListener('submit',async e=>{
+  e.preventDefault();if(!vState.myStore||!currentUser)return;
+  const id=v$('vendorCategoryId').value,name=v$('vendorCategoryName').value.trim();
+  if(!name)return;
+  if(vState.myCategories.some(c=>c.name.toLocaleLowerCase()===name.toLocaleLowerCase()&&String(c.id)!==String(id))){
+   vMsg('vendorCategoryMsg','هذا التصنيف موجود بالفعل.');return;
+  }
+  const button=v$('vendorCategorySave');button.disabled=true;
+  try{
+   const row={name,store_id:vState.myStore.id,owner_id:currentUser.id,updated_at:new Date().toISOString()};
+   const query=id?sb.from('vendor_store_categories').update({name,updated_at:row.updated_at}).eq('id',id).eq('store_id',vState.myStore.id):
+    sb.from('vendor_store_categories').insert(row);
+   const {error}=await query;if(error)throw error;
+   vMsg('vendorCategoryMsg',id?'تم تعديل التصنيف.':'تمت إضافة التصنيف.');
+   resetVendorCategoryForm();await loadVendorCategories();
+  }catch(error){vMsg('vendorCategoryMsg','تعذر حفظ التصنيف: '+error.message);}
+  finally{button.disabled=false;}
+ });
+ window.editVendorCategory=id=>{
+  const c=vState.myCategories.find(x=>String(x.id)===String(id));if(!c)return;
+  v$('vendorCategoryId').value=c.id;v$('vendorCategoryName').value=c.name;
+  v$('vendorCategorySave').textContent='حفظ التعديل';
+  v$('vendorCategoryForm').scrollIntoView({behavior:'smooth',block:'center'});
+ };
+ window.deleteVendorCategory=async id=>{
+  const c=vState.myCategories.find(x=>String(x.id)===String(id));if(!c)return;
+  if(!confirm('حذف التصنيف "'+c.name+'"؟ المنتجات المرتبطة به ستبقى محفوظة، ويمكنك إعادة تصنيفها لاحقاً.'))return;
+  const {error}=await sb.from('vendor_store_categories').delete().eq('id',id).eq('store_id',vState.myStore.id);
+  if(error){alert('تعذر حذف التصنيف: '+error.message);return;}
+  await loadVendorCategories();
+ };
+
  async function loadMyVendorProducts(){
   if(!vState.myStore)return;
   const {data,error}=await sb.from('vendor_store_products').select('*')
@@ -2664,7 +2709,7 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   vState.myProducts=data||[];
   v$('vendorMyProducts').innerHTML=vState.myProducts.map(p=>`
    <div class="vendor-state">
-    <div class="row space"><strong>${vEsc(p.title)}</strong><span class="vendor-pill">${vEsc(vStatusLabel(p.status))}</span></div>
+    <div class="row space"><strong>${vEsc(p.title)}</strong><span class="vendor-pill">${vEsc(p.status==='active'?'منشور في المتجر':vStatusLabel(p.status))}</span></div>
     <div class="vendor-muted-note">${vMoney(p.price)} · المخزون ${Number(p.stock_quantity)||0} · ${vEsc(p.category||'')}</div>
     <div class="actions"><button class="secondary" type="button" onclick="editMyVendorProduct('${p.id}')">تعديل</button><button class="danger" type="button" onclick="deleteMyVendorProduct('${p.id}')">حذف</button></div>
    </div>`).join('')||'<div class="empty">لم تضف منتجات بعد.</div>';
@@ -2672,10 +2717,13 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
  window.editMyVendorProduct=id=>{
   const p=vState.myProducts.find(x=>String(x.id)===String(id));if(!p)return;
   v$('vendorProductId').value=p.id;v$('vendorProductName').value=p.title;
+  if(p.category&&!Array.from(v$('vendorProductCategory').options).some(o=>o.value===p.category)){
+   v$('vendorProductCategory').insertAdjacentHTML('beforeend',`<option value="${vEsc(p.category)}">${vEsc(p.category)} (تصنيف قديم)</option>`);
+  }
   v$('vendorProductCategory').value=p.category||'';v$('vendorProductPrice').value=p.price;
   v$('vendorProductStock').value=p.stock_quantity;v$('vendorProductType').value=p.product_type||'physical';
   v$('vendorProductImageFile').value='';v$('vendorProductImagePreview').innerHTML=p.image_url?`<img src="${vEsc(p.image_url)}" alt="صورة المنتج الحالية"><small>الصورة الحالية — اختر صورة جديدة لاستبدالها</small>`:'';v$('vendorProductDescription').value=p.description||'';
-  v$('vendorProductSave').textContent='حفظ التعديل وإعادة المراجعة';
+  v$('vendorProductSave').textContent='حفظ التعديل ونشره';
   v$('vendorProductForm').scrollIntoView({behavior:'smooth',block:'center'});
  };
  window.deleteMyVendorProduct=async id=>{
@@ -2692,7 +2740,7 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
    price:Number(v$('vendorProductPrice').value),stock_quantity:Number(v$('vendorProductStock').value),
    product_type:v$('vendorProductType').value,
    image_url:(id?vState.myProducts.find(p=>String(p.id)===String(id))?.image_url:null)||null,
-   description:v$('vendorProductDescription').value.trim()
+   description:v$('vendorProductDescription').value.trim(),status:'active'
   };
   const button=v$('vendorProductSave');button.disabled=true;
   try{
@@ -2708,7 +2756,7 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
    const query=id?sb.from('vendor_store_products').update(row).eq('id',id).eq('store_id',vState.myStore.id):
     sb.from('vendor_store_products').insert({...row,store_id:vState.myStore.id,owner_id:currentUser.id});
    const {error}=await query;if(error)throw error;
-   resetVendorProductForm();vMsg('vendorProductMsg',id?'تم حفظ التعديل وإرسال المنتج للمراجعة من جديد.':'تم استلام المنتج وسيظهر بعد موافقة الإدارة.');
+   resetVendorProductForm();vMsg('vendorProductMsg',id?'تم حفظ التعديل ونشر المنتج مباشرة في متجرك.':'تم نشر المنتج مباشرة في متجرك بنجاح.');
    await loadMyVendorProducts();
   }catch(error){vMsg('vendorProductMsg','تعذر حفظ المنتج: '+error.message);}
   finally{button.disabled=false;}
@@ -2730,7 +2778,7 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   v$('vendorEditCategory').value=data.category||'';v$('vendorEditCity').value=data.city||'';
   v$('vendorEditLogo').value=data.logo_url||'';v$('vendorEditWhatsapp').value=data.contact_whatsapp||'';
   v$('vendorEditDescription').value=data.description||'';
-  await Promise.all([loadMyVendorProducts(),loadMyVendorOrders(),loadVendorPromotables(),loadVendorFinance(),loadVendorPromotionHistory()]);
+  await Promise.all([loadVendorCategories(),loadMyVendorProducts(),loadMyVendorOrders(),loadVendorPromotables(),loadVendorFinance(),loadVendorPromotionHistory()]);
  }
  v$('vendorApplicationForm').addEventListener('submit',async e=>{
   e.preventDefault();if(!needAuth())return;
@@ -2834,7 +2882,7 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
    .eq('owner_id',currentUser.id).order('created_at',{ascending:false}).limit(100);
   const box=v$('vendorPromotionHistory');if(!box)return;
   if(error){box.innerHTML='<div class="vendor-muted-note">تعذر تحميل طلبات الترويج.</div>';return;}
-  box.innerHTML=(data||[]).map(p=>`<div class="vendor-state"><strong>${vEsc(p.target_type)} · ${vEsc(p.package_code)}</strong><div class="vendor-muted-note">${vMoney(p.amount_sar)} · ${p.duration_days} يوم · ${vEsc(vStatusLabel(p.status))} · ${vEsc(vStatusLabel(p.payment_status))}</div></div>`).join('')||'<div class="vendor-muted-note">لا توجد طلبات ترويج.</div>';
+  box.innerHTML=(data||[]).map(p=>`<div class="vendor-state"><strong>${vEsc(p.target_type)} · ${vEsc(p.package_code)}</strong><div class="vendor-muted-note">${vMoney(p.amount_sar)} · ${p.duration_days} يوم · ${vEsc(p.status==='active'?'منشور في المتجر':vStatusLabel(p.status))} · ${vEsc(vStatusLabel(p.payment_status))}</div></div>`).join('')||'<div class="vendor-muted-note">لا توجد طلبات ترويج.</div>';
  }
  async function loadVendorFinance(){
   if(!currentUser)return;
@@ -4438,14 +4486,8 @@ window.__souqVendorContext={state:vState,money:vMoney,safeUrl:vSafeUrl,esc:vEsc,
  }
  function renderProducts(){const grid=$('vendorSelectedProducts');if(!grid)return;const f=shopPublic.storefront||{};let products=[...((window.__souqVendorContext?.state?.selectedProducts||[])||[])];if(f.hide_out_of_stock)products=products.filter(p=>Number(p.stock_quantity)>0);if(filterCategory!=='all')products=products.filter(p=>String(p.category||'')===filterCategory);if(filterQuery)products=products.filter(p=>[p.title,p.category,p.description].join(' ').toLowerCase().includes(filterQuery));const sort=$('souqStoreProductSort')?.value||f.sort_mode||'newest';products.sort((a,b)=>sort==='price_low'?Number(a.price)-Number(b.price):sort==='price_high'?Number(b.price)-Number(a.price):sort==='name'?String(a.title).localeCompare(String(b.title),'ar'):sort==='newest'?new Date(b.created_at||0)-new Date(a.created_at||0):0);
   if(!products.length){grid.innerHTML='<div class="empty" style="grid-column:1/-1">لا توجد منتجات مطابقة لاختياراتك.</div>';return}
-  grid.innerHTML=products.map(p=>`<article class="vendor-product-card"><div class="vendor-product-image">${window.__souqVendorContext.safeUrl(p.image_url)?`<img src="${esc(window.__souqVendorContext.safeUrl(p.image_url))}" alt="${esc(p.title)}" loading="lazy">`:'🎮'}<button class="vendor-product-share" type="button" aria-label="مشاركة المنتج" onclick="shareVendorProduct('${esc(p.id)}')">↗</button></div><div class="vendor-product-content">${window.__souqVendorContext?.state?.promotedProducts.has(String(p.id))?'<span class="vendor-pill">منتج مروّج</span>':''}<h3>${esc(p.title)}</h3><div class="vendor-muted-note">${esc(p.category||'')}</div><div class="vendor-product-price">${window.__souqVendorContext.money(p.price)}</div>${f.show_stock?`<div class="vendor-muted-note">${Number(p.stock_quantity)>0?'متوفر · الكمية '+Number(p.stock_quantity):'غير متوفر'}</div>`:''}<div class="vendor-product-actions"><button class="primary" type="button" onclick="addVendorCart('${esc(p.id)}')" ${Number(p.stock_quantity)<1?'disabled':''}>أضف للسلة</button><button class="secondary" type="button" onclick="showVendorProductDetails('${esc(p.id)}')">التفاصيل</button></div></div></article>`).join('');
+  grid.innerHTML=products.map(p=>`<article class="vendor-product-card"><div class="vendor-product-image">${window.__souqVendorContext.safeUrl(p.image_url)?`<img src="${esc(window.__souqVendorContext.safeUrl(p.image_url))}" alt="${esc(p.title)}" loading="lazy">`:'🎮'}</div><div class="vendor-product-content">${window.__souqVendorContext?.state?.promotedProducts.has(String(p.id))?'<span class="vendor-pill">منتج مروّج</span>':''}<h3>${esc(p.title)}</h3><div class="vendor-muted-note">${esc(p.category||'')}</div><div class="vendor-product-price">${window.__souqVendorContext.money(p.price)}</div>${f.show_stock?`<div class="vendor-muted-note">${Number(p.stock_quantity)>0?'متوفر · الكمية '+Number(p.stock_quantity):'غير متوفر'}</div>`:''}<div class="vendor-product-actions"><button class="primary" type="button" onclick="addVendorCart('${esc(p.id)}')" ${Number(p.stock_quantity)<1?'disabled':''}>أضف للسلة</button><button class="secondary" type="button" onclick="showVendorProductDetails('${esc(p.id)}')">التفاصيل</button></div></div></article>`).join('');
  }
- window.shareVendorProduct=async function(id){
-  const p=(window.__souqVendorContext?.state?.selectedProducts||[]).find(x=>String(x.id)===String(id));if(!p)return;
-  const url=location.origin+location.pathname+'?vendor='+encodeURIComponent(window.__souqVendorContext?.state?.selectedStore?.slug||window.__souqVendorContext?.state?.selectedStore?.id||'');
-  const data={title:p.title||'منتج',text:`${p.title||'منتج'} — ${Number(p.price||0).toLocaleString('ar-SA')} ر.س`,url};
-  try{if(navigator.share)await navigator.share(data);else if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(url);alert('تم نسخ رابط المتجر للمشاركة.')}else alert('المشاركة غير مدعومة في هذا المتصفح.')}catch(e){if(e?.name!=='AbortError')alert('تعذرت مشاركة المنتج.')}
- };
  async function apply(id){
   const ctx=window.__souqVendorContext,store=ctx?.state?.selectedStore;if(!store||String(store.id)!==String(id))return;
   filterCategory='all';filterQuery='';await loadPublic(id);
@@ -4674,27 +4716,6 @@ a{color:inherit;text-decoration:none}.container{width:min(1220px,92%);margin:aut
  .toolbar{flex-direction:column}.search-wrap,.sort-select{width:100%;min-height:44px}
 }
 </style>
-
-<style id="merchant-store-square-products-v3">
-.product-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
-.product-card.visible{display:flex;flex-direction:column;min-width:0}
-.product-image{height:auto!important;aspect-ratio:1/1;position:relative}
-.product-image img{width:100%;height:100%;object-fit:cover}
-.product-info{display:flex;flex-direction:column;flex:1;gap:6px}
-.product-name{min-height:2.8em;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.product-action{margin-top:auto}
-.product-image-share{position:absolute;top:9px;left:9px;width:38px;height:38px;border:1px solid #ffffffaa;border-radius:50%;background:#fff;color:#142330;display:grid;place-items:center;font-size:21px;box-shadow:0 2px 9px #0004;padding:0}
-.product-details-overlay{position:fixed;inset:0;z-index:90;background:#000b;display:none;align-items:center;justify-content:center;padding:16px}
-.product-details-overlay.open{display:flex}
-.product-details-card{width:min(720px,100%);max-height:92dvh;overflow:auto;background:var(--store-surface);border:1px solid var(--store-border);border-radius:20px;padding:18px;box-shadow:0 20px 60px #0008}
-.product-details-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
-.product-details-head h2{font-size:20px;margin:0}
-.product-details-image{width:100%;max-height:420px;aspect-ratio:16/10;object-fit:contain;background:var(--store-surface-2);border-radius:13px}
-.product-details-description{white-space:pre-wrap;line-height:1.9;color:var(--store-muted);overflow-wrap:anywhere}
-.product-details-price{font-size:22px;font-weight:900;color:var(--store-secondary);margin:12px 0}
-@media(max-width:650px){.product-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.product-image{height:auto!important}.product-info{padding:10px}.product-name{font-size:13px}.product-price{font-size:15px}.product-action{padding:9px 7px}.product-details-card{padding:13px}.product-details-image{max-height:330px}}
-</style>
-
 </head>
 <body>
 <div class="announcement" id="announcement"></div>
@@ -4768,15 +4789,6 @@ a{color:inherit;text-decoration:none}.container{width:min(1220px,92%);margin:aut
  <div class="cart-lines" id="cartLines"></div>
  <div class="cart-summary"><div><span>الإجمالي</span><strong id="cartTotal">0</strong></div><button class="primary-btn" id="checkoutButton" style="width:100%">متابعة الشراء</button></div>
 </aside>
-<div class="product-details-overlay" id="productDetailsOverlay" role="dialog" aria-modal="true" aria-labelledby="productDetailsTitle">
- <div class="product-details-card">
-  <div class="product-details-head"><h2 id="productDetailsTitle">تفاصيل المنتج</h2><button class="close-btn" id="closeProductDetails" type="button">إغلاق ✕</button></div>
-  <img class="product-details-image" id="productDetailsImage" alt="">
-  <div class="product-details-price" id="productDetailsPrice"></div>
-  <p class="product-details-description" id="productDetailsDescription"></p>
-  <button class="primary-btn" id="productDetailsAdd" type="button" style="width:100%">إضافة إلى السلة</button>
- </div>
-</div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -4852,29 +4864,10 @@ function renderProducts() {
  const sort=$('productSort').value;if(sort==='low')filtered.sort((a,b)=>Number(a.price)-Number(b.price));if(sort==='high')filtered.sort((a,b)=>Number(b.price)-Number(a.price));
  $('productList').innerHTML=filtered.map(p=>{
   const category=(STORE.categories||[]).find(c=>String(c.id)===String(p.categoryId));
-  return `<article class="product-card visible"><div class="product-image">${p.image?`<img src="${safe(p.image)}" alt="${safe(p.name)}" loading="lazy">`:'<span class="image-placeholder">◇</span>'}<button class="product-image-share" type="button" data-share="${safe(p.id)}" aria-label="مشاركة المنتج">↗</button></div><div class="product-info"><div class="product-category">${safe(category?.name||'')}</div><h3 class="product-name">${safe(p.name)}</h3><span class="product-price">${safe(p.price)} ${safe(p.currency||STORE.identity?.currency||'')}</span>${p.oldPrice?`<span class="product-old-price">${safe(p.oldPrice)}</span>`:''}<button class="product-action" data-details="${safe(p.id)}" type="button">تفاصيل المنتج</button><button class="secondary-btn" data-add="${safe(p.id)}" type="button">إضافة إلى السلة</button></div></article>`;
+  return `<article class="product-card visible"><div class="product-image">${p.image?`<img src="${safe(p.image)}" alt="${safe(p.name)}" loading="lazy">`:'<span class="image-placeholder">◇</span>'}</div><div class="product-info"><div class="product-category">${safe(category?.name||'')}</div><h3 class="product-name">${safe(p.name)}</h3><span class="product-price">${safe(p.price)} ${safe(p.currency||STORE.identity?.currency||'')}</span>${p.oldPrice?`<span class="product-old-price">${safe(p.oldPrice)}</span>`:''}<button class="product-action" data-add="${safe(p.id)}">إضافة إلى السلة</button></div></article>`;
  }).join('');
  $('productsEmpty').classList.toggle('visible',filtered.length===0);
  $('productList').querySelectorAll('[data-add]').forEach(btn=>btn.addEventListener('click',()=>addToCart(btn.dataset.add)));
- $('productList').querySelectorAll('[data-details]').forEach(btn=>btn.addEventListener('click',()=>openProductDetails(btn.dataset.details)));
- $('productList').querySelectorAll('[data-share]').forEach(btn=>btn.addEventListener('click',()=>shareProduct(btn.dataset.share)));
-}
-function openProductDetails(id){
- const p=(STORE.products||[]).find(x=>String(x.id)===String(id));if(!p)return;
- $('productDetailsTitle').textContent=p.name||'تفاصيل المنتج';
- $('productDetailsImage').src=p.image||'';$('productDetailsImage').style.display=p.image?'block':'none';
- $('productDetailsPrice').textContent=`${safe(p.price)} ${safe(p.currency||STORE.identity?.currency||'')}`;
- $('productDetailsDescription').textContent=p.description||'لا يوجد وصف إضافي لهذا المنتج.';
- $('productDetailsAdd').onclick=()=>{addToCart(id);closeProductDetails()};
- $('productDetailsOverlay').classList.add('open');document.body.style.overflow='hidden';
-}
-function closeProductDetails(){$('productDetailsOverlay').classList.remove('open');document.body.style.overflow='';}
-async function shareProduct(id){
- const p=(STORE.products||[]).find(x=>String(x.id)===String(id));if(!p)return;
- const url=location.href.split('#')[0]+`#product-${encodeURIComponent(id)}`;
- const data={title:p.name||STORE.identity?.name||'منتج',text:`${p.name||'منتج'} — ${p.price||''} ${p.currency||STORE.identity?.currency||''}`,url};
- try{if(navigator.share)await navigator.share(data);else if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(url);toast('تم نسخ رابط المتجر للمشاركة');}else toast('المشاركة غير مدعومة في هذا المتصفح');}
- catch(e){if(e?.name!=='AbortError')toast('تعذرت مشاركة المنتج');}
 }
 function renderPromo() {
  const p=STORE.sections?.promo||{};if(p.visible!==true||!(p.title||p.text||p.image))return;
@@ -4907,9 +4900,6 @@ $('productSearch').addEventListener('input',renderProducts);$('productSort').add
 $('favoriteButton').onclick=()=>toast('تُفعّل المفضلة عند ربط خدمات المتجر');
 $('checkoutButton').onclick=()=>toast('تُفعّل إتمام الطلب عند ربط نظام الطلبات');
 
-$('closeProductDetails').onclick=closeProductDetails;
-$('productDetailsOverlay').addEventListener('click',e=>{if(e.target===$('productDetailsOverlay'))closeProductDetails()});
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeProductDetails()});
 applyTheme(STORE.theme||{});renderIdentity();renderNavigation();renderHero();renderCategories();renderProducts();renderPromo();renderFeatures();renderFooter();renderCart();
 </script>
 </body>
