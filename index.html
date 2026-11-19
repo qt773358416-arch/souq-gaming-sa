@@ -1160,13 +1160,18 @@ body.vendor-store-open #vendorSelectedStore .vendor-detail-head,body.vendor-stor
 </section>
 
 <section id="page-vendors" class="hidden">
- <div class="vendor-directory-top">
-  <div class="vendor-directory-brand-mark" aria-hidden="true">🎮</div>
-  <div class="vendor-toolbar">
+ <div class="vendor-directory-stage">
+  <div class="vendor-directory-heading">
+   <span class="vendor-heading-flourish" aria-hidden="true">❧</span>
+   <span class="vendor-heading-icon" aria-hidden="true">♙</span>
+   <h1>المتاجر المعتمدة</h1>
+   <span class="vendor-heading-flourish" aria-hidden="true">❧</span>
+  </div>
+  <div class="vendor-directory-toolbar">
    <input id="vendorDirectorySearch" class="field" type="search" placeholder="ابحث عن متجر أو مدينة أو تصنيف..." aria-label="ابحث عن متجر أو مدينة أو تصنيف">
   </div>
+  <div id="vendorDirectoryGrid" class="vendor-directory-grid"><div class="empty">جارٍ تحميل المتاجر...</div></div>
  </div>
- <div id="vendorDirectoryGrid" class="vendor-directory-grid"><div class="empty">جارٍ تحميل المتاجر...</div></div>
  <section id="vendorSelectedStore" class="hidden">
   <div class="vendor-detail-head">
    <button class="secondary" type="button" id="vendorBackToDirectory">← العودة إلى السوق</button>
@@ -1446,6 +1451,14 @@ function showPage(page){
  if(page==='favorites')loadFavorites();
  if(page==='profile')loadProfilePage();
  if(page==='searchpage')$('searchPageInput').value=$('search').value||'';
+ if(page==='vendors'){
+  $('search').placeholder='ابحث عن متجر، منتج، أو علامة تجارية...';
+  const directorySearch=$('vendorDirectorySearch');
+  if(directorySearch){directorySearch.value=$('search').value||'';directorySearch.closest('.vendor-directory-toolbar')?.classList.add('vendor-directory-toolbar-hidden');}
+ }else{
+  $('search').placeholder='ابحث عن كمبيوتر، كرت شاشة، بلايستيشن...';
+  $('vendorDirectorySearch')?.closest('.vendor-directory-toolbar')?.classList.remove('vendor-directory-toolbar-hidden');
+ }
  window.scrollTo({top:0,behavior:'smooth'});
 }
 function needAuth(){if(currentUser)return true;$('authGate').classList.remove('hidden');return false;}
@@ -1459,7 +1472,7 @@ function closeDrawer(){$('sideDrawer').classList.add('hidden');$('drawerBackdrop
 $('closeDrawer').onclick=closeDrawer;$('drawerBackdrop').onclick=closeDrawer;
 document.querySelectorAll('[data-drawer-page]').forEach(b=>b.addEventListener('click',()=>{const page=b.dataset.drawerPage;closeDrawer();if(['myads','messages','community'].includes(page)&&!currentUser){showPage('account');msg('authMsg','سجّل الدخول أو أنشئ حسابًا أولًا.');return;}showPage(page)}));$('closeGate').onclick=()=>$('authGate').classList.add('hidden');$('goAuth').onclick=()=>{$('authGate').classList.add('hidden');showPage('account')};
 document.querySelectorAll('[data-category]').forEach(b=>b.onclick=()=>{selectedCategory=b.dataset.category;document.querySelectorAll('[data-category]').forEach(x=>x.classList.toggle('selected',x===b));renderAdsFromCache()});
-$('searchBtn').onclick=()=>{searchTerm=$('search').value.trim().toLowerCase();renderAdsFromCache()};$('searchPageBtn').onclick=()=>{searchTerm=$('searchPageInput').value.trim().toLowerCase();$('search').value=$('searchPageInput').value;showPage('home')};$('search').addEventListener('keydown',e=>{if(e.key==='Enter')$('searchBtn').click()});
+$('searchBtn').onclick=()=>{if(document.getElementById('page-vendors')&&!document.getElementById('page-vendors').classList.contains('hidden')){const q=$('search').value.trim();if($('vendorDirectorySearch')){$('vendorDirectorySearch').value=q;$('vendorDirectorySearch').dispatchEvent(new Event('input',{bubbles:true}));}return;}searchTerm=$('search').value.trim().toLowerCase();renderAdsFromCache()};$('searchPageBtn').onclick=()=>{searchTerm=$('searchPageInput').value.trim().toLowerCase();$('search').value=$('searchPageInput').value;showPage('home')};$('search').addEventListener('keydown',e=>{if(e.key==='Enter')$('searchBtn').click()});
 
 const FAV_KEY='souqGamingFavoritesV1';
 function getFavIds(){try{return JSON.parse(localStorage.getItem(FAV_KEY)||'[]').map(String)}catch{return []}}
@@ -2466,10 +2479,10 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
    grid.innerHTML='<div class="empty" style="grid-column:1/-1">لا توجد متاجر معتمدة ضمن هذا التصنيف حالياً.</div>';
    return;
   }
-  grid.innerHTML=rows.map(store=>`
+  grid.innerHTML=rows.map((store,index)=>`
    <button class="vendor-directory-card vendor-round-card ${store.is_featured||vState.promotedStores.has(String(store.id))?'is-featured':''}"
      type="button" onclick="openVendorStore('${vEsc(store.id)}')" aria-label="زيارة متجر ${vEsc(store.store_name)}">
-    <span class="vendor-round-avatar">${vendorLogoMarkup(store)}</span>
+    <span class="vendor-round-avatar vendor-ring-${index%6}">${vendorLogoMarkup(store)}</span>
     <strong class="vendor-round-name">${vEsc(store.store_name)}</strong>
     <span class="vendor-round-meta">${vEsc(store.category||'متجر قيمنق')}</span>
     ${store.is_featured||vState.promotedStores.has(String(store.id))?'<span class="vendor-round-featured">متجر مميز</span>':''}
@@ -2575,7 +2588,7 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   vState.selectedStore=null;
   vState.selectedProducts=[];
  });
- v$('vendorDirectorySearch').addEventListener('input',renderVendorDirectory);
+ v$('vendorDirectorySearch').addEventListener('input',()=>{if($('search'))$('search').value=v$('vendorDirectorySearch').value;renderVendorDirectory();});
  v$('vendorDirectoryRefresh')?.addEventListener('click',()=>{vState.selectedCategory='';loadVendorDirectory();});
  v$('vendorCategoryCircleRail')?.addEventListener('click',event=>{
   const button=event.target.closest('[data-vendor-category]');if(!button)return;
@@ -4876,4 +4889,68 @@ function renderFooter() {
 function addToCart(id){const product=(STORE.products||[]).find(p=>String(p.id)===String(id));if(!product)return;const found=cart.find(x=>String(x.id)===String(id));if(found)found.qty++;else cart.push({...product,qty:1});renderCart();toast('تمت إضافة المنتج إلى السلة');}
 function renderCart(){
  $('cartCount').textContent=cart.reduce((n,p)=>n+p.qty,0);
- $('cartLines').innerHTML=cart.length?cart.map(p=>`<div class="cart-line">${p.image?`<img src="${safe(p.image)}" alt="">`:'<div class="image-placeholder">◇</div>'}<div class="cart-line-info"><b>${safe(p.name)}</b><small>${safe(p.price)} × ${p.qty}</small></div><button class="close-btn" data-remove="${safe(p.id)}">حذف</but
+ $('cartLines').innerHTML=cart.length?cart.map(p=>`<div class="cart-line">${p.image?`<img src="${safe(p.image)}" alt="">`:'<div class="image-placeholder">◇</div>'}<div class="cart-line-info"><b>${safe(p.name)}</b><small>${safe(p.price)} × ${p.qty}</small></div><button class="close-btn" data-remove="${safe(p.id)}">حذف</button></div>`).join(''):'<div class="empty-state visible">السلة فارغة.</div>';
+ $('cartTotal').textContent=cart.reduce((n,p)=>n+Number(p.price||0)*p.qty,0).toLocaleString('en-US')+' '+safe(STORE.identity?.currency||'');
+ $('cartLines').querySelectorAll('[data-remove]').forEach(b=>b.onclick=()=>{const i=cart.findIndex(p=>String(p.id)===b.dataset.remove);if(i>=0)cart.splice(i,1);renderCart();});
+}
+function openCart(){$('cartDrawer').classList.add('open');$('overlay').classList.add('visible');}
+function closeCart(){$('cartDrawer').classList.remove('open');$('overlay').classList.remove('visible');}
+let toastTimer;function toast(message){$('toast').textContent=message;$('toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('show'),2200);}
+$('cartButton').onclick=openCart;$('closeCart').onclick=closeCart;$('overlay').onclick=closeCart;
+$('menuToggle').onclick=()=>$('mainNav').classList.toggle('open');
+$('productSearch').addEventListener('input',renderProducts);$('productSort').addEventListener('change',renderProducts);
+$('favoriteButton').onclick=()=>toast('تُفعّل المفضلة عند ربط خدمات المتجر');
+$('checkoutButton').onclick=()=>toast('تُفعّل إتمام الطلب عند ربط نظام الطلبات');
+
+applyTheme(STORE.theme||{});renderIdentity();renderNavigation();renderHero();renderCategories();renderProducts();renderPromo();renderFeatures();renderFooter();renderCart();
+</script>
+</body>
+</html>
+</template>
+
+
+
+
+<style id="souq-vendor-directory-reference-template">
+/* قالب قسم المتاجر مطابق للمرجع: مسرح ألعاب داكن، عنوان مضيء، وشعارات دائرية */
+#page-vendors{padding:10px 0 26px;min-height:70vh;position:relative;isolation:isolate}
+#page-vendors::before{content:"";position:absolute;z-index:-2;inset:0 -14px 0;background:
+ radial-gradient(ellipse at 50% 12%,rgba(0,197,255,.16),transparent 38%),
+ radial-gradient(ellipse at 0% 40%,rgba(166,55,255,.20),transparent 27%),
+ radial-gradient(ellipse at 100% 43%,rgba(0,195,255,.18),transparent 28%),
+ linear-gradient(180deg,#071522 0%,#061725 52%,#081b2a 100%)}
+#page-vendors::after{content:"";position:absolute;z-index:-1;top:100px;bottom:20px;left:-14px;right:-14px;pointer-events:none;opacity:.62;background:
+ linear-gradient(90deg,transparent 0%,rgba(44,194,255,.0) 4%,rgba(44,194,255,.42) 4.4%,transparent 5.4%,transparent 94.6%,rgba(44,194,255,.42) 95.6%,transparent 96%);
+}
+#page-vendors .vendor-directory-stage{position:relative;margin:8px 0 16px;padding:15px 12px 20px;border:1px solid rgba(0,190,255,.58);border-radius:28px;background:linear-gradient(180deg,rgba(4,25,42,.94),rgba(3,19,33,.97));box-shadow:0 0 0 1px rgba(28,163,218,.12),0 0 32px rgba(0,178,255,.17),inset 0 0 35px rgba(0,147,205,.10);overflow:hidden}
+#page-vendors .vendor-directory-stage::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 50% 0%,rgba(0,218,255,.12),transparent 35%),linear-gradient(110deg,transparent 0%,rgba(255,255,255,.025) 50%,transparent 100%)}
+#page-vendors .vendor-directory-heading{position:relative;display:flex;align-items:center;justify-content:center;gap:10px;margin:0 auto 19px;padding:0 0 12px;border-bottom:1px solid rgba(0,205,255,.45);text-align:center}
+#page-vendors .vendor-directory-heading h1{margin:0;color:#f1fbff;font-size:clamp(20px,5vw,27px);font-weight:950;text-shadow:0 0 13px rgba(0,202,255,.52);letter-spacing:-.4px}
+#page-vendors .vendor-heading-icon{font-size:25px;color:#14d9ff;text-shadow:0 0 12px #00cfff}
+#page-vendors .vendor-heading-flourish{font-size:25px;color:#0fc9ee;text-shadow:0 0 10px #00cfff;transform:rotate(180deg)}
+#page-vendors .vendor-heading-flourish:last-child{transform:none}
+#page-vendors .vendor-directory-toolbar{display:block;margin:0 0 15px}
+#page-vendors .vendor-directory-toolbar-hidden{display:none!important}
+#page-vendors #vendorDirectorySearch{width:100%;min-height:46px;border:1px solid #267d9d;border-radius:999px;background:linear-gradient(100deg,#102e45,#0b2236);color:#f2fbff;text-align:right;padding:10px 18px;box-shadow:0 0 13px rgba(0,192,255,.12)}
+#page-vendors #vendorDirectorySearch::placeholder{color:#a9c3d2}
+#page-vendors .vendor-directory-grid{position:relative;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:19px 9px!important;align-items:start}
+#page-vendors .vendor-round-card{appearance:none;-webkit-appearance:none;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:flex-start!important;gap:7px!important;min-width:0!important;width:100%!important;padding:5px 2px 8px!important;border:0!important;border-radius:13px!important;background:transparent!important;color:#f4fbff!important;box-shadow:none!important;text-align:center!important;cursor:pointer}
+#page-vendors .vendor-round-avatar{position:relative;width:min(25vw,118px)!important;height:min(25vw,118px)!important;max-width:118px!important;max-height:118px!important;min-width:68px!important;min-height:68px!important;display:grid!important;place-items:center!important;overflow:hidden!important;border-radius:50%!important;border:2px solid #23d9ff!important;background:radial-gradient(circle at 35% 25%,#234f72,#071726 72%)!important;box-shadow:0 0 0 3px rgba(21,195,255,.12),0 0 15px rgba(0,207,255,.70),inset 0 0 18px rgba(0,183,255,.22)!important;font-size:33px!important}
+#page-vendors .vendor-round-avatar img{display:block;width:100%!important;height:100%!important;object-fit:cover!important;border-radius:50%!important}
+#page-vendors .vendor-ring-1{border-color:#35aaff!important;box-shadow:0 0 0 3px #248cff24,0 0 17px #178dffb8!important}
+#page-vendors .vendor-ring-2{border-color:#ff4568!important;box-shadow:0 0 0 3px #ff456824,0 0 17px #ff345eb8!important}
+#page-vendors .vendor-ring-3{border-color:#d44dff!important;box-shadow:0 0 0 3px #d44dff24,0 0 17px #c43cffb8!important}
+#page-vendors .vendor-ring-4{border-color:#36ed8b!important;box-shadow:0 0 0 3px #36ed8b24,0 0 17px #20dc77b8!important}
+#page-vendors .vendor-ring-5{border-color:#ffc34a!important;box-shadow:0 0 0 3px #ffc34a24,0 0 17px #ffb52db8!important}
+#page-vendors .vendor-round-name{display:block;width:100%;font-size:clamp(11px,2.8vw,15px);font-weight:950;line-height:1.35;color:#f7fbff!important;overflow-wrap:anywhere;text-shadow:0 1px 5px #000}
+#page-vendors .vendor-round-meta{display:inline-block;max-width:100%;font-size:10px;line-height:1.3;color:#e2f5ff!important;border:1px solid rgba(66,192,237,.65);border-radius:99px;padding:4px 8px;background:linear-gradient(90deg,#14344b,#1c3c54);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#page-vendors .vendor-round-featured{font-size:9px;font-weight:900;color:#b9f5ff;background:#07506a;border:1px solid #1acfff;border-radius:99px;padding:3px 8px}
+#page-vendors .vendor-round-card:active{transform:scale(.97)!important}
+#page-vendors .vendor-round-card:focus-visible{outline:2px solid #55e5ff;outline-offset:3px}
+#page-vendors #vendorSelectedStore{position:relative;z-index:2;padding:12px;border:1px solid rgba(0,195,255,.45);border-radius:20px;background:#071b2a}
+@media(min-width:760px){#page-vendors .vendor-directory-stage{padding:22px 26px 28px}#page-vendors .vendor-directory-grid{gap:26px 20px!important}#page-vendors .vendor-round-avatar{width:142px!important;height:142px!important}}
+@media(max-width:390px){#page-vendors .vendor-directory-stage{padding:12px 8px 16px;border-radius:22px}#page-vendors .vendor-directory-grid{gap:15px 5px!important}#page-vendors .vendor-round-avatar{width:24vw!important;height:24vw!important;min-width:62px!important;min-height:62px!important}#page-vendors .vendor-round-meta{font-size:9px;padding:3px 6px}}
+</style>
+
+</body>
+</html>
