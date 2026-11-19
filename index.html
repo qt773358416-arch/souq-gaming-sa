@@ -1011,216 +1011,6 @@ body.vendor-store-open #vendorSelectedStore .vendor-detail-head,body.vendor-stor
 @media(max-width:650px){body.vendor-store-open #vendorSelectedStore{padding:0!important}body.vendor-store-open #vendorSelectedStore #souqMerchantTemplateHost{border-radius:0}body.vendor-store-open #vendorSelectedStore #souqMerchantTemplateFrame{height:calc(100dvh - 52px);min-height:600px}}
 </style>
 
-
-<style id="souq-merchant-storefront-premium-2026">
-/* واجهة متجر التاجر: قالب موحد قابل لتخصيص هوية كل متجر */
-#vendorSelectedStore{
-  --store-bg:#0b1420;--store-card:#142333;--store-card2:#192c3d;
-  --store-line:#29475a;--store-text:#f1f8fc;--store-muted:#a9bfcb;
-  --store-accent:#55d5e8;
-  color:var(--store-text)!important;
-}
-#vendorSelectedStore .vendor-detail-head{
-  display:flex;align-items:center;gap:14px;padding:16px 18px;margin:0 0 16px;
-  border:1px solid var(--store-line);border-radius:18px;
-  background:linear-gradient(115deg,#142c40,#101d2b 70%);
-}
-#vendorSelectedStore .vendor-detail-logo{
-  width:58px;height:58px;flex:0 0 58px;display:grid;place-items:center;
-  border-radius:16px;background:#183c50;border:1px solid #347086;color:var(--store-accent);
-  font-size:25px;font-weight:900;overflow:hidden;
-}
-#vendorSelectedStore .vendor-detail-head h2{font-size:22px!important;color:var(--store-text)!important}
-#vendorSelectedStore .vendor-detail-head p,
-#vendorSelectedStore #vendorSelectedDescription{color:var(--store-muted)!important;line-height:1.8}
-#vendorSelectedStore #vendorSelectedDescription{
-  max-width:1200px;margin:0 auto 16px;padding:0 4px;
-}
-#vendorSelectedStore .row.space{align-items:center;margin:18px 0 12px}
-#vendorSelectedStore .row.space h2{font-size:20px;color:var(--store-text)}
-#vendorSelectedStore .vendor-pill{
-  display:inline-flex;align-items:center;border-radius:99px;padding:6px 11px;
-  background:#143a49;border:1px solid #286276;color:#9cecf4;font-size:12px;font-weight:800;
-}
-#vendorSelectedStore .vendor-product-grid{
-  display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:14px!important;
-}
-#vendorSelectedStore .vendor-product-card,
-#vendorSelectedStore [class*="vendor-product"]{
-  min-width:0;
-}
-#vendorSelectedStore .vendor-product-card{
-  overflow:hidden;border:1px solid var(--store-line)!important;border-radius:17px!important;
-  background:linear-gradient(180deg,#172a3a,#101d2a)!important;
-  box-shadow:0 8px 24px #0003;transition:transform .18s ease,border-color .18s ease;
-}
-#vendorSelectedStore .vendor-product-card:hover{transform:translateY(-3px);border-color:#4dbdd0!important}
-#vendorSelectedStore .vendor-product-image,
-#vendorSelectedStore .vendor-product-card img{
-  width:100%;aspect-ratio:1/1;object-fit:contain;background:#f4f7fa;
-}
-#vendorSelectedStore .vendor-product-content{padding:13px!important}
-#vendorSelectedStore .vendor-product-content h3{font-size:15px!important;color:var(--store-text)!important;line-height:1.6}
-#vendorSelectedStore .vendor-product-content p{color:var(--store-muted)!important;font-size:12px;line-height:1.7}
-#vendorSelectedStore .vendor-product-price,
-#vendorSelectedStore [class*="product-price"]{color:var(--store-accent)!important;font-weight:900}
-#vendorSelectedStore .vendor-product-actions{display:flex;gap:7px;flex-wrap:wrap}
-#vendorSelectedStore .vendor-product-actions button{flex:1;min-width:0}
-#vendorSelectedStore .vendor-cart-box{
-  margin-top:24px!important;padding:18px!important;border:1px solid var(--store-line)!important;
-  border-radius:18px!important;background:linear-gradient(145deg,#142838,#101d2a)!important;
-}
-#vendorSelectedStore .vendor-cart-box h3{color:var(--store-text)}
-#vendorSelectedStore .vendor-cart-form{gap:12px}
-#vendorSelectedStore .field,#vendorSelectedStore input,#vendorSelectedStore textarea{
-  background:#0c1823!important;color:var(--store-text)!important;border:1px solid #2b4b5d!important;
-  border-radius:12px!important;
-}
-#vendorSelectedStore .vendor-danger-note{background:#2b2530!important;border-color:#604052!important;color:#ffdce6!important}
-#vendorSelectedStore #vendorBackToDirectory{border-radius:12px!important}
-@media(max-width:900px){
- #vendorSelectedStore .vendor-product-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
-}
-@media(max-width:620px){
- #vendorSelectedStore .vendor-detail-head{padding:12px;border-radius:14px;gap:10px}
- #vendorSelectedStore .vendor-detail-logo{width:48px;height:48px;flex-basis:48px}
- #vendorSelectedStore .vendor-detail-head h2{font-size:18px!important}
- #vendorSelectedStore .vendor-product-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
- #vendorSelectedStore .vendor-product-content{padding:9px!important}
- #vendorSelectedStore .vendor-product-content h3{font-size:13px!important}
- #vendorSelectedStore .vendor-cart-box{padding:13px!important}
-}
-</style>
-
-<style id="souq-merchant-dashboard-premium-2026">
-
-/* لوحة التاجر: دمج بصري مع النظام الحالي دون استبدال وظائفه أو مصادر بياناته */
-body.vendor-portal-mode{
- --m-bg:#0d1722;--m-card:#142332;--m-card2:#1a2c3b;--m-line:#2a4658;
- --m-text:#eff8fc;--m-muted:#a7bdc9;--m-accent:#55d5e8;
- background:var(--m-bg)!important;color:var(--m-text)!important;
-}
-body.vendor-portal-mode .wrap{max-width:1500px!important;padding:18px 22px calc(100px + env(safe-area-inset-bottom))!important}
-body.vendor-portal-mode #merchantApp{max-width:none!important;width:100%;margin:0 auto}
-body.vendor-portal-mode .merchant-dashboard-layout{
- display:grid!important;grid-template-columns:245px minmax(0,1fr)!important;gap:18px!important;
- align-items:start!important;direction:rtl;
-}
-body.vendor-portal-mode .merchant-desktop-nav{display:block!important;min-width:0}
-body.vendor-portal-mode .merchant-desktop-nav .merchant-drawer{
- position:sticky!important;top:16px!important;transform:none!important;width:auto!important;
- height:calc(100dvh - 32px)!important;max-height:900px;overflow:auto;
- border:1px solid var(--m-line)!important;border-radius:19px!important;
- background:linear-gradient(180deg,#142638,#101d2a)!important;
- box-shadow:0 12px 35px #0003!important;padding:16px!important;
-}
-body.vendor-portal-mode .merchant-app-body{min-width:0!important}
-body.vendor-portal-mode .merchant-header{
- padding:14px 16px!important;border:1px solid var(--m-line)!important;border-radius:18px!important;
- background:linear-gradient(110deg,#172f42,#132231)!important;margin-bottom:12px;
-}
-body.vendor-portal-mode .merchant-brandlogo{
- background:#123c4b!important;color:#85edf4!important;border:1px solid #34788a!important;
- box-shadow:0 0 0 4px #55d5e811;
-}
-body.vendor-portal-mode .merchant-brandline h2{color:var(--m-text)!important;font-size:20px!important}
-body.vendor-portal-mode .merchant-brandline p{color:var(--m-muted)!important}
-body.vendor-portal-mode .merchant-iconbtn{
- background:#1b3445!important;border:1px solid #31566a!important;color:#9beaf2!important;
-}
-body.vendor-portal-mode .merchant-searchbar input,
-body.vendor-portal-mode .merchant-input,
-body.vendor-portal-mode .merchant-filter-row input,
-body.vendor-portal-mode .merchant-filter-row select{
- background:#0c1924!important;color:var(--m-text)!important;border:1px solid var(--m-line)!important;
- border-radius:12px!important;
-}
-body.vendor-portal-mode .merchant-periodbar{padding:10px 4px 14px!important;color:var(--m-muted)!important}
-body.vendor-portal-mode .merchant-periodbar strong,
-body.vendor-portal-mode .merchant-periodbar button.active{color:var(--m-accent)!important}
-body.vendor-portal-mode .merchant-periodbar button.active{border-color:var(--m-accent)!important}
-body.vendor-portal-mode .merchant-kpi-new,
-body.vendor-portal-mode .merchant-panel,
-body.vendor-portal-mode .merchant-data-row,
-body.vendor-portal-mode .vendor-dashboard-card,
-body.vendor-portal-mode .vendor-state{
- background:linear-gradient(155deg,#172b3b,#12212f)!important;
- border:1px solid var(--m-line)!important;border-radius:16px!important;
- color:var(--m-text)!important;box-shadow:0 7px 22px #0002!important;
-}
-body.vendor-portal-mode .merchant-kpi-new{padding:16px!important}
-body.vendor-portal-mode .merchant-kpi-new span,
-body.vendor-portal-mode .merchant-kpi-new small,
-body.vendor-portal-mode .merchant-panel p,
-body.vendor-portal-mode .vendor-muted-note{color:var(--m-muted)!important}
-body.vendor-portal-mode .merchant-kpi-new strong{color:var(--m-text)!important;font-size:23px!important}
-body.vendor-portal-mode .merchant-panel h3,
-body.vendor-portal-mode .merchant-view-head h2,
-body.vendor-portal-mode .vendor-dashboard-card h3{color:var(--m-accent)!important}
-body.vendor-portal-mode .merchant-shortcut{
- background:#1a3040!important;border:1px solid #315166!important;color:var(--m-text)!important;
- border-radius:14px!important;min-height:62px;transition:.18s ease;
-}
-body.vendor-portal-mode .merchant-shortcut:hover{border-color:var(--m-accent)!important;transform:translateY(-2px)}
-body.vendor-portal-mode .merchant-shortcut b{color:var(--m-accent)!important}
-body.vendor-portal-mode .merchant-menu-item{
- color:var(--m-text)!important;border-color:#294354!important;border-radius:10px!important;
- padding:12px 10px!important;margin:3px 0;
-}
-body.vendor-portal-mode .merchant-menu-item:hover,
-body.vendor-portal-mode .merchant-menu-item.active{
- background:#173b4b!important;color:#a5f1f5!important;
-}
-body.vendor-portal-mode .merchant-menu-item b{color:var(--m-accent)!important}
-body.vendor-portal-mode .merchant-status-pill{
- background:#123b43!important;border:1px solid #23616a!important;color:#9cebf0!important;
-}
-body.vendor-portal-mode .merchant-btn,
-body.vendor-portal-mode .primary{
- background:#22bfd1!important;color:#06202a!important;border:1px solid #36d0df!important;
- border-radius:11px!important;font-weight:900!important;
-}
-body.vendor-portal-mode .merchant-btn.secondary,
-body.vendor-portal-mode .secondary{
- background:#203647!important;color:var(--m-text)!important;border:1px solid #35566a!important;
-}
-body.vendor-portal-mode .field,
-body.vendor-portal-mode input,
-body.vendor-portal-mode select,
-body.vendor-portal-mode textarea{
- background:#0c1924!important;color:var(--m-text)!important;border:1px solid var(--m-line)!important;
- border-radius:11px!important;
-}
-body.vendor-portal-mode .merchant-bottom-nav{
- background:#101e2bF5!important;border-top:1px solid var(--m-line)!important;
- box-shadow:0 -8px 25px #0004!important;
-}
-body.vendor-portal-mode .merchant-bottom-nav button{color:var(--m-muted)!important}
-body.vendor-portal-mode .merchant-bottom-nav button.active{
- background:#164453!important;color:#a5f1f5!important;border:1px solid #2b7888!important;
-}
-body.vendor-portal-mode .merchant-drawer-shade{background:#020910bb!important}
-body.vendor-portal-mode .merchant-placeholder,
-body.vendor-portal-mode .merchant-empty-note{
- background:#132535!important;border:1px dashed #36586a!important;color:var(--m-muted)!important;
-}
-body.vendor-portal-mode .vendor-table-wrap{overflow-x:auto}
-body.vendor-portal-mode .vendor-table{min-width:680px}
-@media(max-width:849px){
- body.vendor-portal-mode .wrap{padding:10px 10px calc(95px + env(safe-area-inset-bottom))!important}
- body.vendor-portal-mode .merchant-dashboard-layout{display:block!important}
- body.vendor-portal-mode .merchant-desktop-nav{display:none!important}
- body.vendor-portal-mode .merchant-app-body{width:100%!important}
- body.vendor-portal-mode .merchant-header{padding:11px!important}
- body.vendor-portal-mode .merchant-kpi-new{padding:12px!important}
- body.vendor-portal-mode .merchant-kpi-new strong{font-size:19px!important}
-}
-@media(min-width:850px){
- body.vendor-portal-mode .merchant-bottom-nav{display:none!important}
- body.vendor-portal-mode .merchant-app-body{padding-bottom:25px}
-}
-
-</style>
 </head>
 <body class="theme-dark">
 <div id="souqSplash" role="status" aria-label="جاري تجهيز سوق القيمنق السعودي">
@@ -1418,20 +1208,6 @@ body.vendor-portal-mode .vendor-table{min-width:680px}
  </div>
  <div id="vendorDashboardAuth" class="vendor-state">سجّل الدخول إلى حسابك أولاً لطلب متجر أو إدارة متجرك.</div>
  <div id="vendorApplicationBox" class="vendor-dashboard-card hidden">
-  <section id="vendorVerificationPanel" class="vendor-dashboard-card full" style="margin-bottom:16px">
-   <div class="row space"><div><h3>توثيق التاجر</h3><p class="vendor-muted-note">هذه الخطوة مطلوبة قبل إرسال طلب فتح المتجر. رفع المستند لا يعني اعتماده تلقائياً.</p></div><span class="vendor-pill">مطلوب</span></div>
-   <div id="vendorVerificationStatus" class="vendor-state" role="status">جارٍ تحميل حالة التوثيق...</div>
-   <form id="vendorVerificationForm" class="formgrid">
-    <div><label for="vendorVerifyType">صفة التاجر *</label><select id="vendorVerifyType" class="field" required><option value="freelancer">فرد — وثيقة عمل حر</option><option value="establishment">مؤسسة أو شركة — سجل تجاري</option></select></div>
-    <div><label for="vendorVerifyLegalName">الاسم النظامي *</label><input id="vendorVerifyLegalName" class="field" required maxlength="160"></div>
-    <div><label for="vendorVerifyRegNumber" id="vendorVerifyRegLabel">رقم وثيقة العمل الحر *</label><input id="vendorVerifyRegNumber" class="field" required maxlength="80"></div>
-    <div><label for="vendorVerifyCity">المدينة</label><input id="vendorVerifyCity" class="field" maxlength="80"></div>
-    <div class="full"><label for="vendorVerifyDocument">المستند الداعم * (PDF أو JPG أو PNG أو WEBP — حتى 10MB)</label><input id="vendorVerifyDocument" class="field" type="file" accept=".pdf,.jpg,.jpeg,.png,.webp,application/pdf,image/jpeg,image/png,image/webp" required></div>
-    <div class="full"><label class="pledge-check"><input id="vendorVerifyConsent" type="checkbox" required> أوافق على معالجة بياناتي ومستنداتي لغرض التحقق من أهلية فتح متجر، وأقر بصحة المعلومات.</label></div>
-    <div class="full"><button class="primary" type="submit" id="vendorVerifySubmit">إرسال طلب التوثيق</button><div id="vendorVerifyMsg" class="muted" role="status"></div></div>
-   </form>
-  </section>
-  <div id="vendorStoreApplicationGate" hidden>
   <h2>طلب فتح متجر</h2>
   <p class="vendor-muted-note">بعد إرسال الطلب ستراجعه إدارة المنصة. لن يظهر المتجر للعامة قبل اعتماده.</p>
   <form id="vendorApplicationForm" class="formgrid">
@@ -1445,7 +1221,6 @@ body.vendor-portal-mode .vendor-table{min-width:680px}
    <div class="full"><label class="pledge-check"><input id="vendorApplyAgree" type="checkbox" required> أقر بصحة بيانات المتجر والتزامي بالأنظمة وسياسات المنصة.</label></div>
    <div class="full"><button class="primary" type="submit" id="vendorApplySubmit">إرسال طلب فتح المتجر</button><div id="vendorApplyMsg" class="muted" role="status"></div></div>
   </form>
-  </div>
  </div>
 
  <div id="vendorWorkspace" class="hidden">
@@ -1653,7 +1428,6 @@ const $=id=>document.getElementById(id);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const msg=(id,t)=>$(id).textContent=t;
 function showPage(page){
- document.body.classList.toggle('vendor-portal-mode',page==='vendor-dashboard');
  if(page!=='vendors' && document.body.classList.contains('vendor-store-open'))document.body.classList.remove('vendor-store-open');
  document.body.classList.toggle('store-view',page==='store');
  document.querySelectorAll('main>section').forEach(s=>s.classList.add('hidden'));
@@ -2895,84 +2669,13 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   finally{button.disabled=false;}
  });
 
-
- async function loadVendorVerification(){
-  const statusBox=v$('vendorVerificationStatus'),form=v$('vendorVerificationForm'),gate=v$('vendorStoreApplicationGate');
-  if(!statusBox||!form||!currentUser)return null;
-  const {data,error}=await sb.from('vendor_verification_requests')
-   .select('id,merchant_type,legal_name,status,submitted_at,rejection_reason,reviewer_note')
-   .eq('user_id',currentUser.id).order('submitted_at',{ascending:false}).limit(1).maybeSingle();
-  if(error){
-   statusBox.textContent='تعذر تحميل حالة التوثيق: '+error.message;
-   form.classList.remove('hidden');if(gate)gate.hidden=true;return null;
-  }
-  if(!data){
-   statusBox.textContent='لم ترسل طلب توثيق بعد. اختر صفتك وارفع المستند الداعم.';
-   form.classList.remove('hidden');if(gate)gate.hidden=true;return null;
-  }
-  const labels={pending:'قيد الانتظار',under_review:'قيد المراجعة',verified:'موثق',rejected:'مرفوض',needs_more_info:'يتطلب استكمالاً'};
-  statusBox.textContent='حالة طلب التوثيق: '+(labels[data.status]||data.status)+
-   (data.rejection_reason?' — السبب: '+data.rejection_reason:'')+
-   (data.reviewer_note?' — ملاحظة: '+data.reviewer_note:'');
-  if(data.status==='verified'){
-   form.classList.add('hidden');if(gate)gate.hidden=false;
-  }else if(data.status==='rejected'||data.status==='needs_more_info'){
-   form.classList.remove('hidden');if(gate)gate.hidden=true;
-   v$('vendorVerifyType').value=data.merchant_type||'freelancer';
-   v$('vendorVerifyLegalName').value=data.legal_name||'';
-  }else{
-   form.classList.add('hidden');if(gate)gate.hidden=true;
-  }
-  return data;
- }
- v$('vendorVerifyType')?.addEventListener('change',()=>{
-  v$('vendorVerifyRegLabel').textContent=v$('vendorVerifyType').value==='freelancer'?'رقم وثيقة العمل الحر *':'رقم السجل التجاري *';
- });
- v$('vendorVerificationForm')?.addEventListener('submit',async e=>{
-  e.preventDefault();if(!needAuth())return;
-  const file=v$('vendorVerifyDocument').files?.[0];
-  if(!file){vMsg('vendorVerifyMsg','اختر المستند الداعم أولاً.');return;}
-  const validTypes=['application/pdf','image/jpeg','image/png','image/webp'];
-  if(!validTypes.includes(file.type)||file.size>10*1024*1024){vMsg('vendorVerifyMsg','نوع الملف غير مدعوم أو حجمه أكبر من 10 ميجابايت.');return;}
-  const btn=v$('vendorVerifySubmit');btn.disabled=true;
-  let requestId=null,path=null;
-  try{
-   const payload={
-    user_id:currentUser.id,
-    merchant_type:v$('vendorVerifyType').value,
-    legal_name:v$('vendorVerifyLegalName').value.trim(),
-    registration_number:v$('vendorVerifyRegNumber').value.trim(),
-    city:v$('vendorVerifyCity').value.trim()||null,
-    status:'pending'
-   };
-   const created=await sb.from('vendor_verification_requests').insert(payload).select('id').single();
-   if(created.error)throw created.error;
-   requestId=created.data.id;
-   const ext=(file.name.split('.').pop()||'bin').toLowerCase().replace(/[^a-z0-9]/g,'')||'bin';
-   path=`${currentUser.id}/${requestId}/${crypto.randomUUID()}.${ext}`;
-   const uploaded=await sb.storage.from('vendor-verification-private').upload(path,file,{upsert:false,contentType:file.type});
-   if(uploaded.error)throw uploaded.error;
-   const saved=await sb.from('vendor_verification_documents').insert({
-    request_id:requestId,user_id:currentUser.id,
-    document_type:v$('vendorVerifyType').value==='freelancer'?'freelance_document':'commercial_registration',
-    storage_path:path,mime_type:file.type,file_size:file.size
-   });
-   if(saved.error)throw saved.error;
-   v$('vendorVerificationForm').reset();
-   vMsg('vendorVerifyMsg','تم استلام طلب التوثيق والمستند. ستظهر الحالة بعد المراجعة.');
-   await loadVendorVerification();
-  }catch(err){
-   vMsg('vendorVerifyMsg','تعذر إرسال الطلب: '+(err.message||String(err)));
-  }finally{btn.disabled=false;}
- });
-
  async function loadVendorStoreWorkspace(){
   if(!currentUser){v$('vendorDashboardAuth').classList.remove('hidden');v$('vendorApplicationBox').classList.add('hidden');v$('vendorWorkspace').classList.add('hidden');return;}
   v$('vendorDashboardAuth').classList.add('hidden');
   const {data,error}=await sb.from('vendor_stores').select('*').eq('owner_id',currentUser.id).maybeSingle();
   if(error){vMsg('vendorDashboardAuth','تعذر قراءة حالة المتجر: '+error.message+' — نفّذ ملف SQL الإضافي.');v$('vendorDashboardAuth').classList.remove('hidden');return;}
   vState.myStore=data||null;
-  if(!data){v$('vendorApplicationBox').classList.remove('hidden');v$('vendorWorkspace').classList.add('hidden');await loadVendorVerification();return;}
+  if(!data){v$('vendorApplicationBox').classList.remove('hidden');v$('vendorWorkspace').classList.add('hidden');return;}
   v$('vendorApplicationBox').classList.add('hidden');v$('vendorWorkspace').classList.remove('hidden');
   v$('vendorWorkspaceStatus').textContent='حالة المتجر: '+vStatusLabel(data.status)+'. '+(data.status==='approved'?'متجرك معتمد ويمكنك إدارة المنتجات وطلب الترويج.':'لن يظهر المتجر للعامة حتى تعتمد الإدارة الطلب، ولن تتمكن من نشر المنتجات أو طلب الترويج قبل الاعتماد.');
   const canOperate=data.status==='approved';
@@ -4909,6 +4612,88 @@ a{color:inherit;text-decoration:none}.container{width:min(1220px,92%);margin:aut
 .cart-summary{border-top:1px solid var(--store-border);padding-top:15px}.cart-summary div{display:flex;justify-content:space-between;margin-bottom:13px}
 .toast{position:fixed;z-index:70;bottom:20px;right:50%;transform:translate(50%,20px);opacity:0;pointer-events:none;background:var(--store-surface-2);border:1px solid var(--store-border);border-radius:12px;padding:11px 17px;font-size:12px;transition:.2s}
 .toast.show{opacity:1;transform:translate(50%,0)}
+
+/* ===== SOUQ GAMING STOREFRONT RESPONSIVE REBUILD ===== */
+html,body{width:100%;max-width:100%;min-width:0;overflow-x:hidden}
+body{min-height:100vh}
+.container{width:calc(100% - 32px)!important;max-width:1220px!important;margin-inline:auto!important}
+.site-header{width:100%;max-width:100%;inset-inline:0}
+.header-inner{width:calc(100% - 28px)!important;max-width:1220px!important;margin-inline:auto!important;gap:14px}
+.hero{padding:12px 0 0!important;margin:0 auto!important}
+.hero:has(.hero-panel:not(.visible)){display:none!important}
+.hero-panel{min-height:250px;padding:32px 5%!important}
+.section{margin:24px auto!important}
+.section-heading{margin-bottom:13px}
+.category-list{grid-template-columns:repeat(auto-fit,minmax(112px,1fr));gap:10px}
+.category-card{min-height:94px;padding:14px 9px}
+.product-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.product-card{min-width:0}
+.product-image{height:190px;background:linear-gradient(145deg,var(--store-surface-2),var(--store-surface))}
+.product-image img{object-fit:contain;padding:8px}
+.product-image .image-placeholder{width:100%;height:100%;display:grid;place-items:center;font-size:48px;color:var(--store-secondary);background:radial-gradient(circle at 50% 42%,color-mix(in srgb,var(--store-primary) 24%,transparent),transparent 58%)}
+.product-info{min-width:0}
+.product-name{line-height:1.65;min-height:2.9em;overflow-wrap:anywhere}
+.product-price{color:var(--store-secondary)}
+.product-action{font-weight:700;min-height:42px}
+.empty-state{margin-top:10px}
+#souqMerchantTemplateHost,#souqMerchantTemplateFrame{width:100%!important;max-width:100%!important;min-width:0!important}
+.product-actions{display:grid;grid-template-columns:1fr;gap:7px;margin-top:10px}
+.product-details-action{width:100%;border:1px solid var(--store-border);background:var(--store-surface-2);color:var(--store-text);border-radius:10px;padding:9px;font-size:12px}
+.product-details-action:hover{border-color:var(--store-secondary)}
+.product-modal{position:fixed;inset:0;z-index:80;display:none;align-items:center;justify-content:center;padding:16px;background:#000b}
+.product-modal.open{display:flex}
+.product-modal-card{width:min(560px,100%);max-height:90vh;overflow:auto;background:var(--store-surface);border:1px solid var(--store-border);border-radius:20px;padding:16px}
+.product-modal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.product-modal-head h3{margin:0;font-size:18px}
+.product-modal-close{border:1px solid var(--store-border);background:var(--store-surface-2);color:var(--store-text);border-radius:10px;padding:8px 12px}
+.product-modal-image{width:100%;max-height:260px;aspect-ratio:16/9;object-fit:contain;background:var(--store-surface-2);border-radius:13px}
+.product-modal-description{white-space:pre-wrap;line-height:1.9;color:var(--store-muted);font-size:13px}
+.product-modal-price{font-size:20px;font-weight:800;color:var(--store-secondary);margin:12px 0}
+@media(max-width:760px){
+ .container{width:calc(100% - 24px)!important}
+ .header-inner{width:calc(100% - 20px)!important;min-height:64px;gap:8px}
+ .brand{flex:1;max-width:calc(100% - 115px);font-size:15px}
+ .brand-logo{width:34px;height:34px;flex:0 0 34px}
+ .header-actions{margin-inline-start:0;gap:6px}
+ .icon-btn{width:39px;height:39px;flex:0 0 39px}
+ .hero{padding:8px 0 0!important}
+ .hero-panel.visible{display:grid!important;grid-template-columns:1fr;min-height:0;padding:22px 18px!important;gap:10px}
+ .hero-title{font-size:clamp(24px,7vw,34px)}
+ .hero-description{font-size:13px;margin-bottom:13px}
+ .hero-visual{min-height:110px}
+ .hero-visual img{max-height:135px}
+ .section{margin:22px auto!important}
+ .section-heading h2{font-size:19px}
+ .category-list{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+ .category-card{min-height:88px;padding:11px 5px}
+ .category-icon{font-size:23px}
+ .category-name{font-size:11px;line-height:1.5}
+ .toolbar{display:grid;grid-template-columns:1fr;gap:8px}
+ .search-wrap input{min-height:48px;font-size:15px}
+ .sort-select{min-height:46px;font-size:14px}
+ .product-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px}
+ .product-image{height:auto;aspect-ratio:1/1}
+ .product-info{padding:10px}
+ .product-name{font-size:12px;min-height:3.1em;margin:5px 0 8px}
+ .product-price{font-size:15px}
+ .product-action{padding:9px 7px;font-size:12px;min-height:40px}
+ .product-actions{grid-template-columns:1fr 1fr;gap:6px}
+ .product-action,.product-details-action{font-size:11px;padding:9px 5px}
+ .promo-block.visible{grid-template-columns:1fr;gap:8px}
+ .promo-image{max-width:100%;max-height:130px}
+ .features-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .footer-grid{gap:14px}
+}
+@media(max-width:370px){
+ .container{width:calc(100% - 18px)!important}
+ .category-list{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .product-grid{gap:7px}
+ .product-info{padding:8px}
+ .product-action{font-size:11px}
+}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+/* ===== END STOREFRONT RESPONSIVE REBUILD ===== */
+
 @media(max-width:900px){.category-list{grid-template-columns:repeat(3,1fr)}.product-grid{grid-template-columns:repeat(3,1fr)}.footer-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:650px){
  .header-inner{min-height:66px;gap:10px}.menu-btn{display:block}.nav{display:none;position:absolute;top:66px;right:0;left:0;padding:16px 5%;background:var(--store-bg);border-bottom:1px solid var(--store-border);flex-direction:column;align-items:flex-start}.nav.open{display:flex}
@@ -4994,6 +4779,15 @@ a{color:inherit;text-decoration:none}.container{width:min(1220px,92%);margin:aut
  <div class="cart-summary"><div><span>الإجمالي</span><strong id="cartTotal">0</strong></div><button class="primary-btn" id="checkoutButton" style="width:100%">متابعة الشراء</button></div>
 </aside>
 <div class="toast" id="toast"></div>
+<div class="product-modal" id="productModal" role="dialog" aria-modal="true" aria-labelledby="productModalTitle">
+ <div class="product-modal-card">
+  <div class="product-modal-head"><h3 id="productModalTitle">تفاصيل المنتج</h3><button class="product-modal-close" id="productModalClose" type="button">إغلاق ✕</button></div>
+  <img class="product-modal-image" id="productModalImage" alt="">
+  <div class="product-modal-price" id="productModalPrice"></div>
+  <p class="product-modal-description" id="productModalDescription"></p>
+  <button class="primary-btn" id="productModalAdd" type="button" style="width:100%">إضافة إلى السلة</button>
+ </div>
+</div>
 
 <script>
 /*
@@ -5068,11 +4862,25 @@ function renderProducts() {
  const sort=$('productSort').value;if(sort==='low')filtered.sort((a,b)=>Number(a.price)-Number(b.price));if(sort==='high')filtered.sort((a,b)=>Number(b.price)-Number(a.price));
  $('productList').innerHTML=filtered.map(p=>{
   const category=(STORE.categories||[]).find(c=>String(c.id)===String(p.categoryId));
-  return `<article class="product-card visible"><div class="product-image">${p.image?`<img src="${safe(p.image)}" alt="${safe(p.name)}" loading="lazy">`:'<span class="image-placeholder">◇</span>'}</div><div class="product-info"><div class="product-category">${safe(category?.name||'')}</div><h3 class="product-name">${safe(p.name)}</h3><span class="product-price">${safe(p.price)} ${safe(p.currency||STORE.identity?.currency||'')}</span>${p.oldPrice?`<span class="product-old-price">${safe(p.oldPrice)}</span>`:''}<button class="product-action" data-add="${safe(p.id)}">إضافة إلى السلة</button></div></article>`;
+  return `<article class="product-card visible"><div class="product-image">${p.image?`<img src="${safe(p.image)}" alt="${safe(p.name)}" loading="lazy">`:'<span class="image-placeholder" aria-label="لا توجد صورة للمنتج">🎮</span>'}</div><div class="product-info"><div class="product-category">${safe(category?.name||'')}</div><h3 class="product-name">${safe(p.name)}</h3><span class="product-price">${safe(p.price)} ${safe(p.currency||STORE.identity?.currency||'')}</span>${p.oldPrice?`<span class="product-old-price">${safe(p.oldPrice)}</span>`:''}<div class="product-actions"><button class="product-action" data-add="${safe(p.id)}">إضافة إلى السلة</button><button class="product-details-action" type="button" data-details="${safe(p.id)}">التفاصيل</button></div></div></article>`;
  }).join('');
  $('productsEmpty').classList.toggle('visible',filtered.length===0);
  $('productList').querySelectorAll('[data-add]').forEach(btn=>btn.addEventListener('click',()=>addToCart(btn.dataset.add)));
+ $('productList').querySelectorAll('[data-details]').forEach(btn=>btn.addEventListener('click',()=>openProductDetails(btn.dataset.details)));
 }
+function openProductDetails(id){
+ const p=(STORE.products||[]).find(x=>String(x.id)===String(id));if(!p)return;
+ $('productModalTitle').textContent=p.name||'تفاصيل المنتج';
+ $('productModalPrice').textContent=`${safe(p.price)} ${safe(p.currency||STORE.identity?.currency||'')}`;
+ $('productModalDescription').textContent=p.description||'لا يوجد وصف إضافي لهذا المنتج.';
+ const image=$('productModalImage');
+ if(p.image){image.src=p.image;image.style.display='block'}else{image.removeAttribute('src');image.style.display='none'}
+ $('productModalAdd').onclick=()=>{addToCart(id);$('productModal').classList.remove('open')};
+ $('productModal').classList.add('open');
+}
+$('productModalClose').addEventListener('click',()=>$('productModal').classList.remove('open'));
+$('productModal').addEventListener('click',e=>{if(e.target===$('productModal'))$('productModal').classList.remove('open')});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')$('productModal')?.classList.remove('open')});
 function renderPromo() {
  const p=STORE.sections?.promo||{};if(p.visible!==true||!(p.title||p.text||p.image))return;
  show($('promoSection'));show($('promoBlock'));$('promoTitle').textContent=p.title||'';$('promoText').textContent=p.text||'';
