@@ -1092,6 +1092,135 @@ body.vendor-store-open #vendorSelectedStore .vendor-detail-head,body.vendor-stor
 }
 </style>
 
+<style id="souq-merchant-dashboard-premium-2026">
+
+/* لوحة التاجر: دمج بصري مع النظام الحالي دون استبدال وظائفه أو مصادر بياناته */
+body.vendor-portal-mode{
+ --m-bg:#0d1722;--m-card:#142332;--m-card2:#1a2c3b;--m-line:#2a4658;
+ --m-text:#eff8fc;--m-muted:#a7bdc9;--m-accent:#55d5e8;
+ background:var(--m-bg)!important;color:var(--m-text)!important;
+}
+body.vendor-portal-mode .wrap{max-width:1500px!important;padding:18px 22px calc(100px + env(safe-area-inset-bottom))!important}
+body.vendor-portal-mode #merchantApp{max-width:none!important;width:100%;margin:0 auto}
+body.vendor-portal-mode .merchant-dashboard-layout{
+ display:grid!important;grid-template-columns:245px minmax(0,1fr)!important;gap:18px!important;
+ align-items:start!important;direction:rtl;
+}
+body.vendor-portal-mode .merchant-desktop-nav{display:block!important;min-width:0}
+body.vendor-portal-mode .merchant-desktop-nav .merchant-drawer{
+ position:sticky!important;top:16px!important;transform:none!important;width:auto!important;
+ height:calc(100dvh - 32px)!important;max-height:900px;overflow:auto;
+ border:1px solid var(--m-line)!important;border-radius:19px!important;
+ background:linear-gradient(180deg,#142638,#101d2a)!important;
+ box-shadow:0 12px 35px #0003!important;padding:16px!important;
+}
+body.vendor-portal-mode .merchant-app-body{min-width:0!important}
+body.vendor-portal-mode .merchant-header{
+ padding:14px 16px!important;border:1px solid var(--m-line)!important;border-radius:18px!important;
+ background:linear-gradient(110deg,#172f42,#132231)!important;margin-bottom:12px;
+}
+body.vendor-portal-mode .merchant-brandlogo{
+ background:#123c4b!important;color:#85edf4!important;border:1px solid #34788a!important;
+ box-shadow:0 0 0 4px #55d5e811;
+}
+body.vendor-portal-mode .merchant-brandline h2{color:var(--m-text)!important;font-size:20px!important}
+body.vendor-portal-mode .merchant-brandline p{color:var(--m-muted)!important}
+body.vendor-portal-mode .merchant-iconbtn{
+ background:#1b3445!important;border:1px solid #31566a!important;color:#9beaf2!important;
+}
+body.vendor-portal-mode .merchant-searchbar input,
+body.vendor-portal-mode .merchant-input,
+body.vendor-portal-mode .merchant-filter-row input,
+body.vendor-portal-mode .merchant-filter-row select{
+ background:#0c1924!important;color:var(--m-text)!important;border:1px solid var(--m-line)!important;
+ border-radius:12px!important;
+}
+body.vendor-portal-mode .merchant-periodbar{padding:10px 4px 14px!important;color:var(--m-muted)!important}
+body.vendor-portal-mode .merchant-periodbar strong,
+body.vendor-portal-mode .merchant-periodbar button.active{color:var(--m-accent)!important}
+body.vendor-portal-mode .merchant-periodbar button.active{border-color:var(--m-accent)!important}
+body.vendor-portal-mode .merchant-kpi-new,
+body.vendor-portal-mode .merchant-panel,
+body.vendor-portal-mode .merchant-data-row,
+body.vendor-portal-mode .vendor-dashboard-card,
+body.vendor-portal-mode .vendor-state{
+ background:linear-gradient(155deg,#172b3b,#12212f)!important;
+ border:1px solid var(--m-line)!important;border-radius:16px!important;
+ color:var(--m-text)!important;box-shadow:0 7px 22px #0002!important;
+}
+body.vendor-portal-mode .merchant-kpi-new{padding:16px!important}
+body.vendor-portal-mode .merchant-kpi-new span,
+body.vendor-portal-mode .merchant-kpi-new small,
+body.vendor-portal-mode .merchant-panel p,
+body.vendor-portal-mode .vendor-muted-note{color:var(--m-muted)!important}
+body.vendor-portal-mode .merchant-kpi-new strong{color:var(--m-text)!important;font-size:23px!important}
+body.vendor-portal-mode .merchant-panel h3,
+body.vendor-portal-mode .merchant-view-head h2,
+body.vendor-portal-mode .vendor-dashboard-card h3{color:var(--m-accent)!important}
+body.vendor-portal-mode .merchant-shortcut{
+ background:#1a3040!important;border:1px solid #315166!important;color:var(--m-text)!important;
+ border-radius:14px!important;min-height:62px;transition:.18s ease;
+}
+body.vendor-portal-mode .merchant-shortcut:hover{border-color:var(--m-accent)!important;transform:translateY(-2px)}
+body.vendor-portal-mode .merchant-shortcut b{color:var(--m-accent)!important}
+body.vendor-portal-mode .merchant-menu-item{
+ color:var(--m-text)!important;border-color:#294354!important;border-radius:10px!important;
+ padding:12px 10px!important;margin:3px 0;
+}
+body.vendor-portal-mode .merchant-menu-item:hover,
+body.vendor-portal-mode .merchant-menu-item.active{
+ background:#173b4b!important;color:#a5f1f5!important;
+}
+body.vendor-portal-mode .merchant-menu-item b{color:var(--m-accent)!important}
+body.vendor-portal-mode .merchant-status-pill{
+ background:#123b43!important;border:1px solid #23616a!important;color:#9cebf0!important;
+}
+body.vendor-portal-mode .merchant-btn,
+body.vendor-portal-mode .primary{
+ background:#22bfd1!important;color:#06202a!important;border:1px solid #36d0df!important;
+ border-radius:11px!important;font-weight:900!important;
+}
+body.vendor-portal-mode .merchant-btn.secondary,
+body.vendor-portal-mode .secondary{
+ background:#203647!important;color:var(--m-text)!important;border:1px solid #35566a!important;
+}
+body.vendor-portal-mode .field,
+body.vendor-portal-mode input,
+body.vendor-portal-mode select,
+body.vendor-portal-mode textarea{
+ background:#0c1924!important;color:var(--m-text)!important;border:1px solid var(--m-line)!important;
+ border-radius:11px!important;
+}
+body.vendor-portal-mode .merchant-bottom-nav{
+ background:#101e2bF5!important;border-top:1px solid var(--m-line)!important;
+ box-shadow:0 -8px 25px #0004!important;
+}
+body.vendor-portal-mode .merchant-bottom-nav button{color:var(--m-muted)!important}
+body.vendor-portal-mode .merchant-bottom-nav button.active{
+ background:#164453!important;color:#a5f1f5!important;border:1px solid #2b7888!important;
+}
+body.vendor-portal-mode .merchant-drawer-shade{background:#020910bb!important}
+body.vendor-portal-mode .merchant-placeholder,
+body.vendor-portal-mode .merchant-empty-note{
+ background:#132535!important;border:1px dashed #36586a!important;color:var(--m-muted)!important;
+}
+body.vendor-portal-mode .vendor-table-wrap{overflow-x:auto}
+body.vendor-portal-mode .vendor-table{min-width:680px}
+@media(max-width:849px){
+ body.vendor-portal-mode .wrap{padding:10px 10px calc(95px + env(safe-area-inset-bottom))!important}
+ body.vendor-portal-mode .merchant-dashboard-layout{display:block!important}
+ body.vendor-portal-mode .merchant-desktop-nav{display:none!important}
+ body.vendor-portal-mode .merchant-app-body{width:100%!important}
+ body.vendor-portal-mode .merchant-header{padding:11px!important}
+ body.vendor-portal-mode .merchant-kpi-new{padding:12px!important}
+ body.vendor-portal-mode .merchant-kpi-new strong{font-size:19px!important}
+}
+@media(min-width:850px){
+ body.vendor-portal-mode .merchant-bottom-nav{display:none!important}
+ body.vendor-portal-mode .merchant-app-body{padding-bottom:25px}
+}
+
+</style>
 </head>
 <body class="theme-dark">
 <div id="souqSplash" role="status" aria-label="جاري تجهيز سوق القيمنق السعودي">
@@ -1289,6 +1418,20 @@ body.vendor-store-open #vendorSelectedStore .vendor-detail-head,body.vendor-stor
  </div>
  <div id="vendorDashboardAuth" class="vendor-state">سجّل الدخول إلى حسابك أولاً لطلب متجر أو إدارة متجرك.</div>
  <div id="vendorApplicationBox" class="vendor-dashboard-card hidden">
+  <section id="vendorVerificationPanel" class="vendor-dashboard-card full" style="margin-bottom:16px">
+   <div class="row space"><div><h3>توثيق التاجر</h3><p class="vendor-muted-note">هذه الخطوة مطلوبة قبل إرسال طلب فتح المتجر. رفع المستند لا يعني اعتماده تلقائياً.</p></div><span class="vendor-pill">مطلوب</span></div>
+   <div id="vendorVerificationStatus" class="vendor-state" role="status">جارٍ تحميل حالة التوثيق...</div>
+   <form id="vendorVerificationForm" class="formgrid">
+    <div><label for="vendorVerifyType">صفة التاجر *</label><select id="vendorVerifyType" class="field" required><option value="freelancer">فرد — وثيقة عمل حر</option><option value="establishment">مؤسسة أو شركة — سجل تجاري</option></select></div>
+    <div><label for="vendorVerifyLegalName">الاسم النظامي *</label><input id="vendorVerifyLegalName" class="field" required maxlength="160"></div>
+    <div><label for="vendorVerifyRegNumber" id="vendorVerifyRegLabel">رقم وثيقة العمل الحر *</label><input id="vendorVerifyRegNumber" class="field" required maxlength="80"></div>
+    <div><label for="vendorVerifyCity">المدينة</label><input id="vendorVerifyCity" class="field" maxlength="80"></div>
+    <div class="full"><label for="vendorVerifyDocument">المستند الداعم * (PDF أو JPG أو PNG أو WEBP — حتى 10MB)</label><input id="vendorVerifyDocument" class="field" type="file" accept=".pdf,.jpg,.jpeg,.png,.webp,application/pdf,image/jpeg,image/png,image/webp" required></div>
+    <div class="full"><label class="pledge-check"><input id="vendorVerifyConsent" type="checkbox" required> أوافق على معالجة بياناتي ومستنداتي لغرض التحقق من أهلية فتح متجر، وأقر بصحة المعلومات.</label></div>
+    <div class="full"><button class="primary" type="submit" id="vendorVerifySubmit">إرسال طلب التوثيق</button><div id="vendorVerifyMsg" class="muted" role="status"></div></div>
+   </form>
+  </section>
+  <div id="vendorStoreApplicationGate" hidden>
   <h2>طلب فتح متجر</h2>
   <p class="vendor-muted-note">بعد إرسال الطلب ستراجعه إدارة المنصة. لن يظهر المتجر للعامة قبل اعتماده.</p>
   <form id="vendorApplicationForm" class="formgrid">
@@ -1302,6 +1445,7 @@ body.vendor-store-open #vendorSelectedStore .vendor-detail-head,body.vendor-stor
    <div class="full"><label class="pledge-check"><input id="vendorApplyAgree" type="checkbox" required> أقر بصحة بيانات المتجر والتزامي بالأنظمة وسياسات المنصة.</label></div>
    <div class="full"><button class="primary" type="submit" id="vendorApplySubmit">إرسال طلب فتح المتجر</button><div id="vendorApplyMsg" class="muted" role="status"></div></div>
   </form>
+  </div>
  </div>
 
  <div id="vendorWorkspace" class="hidden">
@@ -1509,6 +1653,7 @@ const $=id=>document.getElementById(id);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const msg=(id,t)=>$(id).textContent=t;
 function showPage(page){
+ document.body.classList.toggle('vendor-portal-mode',page==='vendor-dashboard');
  if(page!=='vendors' && document.body.classList.contains('vendor-store-open'))document.body.classList.remove('vendor-store-open');
  document.body.classList.toggle('store-view',page==='store');
  document.querySelectorAll('main>section').forEach(s=>s.classList.add('hidden'));
@@ -2750,13 +2895,84 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   finally{button.disabled=false;}
  });
 
+
+ async function loadVendorVerification(){
+  const statusBox=v$('vendorVerificationStatus'),form=v$('vendorVerificationForm'),gate=v$('vendorStoreApplicationGate');
+  if(!statusBox||!form||!currentUser)return null;
+  const {data,error}=await sb.from('vendor_verification_requests')
+   .select('id,merchant_type,legal_name,status,submitted_at,rejection_reason,reviewer_note')
+   .eq('user_id',currentUser.id).order('submitted_at',{ascending:false}).limit(1).maybeSingle();
+  if(error){
+   statusBox.textContent='تعذر تحميل حالة التوثيق: '+error.message;
+   form.classList.remove('hidden');if(gate)gate.hidden=true;return null;
+  }
+  if(!data){
+   statusBox.textContent='لم ترسل طلب توثيق بعد. اختر صفتك وارفع المستند الداعم.';
+   form.classList.remove('hidden');if(gate)gate.hidden=true;return null;
+  }
+  const labels={pending:'قيد الانتظار',under_review:'قيد المراجعة',verified:'موثق',rejected:'مرفوض',needs_more_info:'يتطلب استكمالاً'};
+  statusBox.textContent='حالة طلب التوثيق: '+(labels[data.status]||data.status)+
+   (data.rejection_reason?' — السبب: '+data.rejection_reason:'')+
+   (data.reviewer_note?' — ملاحظة: '+data.reviewer_note:'');
+  if(data.status==='verified'){
+   form.classList.add('hidden');if(gate)gate.hidden=false;
+  }else if(data.status==='rejected'||data.status==='needs_more_info'){
+   form.classList.remove('hidden');if(gate)gate.hidden=true;
+   v$('vendorVerifyType').value=data.merchant_type||'freelancer';
+   v$('vendorVerifyLegalName').value=data.legal_name||'';
+  }else{
+   form.classList.add('hidden');if(gate)gate.hidden=true;
+  }
+  return data;
+ }
+ v$('vendorVerifyType')?.addEventListener('change',()=>{
+  v$('vendorVerifyRegLabel').textContent=v$('vendorVerifyType').value==='freelancer'?'رقم وثيقة العمل الحر *':'رقم السجل التجاري *';
+ });
+ v$('vendorVerificationForm')?.addEventListener('submit',async e=>{
+  e.preventDefault();if(!needAuth())return;
+  const file=v$('vendorVerifyDocument').files?.[0];
+  if(!file){vMsg('vendorVerifyMsg','اختر المستند الداعم أولاً.');return;}
+  const validTypes=['application/pdf','image/jpeg','image/png','image/webp'];
+  if(!validTypes.includes(file.type)||file.size>10*1024*1024){vMsg('vendorVerifyMsg','نوع الملف غير مدعوم أو حجمه أكبر من 10 ميجابايت.');return;}
+  const btn=v$('vendorVerifySubmit');btn.disabled=true;
+  let requestId=null,path=null;
+  try{
+   const payload={
+    user_id:currentUser.id,
+    merchant_type:v$('vendorVerifyType').value,
+    legal_name:v$('vendorVerifyLegalName').value.trim(),
+    registration_number:v$('vendorVerifyRegNumber').value.trim(),
+    city:v$('vendorVerifyCity').value.trim()||null,
+    status:'pending'
+   };
+   const created=await sb.from('vendor_verification_requests').insert(payload).select('id').single();
+   if(created.error)throw created.error;
+   requestId=created.data.id;
+   const ext=(file.name.split('.').pop()||'bin').toLowerCase().replace(/[^a-z0-9]/g,'')||'bin';
+   path=`${currentUser.id}/${requestId}/${crypto.randomUUID()}.${ext}`;
+   const uploaded=await sb.storage.from('vendor-verification-private').upload(path,file,{upsert:false,contentType:file.type});
+   if(uploaded.error)throw uploaded.error;
+   const saved=await sb.from('vendor_verification_documents').insert({
+    request_id:requestId,user_id:currentUser.id,
+    document_type:v$('vendorVerifyType').value==='freelancer'?'freelance_document':'commercial_registration',
+    storage_path:path,mime_type:file.type,file_size:file.size
+   });
+   if(saved.error)throw saved.error;
+   v$('vendorVerificationForm').reset();
+   vMsg('vendorVerifyMsg','تم استلام طلب التوثيق والمستند. ستظهر الحالة بعد المراجعة.');
+   await loadVendorVerification();
+  }catch(err){
+   vMsg('vendorVerifyMsg','تعذر إرسال الطلب: '+(err.message||String(err)));
+  }finally{btn.disabled=false;}
+ });
+
  async function loadVendorStoreWorkspace(){
   if(!currentUser){v$('vendorDashboardAuth').classList.remove('hidden');v$('vendorApplicationBox').classList.add('hidden');v$('vendorWorkspace').classList.add('hidden');return;}
   v$('vendorDashboardAuth').classList.add('hidden');
   const {data,error}=await sb.from('vendor_stores').select('*').eq('owner_id',currentUser.id).maybeSingle();
   if(error){vMsg('vendorDashboardAuth','تعذر قراءة حالة المتجر: '+error.message+' — نفّذ ملف SQL الإضافي.');v$('vendorDashboardAuth').classList.remove('hidden');return;}
   vState.myStore=data||null;
-  if(!data){v$('vendorApplicationBox').classList.remove('hidden');v$('vendorWorkspace').classList.add('hidden');return;}
+  if(!data){v$('vendorApplicationBox').classList.remove('hidden');v$('vendorWorkspace').classList.add('hidden');await loadVendorVerification();return;}
   v$('vendorApplicationBox').classList.add('hidden');v$('vendorWorkspace').classList.remove('hidden');
   v$('vendorWorkspaceStatus').textContent='حالة المتجر: '+vStatusLabel(data.status)+'. '+(data.status==='approved'?'متجرك معتمد ويمكنك إدارة المنتجات وطلب الترويج.':'لن يظهر المتجر للعامة حتى تعتمد الإدارة الطلب، ولن تتمكن من نشر المنتجات أو طلب الترويج قبل الاعتماد.');
   const canOperate=data.status==='approved';
