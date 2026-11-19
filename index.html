@@ -5000,5 +5000,133 @@ body.vendors-page-active #page-vendors .vendor-directory-grid{
 }
 </style>
 
+
+<style id="souq-ad-detail-electronic-premium">
+/* تفاصيل الإعلان: خلفية إلكترونية مرتبة ومتناسقة مع هوية سوق القيمنق */
+#page-detail{
+ position:relative;
+ isolation:isolate;
+ padding:12px 0 112px!important;
+ background:
+  radial-gradient(ellipse at 50% 0%,rgba(0,197,255,.15),transparent 34%),
+  radial-gradient(ellipse at 0% 38%,rgba(31,117,255,.10),transparent 28%),
+  radial-gradient(ellipse at 100% 70%,rgba(0,220,255,.08),transparent 26%),
+  repeating-linear-gradient(135deg,rgba(35,174,220,.025) 0 1px,transparent 1px 24px),
+  linear-gradient(180deg,#0a1724 0%,#0d1b29 48%,#0a1723 100%)!important;
+}
+#page-detail .ad-detail-layout{position:relative;display:flex!important;flex-direction:column!important;gap:13px!important;max-width:980px;margin:0 auto}
+#page-detail .ad-detail-layout>header,
+#page-detail .ad-detail-layout>section{
+ position:relative;min-width:0;padding:16px!important;
+ border:1px solid rgba(65,153,190,.35)!important;border-radius:19px!important;
+ background:linear-gradient(145deg,rgba(24,42,57,.97),rgba(13,29,43,.97))!important;
+ box-shadow:0 8px 24px rgba(0,0,0,.20),inset 0 1px rgba(255,255,255,.025)!important;
+ overflow:hidden;
+}
+#page-detail .ad-detail-layout>header::before,
+#page-detail .ad-detail-layout>section::before{
+ content:"";position:absolute;inset:0 0 auto;height:2px;
+ background:linear-gradient(90deg,transparent,rgba(25,211,244,.8),transparent);
+ opacity:.65;pointer-events:none
+}
+#page-detail .detail-rating-section{order:6!important;margin:0!important}
+#page-detail .detail-summary{order:1!important}
+#page-detail .detail-media-section{order:2!important}
+#page-detail .detail-description-section{order:3!important}
+#page-detail .detail-comments-section{order:4!important}
+#page-detail .detail-seller-section{order:5!important}
+#page-detail .detail-title-row{align-items:center}
+#page-detail .detail-eyebrow{letter-spacing:.3px;text-shadow:0 0 12px rgba(22,199,217,.25)}
+#page-detail .detail-price{padding:7px 12px;border:1px solid rgba(22,199,217,.55);border-radius:13px;background:rgba(9,65,82,.28);text-shadow:0 0 14px rgba(22,199,217,.25)}
+#page-detail .detail-meta span{background:linear-gradient(135deg,#1b3548,#142a3a);border-color:#34566b;color:#c2d6e0;border-radius:11px}
+#page-detail .detail-section-heading{position:relative}
+#page-detail .detail-section-heading h3,
+#page-detail .detail-description-section>h3,
+#page-detail .detail-comments-section h3,
+#page-detail .detail-rating-section>h3{color:#eafaff}
+#page-detail .detail-media-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+#page-detail .detail-media-image{height:clamp(190px,58vw,390px);background:radial-gradient(circle at 50% 45%,#18334a,#0b1926 75%);border:1px solid #31546a;border-radius:15px}
+#page-detail .detail-media-video{border:1px solid #31546a;background:#07131f}
+#page-detail .detail-description{line-height:1.85;color:#d7e8ef}
+#page-detail .ad-pledge-panel{padding:13px!important;border:1px solid rgba(22,199,217,.34)!important;border-radius:15px!important;background:linear-gradient(120deg,rgba(14,65,77,.35),rgba(24,47,62,.72))!important}
+#page-detail .ad-pledge-panel h3{margin:0 0 9px;color:#65e4f1}
+#page-detail .ad-pledge-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:99px;border:1px solid #268ca0;background:#123a49;color:#aaf4fa;font-size:12px;font-weight:800}
+#page-detail .detail-comments-section .detail-section-heading{margin-bottom:12px}
+#page-detail #adCommentForm{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:9px}
+#page-detail #adCommentText{min-height:72px;max-height:140px;resize:vertical;border-radius:13px;background:#0d1a27!important;border-color:#34566b!important}
+#page-detail .detail-comment-submit{display:flex;flex-direction:column;align-items:stretch;gap:5px}
+#page-detail .detail-comment-submit .primary{min-height:48px;padding:10px 16px;white-space:nowrap;border-radius:13px}
+#page-detail .detail-comments-list{gap:9px!important;margin-top:12px}
+#page-detail .detail-comments-list .listitem{background:rgba(11,27,41,.65);border-color:#304d60!important;border-radius:14px!important}
+#page-detail .detail-seller-section{display:grid;gap:12px}
+#page-detail .detail-seller-section>div:first-child{display:flex;justify-content:space-between;align-items:center;gap:12px}
+#page-detail .detail-seller-section>div:first-child strong{color:#f1fbff;font-size:17px}
+#page-detail .detail-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+#page-detail .detail-actions button{min-width:0;min-height:46px;padding:9px 10px;border-radius:13px;font-size:13px;font-weight:800}
+#page-detail .detail-actions .primary{background:linear-gradient(135deg,#18d0df,#0da9c6)!important;color:#04232d!important}
+#page-detail .detail-actions .danger{background:rgba(117,28,52,.35)!important;border-color:#a63756!important;color:#ffc5d2!important}
+
+/* تقييم البائع: ملخص صغير، نجوم أفقية وزر إرسال مدمج لا يملأ عرض الشاشة */
+#page-detail .detail-rating-section{padding:14px!important}
+#page-detail .detail-rating-section>h3{font-size:17px;margin:0 0 10px!important}
+#page-detail #reviewsPanel .rating-summary{
+ display:flex;align-items:center;justify-content:space-between;gap:12px;
+ margin:0 0 10px!important;padding:10px 12px!important;
+ border:1px solid rgba(22,199,217,.25)!important;border-radius:14px!important;
+ background:linear-gradient(110deg,rgba(15,68,82,.52),rgba(25,47,62,.82))!important
+}
+#page-detail #reviewsPanel .rating-number{font-size:23px!important;white-space:nowrap}
+#page-detail #reviewsPanel .rating-summary .muted{font-size:11px;line-height:1.5}
+#page-detail #reviewsPanel .stars{font-size:16px!important;letter-spacing:1px!important}
+#page-detail #reviewsPanel .review-form{
+ display:grid!important;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:9px;
+ margin:10px 0 0!important;padding:12px!important;
+ border:1px solid #315267!important;border-radius:15px!important;
+ background:rgba(10,26,40,.68)!important
+}
+#page-detail #reviewsPanel .review-form>strong{grid-column:1/-1;font-size:14px;color:#eafaff}
+#page-detail #reviewsPanel .rating-pick{grid-column:1/-1;display:flex!important;flex-direction:row-reverse!important;justify-content:flex-start!important;gap:5px!important;margin:0!important}
+#page-detail #reviewsPanel .rating-pick button{
+ width:34px!important;height:34px!important;min-width:34px!important;padding:0!important;
+ display:grid!important;place-items:center!important;border:1px solid transparent!important;
+ border-radius:9px!important;background:transparent!important;color:#667d8c!important;font-size:24px!important;line-height:1!important
+}
+#page-detail #reviewsPanel .rating-pick button.selected{color:#ffc247!important;text-shadow:0 0 9px rgba(255,194,71,.35)}
+#page-detail #reviewsPanel #reviewComment{
+ grid-column:1;min-height:58px!important;max-height:90px;resize:vertical;
+ border-radius:12px;background:#0d1a27!important;border-color:#34566b!important;font-size:13px
+}
+#page-detail #reviewsPanel .review-form>button[type="submit"]{
+ grid-column:2!important;grid-row:3!important;align-self:stretch!important;
+ width:auto!important;min-width:112px!important;max-width:145px!important;
+ min-height:48px!important;padding:8px 13px!important;margin:0!important;
+ border-radius:12px!important;font-size:13px!important;font-weight:900!important;
+ white-space:nowrap;background:linear-gradient(135deg,#18d0df,#0da9c6)!important;color:#04232d!important
+}
+#page-detail #reviewsPanel #reviewMsg{grid-column:1/-1;font-size:11px}
+#page-detail #reviewsPanel .review-list{margin-top:10px}
+#page-detail #reviewsPanel .review-item{padding:10px 4px!important;border-bottom:1px solid rgba(67,111,135,.35)!important}
+#page-detail #reviewsPanel .review-item p{margin:5px 0;font-size:13px;line-height:1.6}
+#page-detail #reviewsPanel .notice{margin-top:8px;border-radius:12px}
+@media(max-width:480px){
+ #page-detail .ad-detail-layout{gap:11px!important}
+ #page-detail .ad-detail-layout>header,
+ #page-detail .ad-detail-layout>section{padding:13px!important;border-radius:16px!important}
+ #page-detail .detail-media-grid{grid-template-columns:1fr}
+ #page-detail .detail-media-image{height:clamp(210px,68vw,330px)}
+ #page-detail #adCommentForm{grid-template-columns:1fr}
+ #page-detail .detail-comment-submit{align-items:flex-start}
+ #page-detail .detail-comment-submit .primary{width:auto!important;min-width:135px}
+ #page-detail .detail-actions{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #page-detail #reviewsPanel .review-form{grid-template-columns:minmax(0,1fr) auto;gap:7px}
+ #page-detail #reviewsPanel #reviewComment{min-width:0}
+ #page-detail #reviewsPanel .review-form>button[type="submit"]{min-width:100px!important;max-width:120px!important;padding:7px 9px!important}
+}
+@media(max-width:360px){
+ #page-detail #reviewsPanel .review-form{grid-template-columns:1fr}
+ #page-detail #reviewsPanel #reviewComment,
+ #page-detail #reviewsPanel .review-form>button[type="submit"]{grid-column:1!important;grid-row:auto!important;width:100%!important;max-width:none!important}
+}
+</style>
 </body>
 </html>
