@@ -909,12 +909,6 @@ body.vendor-portal-mode.merchant-compact .merchant-data-row{padding:8px!importan
 .media-preview img,.media-preview video{width:min(220px,100%);max-height:180px;object-fit:contain;border-radius:12px;background:#07111a;border:1px solid var(--line)}
 .media-preview small{display:block;width:100%;color:var(--muted)}
 </style>
-
-<style id="souq-store-logo-upload-ui">
-#vendorApplyLogoPreview img,#vendorEditLogoPreview img{width:88px;height:88px;object-fit:contain;border-radius:14px;background:#fff;padding:5px;border:1px solid var(--line)}
-#vendorOpenPublicStore{white-space:nowrap}
-</style>
-
 </head>
 <body class="theme-dark">
 <div class="wrap">
@@ -1109,7 +1103,7 @@ body.vendor-portal-mode.merchant-compact .merchant-data-row{padding:8px!importan
    <div><label for="vendorApplySlug">رابط مختصر بالإنجليزية (اختياري)</label><input id="vendorApplySlug" class="field" maxlength="70" placeholder="my-gaming-store" pattern="[a-zA-Z0-9-]+"></div>
    <div><label for="vendorApplyCategory">التصنيف</label><select id="vendorApplyCategory" class="field"><option>أجهزة الكمبيوتر والقيمنق</option><option>قطع الكمبيوتر</option><option>أجهزة الكونسول</option><option>ملحقات القيمنق</option><option>الألعاب الرقمية</option><option>كروت الشحن</option><option>إلكترونيات أخرى</option></select></div>
    <div><label for="vendorApplyCity">المدينة</label><input id="vendorApplyCity" class="field" maxlength="80"></div>
-   <div class="full"><label for="vendorApplyLogoFile">شعار المتجر (اختياري — اختر من الصور أو الملفات)</label><input id="vendorApplyLogoFile" class="field" type="file" accept="image/png,image/jpeg,image/webp,image/avif"><div id="vendorApplyLogoPreview" class="media-preview"></div></div>
+   <div class="full"><label for="vendorApplyLogo">رابط شعار المتجر (اختياري)</label><input id="vendorApplyLogo" class="field" type="url" placeholder="https://..."></div>
    <div class="full"><label for="vendorApplyDescription">نبذة عن المتجر *</label><textarea id="vendorApplyDescription" class="field" rows="3" required maxlength="1200"></textarea></div>
    <div><label for="vendorApplyWhatsapp">رقم واتساب المتجر (اختياري)</label><input id="vendorApplyWhatsapp" class="field" type="tel" maxlength="20"></div>
    <div class="full"><label class="pledge-check"><input id="vendorApplyAgree" type="checkbox" required> أقر بصحة بيانات المتجر والتزامي بالأنظمة وسياسات المنصة.</label></div>
@@ -1119,10 +1113,6 @@ body.vendor-portal-mode.merchant-compact .merchant-data-row{padding:8px!importan
 
  <div id="vendorWorkspace" class="hidden">
   <div id="vendorWorkspaceStatus" class="vendor-state"></div>
-  <div class="vendor-state row space" style="gap:10px;flex-wrap:wrap">
-   <div><strong>واجهة متجري العامة</strong><div class="vendor-muted-note">تعرض المنتجات المعتمدة وهوية المتجر المحفوظة في قاعدة البيانات.</div></div>
-   <button type="button" class="primary" id="vendorOpenPublicStore">فتح متجري المستقل ↗</button>
-  </div>
   <div class="vendor-dashboard-grid">
    <section class="vendor-dashboard-card full">
     <h3>بيانات متجري</h3>
@@ -1131,7 +1121,7 @@ body.vendor-portal-mode.merchant-compact .merchant-data-row{padding:8px!importan
      <div><label>الرابط المختصر<input id="vendorEditSlug" class="field" required maxlength="70" pattern="[a-zA-Z0-9-]+"></label></div>
      <div><label>التصنيف<input id="vendorEditCategory" class="field" maxlength="100"></label></div>
      <div><label>المدينة<input id="vendorEditCity" class="field" maxlength="80"></label></div>
-     <div><label>رابط الشعار<input id="vendorEditLogo" class="field" type="url"></label></div>
+     <div><label>رابط الشعار (اختياري)<input id="vendorEditLogo" class="field" type="url" placeholder="أو ارفع الشعار من جهازك"></label><label style="display:block;margin-top:8px">رفع شعار من الجهاز<input id="vendorEditLogoFile" class="field" type="file" accept="image/png,image/jpeg,image/webp,image/avif"></label><div id="vendorEditLogoPreview" class="media-preview"></div><small class="vendor-muted-note">PNG أو JPG أو WEBP أو AVIF — حتى 5 ميجابايت</small></div>
      <div><label>واتساب المتجر<input id="vendorEditWhatsapp" class="field" type="tel" maxlength="20"></label></div>
      <div class="full"><label>نبذة المتجر<textarea id="vendorEditDescription" class="field" rows="3" maxlength="1200"></textarea></label></div>
      <div class="full"><button class="primary" type="submit">حفظ بيانات المتجر</button><span id="vendorStoreSettingsMsg" class="muted"></span></div>
@@ -2488,43 +2478,19 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   v$('vendorEditDescription').value=data.description||'';
   await Promise.all([loadMyVendorProducts(),loadMyVendorOrders(),loadVendorPromotables(),loadVendorFinance(),loadVendorPromotionHistory()]);
  }
-
-  async function uploadVendorStoreLogo(file){
-   if(!file)return null;
-   if(!/^image\/(png|jpeg|webp|avif)$/.test(file.type)||file.size>5*1024*1024)throw new Error('الشعار يجب أن يكون PNG أو JPG أو WEBP أو AVIF وبحجم لا يتجاوز 5 ميجابايت.');
-   const ext=(file.name.split('.').pop()||'png').toLowerCase().replace(/[^a-z0-9]/g,'')||'png';
-   const path=`${currentUser.id}/store-brand/${Date.now()}-${crypto.randomUUID?crypto.randomUUID():Math.random().toString(36).slice(2)}.${ext}`;
-   const {error}=await sb.storage.from('vendor-product-media').upload(path,file,{upsert:false,contentType:file.type});
-   if(error)throw new Error('تعذر رفع الشعار إلى vendor-product-media: '+error.message);
-   const {data}=sb.storage.from('vendor-product-media').getPublicUrl(path);
-   if(!data?.publicUrl)throw new Error('تم رفع الشعار لكن تعذر إنشاء رابط عرضه.');
-   return {path,url:data.publicUrl};
-  }
-  function bindLogoPreview(inputId,previewId){
-   const input=v$(inputId),preview=v$(previewId);if(!input||!preview)return;
-   input.addEventListener('change',()=>{
-    preview.innerHTML='';const file=input.files?.[0];if(!file)return;
-    if(!/^image\/(png|jpeg|webp|avif)$/.test(file.type)||file.size>5*1024*1024){preview.textContent='اختر صورة مناسبة لا تتجاوز 5 ميجابايت.';input.value='';return;}
-    const img=document.createElement('img');img.alt='معاينة شعار المتجر';img.src=URL.createObjectURL(file);preview.appendChild(img);
-   });
-  }
-  bindLogoPreview('vendorApplyLogoFile','vendorApplyLogoPreview');
-
  v$('vendorApplicationForm').addEventListener('submit',async e=>{
   e.preventDefault();if(!needAuth())return;
   const button=v$('vendorApplySubmit');button.disabled=true;
   const autoSlug='vendor-'+currentUser.id.replace(/-/g,'').slice(0,10);
   const slug=(v$('vendorApplySlug').value.trim().toLowerCase()||autoSlug).replace(/[^a-z0-9-]/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
+  const row={
+   owner_id:currentUser.id,store_name:v$('vendorApplyName').value.trim(),slug,
+   category:v$('vendorApplyCategory').value,city:v$('vendorApplyCity').value.trim(),
+   logo_url:vSafeUrl(v$('vendorApplyLogo').value)||null,
+   description:v$('vendorApplyDescription').value.trim(),
+   contact_whatsapp:v$('vendorApplyWhatsapp').value.trim()||null
+  };
   try{
-   const logoFile=v$('vendorApplyLogoFile')?.files?.[0];
-   const uploadedLogo=logoFile?await uploadVendorStoreLogo(logoFile):null;
-   const row={
-    owner_id:currentUser.id,store_name:v$('vendorApplyName').value.trim(),slug,
-    category:v$('vendorApplyCategory').value,city:v$('vendorApplyCity').value.trim(),
-    logo_url:uploadedLogo?.url||null,
-    description:v$('vendorApplyDescription').value.trim(),
-    contact_whatsapp:v$('vendorApplyWhatsapp').value.trim()||null
-   };
    const {data,error}=await sb.from('vendor_stores').insert(row).select('*').single();
    if(error)throw error;
    vState.myStore=data;vMsg('vendorApplyMsg','تم إرسال طلب فتح المتجر بنجاح. حالته الآن بانتظار مراجعة الإدارة.');
@@ -2532,19 +2498,42 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   }catch(error){vMsg('vendorApplyMsg','تعذر إرسال الطلب: '+error.message);}
   finally{button.disabled=false;}
  });
+
+ async function uploadVendorMediaFile(file,folder,maxBytes){
+  if(!file)return null;
+  if(!currentUser)throw new Error('سجّل الدخول أولاً.');
+  if(!/^image\/(png|jpeg|webp|avif)$/.test(file.type))throw new Error('نوع الصورة غير مدعوم.');
+  if(file.size>maxBytes)throw new Error('حجم الصورة أكبر من الحد المسموح.');
+  const ext=(file.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'')||'jpg';
+  const path=`${folder}/${currentUser.id}/${Date.now()}-${Math.random().toString(36).slice(2,9)}.${ext}`;
+  const {error}=await sb.storage.from('marketplace-assets').upload(path,file,{upsert:false,contentType:file.type});
+  if(error)throw new Error('تعذر رفع الملف: '+error.message);
+  return sb.storage.from('marketplace-assets').getPublicUrl(path).data.publicUrl;
+ }
+ const logoPicker=v$('vendorEditLogoFile');
+ if(logoPicker&&!logoPicker.dataset.bound){logoPicker.dataset.bound='1';logoPicker.addEventListener('change',()=>{const f=logoPicker.files?.[0],box=v$('vendorEditLogoPreview');if(box)box.innerHTML=f?`<img src="${URL.createObjectURL(f)}" alt="معاينة الشعار" style="max-width:120px;max-height:120px;object-fit:contain">`:'';});}
+
  v$('vendorStoreSettingsForm').addEventListener('submit',async e=>{
   e.preventDefault();if(!vState.myStore)return;
-  const row={
-   store_name:v$('vendorEditName').value.trim(),
-   slug:v$('vendorEditSlug').value.trim().toLowerCase(),
-   category:v$('vendorEditCategory').value.trim(),city:v$('vendorEditCity').value.trim(),
-   logo_url:vSafeUrl(v$('vendorEditLogo').value)||null,
-   contact_whatsapp:v$('vendorEditWhatsapp').value.trim()||null,
-   description:v$('vendorEditDescription').value.trim(),updated_at:new Date().toISOString()
-  };
-  const {error}=await sb.from('vendor_stores').update(row).eq('id',vState.myStore.id);
-  if(error)vMsg('vendorStoreSettingsMsg','تعذر الحفظ: '+error.message);
-  else{vMsg('vendorStoreSettingsMsg','تم حفظ بيانات المتجر.');await loadVendorDirectory();}
+  const saveBtn=e.submitter;if(saveBtn)saveBtn.disabled=true;
+  try{
+   let logoUrl=vSafeUrl(v$('vendorEditLogo').value)||null;
+   const logoFile=logoPicker?.files?.[0];
+   if(logoFile)logoUrl=await uploadVendorMediaFile(logoFile,'vendor-products',5*1024*1024);
+   const row={
+    store_name:v$('vendorEditName').value.trim(),
+    slug:v$('vendorEditSlug').value.trim().toLowerCase(),
+    category:v$('vendorEditCategory').value.trim(),city:v$('vendorEditCity').value.trim(),
+    logo_url:logoUrl,
+    contact_whatsapp:v$('vendorEditWhatsapp').value.trim()||null,
+    description:v$('vendorEditDescription').value.trim(),updated_at:new Date().toISOString()
+   };
+   const {error}=await sb.from('vendor_stores').update(row).eq('id',vState.myStore.id);
+   if(error)throw error;
+   vState.myStore={...vState.myStore,...row};v$('vendorEditLogo').value=logoUrl||'';if(logoPicker)logoPicker.value='';
+   vMsg('vendorStoreSettingsMsg','تم حفظ بيانات المتجر والشعار.');await loadVendorDirectory();
+  }catch(error){vMsg('vendorStoreSettingsMsg','تعذر الحفظ: '+error.message);}
+  finally{if(saveBtn)saveBtn.disabled=false;}
  });
 
 
@@ -4514,7 +4503,7 @@ window.__souqVendorContext={state:vState,money:vMoney,safeUrl:vSafeUrl,esc:vEsc,
   {id:'tamara',name:'تمارا Tamara',url:'https://tamara.co/en-sa/partners',desc:'خيار اشتر الآن وادفع لاحقًا؛ يخضع لقبول التاجر والتكامل.'},
   {id:'tabby',name:'تابي Tabby',url:'https://tabby.ai/business',desc:'خيار اشتر الآن وادفع لاحقًا؛ يخضع لقبول التاجر والتكامل.'}
  ];
- const defPublic=()=>({storefront:{banner_url:'',announcement:'',theme_color:'#e8dce8',show_banner:true,show_announcement:true,show_search:true,show_category_filters:true,show_stock:true,hide_out_of_stock:false,show_whatsapp:true,show_social_links:true,product_columns:2,sort_mode:'newest',whatsapp:'',returns_policy:'',shipping_policy:'',warranty_policy:'',business_address:'',cr_number:'',vat_number:'',documentation_url:'',support_email:'',complaints_contact:'',complaint_response_time:'',privacy_policy:''},delivery_display:{providers:[],primary:'',estimated_fee:0,fee_payer:'customer',allow_pickup:false,shipping_scope:'national',coverage:'',delivery_window:'',note:'يتم تأكيد شركة التوصيل وتكلفة الشحن بعد مراجعة الطلب.'},channel_links:{}});
+ const defPublic=()=>({storefront:{banner_url:'',announcement:'',hero_title:'',hero_description:'',products_title:'',products_subtitle:'',categories_title:'',theme_color:'#e8dce8',show_banner:true,show_announcement:true,show_search:true,show_category_filters:true,show_stock:true,hide_out_of_stock:false,show_whatsapp:true,show_social_links:true,product_columns:2,sort_mode:'newest',whatsapp:'',returns_policy:'',shipping_policy:'',warranty_policy:'',business_address:'',cr_number:'',vat_number:'',documentation_url:'',support_email:'',complaints_contact:'',complaint_response_time:'',privacy_policy:''},delivery_display:{providers:[],primary:'',estimated_fee:0,fee_payer:'customer',allow_pickup:false,shipping_scope:'national',coverage:'',delivery_window:'',note:'يتم تأكيد شركة التوصيل وتكلفة الشحن بعد مراجعة الطلب.'},channel_links:{}});
  const defPrivate=()=>({shipping:{providers:[],primary:'',fixed_fee:0,fee_payer:'customer',delivery_note:'',allow_pickup:false,shipping_scope:'national',coverage:'',delivery_window:''},channels:{enabled:['souq']},payments:{gateway_requests:[],methods:[],cash_on_delivery:false,bank_transfer:false,note:''},modules:{requested:[]}});
  let publicSettings=defPublic(),privateSettings=defPrivate(),storeId=null,loaded=false;
  function ensurePanel(sectionId,id,html){const section=$(sectionId);if(!section)return null;let node=$(id);if(!node){node=document.createElement('div');node.id=id;section.appendChild(node)}node.innerHTML=html;return node}
@@ -4524,7 +4513,7 @@ window.__souqVendorContext={state:vState,money:vMoney,safeUrl:vSafeUrl,esc:vEsc,
  function renderChannelCards(){return channels.filter(c=>c.id!=='souq').map(c=>`<div class="souq-channel-card"><div class="head"><strong>${esc(c.name)}</strong><input type="checkbox" data-souq-channel="${c.id}" aria-label="تفعيل ${esc(c.name)}"></div><small>${esc(c.kind)} · ${esc(c.desc)}</small><div class="souq-setting-field"><label>رابط حسابك أو متجرك (اختياري)</label><input type="url" id="souqChannelUrl_${c.id}" data-souq-channel-url="${c.id}" placeholder="https://" dir="ltr"></div>${c.setup?`<a href="${c.setup}" target="_blank" rel="noopener">فتح بوابة الخدمة / التسجيل ↗</a>`:''}</div>`).join('')}
  function renderGatewayCards(){return gateways.map(g=>`<div class="souq-gateway-card"><div class="head"><strong>${esc(g.name)}</strong><input type="checkbox" data-souq-gateway="${g.id}" aria-label="طلب تفعيل ${esc(g.name)}"></div><small>${esc(g.desc)}</small><a href="${g.url}" target="_blank" rel="noopener">الموقع الرسمي ↗</a>${g.docs?` · <a href="${g.docs}" target="_blank" rel="noopener">الوثائق</a>`:''}</div>`).join('')}
  function renderPanels(){
-  ensurePanel('merchantViewStore','souqStoreCustomizationPanel',`<div class="souq-settings-panel"><h3>🎨 تخصيص واجهة متجرك</h3><p>تحكم في شكل صفحة متجرك التي يراها العملاء. التغييرات العامة تظهر للزوار بعد حفظها واعتماد المتجر.</p><form id="souqStorefrontForm"><div class="souq-settings-grid">${field('رابط صورة البانر','souqBannerUrl',publicSettings.storefront.banner_url,'url',true)}${field('رسالة أعلى المتجر / إعلان','souqAnnouncement',publicSettings.storefront.announcement,'text',true)}${field('لون المتجر','souqThemeColor',publicSettings.storefront.theme_color,'color')}${field('واتساب المتجر','souqStoreWhatsapp',publicSettings.storefront.whatsapp,'tel')}
+  ensurePanel('merchantViewStore','souqStoreCustomizationPanel',`<div class="souq-settings-panel"><h3>🎨 تخصيص واجهة متجرك</h3><p>تحكم في شكل صفحة متجرك التي يراها العملاء. التغييرات العامة تظهر للزوار بعد حفظها واعتماد المتجر.</p><form id="souqStorefrontForm"><div class="souq-settings-grid">${field('رابط صورة البانر','souqBannerUrl',publicSettings.storefront.banner_url,'url',true)}<div class="souq-field"><label for="souqBannerFile">أو ارفع صورة البنر من جهازك</label><input id="souqBannerFile" type="file" accept="image/png,image/jpeg,image/webp,image/avif"><small>حتى 8 ميجابايت</small><div id="souqBannerPreview" class="media-preview"></div></div>${field('رسالة أعلى المتجر / إعلان','souqAnnouncement',publicSettings.storefront.announcement,'text',true)}${field('عنوان البنر الرئيسي','souqHeroTitle',publicSettings.storefront.hero_title,'text',true)}${field('وصف البنر الرئيسي','souqHeroDescription',publicSettings.storefront.hero_description,'text',true)}${field('عنوان قسم المنتجات','souqProductsTitle',publicSettings.storefront.products_title,'text',true)}${field('وصف قسم المنتجات','souqProductsSubtitle',publicSettings.storefront.products_subtitle,'text',true)}${field('عنوان قسم التصنيفات','souqCategoriesTitle',publicSettings.storefront.categories_title,'text',true)}${field('لون المتجر','souqThemeColor',publicSettings.storefront.theme_color,'color')}${field('واتساب المتجر','souqStoreWhatsapp',publicSettings.storefront.whatsapp,'tel')}
   ${field('عنوان النشاط / عنوان المتجر','souqBusinessAddress',publicSettings.storefront.business_address,'text',true)}
   ${field('رقم السجل التجاري (إن وجد)','souqCRNumber',publicSettings.storefront.cr_number)}${field('الرقم الضريبي (إن وجد)','souqVatNumber',publicSettings.storefront.vat_number)}
   ${field('رابط توثيق المتجر أو السجل (اختياري)','souqDocumentationUrl',publicSettings.storefront.documentation_url,'url',true)}
@@ -4548,7 +4537,28 @@ window.__souqVendorContext={state:vState,money:vMoney,safeUrl:vSafeUrl,esc:vEsc,
   bindForms();fillForms();
  }
  function bindForms(){
-  const sf=$('souqStorefrontForm');if(sf&&!sf.dataset.bound){sf.dataset.bound='1';sf.addEventListener('submit',async e=>{e.preventDefault();readStorefront();await save('souqStorefrontMsg')})}
+  const bannerPick=$('souqBannerFile');if(bannerPick&&!bannerPick.dataset.previewBound){bannerPick.dataset.previewBound='1';bannerPick.addEventListener('change',()=>{const f=bannerPick.files?.[0],box=$('souqBannerPreview');if(box)box.innerHTML=f?`<img src="${URL.createObjectURL(f)}" alt="معاينة البنر" style="max-width:100%;max-height:150px;object-fit:cover">`:'';});}
+  const sf=$('souqStorefrontForm');
+  if(sf&&!sf.dataset.bound){
+   sf.dataset.bound='1';
+   sf.addEventListener('submit',async e=>{
+    e.preventDefault();const msg=$('souqStorefrontMsg');
+    try{
+     const file=$('souqBannerFile')?.files?.[0];
+     if(file){
+      if(!currentUser)throw new Error('سجّل الدخول أولاً.');
+      if(!/^image\/(png|jpeg|webp|avif)$/.test(file.type)||file.size>8*1024*1024)throw new Error('اختر صورة PNG أو JPG أو WEBP أو AVIF حتى 8 ميجابايت.');
+      const ext=(file.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'')||'jpg';
+      const path=`vendor-products/${currentUser.id}/store-media/${Date.now()}-${Math.random().toString(36).slice(2,9)}.${ext}`;
+      const {error}=await sb.storage.from('marketplace-assets').upload(path,file,{upsert:false,contentType:file.type});
+      if(error)throw error;
+      $('souqBannerUrl').value=sb.storage.from('marketplace-assets').getPublicUrl(path).data.publicUrl;
+     }
+     readStorefront();await save('souqStorefrontMsg');
+     if(msg&&!msg.textContent.startsWith('تعذر')){$('souqBannerFile').value='';if($('souqBannerPreview'))$('souqBannerPreview').innerHTML='';}
+    }catch(err){if(msg)msg.textContent='تعذر رفع البنر أو حفظه: '+(err.message||'');}
+   });
+  }
   const ship=$('souqSaveShipping');if(ship&&!ship.dataset.bound){ship.dataset.bound='1';ship.addEventListener('click',async()=>{readShipping();await save('souqShippingMsg')})}
   const ch=$('souqSaveChannels');if(ch&&!ch.dataset.bound){ch.dataset.bound='1';ch.addEventListener('click',async()=>{readChannels();await save('souqChannelsMsg')})}
   const pay=$('souqSavePayments');if(pay&&!pay.dataset.bound){pay.dataset.bound='1';pay.addEventListener('click',async()=>{readPayments();await save('souqPaymentsMsg')})}
@@ -4556,7 +4566,7 @@ window.__souqVendorContext={state:vState,money:vMoney,safeUrl:vSafeUrl,esc:vEsc,
  }
  function fillForms(){
   const f=publicSettings.storefront;const set=(id,v)=>{const n=$(id);if(n)n.value=v??''};const ck=(id,v)=>{const n=$(id);if(n)n.checked=!!v};
-  set('souqBannerUrl',f.banner_url);set('souqAnnouncement',f.announcement);set('souqThemeColor',f.theme_color||'#e8dce8');set('souqStoreWhatsapp',f.whatsapp);set('souqProductColumns',String(f.product_columns||2));set('souqSortMode',f.sort_mode||'newest');set('souqReturnsPolicy',f.returns_policy);set('souqShippingPolicy',f.shipping_policy);set('souqWarrantyPolicy',f.warranty_policy);set('souqBusinessAddress',f.business_address);set('souqCRNumber',f.cr_number);set('souqVatNumber',f.vat_number);set('souqDocumentationUrl',f.documentation_url);set('souqSupportEmail',f.support_email);set('souqComplaintsContact',f.complaints_contact);set('souqComplaintResponseTime',f.complaint_response_time);set('souqPrivacyPolicy',f.privacy_policy);
+  set('souqBannerUrl',f.banner_url);set('souqAnnouncement',f.announcement);set('souqHeroTitle',f.hero_title);set('souqHeroDescription',f.hero_description);set('souqProductsTitle',f.products_title);set('souqProductsSubtitle',f.products_subtitle);set('souqCategoriesTitle',f.categories_title);set('souqThemeColor',f.theme_color||'#e8dce8');set('souqStoreWhatsapp',f.whatsapp);set('souqProductColumns',String(f.product_columns||2));set('souqSortMode',f.sort_mode||'newest');set('souqReturnsPolicy',f.returns_policy);set('souqShippingPolicy',f.shipping_policy);set('souqWarrantyPolicy',f.warranty_policy);set('souqBusinessAddress',f.business_address);set('souqCRNumber',f.cr_number);set('souqVatNumber',f.vat_number);set('souqDocumentationUrl',f.documentation_url);set('souqSupportEmail',f.support_email);set('souqComplaintsContact',f.complaints_contact);set('souqComplaintResponseTime',f.complaint_response_time);set('souqPrivacyPolicy',f.privacy_policy);
   ck('souqShowBanner',f.show_banner);ck('souqShowAnnouncement',f.show_announcement);ck('souqShowSearch',f.show_search);ck('souqShowCategories',f.show_category_filters);ck('souqShowStock',f.show_stock);ck('souqHideOutStock',f.hide_out_of_stock);ck('souqShowWhatsapp',f.show_whatsapp);ck('souqShowSocial',f.show_social_links);
   document.querySelectorAll('[data-souq-carrier]').forEach(n=>n.checked=(privateSettings.shipping.providers||[]).includes(n.dataset.souqCarrier));
   set('souqPrimaryCarrier',privateSettings.shipping.primary);set('souqFeePayer',privateSettings.shipping.fee_payer||'customer');set('souqFixedDeliveryFee',privateSettings.shipping.fixed_fee||0);set('souqDeliveryNote',privateSettings.shipping.delivery_note||'');set('souqShippingScope',privateSettings.shipping.shipping_scope||'national');set('souqShippingCoverage',privateSettings.shipping.coverage||'');set('souqDeliveryWindow',privateSettings.shipping.delivery_window||'');ck('souqAllowPickup',privateSettings.shipping.allow_pickup);
@@ -4565,7 +4575,7 @@ window.__souqVendorContext={state:vState,money:vMoney,safeUrl:vSafeUrl,esc:vEsc,
   document.querySelectorAll('[data-souq-gateway]').forEach(n=>n.checked=(privateSettings.payments.gateway_requests||[]).includes(n.dataset.souqGateway));document.querySelectorAll('[id^="souqMethod_"]').forEach(n=>n.checked=(privateSettings.payments.methods||[]).includes(n.id.replace('souqMethod_','')));ck('souqCOD',privateSettings.payments.cash_on_delivery);ck('souqBankTransfer',privateSettings.payments.bank_transfer);set('souqPaymentNote',privateSettings.payments.note||'');
   document.querySelectorAll('[id^=\"souqModule_\"]').forEach(n=>{n.checked=(privateSettings.modules?.requested||[]).includes(n.id.replace('souqModule_',''))});
  }
- function readStorefront(){const f=publicSettings.storefront;const val=id=>$(id)?.value?.trim()||'';const flag=id=>!!$(id)?.checked;f.banner_url=val('souqBannerUrl');f.announcement=val('souqAnnouncement');f.theme_color=/^#[0-9a-fA-F]{6}$/.test(val('souqThemeColor'))?val('souqThemeColor'):'#e8dce8';f.whatsapp=val('souqStoreWhatsapp').replace(/[^0-9+]/g,'');f.product_columns=Number(val('souqProductColumns'))===3?3:2;f.sort_mode=val('souqSortMode')||'newest';f.returns_policy=val('souqReturnsPolicy');f.shipping_policy=val('souqShippingPolicy');f.warranty_policy=val('souqWarrantyPolicy');f.business_address=val('souqBusinessAddress');f.cr_number=val('souqCRNumber');f.vat_number=val('souqVatNumber');f.documentation_url=/^https:\/\//i.test(val('souqDocumentationUrl'))?val('souqDocumentationUrl'):'';f.support_email=val('souqSupportEmail');f.complaints_contact=val('souqComplaintsContact');f.complaint_response_time=val('souqComplaintResponseTime');f.privacy_policy=val('souqPrivacyPolicy');f.show_banner=flag('souqShowBanner');f.show_announcement=flag('souqShowAnnouncement');f.show_search=flag('souqShowSearch');f.show_category_filters=flag('souqShowCategories');f.show_stock=flag('souqShowStock');f.hide_out_of_stock=flag('souqHideOutStock');f.show_whatsapp=flag('souqShowWhatsapp');f.show_social_links=flag('souqShowSocial')}
+ function readStorefront(){const f=publicSettings.storefront;const val=id=>$(id)?.value?.trim()||'';const flag=id=>!!$(id)?.checked;f.banner_url=val('souqBannerUrl');f.announcement=val('souqAnnouncement');f.hero_title=val('souqHeroTitle');f.hero_description=val('souqHeroDescription');f.products_title=val('souqProductsTitle');f.products_subtitle=val('souqProductsSubtitle');f.categories_title=val('souqCategoriesTitle');f.theme_color=/^#[0-9a-fA-F]{6}$/.test(val('souqThemeColor'))?val('souqThemeColor'):'#e8dce8';f.whatsapp=val('souqStoreWhatsapp').replace(/[^0-9+]/g,'');f.product_columns=Number(val('souqProductColumns'))===3?3:2;f.sort_mode=val('souqSortMode')||'newest';f.returns_policy=val('souqReturnsPolicy');f.shipping_policy=val('souqShippingPolicy');f.warranty_policy=val('souqWarrantyPolicy');f.business_address=val('souqBusinessAddress');f.cr_number=val('souqCRNumber');f.vat_number=val('souqVatNumber');f.documentation_url=/^https:\/\//i.test(val('souqDocumentationUrl'))?val('souqDocumentationUrl'):'';f.support_email=val('souqSupportEmail');f.complaints_contact=val('souqComplaintsContact');f.complaint_response_time=val('souqComplaintResponseTime');f.privacy_policy=val('souqPrivacyPolicy');f.show_banner=flag('souqShowBanner');f.show_announcement=flag('souqShowAnnouncement');f.show_search=flag('souqShowSearch');f.show_category_filters=flag('souqShowCategories');f.show_stock=flag('souqShowStock');f.hide_out_of_stock=flag('souqHideOutStock');f.show_whatsapp=flag('souqShowWhatsapp');f.show_social_links=flag('souqShowSocial')}
  function readShipping(){const providers=[...document.querySelectorAll('[data-souq-carrier]:checked')].map(n=>n.dataset.souqCarrier),selectedPrimary=$('souqPrimaryCarrier')?.value||'',primary=providers.includes(selectedPrimary)?selectedPrimary:'';privateSettings.shipping={providers,primary,fixed_fee:Math.max(0,Number($('souqFixedDeliveryFee')?.value||0)),fee_payer:$('souqFeePayer')?.value||'customer',delivery_note:$('souqDeliveryNote')?.value?.trim()||'',allow_pickup:!!$('souqAllowPickup')?.checked,shipping_scope:$('souqShippingScope')?.value||'national',coverage:$('souqShippingCoverage')?.value?.trim()||'',delivery_window:$('souqDeliveryWindow')?.value?.trim()||''};publicSettings.delivery_display={providers,primary,estimated_fee:privateSettings.shipping.fixed_fee||0,fee_payer:privateSettings.shipping.fee_payer||'customer',allow_pickup:privateSettings.shipping.allow_pickup,shipping_scope:privateSettings.shipping.shipping_scope,coverage:privateSettings.shipping.coverage,delivery_window:privateSettings.shipping.delivery_window,note:privateSettings.shipping.delivery_note||'يتم تأكيد شركة التوصيل وتكلفة الشحن بعد مراجعة الطلب.'}}
  function readChannels(){const enabled=[...document.querySelectorAll('[data-souq-channel]:checked')].map(n=>n.dataset.souqChannel);privateSettings.channels={enabled};const links={};document.querySelectorAll('[data-souq-channel-url]').forEach(n=>{const value=n.value.trim();if(enabled.includes(n.dataset.souqChannel)&&/^https:\/\//i.test(value))links[n.dataset.souqChannel]=value});publicSettings.channel_links=links}
  function readPayments(){const gateway_requests=[...document.querySelectorAll('[data-souq-gateway]:checked')].map(n=>n.dataset.souqGateway),methods=[...document.querySelectorAll('[id^="souqMethod_"]:checked')].map(n=>n.id.replace('souqMethod_',''));privateSettings.payments={gateway_requests,methods,cash_on_delivery:!!$('souqCOD')?.checked,bank_transfer:!!$('souqBankTransfer')?.checked,note:$('souqPaymentNote')?.value?.trim()||''}}
