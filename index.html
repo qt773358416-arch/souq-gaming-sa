@@ -1001,6 +1001,16 @@ body.vendor-store-open #vendorSelectedStore .vendor-cart-box{margin-top:24px}
 body.vendor-store-open .bottom,body.vendor-store-open .footer{display:none!important}
 </style>
 
+
+<style id="souq-merchant-template-integration">
+body.vendor-store-open #vendorSelectedStore{background:#0b1020!important;color:#f5f7fb!important}
+body.vendor-store-open #vendorSelectedStore #souqMerchantTemplateHost{position:relative;width:100%;max-width:1440px;margin:0 auto;min-height:100dvh;background:#0b1020;border-radius:18px;overflow:hidden}
+body.vendor-store-open #vendorSelectedStore #souqMerchantTemplateFrame{display:block;width:100%;height:calc(100dvh - 58px);min-height:680px;border:0;background:#0b1020}
+body.vendor-store-open #vendorSelectedStore #souqMerchantBack{position:sticky;top:0;z-index:100000;width:100%;height:52px;border:0;border-bottom:1px solid rgba(255,255,255,.12);background:#121a2b;color:#f5f7fb;font-weight:700;font-size:15px;text-align:right;padding:0 18px}
+body.vendor-store-open #vendorSelectedStore .vendor-detail-head,body.vendor-store-open #vendorSelectedStore #vendorSelectedDescription,body.vendor-store-open #vendorSelectedStore #vendorSelectedProductCount,body.vendor-store-open #vendorSelectedStore #souqStorefrontPublic,body.vendor-store-open #vendorSelectedStore #souqStorefrontTools,body.vendor-store-open #vendorSelectedStore #vendorSelectedProducts,body.vendor-store-open #vendorSelectedStore .vendor-cart-box{display:none!important}
+@media(max-width:650px){body.vendor-store-open #vendorSelectedStore{padding:0!important}body.vendor-store-open #vendorSelectedStore #souqMerchantTemplateHost{border-radius:0}body.vendor-store-open #vendorSelectedStore #souqMerchantTemplateFrame{height:calc(100dvh - 52px);min-height:600px}}
+</style>
+
 </head>
 <body class="theme-dark">
 <div id="souqSplash" role="status" aria-label="جاري تجهيز سوق القيمنق السعودي">
@@ -3816,3 +3826,991 @@ window.__souqVendorContext={state:vState,money:vMoney,safeUrl:vSafeUrl,esc:vEsc,
    button.disabled = true; button.textContent = 'جارٍ تسجيل الطلب...';
    try {
      const { data, error } = await sb.rpc('create_ad_promotion_request', {
+       p_ad_id: selectedAdId,
+       p_package_code: selectedPackage
+     });
+     if (error) throw error;
+     message.textContent = 'تم تسجيل طلبك بنجاح برقم: ' + String(data).slice(0,8) + '. الترويج لم يبدأ بعد؛ يلزم تأكيد الدفع من إدارة المنصة.';
+     button.textContent = 'تم تسجيل الطلب';
+   } catch (err) {
+     message.textContent = 'تعذر تسجيل الطلب: ' + (err?.message || 'تحقق من تشغيل ملف SQL الخاص بالترويج.');
+     button.disabled = false; button.textContent = 'إعادة المحاولة';
+   }
+ });
+})();
+</script>
+
+
+<style id="souq-paid-promoted-listing-badge">
+#ads .ad-square-card.is-paid-promoted{position:relative!important;border-color:#c79a42!important;box-shadow:0 0 0 1px #c79a4240,0 5px 18px #0005!important}
+#ads .ad-square-card .paid-promotion-badge{position:absolute;z-index:5;top:5px;right:5px;max-width:calc(100% - 12px);padding:3px 6px;border:1px solid #d8ad55;border-radius:7px;background:#382b12;color:#ffe3a0;font-size:9px;font-weight:900;line-height:1.25;white-space:nowrap;pointer-events:none}
+@media(max-width:759px){#ads .ad-square-card .paid-promotion-badge{font-size:8px;padding:2px 4px;top:4px;right:4px}}
+</style>
+
+
+<style id="souq-final-floating-carousel-filter-polish">
+/* الأزرار العائمة: دائرية بالكامل ومرفوعة 2 سم تقريباً عن شريط التنقل السفلي */
+.souq-side-float {
+  width:74px!important;height:74px!important;min-height:74px!important;
+  aspect-ratio:1/1!important;border-radius:50%!important;
+  bottom:calc(120px + env(safe-area-inset-bottom))!important;
+  padding:6px!important;display:flex!important;
+  align-items:center!important;justify-content:center!important;
+  border:2px solid #3d7792!important;
+  background:radial-gradient(circle at 35% 25%,#28527a,#102536 72%)!important;
+  color:#f1fbff!important;
+  box-shadow:0 7px 22px #0008,0 0 0 3px #2ac9df20!important;
+  font-size:10px!important;line-height:1.15!important;
+}
+.souq-side-float .float-icon {
+  display:grid!important;place-items:center!important;
+  width:34px!important;height:34px!important;
+  border-radius:50%!important;
+  background:#ffffff18!important;
+  font-size:22px!important;
+}
+.souq-side-float.ai{left:11px!important}
+.souq-side-float.news{right:11px!important}
+@media(max-width:600px) {
+  .souq-side-float{width:74px!important;height:74px!important;min-height:74px!important;bottom:calc(120px + env(safe-area-inset-bottom))!important}
+}
+/* بنر متحرك بثلاث صور مدمجة داخل الملف، قابل لاحقاً للربط بلوحة التحكم */
+.vendor-home-hero.souq-three-slide-hero {
+  position:relative!important;isolation:isolate!important;overflow:hidden!important;
+}
+.souq-hero-slides{position:absolute!important;inset:0!important;z-index:-1!important;overflow:hidden!important}
+.souq-hero-slide{position:absolute!important;inset:0!important;opacity:0!important;transform:scale(1.035)!important;transition:opacity .8s ease,transform 5.5s ease!important}
+.souq-hero-slide.active{opacity:1!important;transform:scale(1)!important}
+.souq-hero-slide img{width:100%!important;height:100%!important;object-fit:cover!important;display:block!important}
+.vendor-home-hero.souq-three-slide-hero:before{content:"";position:absolute;inset:0;z-index:0;background:linear-gradient(90deg,#09172b55,#10182dcc 65%,#11182de8);pointer-events:none}
+.vendor-home-hero.souq-three-slide-hero .vendor-home-hero-copy{position:relative;z-index:2}
+.vendor-home-hero.souq-three-slide-hero #vendorHomeHeroImage{display:none!important}
+.souq-hero-dots{position:absolute;z-index:4;left:14px;bottom:12px;display:flex;gap:6px;align-items:center}
+.souq-hero-dots button{width:7px;height:7px;min-width:7px;padding:0;border:0;border-radius:99px;background:#ffffff80;transition:width .2s ease,background .2s ease}
+.souq-hero-dots button.active{width:21px;background:#4de1f0}
+@media(prefers-reduced-motion:reduce){.souq-hero-slide{transition:none!important}}
+/* زيادة ارتفاع شريط التصنيفات والفلاتر بنحو سنتيمتر */
+#page-home .home-browse-combined {
+  min-height:120px!important;
+  padding-top:17px!important;padding-bottom:17px!important;
+  align-items:center!important;
+}
+#page-home .home-browse-combined .home-personal-categories .chip {
+  min-height:42px!important;padding:10px 14px!important;font-size:12px!important;
+}
+#page-home .home-browse-combined .smart-filter-toggle {
+  min-height:44px!important;padding:9px 12px!important;font-size:12px!important;
+}
+@media(max-width:600px){
+ #page-home .home-browse-combined{min-height:120px!important;padding:15px 8px!important}
+ #page-home .home-browse-combined .home-personal-categories .chip{min-height:42px!important}
+ #page-home .home-browse-combined .smart-filter-toggle{min-height:44px!important}
+}
+</style>
+<script id="souq-three-banner-carousel-controller">
+(() => {
+ const hero=document.getElementById('vendorHomeHero');
+ if(!hero || hero.dataset.carouselController==='1') return;
+ hero.dataset.carouselController='1';
+ const slides=[...hero.querySelectorAll('.souq-hero-slide')];
+ const dots=[...hero.querySelectorAll('[data-hero-dot]')];
+ if(slides.length!==3) return;
+ let active=0, timer=null;
+ const show=(index)=>{
+   active=(index+slides.length)%slides.length;
+   slides.forEach((s,i)=>s.classList.toggle('active',i===active));
+   dots.forEach((d,i)=>{d.classList.toggle('active',i===active);d.setAttribute('aria-pressed',String(i===active));});
+ };
+ const stop=()=>{if(timer){clearInterval(timer);timer=null;}};
+ const start=()=>{stop();if(!document.hidden)timer=setInterval(()=>show(active+1),5000);};
+ dots.forEach((dot)=>dot.addEventListener('click',()=>{show(Number(dot.dataset.heroDot));start();}));
+ hero.addEventListener('mouseenter',stop);
+ hero.addEventListener('mouseleave',start);
+ document.addEventListener('visibilitychange',()=>document.hidden?stop():start());
+ show(0);start();
+})();
+</script>
+
+
+<style id="souq-filter-button-alignment-fix">
+/* تصحيح شريط التصنيفات والفلاتر: ارتفاع موحد وبدون فراغ رأسي */
+#page-home .home-browse-combined {
+  display:flex!important;
+  flex-direction:row!important;
+  align-items:center!important;
+  gap:8px!important;
+  min-height:0!important;
+  height:auto!important;
+  padding:8px!important;
+  margin:8px 0 12px!important;
+  overflow:hidden!important;
+  border-radius:13px!important;
+  box-sizing:border-box!important;
+}
+#page-home .home-browse-combined .home-personal-categories {
+  flex:1 1 0!important;
+  width:auto!important;
+  min-width:0!important;
+  height:auto!important;
+  padding:0!important;
+  margin:0!important;
+  overflow:hidden!important;
+}
+#page-home .home-browse-combined .home-personal-categories .categories {
+  display:flex!important;
+  align-items:center!important;
+  flex-wrap:nowrap!important;
+  gap:7px!important;
+  width:100%!important;
+  min-width:0!important;
+  height:46px!important;
+  padding:2px 0!important;
+  margin:0!important;
+  overflow-x:auto!important;
+  overflow-y:hidden!important;
+  scrollbar-width:none!important;
+  -webkit-overflow-scrolling:touch!important;
+}
+#page-home .home-browse-combined .home-personal-categories .categories::-webkit-scrollbar {
+  display:none!important;
+}
+#page-home .home-browse-combined .home-personal-categories .chip {
+  flex:0 0 auto!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-height:40px!important;
+  height:40px!important;
+  padding:0 12px!important;
+  margin:0!important;
+  border-radius:10px!important;
+  font-size:12px!important;
+  line-height:1!important;
+  white-space:nowrap!important;
+}
+#page-home .home-browse-combined .listing-tools {
+  position:relative!important;
+  flex:0 0 auto!important;
+  width:auto!important;
+  min-width:0!important;
+  max-width:none!important;
+  height:auto!important;
+  min-height:0!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  overflow:visible!important;
+}
+#page-home .home-browse-combined .listing-tools-title {
+  display:none!important;
+}
+#page-home .home-browse-combined .smart-filter-toggle {
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:6px!important;
+  width:auto!important;
+  min-width:0!important;
+  min-height:40px!important;
+  height:40px!important;
+  margin:0!important;
+  padding:0 12px!important;
+  border:1px solid #3a596a!important;
+  border-radius:10px!important;
+  background:#203542!important;
+  color:#eaf8fc!important;
+  box-shadow:none!important;
+  font-size:12px!important;
+  line-height:1!important;
+  font-weight:800!important;
+  white-space:nowrap!important;
+}
+#page-home .home-browse-combined .smart-filter-toggle .smart-filter-chevron {
+  margin:0!important;
+  font-size:15px!important;
+  line-height:1!important;
+}
+#page-home .home-browse-combined .listing-advanced {
+  position:absolute!important;
+  z-index:30!important;
+  top:calc(100% + 8px)!important;
+  right:0!important;
+  left:auto!important;
+  width:min(310px,calc(100vw - 32px))!important;
+  max-width:calc(100vw - 32px)!important;
+  box-sizing:border-box!important;
+}
+@media(max-width:600px) {
+  #page-home .home-browse-combined {
+    min-height:0!important;
+    height:auto!important;
+    padding:7px!important;
+    gap:6px!important;
+  }
+  #page-home .home-browse-combined .home-personal-categories .categories {
+    height:42px!important;
+    gap:5px!important;
+  }
+  #page-home .home-browse-combined .home-personal-categories .chip {
+    min-height:36px!important;
+    height:36px!important;
+    padding:0 9px!important;
+    font-size:10px!important;
+  }
+  #page-home .home-browse-combined .smart-filter-toggle {
+    min-height:36px!important;
+    height:36px!important;
+    padding:0 9px!important;
+    gap:4px!important;
+    font-size:10px!important;
+  }
+}
+</style>
+
+
+
+
+<style id="vendor-category-circles-and-compact-mobile-banner">
+.vendor-category-circle-rail{display:flex;gap:13px;overflow-x:auto;overflow-y:hidden;padding:10px 3px 13px;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory}
+.vendor-category-circle-rail::-webkit-scrollbar{display:none}
+.vendor-category-circle{flex:0 0 76px;width:76px;min-height:94px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:7px;padding:0 3px;background:transparent!important;border:0!important;color:#eef7fa!important;scroll-snap-align:start}
+.vendor-category-circle-icon{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#203c58,#101d30);border:2px solid #355c7d;box-shadow:0 4px 13px #0005;font-size:27px;overflow:hidden}
+.vendor-category-circle-icon img{width:34px;height:34px;object-fit:contain}
+.vendor-category-circle b{font-size:10px;white-space:nowrap;font-weight:700}
+.vendor-category-circle.selected .vendor-category-circle-icon{border-color:#55c9df;box-shadow:0 0 0 3px #55c9df35,0 4px 13px #0005}
+.vendor-category-circle.selected b{color:#7ce9f5}
+@media(max-width:600px){
+ .vendor-home-hero{width:100%!important;height:76px!important;min-height:76px!important;max-height:76px!important;aspect-ratio:auto!important;padding:7px 10px!important;margin:8px 0 10px!important;border-radius:13px!important}
+ .vendor-home-hero-copy{max-width:82%!important}
+ .vendor-home-hero h1{font-size:13px!important;line-height:1.25!important;margin:0 0 2px!important}
+ .vendor-home-hero p{font-size:8px!important;line-height:1.2!important;margin:0 0 3px!important;max-width:100%!important}
+ .vendor-home-hero .primary{font-size:8px!important;padding:3px 8px!important;line-height:1.2!important}
+ .vendor-home-hero:after{font-size:36px!important;left:5px!important;bottom:-9px!important}
+ .vendor-home-hero.has-image:before{background:linear-gradient(90deg,#0b1530ed 0%,#101a31c4 65%,#17133875 100%)!important}
+ .vendor-category-circle-rail{gap:9px;padding:8px 2px 10px}
+ .vendor-category-circle{flex-basis:67px;width:67px;min-height:82px;gap:5px}
+ .vendor-category-circle-icon{width:54px;height:54px;font-size:23px}
+ .vendor-category-circle-icon img{width:29px;height:29px}
+ .vendor-category-circle b{font-size:9px}
+}
+</style>
+
+
+<style id="souq-final-three-column-title-price-pledge-fix">
+/* تثبيت 3 بطاقات في كل صف على الجوال والكمبيوتر، مع إبقاء التحميل غير محدود */
+#ads.grid,
+#ads.grid.list-view {
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  align-items:stretch!important;
+  gap:9px!important;
+}
+#ads.grid > .ad-square-card,
+#ads.grid.list-view > .ad-square-card {
+  display:flex!important;
+  flex-direction:column!important;
+  width:100%!important;
+  min-width:0!important;
+  height:auto!important;
+  aspect-ratio:auto!important;
+  overflow:hidden!important;
+  border:1px solid var(--line)!important;
+  border-radius:13px!important;
+  background:var(--panel)!important;
+}
+#ads .ad-square-card .ad-image-wrap {
+  flex:0 0 auto!important;
+  width:100%!important;
+  aspect-ratio:1/1!important;
+  height:auto!important;
+  min-height:0!important;
+  margin:0!important;
+  overflow:hidden!important;
+}
+#ads .ad-square-card .ad-image-wrap .adimg {
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  aspect-ratio:1/1!important;
+  object-fit:cover!important;
+}
+#ads .ad-square-card .adbody {
+  flex:1 0 auto!important;
+  width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  padding:8px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:flex-start!important;
+  gap:6px!important;
+  overflow:visible!important;
+  background:transparent!important;
+}
+/* عنوان الإعلان يظهر أولاً ولا يختفي بسبب ارتفاع البطاقة */
+#ads .ad-square-card .adbody h3 {
+  display:-webkit-box!important;
+  -webkit-box-orient:vertical!important;
+  -webkit-line-clamp:2!important;
+  overflow:hidden!important;
+  min-height:0!important;
+  max-height:2.8em!important;
+  width:100%!important;
+  margin:0!important;
+  text-align:right!important;
+  white-space:normal!important;
+  overflow-wrap:anywhere!important;
+  font-size:clamp(10px,2.8vw,14px)!important;
+  line-height:1.4!important;
+  color:var(--text)!important;
+}
+/* السعر في زاوية والتعهد في الزاوية المقابلة */
+#ads .ad-square-card .ad-square-price,
+#ads .ad-square-card .ad-pledge-badge {
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:auto!important;
+  max-width:48%!important;
+  min-width:0!important;
+  margin:0!important;
+  white-space:normal!important;
+}
+#ads .ad-square-card .ad-square-price {
+  align-self:flex-start!important;
+  order:2!important;
+  font-size:clamp(10px,2.8vw,15px)!important;
+  line-height:1.25!important;
+  font-weight:900!important;
+  color:var(--brand)!important;
+  white-space:nowrap!important;
+}
+#ads .ad-square-card .ad-pledge-badge {
+  align-self:flex-end!important;
+  order:3!important;
+  padding:3px 5px!important;
+  border:1px solid #278d9b!important;
+  border-radius:8px!important;
+  background:#123b46!important;
+  color:#8debf0!important;
+  font-size:clamp(7px,1.9vw,10px)!important;
+  line-height:1.25!important;
+  font-weight:800!important;
+  text-align:center!important;
+  overflow-wrap:anywhere!important;
+}
+#ads .ad-square-card .ad-pledge-badge.defect {
+  background:#4a2c20!important;
+  border-color:#b86c3b!important;
+  color:#ffd0a8!important;
+}
+#ads .ad-square-card .ad-square-meta,
+#ads .ad-square-card .ad-square-open {display:none!important}
+#ads .ad-square-card .ad-share-top {
+  z-index:4!important;
+  width:29px!important;height:29px!important;
+  min-width:29px!important;min-height:29px!important;
+  top:6px!important;left:6px!important;
+  font-size:14px!important;
+}
+@media(max-width:380px) {
+  #ads.grid,#ads.grid.list-view {gap:6px!important}
+  #ads .ad-square-card .adbody {padding:6px 5px!important;gap:5px!important}
+  #ads .ad-square-card .adbody h3 {font-size:10px!important}
+  #ads .ad-square-card .ad-square-price {font-size:10px!important}
+  #ads .ad-square-card .ad-pledge-badge {font-size:7px!important;padding:2px 3px!important}
+}
+</style>
+
+
+<style id="souq-approved-stores-under-categories-and-square-ads">
+/* بطاقات الإعلانات: مربعة بالكامل، 3 في كل صف، والعدد مفتوح */
+#ads.grid,#ads.grid.list-view{
+ display:grid!important;
+ grid-template-columns:repeat(3,minmax(0,1fr))!important;
+ gap:9px!important;
+ align-items:stretch!important;
+}
+#ads.grid>.ad-square-card,#ads.grid.list-view>.ad-square-card{
+ display:flex!important;flex-direction:column!important;
+ width:100%!important;min-width:0!important;min-height:0!important;
+ margin:0!important;padding:0!important;overflow:hidden!important;
+ aspect-ratio:auto!important;border:1px solid var(--line)!important;
+ border-radius:14px!important;background:var(--panel)!important;
+ box-shadow:var(--shadow)!important;
+}
+#ads .ad-square-card .ad-image-wrap{
+ display:block!important;position:relative!important;flex:0 0 auto!important;
+ width:100%!important;height:auto!important;min-height:0!important;
+ aspect-ratio:1/1!important;margin:0!important;overflow:hidden!important;
+ border-radius:0!important;background:var(--panel2)!important;
+}
+#ads .ad-square-card .ad-image-wrap .adimg{
+ display:block!important;width:100%!important;height:100%!important;
+ min-height:0!important;aspect-ratio:1/1!important;object-fit:cover!important;
+}
+#ads .ad-square-card .adbody{
+ display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+ grid-template-rows:auto auto!important;align-items:center!important;
+ gap:7px 4px!important;flex:1 0 auto!important;min-width:0!important;
+ padding:8px 7px!important;background:transparent!important;
+}
+#ads .ad-square-card .adbody h3{
+ grid-column:1/-1!important;grid-row:1!important;
+ display:-webkit-box!important;-webkit-box-orient:vertical!important;
+ -webkit-line-clamp:2!important;overflow:hidden!important;
+ width:100%!important;min-height:2.7em!important;max-height:2.7em!important;
+ margin:0!important;text-align:right!important;white-space:normal!important;
+ overflow-wrap:anywhere!important;font-size:clamp(10px,2.8vw,14px)!important;
+ line-height:1.35!important;color:var(--text)!important;
+}
+#ads .ad-square-card .ad-square-price{
+ grid-column:1!important;grid-row:2!important;justify-self:start!important;
+ align-self:center!important;display:block!important;max-width:100%!important;
+ margin:0!important;font-size:clamp(10px,2.8vw,15px)!important;
+ line-height:1.3!important;font-weight:900!important;color:var(--brand)!important;
+ white-space:nowrap!important;
+}
+#ads .ad-square-card .ad-pledge-badge{
+ grid-column:2!important;grid-row:2!important;justify-self:end!important;
+ align-self:center!important;display:inline-flex!important;align-items:center!important;
+ justify-content:center!important;max-width:100%!important;min-width:0!important;
+ margin:0!important;padding:4px 6px!important;border:1px solid #278d9b!important;
+ border-radius:9px!important;background:#123b46!important;color:#8debf0!important;
+ font-size:clamp(7px,1.8vw,10px)!important;font-weight:800!important;
+ line-height:1.2!important;text-align:center!important;white-space:normal!important;
+ overflow-wrap:anywhere!important;
+}
+#ads .ad-square-card .ad-pledge-badge.defect{
+ background:#4a2c20!important;border-color:#b86c3b!important;color:#ffd0a8!important;
+}
+#ads .ad-square-card .ad-square-meta,
+#ads .ad-square-card .ad-square-open{display:none!important}
+#ads .ad-square-card .ad-share-top{
+ position:absolute!important;top:6px!important;left:6px!important;
+ width:30px!important;height:30px!important;min-width:30px!important;
+ padding:0!important;border-radius:50%!important;z-index:5!important;
+}
+/* تجميع كل المتاجر المعتمدة أسفل تصنيفها */
+#vendorCircleRail{display:block!important;overflow:visible!important}
+.vendor-category-store-group{
+ margin:12px 0 16px!important;padding:10px!important;
+ border:1px solid var(--line)!important;border-radius:14px!important;
+ background:var(--panel)!important;
+}
+.vendor-category-store-heading{
+ display:flex!important;justify-content:space-between!important;align-items:center!important;
+ gap:8px!important;margin-bottom:9px!important;font-weight:900!important;
+ color:var(--brand)!important;font-size:14px!important;
+}
+.vendor-category-store-heading span{font-size:11px!important;color:var(--muted)!important}
+.vendor-category-store-items{
+ display:flex!important;flex-wrap:wrap!important;align-items:flex-start!important;
+ justify-content:flex-start!important;gap:12px!important;
+}
+.vendor-category-store-items .vendor-circle{
+ flex:0 0 76px!important;width:76px!important;max-width:76px!important;
+}
+@media(max-width:600px){
+ #ads.grid,#ads.grid.list-view{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:7px!important}
+ #ads .ad-square-card .adbody{padding:7px 5px!important;gap:6px 3px!important}
+ #ads .ad-square-card .adbody h3{font-size:clamp(9px,2.7vw,12px)!important;min-height:2.7em!important}
+ #ads .ad-square-card .ad-square-price{font-size:clamp(9px,2.6vw,12px)!important}
+ #ads .ad-square-card .ad-pledge-badge{font-size:clamp(6px,1.75vw,8px)!important;padding:3px 4px!important}
+ .vendor-category-store-group{padding:8px!important;margin:10px 0 13px!important}
+ .vendor-category-store-items{gap:8px!important}
+ .vendor-category-store-items .vendor-circle{flex-basis:68px!important;width:68px!important;max-width:68px!important}
+}
+</style>
+
+
+<style id="souq-hide-home-store-list-show-by-category-only">
+#vendorCircleRail[hidden],
+#vendorCircleRail{display:none!important;height:0!important;min-height:0!important;margin:0!important;padding:0!important;border:0!important}
+#vendorCircleSection{display:block!important}
+#vendorCategoryCircleRail{display:flex!important}
+</style>
+
+<style id="souq-storefront-customization-css">
+#souqStorefrontPublic{--souq-shop-color:#e8dce8;background:#fff;border:1px solid #eadfe8;border-radius:18px;padding:14px;margin:12px 0 18px;color:#252129;overflow:hidden}
+#souqStorefrontPublic .souq-shop-banner{height:clamp(130px,28vw,260px);background:#f3edf3;border-radius:14px;overflow:hidden;margin-bottom:12px}
+#souqStorefrontPublic .souq-shop-banner img{width:100%;height:100%;object-fit:cover;display:block}
+#souqStorefrontPublic .souq-shop-top{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+#souqStorefrontPublic .souq-shop-logo{width:58px;height:58px;border-radius:16px;overflow:hidden;background:var(--souq-shop-color);display:grid;place-items:center;font-size:25px;font-weight:900;color:#423746;flex:0 0 auto}
+#souqStorefrontPublic .souq-shop-logo img{width:100%;height:100%;object-fit:cover}
+#souqStorefrontPublic .souq-shop-top h2{margin:0;color:#28212a;font-size:21px}
+#souqStorefrontPublic .souq-shop-top p{margin:3px 0 0;color:#6e6470;font-size:13px}
+#souqStorefrontPublic .souq-shop-announcement{background:color-mix(in srgb,var(--souq-shop-color) 35%,white);padding:10px 12px;border-radius:11px;margin:12px 0;color:#453b46;font-size:13px}
+#souqStorefrontPublic .souq-shop-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+#souqStorefrontPublic .souq-shop-actions a{color:#46354b;border:1px solid var(--souq-shop-color);background:#fff;padding:7px 10px;border-radius:10px;text-decoration:none;font-size:12px}
+#souqStorefrontPublic .souq-shop-delivery{font-size:12px;line-height:1.7;color:#635966;background:#faf7fa;border-radius:10px;padding:10px;margin-top:10px}
+#souqStorefrontTools{background:#fff;border:1px solid #ece5ec;border-radius:14px;padding:12px;margin:13px 0}
+#souqStorefrontTools input,#souqStorefrontTools select{background:#fff;color:#2b2530;border:1px solid #e1d9e2;border-radius:10px;padding:10px;min-width:0}
+#souqStorefrontTools .souq-product-controls{display:flex;gap:8px;flex-wrap:wrap}
+#souqStorefrontTools .souq-product-controls input{flex:1;min-width:150px}
+#souqStorefrontTools .souq-category-pills{display:flex;gap:7px;overflow:auto;padding-top:10px}
+#souqStorefrontTools .souq-category-pills button{white-space:nowrap;border-radius:99px;padding:7px 12px;background:#f8f4f8;border:1px solid #e6dce6;color:#493b4d}
+#souqStorefrontTools .souq-category-pills button.active{background:var(--souq-shop-color);border-color:var(--souq-shop-color);font-weight:800}
+#vendorSelectedProducts.souq-columns-3{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+#vendorSelectedProducts.souq-columns-2{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+@media(max-width:560px){#vendorSelectedProducts.souq-columns-3{grid-template-columns:repeat(2,minmax(0,1fr))!important}#souqStorefrontPublic{padding:10px}}
+</style>
+<script id="souq-public-storefront-engine">
+(()=>{
+ 'use strict';if(window.__souqPublicStorefrontBooted)return;window.__souqPublicStorefrontBooted=true;
+ const $=id=>document.getElementById(id), esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const providerNames={smsa:'سمسا',aramex:'أرامكس',spl:'سبل',naqel:'ناقل',aymakan:'أي مكان',jt:'J&T',redbox:'ريد بوكس',shipa:'Shipa',dhl:'DHL',fedex:'FedEx',oto:'OTO',torod:'طرود',eeasy:'eeasy',shipq:'ShipQ'};
+ let lastStoreId='',shopPublic={},filterCategory='all',filterQuery='';
+ function safeColor(x){return /^#[0-9a-f]{6}$/i.test(String(x||''))?x:'#e8dce8'}
+ function ensureMount(){const root=$('vendorSelectedStore');if(!root)return null;let m=$('souqStorefrontPublic');if(!m){m=document.createElement('div');m.id='souqStorefrontPublic';root.insertBefore(m,root.firstChild)}return m}
+ function ensureTools(){const grid=$('vendorSelectedProducts');if(!grid)return null;let t=$('souqStorefrontTools');if(!t){t=document.createElement('div');t.id='souqStorefrontTools';grid.parentNode.insertBefore(t,grid)}return t}
+ async function loadPublic(storeId){try{const {data,error}=await sb.from('vendor_store_public_preferences').select('public_settings').eq('store_id',storeId).maybeSingle();if(error){console.warn('Public store customization not loaded',error);shopPublic={};return}shopPublic=data?.public_settings||{}}catch(e){console.warn(e);shopPublic={}}}
+ function linksMarkup(links){const labels={instagram:'Instagram',tiktok:'TikTok',snapchat:'Snapchat',whatsapp:'WhatsApp',facebook:'Facebook',google:'Google Merchant',google_business:'Google Business',youtube:'YouTube',x:'X',amazon:'Amazon',noon:'نون',haraj:'حراج',salla:'سلة',zid:'زد',shopify:'Shopify',trendyol:'ترينديول',woocommerce:'WooCommerce',magento:'Magento',opencart:'OpenCart'};return Object.entries(links||{}).map(([k,u])=>{let url='';try{const parsed=new URL(u);if(parsed.protocol==='https:')url=parsed.href}catch{}return url?`<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(labels[k]||k)} ↗</a>`:''}).join('')}
+ function renderHeader(store){const f=shopPublic.storefront||{},delivery=shopPublic.delivery_display||{},mount=ensureMount();if(!mount)return;const color=safeColor(f.theme_color);mount.style.setProperty('--souq-shop-color',color);const logo=store.logo_url&&window.__souqVendorContext.safeUrl(store.logo_url)?`<img src="${esc(window.__souqVendorContext.safeUrl(store.logo_url))}" alt="${esc(store.store_name)}">`:(esc((store.store_name||'م').trim().charAt(0)||'م'));
+  const banner=f.show_banner&&f.banner_url&&window.__souqVendorContext.safeUrl(f.banner_url)?`<div class="souq-shop-banner"><img src="${esc(window.__souqVendorContext.safeUrl(f.banner_url))}" alt="واجهة ${esc(store.store_name)}"></div>`:'';
+  const announce=f.show_announcement&&f.announcement?`<div class="souq-shop-announcement">${esc(f.announcement)}</div>`:'';
+  const whats=f.show_whatsapp&&f.whatsapp?`<a href="https://wa.me/${esc(String(f.whatsapp).replace(/\D/g,''))}" target="_blank" rel="noopener">تواصل واتساب ↗</a>`:'';
+  const socials=f.show_social_links?linksMarkup(shopPublic.channel_links):'';
+  const carriers=(delivery.providers||[]).map(x=>providerNames[x]||x).join('، ');
+  const fee=Number(delivery.estimated_fee||0),payer=delivery.fee_payer==='merchant'?'على المتجر':delivery.fee_payer==='shared'?'حسب الاتفاق':'على العميل',primaryName=providerNames[delivery.primary]||'',scopeLabel=({local:'داخل المدينة',national:'داخل المملكة',international:'دولي',mixed:'محلي ودولي'})[delivery.shipping_scope]||'',pickupLabel=delivery.allow_pickup?'الاستلام من المتجر متاح. ':'';
+  const deliver=carriers||delivery.note||fee>0?`<div class="souq-shop-delivery">🚚 ${carriers?'شركات التوصيل التي اختارها المتجر: '+esc(carriers)+'. ':''}${primaryName?'الشركة المفضلة: '+esc(primaryName)+'. ':''}${scopeLabel?'نطاق التوصيل: '+esc(scopeLabel)+'. ':''}${delivery.coverage?'المناطق: '+esc(delivery.coverage)+'. ':''}${delivery.delivery_window?'المدة المتوقعة: '+esc(delivery.delivery_window)+'. ':''}${pickupLabel}${fee>0?`رسوم إرشادية: ${fee.toLocaleString('ar-SA')} ر.س (${payer})، وليست سعرًا نهائيًا. `:''}${esc(delivery.note||'تأكيد شركة التوصيل والتكلفة قبل تجهيز الطلب.')}</div>`:'';
+  const policies=[['الاستبدال والاسترجاع',f.returns_policy],['التوصيل والشحن',f.shipping_policy],['الضمان',f.warranty_policy],['الخصوصية وحماية البيانات',f.privacy_policy],['استقبال الشكاوى',f.complaints_contact],['مدة الرد على الشكاوى',f.complaint_response_time]].filter(x=>x[1]).map(x=>`<details style="margin-top:7px"><summary>${esc(x[0])}</summary><p>${esc(x[1])}</p></details>`).join('');
+  let docHref='';try{const u=new URL(String(f.documentation_url||''),location.href);if(u.protocol==='https:')docHref=u.href}catch{}const supportEmail=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(f.support_email||''))?String(f.support_email):'';const legal=[f.business_address?`العنوان: ${esc(f.business_address)}`:'',f.cr_number?`السجل التجاري: ${esc(f.cr_number)}`:'',f.vat_number?`الرقم الضريبي: ${esc(f.vat_number)}`:'',supportEmail?`البريد: <a href="mailto:${esc(supportEmail)}">${esc(supportEmail)}</a>`:'',docHref?`<a href="${esc(docHref)}" target="_blank" rel="noopener noreferrer">رابط التوثيق الرسمي ↗</a>`:''].filter(Boolean).join(' · ');
+  const contactInfo=legal?`<div class="souq-shop-delivery">${legal}</div>`:'';
+  mount.innerHTML=`${banner}<div class="souq-shop-top"><div class="souq-shop-logo">${logo}</div><div><h2>${esc(store.store_name||'المتجر')}</h2><p>${esc([store.category,store.city].filter(Boolean).join(' · '))}</p></div></div>${announce}<div class="souq-shop-actions">${whats}${socials}</div>${contactInfo}${deliver}${policies}`;
+  const grid=$('vendorSelectedProducts');if(grid){grid.classList.toggle('souq-columns-3',Number(f.product_columns)===3);grid.classList.toggle('souq-columns-2',Number(f.product_columns)!==3)}
+ }
+ function renderTools(){const f=shopPublic.storefront||{},tools=ensureTools();if(!tools)return;if(!f.show_search&&!f.show_category_filters){tools.hidden=true;tools.innerHTML='';return}tools.hidden=false;
+  const cats=[...new Set(((window.__souqVendorContext?.state?.selectedProducts||[])||[]).map(p=>String(p.category||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'ar'));
+  tools.innerHTML=`<div class="souq-product-controls">${f.show_search?'<input id="souqStoreProductSearch" type="search" placeholder="ابحث في منتجات المتجر..." aria-label="بحث منتجات المتجر">':''}<select id="souqStoreProductSort" aria-label="ترتيب المنتجات"><option value="default">ترتيب المنتجات</option><option value="newest">الأحدث</option><option value="price_low">السعر الأقل</option><option value="price_high">السعر الأعلى</option><option value="name">الاسم</option></select></div>${f.show_category_filters&&cats.length?'<div class="souq-category-pills"><button type="button" class="active" data-souq-category="all">الكل</button>'+cats.map(c=>`<button type="button" data-souq-category="${esc(c)}">${esc(c)}</button>`).join('')+'</div>':''}`;
+  if($('souqStoreProductSort'))$('souqStoreProductSort').value=f.sort_mode||'newest';
+  $('souqStoreProductSearch')?.addEventListener('input',e=>{filterQuery=e.target.value.trim().toLowerCase();renderProducts()});
+  $('souqStoreProductSort')?.addEventListener('change',renderProducts);
+  tools.querySelectorAll('[data-souq-category]').forEach(b=>b.addEventListener('click',()=>{filterCategory=b.dataset.souqCategory;tools.querySelectorAll('[data-souq-category]').forEach(x=>x.classList.toggle('active',x===b));renderProducts()}));
+ }
+ function renderProducts(){const grid=$('vendorSelectedProducts');if(!grid)return;const f=shopPublic.storefront||{};let products=[...((window.__souqVendorContext?.state?.selectedProducts||[])||[])];if(f.hide_out_of_stock)products=products.filter(p=>Number(p.stock_quantity)>0);if(filterCategory!=='all')products=products.filter(p=>String(p.category||'')===filterCategory);if(filterQuery)products=products.filter(p=>[p.title,p.category,p.description].join(' ').toLowerCase().includes(filterQuery));const sort=$('souqStoreProductSort')?.value||f.sort_mode||'newest';products.sort((a,b)=>sort==='price_low'?Number(a.price)-Number(b.price):sort==='price_high'?Number(b.price)-Number(a.price):sort==='name'?String(a.title).localeCompare(String(b.title),'ar'):sort==='newest'?new Date(b.created_at||0)-new Date(a.created_at||0):0);
+  if(!products.length){grid.innerHTML='<div class="empty" style="grid-column:1/-1">لا توجد منتجات مطابقة لاختياراتك.</div>';return}
+  grid.innerHTML=products.map(p=>`<article class="vendor-product-card"><div class="vendor-product-image">${window.__souqVendorContext.safeUrl(p.image_url)?`<img src="${esc(window.__souqVendorContext.safeUrl(p.image_url))}" alt="${esc(p.title)}" loading="lazy">`:'🎮'}</div><div class="vendor-product-content">${window.__souqVendorContext?.state?.promotedProducts.has(String(p.id))?'<span class="vendor-pill">منتج مروّج</span>':''}<h3>${esc(p.title)}</h3><div class="vendor-muted-note">${esc(p.category||'')}</div><div class="vendor-product-price">${window.__souqVendorContext.money(p.price)}</div>${f.show_stock?`<div class="vendor-muted-note">${Number(p.stock_quantity)>0?'متوفر · الكمية '+Number(p.stock_quantity):'غير متوفر'}</div>`:''}<div class="vendor-product-actions"><button class="primary" type="button" onclick="addVendorCart('${esc(p.id)}')" ${Number(p.stock_quantity)<1?'disabled':''}>أضف للسلة</button><button class="secondary" type="button" onclick="showVendorProductDetails('${esc(p.id)}')">التفاصيل</button></div></div></article>`).join('');
+ }
+ async function apply(id){
+  const ctx=window.__souqVendorContext,store=ctx?.state?.selectedStore;if(!store||String(store.id)!==String(id))return;
+  filterCategory='all';filterQuery='';await loadPublic(id);
+  const root=$('vendorSelectedStore');if(!root)return;
+  let host=$('souqMerchantTemplateHost');if(!host){host=document.createElement('div');host.id='souqMerchantTemplateHost';root.insertBefore(host,root.firstChild)}
+  const source=$('souqMerchantTemplateSource');if(!source){renderHeader(store);renderTools();renderProducts();return}
+  const products=(ctx.state.selectedProducts||[]).map(p=>({id:p.id,name:p.title,description:p.description,categoryId:String(p.category||''),image:ctx.safeUrl(p.image_url)||'',price:Number(p.price)||0,oldPrice:'',currency:'ر.س',visible:p.status==='active'&&Number(p.stock_quantity)>=0,stock:Number(p.stock_quantity)||0}));
+  const cats=[...new Set(products.map(p=>p.categoryId).filter(Boolean))].map((name,i)=>({id:name,name,icon:'🎮',visible:true}));
+  const f=shopPublic.storefront||{},heroImage=f.show_banner&&f.banner_url?ctx.safeUrl(f.banner_url):'';
+  const cfg={identity:{name:store.store_name||'المتجر',logo:ctx.safeUrl(store.logo_url)||'',announcement:f.show_announcement?f.announcement||'':'',currency:'ر.س'},
+   theme:{background:'#0b1020',surface:'#121a2b',text:'#f5f7fb',muted:'#a4afc3',primary:safeColor(f.theme_color||'#8b5cf6'),secondary:'#22d3ee',radius:'20px',font:"'IBM Plex Sans Arabic',Tahoma,sans-serif"},
+   navigation:[{label:'الرئيسية',url:'#'},{label:'التصنيفات',url:'#categoriesSection'},{label:'المنتجات',url:'#productsSection'}],
+   hero:{visible:!!f.show_banner&&(!!heroImage||!!f.hero_title||!!f.hero_description),title:f.hero_title||store.store_name||'مرحباً بكم في متجرنا',description:f.hero_description||store.description||'تصفح منتجات المتجر واختر ما يناسبك',buttonLabel:'تسوق الآن',image:heroImage},
+   categories:cats,products,
+   sections:{categories:{visible:cats.length>0,title:f.categories_title||'تسوق حسب التصنيف',subtitle:''},products:{visible:true,title:f.products_title||'منتجات المتجر',subtitle:f.products_subtitle||'تصفح أحدث المنتجات المتاحة'},promo:{visible:false},features:{visible:false,items:[]}},
+   footer:{visible:false,columns:[],copyright:''}};
+  window.__souqBuildStoreConfig=()=>cfg;
+  const parsedTemplate=new DOMParser().parseFromString(source.innerHTML,'text/html');
+  let templateBody=parsedTemplate.body.innerHTML.replace('const STORE = window.STORE_CONFIG || {};','const STORE = window.parent.__souqBuildStoreConfig();')
+   .replace("if(section.visible===false||!items.length)return;","if(section.visible===false)return;")
+   .replace("function addToCart(id){const product=(STORE.products||[]).find(p=>String(p.id)===String(id));if(!product)return;const found=cart.find(x=>String(x.id)===String(id));if(found)found.qty++;else cart.push({...product,qty:1});renderCart();toast('تمت إضافة المنتج إلى السلة');}","function addToCart(id){const product=(STORE.products||[]).find(p=>String(p.id)===String(id));if(!product)return;const found=cart.find(x=>String(x.id)===String(id));if(found)found.qty++;else cart.push({...product,qty:1});window.parent.addVendorCart(String(id));renderCart();toast('تمت إضافة المنتج إلى السلة');}")
+   .replace("$('checkoutButton').onclick=()=>toast('تُفعّل إتمام الطلب عند ربط نظام الطلبات');","$('checkoutButton').onclick=()=>{window.parent.__souqStartVendorCheckout();};");
+  const html='<!DOCTYPE html><html lang="ar" dir="rtl"><head>'+parsedTemplate.head.innerHTML+'</head><body>'+templateBody+'</body></html>';
+  host.innerHTML='<button id="souqMerchantBack" type="button">← العودة إلى السوق</button><iframe id="souqMerchantTemplateFrame" title="متجر التاجر" loading="eager"></iframe>';
+  $('souqMerchantBack').onclick=()=>{$('vendorBackToDirectory').click()};
+  window.__souqStartVendorCheckout=()=>{closeVendorTemplateCart();const form=$('vendorCheckoutForm');form?.scrollIntoView({behavior:'smooth',block:'center'});};
+  function closeVendorTemplateCart(){const frame=$('souqMerchantTemplateFrame');try{frame.contentWindow.postMessage({type:'SOUQ_CLOSE_CART'},'*')}catch{}}
+  const frame=$('souqMerchantTemplateFrame');
+  frame.srcdoc=html;
+  renderHeader(store);renderTools();renderProducts();
+ }
+ const baseOpen=window.openVendorStore;
+ if(typeof baseOpen==='function')window.openVendorStore=async function(id){const res=await baseOpen.apply(this,arguments);lastStoreId=String(id);filterCategory='all';filterQuery='';await apply(id);return res};
+ const cartObserver=new MutationObserver(()=>{renderCheckoutHint()});
+ function watchCart(){const rows=$('vendorCartRows');if(rows&&!rows.dataset.souqWatching){rows.dataset.souqWatching='1';cartObserver.observe(rows,{childList:true,subtree:true})}}
+ watchCart();setTimeout(watchCart,500);setTimeout(watchCart,1500);
+ async function renderCheckoutHint(){const form=$('vendorCheckoutForm');if(!form)return;let box=$('souqCheckoutDeliveryHint');if(!box){box=document.createElement('div');box.id='souqCheckoutDeliveryHint';box.className='full vendor-state';const warning=form.querySelector('.vendor-danger-note');if(warning)form.insertBefore(box,warning);else form.prepend(box)}const ids=[...new Set(window.__souqVendorContext.selectedCartItems().map(x=>String(x.product.store_id)).filter(Boolean))];if(!ids.length){box.hidden=true;return}box.hidden=false;box.textContent='جارٍ تحميل خيارات التوصيل المفضلة للمتاجر في السلة...';try{const {data,error}=await sb.from('vendor_store_public_preferences').select('store_id,public_settings').in('store_id',ids);if(error)throw error;const prefs=new Map((data||[]).map(x=>[String(x.store_id),x.public_settings||{}]));const names=new Map(((window.__souqVendorContext?.state?.stores)||[]).map(x=>[String(x.id),x.store_name]));box.innerHTML=ids.map(id=>{const d=prefs.get(id)?.delivery_display||{},providers=(d.providers||[]).map(p=>providerNames[p]||p).join('، '),primary=providerNames[d.primary]||'',fee=Number(d.estimated_fee||0),payer=d.fee_payer==='merchant'?'على المتجر':d.fee_payer==='shared'?'حسب الاتفاق':'على العميل',windowText=d.delivery_window||'',coverage=d.coverage||'',pickup=!!d.allow_pickup;return `<div style="padding:5px 0;border-bottom:1px solid #ddd">🚚 <b>${esc(names.get(id)||'متجر')}</b>: ${providers?esc(providers):'لم يحدد المتجر شركة مفضلة'}. ${primary?'المفضلة: '+esc(primary)+'. ':''}${coverage?'المناطق: '+esc(coverage)+'. ':''}${windowText?'المدة المتوقعة: '+esc(windowText)+'. ':''}${pickup?'الاستلام من المتجر متاح. ':''}${fee>0?'رسوم إرشادية '+fee.toLocaleString('ar-SA')+' ر.س ('+payer+'). ':''}${esc(d.note||'يتم تأكيد الشحن قبل تجهيز الطلب.')}</div>`}).join('')+'<small>هذه تفضيلات المتجر وليست حجز شحنة أو تسعيرًا مؤكدًا.</small>'}catch(e){box.textContent='تظهر خيارات الشحن بعد إعداد قاعدة بيانات التخصيص.'}}
+})();
+</script>
+
+<script id="doctor-gaming-section-logic">
+(()=>{
+ 'use strict';const $=id=>document.getElementById(id);if(!$('page-doctor')||typeof sb==='undefined')return;
+ let rows=[],replyTarget=null,selectedMedia=null,verified=[];const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const isAdmin=()=>!!(currentUser&&(currentUser.app_metadata?.role==='platform_admin'||currentUser.app_metadata?.platform_admin===true||currentUser.app_metadata?.is_platform_admin===true));
+ const isVerified=()=>!!(currentUser&&verified.some(v=>v.user_id===currentUser.id));
+ const time=v=>v?new Date(v).toLocaleTimeString('ar-SA',{hour:'numeric',minute:'2-digit'}):'';
+ const dateKey=v=>v?new Date(v).toLocaleDateString('ar-SA'):'اليوم';
+ const feed=$('doctorChatFeed');
+ function setReply(id,text){if(!isVerified()){alert('الرد متاح للمختصين المعتمدين فقط.');return}replyTarget={id,text};$('doctorReplyText').textContent=text;$('doctorReplyPreview').classList.remove('hidden');$('doctorMessageText').focus()}
+ function clearReply(){replyTarget=null;$('doctorReplyPreview').classList.add('hidden');$('doctorReplyText').textContent=''}
+ function render(){const q=($('doctorSearch').value||'').trim().toLowerCase();const filtered=rows.filter(x=>!q||[x.title,x.body,x.category,x.message?.body].some(v=>String(v||'').toLowerCase().includes(q)));
+  if(!filtered.length){feed.innerHTML='<div class="empty">لا توجد محادثات بعد. ابدأ بإرسال سؤالك من الأسفل.</div>';return;}
+  let last='';feed.innerHTML=filtered.map(item=>{const d=dateKey(item.created_at),day=d!==last?(last=d,`<div class="doctor-day-divider">${esc(d)}</div>`):'';const author=item.user_id===currentUser?.id,ex=verified.find(v=>v.user_id===item.user_id),label=author?'أنت':(ex?.display_name||'عضو المجتمع');const body=item.body||'';const quote=item.reply_to_message_id?rows.find(x=>x.id===item.reply_to_message_id):null;const video=String(item.attachment_type||'').startsWith('video/')||/\.(mp4|webm|mov)(\?|$)/i.test(item.attachment_url||'');
+   const media=item.attachment_url?(video?`<video class="doctor-chat-video" controls playsinline preload="metadata" src="${esc(item.attachment_url)}"></video>`:`<a href="${esc(item.attachment_url)}" target="_blank" rel="noopener"><img class="doctor-chat-photo" src="${esc(item.attachment_url)}" alt="صورة مرفقة" loading="lazy"></a>`):'';
+   const replyButton=isVerified()?`<button type="button" data-doctor-reply="${esc(item.id)}">↩ رد</button>`:'';
+   const deleteButton=author&&!item.is_question&&!item.legacy?`<button type="button" class="doctor-delete" data-doctor-delete="${esc(item.id)}">🗑 حذف الرسالة</button>`:'';
+   const reportButton=!author&&!item.legacy?`<button type="button" class="doctor-report" data-doctor-report="${esc(item.question_id)}">⚑ إبلاغ</button>`:'';
+   return `${day}<article class="doctor-chat-item ${author?'mine':''}" data-message-id="${esc(item.id)}"><div class="doctor-chat-bubble">${!author?`<div class="doctor-chat-author">${esc(label)} ${ex?'<span class="doctor-verified">✓</span>':''}</div>`:''}${quote?`<div class="doctor-quoted"><b>${esc(quote.user_id===currentUser?.id?'أنت':(verified.find(v=>v.user_id===quote.user_id)?.display_name||'رسالة سابقة'))}</b><span>${esc(quote.body||'مرفق')}</span></div>`:''}${body?`<div class="doctor-chat-text">${esc(body)}</div>`:''}${media}<div class="doctor-chat-meta"><span>${time(item.created_at)}</span>${author?'<span class="doctor-chat-tick">✓✓</span>':''}</div></div><div class="doctor-chat-actions">${replyButton}${deleteButton}${reportButton}${author&&!deleteButton?'<span class="muted">رسالتك</span>':''}</div></article>`;
+  }).join('');
+ }
+ async function loadApplicationStatus(){
+  if(!currentUser){$('doctorApplyTop').classList.remove('hidden');$('doctorApplyPanel').classList.add('hidden');return;}
+  const {data,error}=await sb.from('doctor_specialists').select('user_id,is_verified,application_status').eq('user_id',currentUser.id).maybeSingle();
+  if(error){$('doctorApplyTop').classList.remove('hidden');return;}
+  if(data){const approved=!!(data.is_verified||data.application_status==='approved');$('doctorApplyForm').classList.add('hidden');$('doctorApplyTop').classList.toggle('hidden',approved);$('doctorApplyTop').textContent=approved?'🎓 مختص معتمد':'حالة طلبك';$('doctorApplyPanel').classList.add('hidden');const status=approved?'تم اعتماد حسابك كمختص. يمكنك الآن الرد على الأسئلة.':data.application_status==='rejected'?'تمت مراجعة طلبك. لا يمكن تقديم طلب آخر من هذا الحساب.':'طلبك قيد المراجعة. سنعرض لك الحالة هنا عند اعتماد الإدارة.';$('doctorApplyMsg').textContent=status;}
+  else{$('doctorApplyTop').classList.remove('hidden');$('doctorApplyForm').classList.remove('hidden');$('doctorApplyMsg').textContent='';}
+ }
+ async function load(){feed.innerHTML='<div class="empty">جارٍ تحميل المحادثات...</div>';
+  const {data:questions,error}=await sb.from('doctor_questions').select('id,user_id,title,body,category,status,created_at').eq('status','published').order('created_at',{ascending:true}).limit(100);
+  if(error){feed.innerHTML='<div class="notice">تعذر تحميل المحادثات. تحقق من صلاحيات قاعدة البيانات.</div>';return;}
+  const ids=(questions||[]).map(x=>x.id);const [messages,legacyAnswers,experts]=await Promise.all([
+   sb.from('doctor_messages').select('id,question_id,user_id,body,attachment_url,attachment_type,is_expert_reply,reply_to_message_id,created_at').in('question_id',ids.length?ids:['00000000-0000-0000-0000-000000000000']).order('created_at',{ascending:true}).limit(500),
+   sb.from('doctor_answers').select('id,question_id,user_id,body,created_at').in('question_id',ids.length?ids:['00000000-0000-0000-0000-000000000000']).order('created_at',{ascending:true}),
+   sb.from('doctor_specialists').select('user_id,display_name,specialty,is_verified').eq('is_verified',true)
+  ]);
+  if(messages.error){feed.innerHTML='<div class="notice">تعذر تحميل الرسائل. نفّذ ملف ترقية قاعدة البيانات المرفق.</div>';return;}
+  verified=experts.data||[];rows=[];
+  const messageRows=messages.data||[],consumedMessageIds=new Set();
+  // Merge each thread's opening message into its question card so it is not shown twice.
+  (questions||[]).forEach(q=>{
+   const opening=messageRows.find(m=>m.question_id===q.id&&m.user_id===q.user_id&&!m.reply_to_message_id&&!m.is_expert_reply);
+   if(opening){consumedMessageIds.add(opening.id);rows.push({...opening,body:[q.title,q.body].filter(Boolean).join('\n'),category:q.category,is_question:true});}
+   else rows.push({id:'question-'+q.id,question_id:q.id,user_id:q.user_id,body:[q.title,q.body].filter(Boolean).join('\n'),created_at:q.created_at,category:q.category,is_question:true});
+  });
+  (legacyAnswers.data||[]).forEach(a=>rows.push({id:'legacy-'+a.id,question_id:a.question_id,user_id:a.user_id,body:a.body,created_at:a.created_at,legacy:true}));
+  rows=[...rows,...messageRows.filter(m=>!consumedMessageIds.has(m.id))];rows.sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));render();await loadApplicationStatus();
+ }
+ async function loadAdmin(){const panel=$('doctorAdminPanel');const [pending,reports]=await Promise.all([
+  sb.from('doctor_specialists').select('user_id,display_name,specialty,bio,application_status').eq('is_verified',false).order('created_at'),
+  sb.from('doctor_reports').select('id,question_id,reason,status,doctor_questions(title)').eq('status','pending').order('created_at',{ascending:false})
+ ]);$('doctorPendingExperts').innerHTML=(pending.data||[]).map(x=>`<div class="doctor-admin-row"><span>${esc(x.display_name)} — ${esc(x.specialty)}</span><button class="primary" data-doctor-approve="${esc(x.user_id)}">اعتماد</button></div>`).join('')||'<p class="muted">لا توجد طلبات معلّقة.</p>';$('doctorReports').innerHTML=(reports.data||[]).map(x=>`<div class="doctor-admin-row"><span>${esc(x.doctor_questions?.title||'بلاغ')}</span><button class="secondary" data-doctor-report-done="${esc(x.id)}">تمت المراجعة</button></div>`).join('')||'<p class="muted">لا توجد بلاغات.</p>';
+ }
+ async function uploadMedia(file){if(!file)return null;const image=/^image\/(jpeg|png|webp)$/.test(file.type),video=/^video\/(mp4|webm|quicktime)$/.test(file.type);if(!image&&!video)throw new Error('نوع الملف غير مدعوم. استخدم JPG أو PNG أو WEBP أو MP4 أو WEBM أو MOV.');const max=image?5*1024*1024:25*1024*1024;if(file.size>max)throw new Error(image?'حجم الصورة الأقصى 5 ميجابايت.':'حجم الفيديو الأقصى 25 ميجابايت.');const ext=file.name.split('.').pop().toLowerCase().replace(/[^a-z0-9]/g,'')||(image?'jpg':'mp4');const path=`${currentUser.id}/${crypto.randomUUID()}.${ext}`;const {error}=await sb.storage.from('doctor-media').upload(path,file,{upsert:false,contentType:file.type});if(error)throw error;const {data}=sb.storage.from('doctor-media').getPublicUrl(path);return {url:data.publicUrl,type:file.type};}
+ function chooseMedia(file){selectedMedia=file||null;$('doctorImagePreview').classList.toggle('hidden',!selectedMedia);$('doctorImagePreviewImg').classList.add('hidden');$('doctorVideoPreview').classList.add('hidden');if(!selectedMedia)return;const url=URL.createObjectURL(selectedMedia);$('doctorMediaName').textContent=selectedMedia.name||'مرفق جديد';if(selectedMedia.type.startsWith('video/')){$('doctorVideoPreview').src=url;$('doctorVideoPreview').classList.remove('hidden')}else{$('doctorImagePreviewImg').src=url;$('doctorImagePreviewImg').classList.remove('hidden')}}
+ $('doctorAttachBtn').onclick=()=>{$('doctorAttachMenu').classList.toggle('hidden')};$('doctorPickImage').onclick=()=>{$('doctorAttachMenu').classList.add('hidden');if(needAuth())$('doctorImageFile').click()};$('doctorPickVideo').onclick=()=>{$('doctorAttachMenu').classList.add('hidden');if(needAuth())$('doctorVideoFile').click()};$('doctorTakePhoto').onclick=()=>{$('doctorAttachMenu').classList.add('hidden');if(needAuth())$('doctorCameraFile').click()};
+ ['doctorImageFile','doctorVideoFile','doctorCameraFile'].forEach(id=>$(id).addEventListener('change',e=>chooseMedia(e.target.files?.[0]||null)));
+ $('doctorRemoveImage').onclick=()=>{selectedMedia=null;['doctorImageFile','doctorVideoFile','doctorCameraFile'].forEach(id=>$(id).value='');$('doctorImagePreview').classList.add('hidden');$('doctorVideoPreview').removeAttribute('src');$('doctorImagePreviewImg').removeAttribute('src')};$('doctorCancelReply').onclick=clearReply;
+ $('doctorComposeForm').onsubmit=async e=>{e.preventDefault();if(!needAuth())return;const body=$('doctorMessageText').value.trim();if(!body&&!selectedMedia)return;if(replyTarget&&!isVerified()){alert('الرد متاح للمختصين المعتمدين فقط.');return}const btn=$('doctorSendBtn');btn.disabled=true;try{
+  let questionId=replyTarget?.question_id||null;if(!questionId&&replyTarget?.id){const target=rows.find(x=>x.id===replyTarget.id);questionId=target?.question_id||null;}
+  if(!questionId){const title=body.split('\n')[0].slice(0,120)||'استفسار مع مرفق';const q=await sb.from('doctor_questions').insert({user_id:currentUser.id,title,category:'عام',body,status:'published'}).select('id').single();if(q.error)throw q.error;questionId=q.data.id;sb.functions.invoke('doctor-question-notify',{body:{question_id:questionId}}).catch(()=>{});}
+  const media=selectedMedia?await uploadMedia(selectedMedia):null;const payload={question_id:questionId,user_id:currentUser.id,body,attachment_url:media?.url||null,attachment_type:media?.type||null,is_expert_reply:!!replyTarget,reply_to_message_id:replyTarget?.id||null};const {error}=await sb.from('doctor_messages').insert(payload);if(error)throw error;
+  $('doctorMessageText').value='';selectedMedia=null;['doctorImageFile','doctorVideoFile','doctorCameraFile'].forEach(id=>$(id).value='');$('doctorImagePreview').classList.add('hidden');$('doctorVideoPreview').removeAttribute('src');$('doctorImagePreviewImg').removeAttribute('src');clearReply();await load();
+ }catch(err){alert('تعذر إرسال الرسالة: '+(err.message||String(err)));}finally{btn.disabled=false;}};
+ feed.addEventListener('click',async e=>{const reply=e.target.closest('[data-doctor-reply]'),del=e.target.closest('[data-doctor-delete]'),report=e.target.closest('[data-doctor-report]');if(reply){if(!needAuth())return;if(!isVerified()){alert('الرد متاح للمختصين المعتمدين فقط.');return}const item=rows.find(x=>x.id===reply.dataset.doctorReply);if(item){const targetId=item.is_question||item.legacy?null:item.id;replyTarget={id:targetId,question_id:item.question_id};$('doctorReplyText').textContent=(item.body||'').slice(0,140);$('doctorReplyPreview').classList.remove('hidden');$('doctorMessageText').focus()}return}if(del){if(!needAuth())return;if(!confirm('هل تريد حذف هذه الرسالة نهائياً؟'))return;const {error}=await sb.from('doctor_messages').delete().eq('id',del.dataset.doctorDelete).eq('user_id',currentUser.id);if(error)alert('تعذر حذف الرسالة: '+error.message);else await load();return}if(report){if(!needAuth())return;const reason=prompt('اكتب سبب الإبلاغ عن هذه المحادثة:');if(!reason||!reason.trim())return;const {error}=await sb.from('doctor_reports').insert({question_id:report.dataset.doctorReport,reporter_id:currentUser.id,reason:reason.trim()});if(error)alert('تعذر إرسال البلاغ: '+error.message);else alert('تم إرسال البلاغ إلى إدارة المنصة.');}});
+ $('doctorSearch').addEventListener('input',render);$('doctorApplyTop').onclick=async()=>{if(!needAuth())return;await loadApplicationStatus();$('doctorApplyPanel').classList.remove('hidden')};$('doctorApplyClose').onclick=()=>$('doctorApplyPanel').classList.add('hidden');document.querySelectorAll('[data-doctor-close]').forEach(b=>b.addEventListener('click',()=>$(b.dataset.doctorClose)?.classList.add('hidden')));document.addEventListener('keydown',e=>{if(e.key==='Escape'){$('doctorAdminPanel').classList.add('hidden');$('doctorApplyPanel').classList.add('hidden')}});$('doctorMenu').onclick=async()=>{if(!isAdmin())return;const panel=$('doctorAdminPanel');const opening=panel.classList.contains('hidden');panel.classList.toggle('hidden');if(opening)await loadAdmin();};$('doctorBack').onclick=()=>{if(typeof showPage==='function')showPage('home')};
+ $('doctorApplyForm').onsubmit=async e=>{e.preventDefault();if(!needAuth())return;const payload={user_id:currentUser.id,display_name:$('doctorExpertName').value.trim(),specialty:$('doctorExpertField').value.trim(),bio:$('doctorExpertBio').value.trim(),experience_years:Number($('doctorExpertExperience').value),portfolio_url:$('doctorExpertPortfolio').value.trim()||null,is_verified:false,application_status:'pending'};const {error}=await sb.from('doctor_specialists').insert(payload);if(error){$('doctorApplyMsg').textContent=error.code==='23505'?'سبق أن قدمت طلباً. لا يسمح إلا بطلب واحد لكل حساب.':'تعذر إرسال الطلب: '+error.message;return}$('doctorApplyForm').classList.add('hidden');$('doctorApplyTop').classList.remove('hidden');$('doctorApplyTop').textContent='حالة طلبك';$('doctorApplyMsg').textContent='✓ تم استلام طلبك بنجاح. طلبك الآن قيد المراجعة، ولا يمكن تقديم طلب آخر من هذا الحساب.';$('doctorApplyPanel').classList.remove('hidden');e.target.reset();};
+ $('doctorAdminPanel').addEventListener('click',async e=>{const a=e.target.closest('[data-doctor-approve]'),r=e.target.closest('[data-doctor-report-done]');if(a&&isAdmin()){const {error}=await sb.from('doctor_specialists').update({is_verified:true,application_status:'approved',verified_at:new Date().toISOString()}).eq('user_id',a.dataset.doctorApprove);if(error)alert(error.message);else{await loadAdmin();await load();}}if(r&&isAdmin()){const {error}=await sb.from('doctor_reports').update({status:'reviewed'}).eq('id',r.dataset.doctorReportDone);if(error)alert(error.message);else loadAdmin();}});
+ const doctorPage=$('page-doctor');const syncDoctorPage=()=>{document.body.classList.toggle('doctor-page-active',!!doctorPage&&!doctorPage.classList.contains('hidden'));if(document.body.classList.contains('doctor-page-active')){$('souqAiPanel')?.classList.add('hidden');$('souqNewsPanel')?.classList.add('hidden')}};new MutationObserver(syncDoctorPage).observe(doctorPage,{attributes:true,attributeFilter:['class']});syncDoctorPage();
+ document.querySelectorAll('[data-page="doctor"]').forEach(b=>b.addEventListener('click',load));sb.auth.onAuthStateChange(()=>{if(!$('page-doctor').classList.contains('hidden'))load()});load();
+})();
+</script>
+
+
+<template id="souqMerchantTemplateSource">
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b1020">
+<title>المتجر</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap');
+:root{
+ --store-bg:#0b1020;--store-surface:#121a2b;--store-surface-2:#19243a;
+ --store-text:#f5f7fb;--store-muted:#a4afc3;--store-primary:#8b5cf6;
+ --store-secondary:#22d3ee;--store-border:rgba(255,255,255,.10);
+ --store-radius:20px;--store-font:'IBM Plex Sans Arabic',Tahoma,sans-serif;
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--store-bg);color:var(--store-text);font-family:var(--store-font)}
+button,input,select{font:inherit}button{cursor:pointer}
+a{color:inherit;text-decoration:none}.container{width:min(1220px,92%);margin:auto}
+.announcement{display:none;background:var(--store-primary);color:white;text-align:center;padding:9px 12px;font-size:12px}
+.announcement.visible{display:block}
+.site-header{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--store-bg) 90%,transparent);backdrop-filter:blur(16px);border-bottom:1px solid var(--store-border)}
+.header-inner{min-height:76px;display:flex;align-items:center;gap:26px}
+.brand{display:flex;align-items:center;gap:11px;min-width:150px;font-size:20px;font-weight:700}
+.brand-logo{width:42px;height:42px;object-fit:contain;border-radius:13px;display:none}
+.brand-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nav{display:flex;align-items:center;gap:22px;flex:1}
+.nav a{font-size:13px;color:var(--store-muted)}
+.nav a:hover{color:var(--store-secondary)}
+.header-actions{display:flex;gap:9px;align-items:center}
+.icon-btn{width:42px;height:42px;border:1px solid var(--store-border);border-radius:13px;background:var(--store-surface);color:var(--store-text);position:relative}
+.count{position:absolute;top:-6px;left:-6px;min-width:18px;height:18px;padding:0 4px;border-radius:20px;background:var(--store-secondary);color:#07111b;font-size:10px;font-weight:700;display:grid;place-items:center}
+.menu-btn{display:none}
+.hero{padding:28px 0 18px}
+.hero-panel{display:none;position:relative;overflow:hidden;min-height:350px;border:1px solid var(--store-border);border-radius:var(--store-radius);background:linear-gradient(115deg,var(--store-surface),color-mix(in srgb,var(--store-primary) 28%,var(--store-surface)));grid-template-columns:1fr .8fr;align-items:center;padding:48px 6%}
+.hero-panel.visible{display:grid}
+.hero-copy{position:relative;z-index:1}
+.hero-kicker{display:none;font-size:12px;color:var(--store-secondary);margin-bottom:13px}
+.hero-kicker.visible{display:inline-block}
+.hero-title{font-size:clamp(30px,4vw,49px);line-height:1.3;margin:0 0 12px}
+.hero-description{color:var(--store-muted);line-height:1.9;max-width:540px;margin:0 0 22px;font-size:14px}
+.primary-btn,.secondary-btn{border:0;border-radius:12px;padding:13px 20px;font-weight:700}
+.primary-btn{background:var(--store-primary);color:white}
+.secondary-btn{background:var(--store-surface-2);border:1px solid var(--store-border);color:var(--store-text)}
+.hero-visual{min-height:230px;display:grid;place-items:center}
+.hero-visual img{max-width:100%;max-height:280px;object-fit:contain;border-radius:15px}
+.hero-placeholder{width:210px;height:210px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--store-secondary) 35%,transparent),transparent 70%);border:1px solid var(--store-border)}
+.section{margin:42px auto}
+.section-heading{display:flex;align-items:end;justify-content:space-between;gap:15px;margin-bottom:18px}
+.section-heading h2{font-size:22px;margin:0}
+.section-heading p{color:var(--store-muted);font-size:12px;margin:5px 0 0}
+.category-list{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+.category-card{display:none;border:1px solid var(--store-border);border-radius:16px;background:var(--store-surface);padding:18px 10px;text-align:center;transition:.2s}
+.category-card.visible{display:block}
+.category-card:hover{border-color:var(--store-primary);transform:translateY(-3px)}
+.category-icon{font-size:27px;display:block;margin-bottom:8px}
+.category-name{font-size:12px;font-weight:600}
+.toolbar{display:flex;gap:10px;margin-bottom:16px}
+.search-wrap{position:relative;flex:1}
+.search-wrap input{width:100%;background:var(--store-surface);border:1px solid var(--store-border);border-radius:12px;padding:13px 42px 13px 13px;color:var(--store-text);outline:none}
+.search-wrap span{position:absolute;right:14px;top:10px;color:var(--store-muted)}
+.sort-select{background:var(--store-surface);border:1px solid var(--store-border);border-radius:12px;padding:0 12px;color:var(--store-text);outline:none}
+.product-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px}
+.product-card{display:none;border:1px solid var(--store-border);border-radius:17px;overflow:hidden;background:var(--store-surface);transition:.2s}
+.product-card.visible{display:block}
+.product-card:hover{transform:translateY(-4px);border-color:var(--store-primary)}
+.product-image{height:195px;background:var(--store-surface-2);display:grid;place-items:center;overflow:hidden;position:relative}
+.product-image img{width:100%;height:100%;object-fit:cover}
+.product-image .image-placeholder{font-size:38px;color:var(--store-muted)}
+.product-info{padding:14px}
+.product-category{font-size:10px;color:var(--store-muted)}
+.product-name{font-size:14px;margin:6px 0 10px}
+.product-price{font-size:16px;font-weight:700}
+.product-old-price{font-size:11px;color:var(--store-muted);text-decoration:line-through;margin-right:7px}
+.product-action{width:100%;margin-top:12px;border:1px solid color-mix(in srgb,var(--store-primary) 55%,transparent);background:color-mix(in srgb,var(--store-primary) 14%,transparent);color:var(--store-text);border-radius:10px;padding:10px}
+.empty-state{display:none;grid-column:1/-1;text-align:center;padding:44px 20px;border:1px dashed var(--store-border);border-radius:16px;color:var(--store-muted);line-height:1.9}
+.empty-state.visible{display:block}
+.content-block{display:none;border:1px solid var(--store-border);border-radius:var(--store-radius);padding:25px;background:var(--store-surface)}
+.content-block.visible{display:block}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}
+.feature{display:none;border:1px solid var(--store-border);border-radius:16px;padding:20px;background:var(--store-surface)}
+.feature.visible{display:block}
+.feature-icon{font-size:24px}.feature h3{font-size:14px;margin:10px 0 5px}.feature p{font-size:12px;color:var(--store-muted);line-height:1.8;margin:0}
+.promo-block{display:none;grid-template-columns:1fr auto;align-items:center;gap:15px;padding:27px;border-radius:var(--store-radius);background:linear-gradient(110deg,var(--store-surface-2),color-mix(in srgb,var(--store-primary) 25%,var(--store-surface)));border:1px solid var(--store-border)}
+.promo-block.visible{display:grid}.promo-block h3{margin:0 0 7px}.promo-block p{margin:0;color:var(--store-muted);font-size:13px}.promo-image{max-width:130px;max-height:100px;object-fit:contain}
+.site-footer{display:none;margin-top:55px;border-top:1px solid var(--store-border);background:color-mix(in srgb,var(--store-bg) 80%,black);padding:35px 0 18px}
+.site-footer.visible{display:block}
+.footer-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:25px}
+.footer-col h4{margin:0 0 12px;font-size:14px}.footer-col p,.footer-col a{display:block;color:var(--store-muted);font-size:12px;line-height:2}
+.footer-bottom{border-top:1px solid var(--store-border);margin-top:25px;padding-top:15px;color:var(--store-muted);font-size:11px}
+.overlay{position:fixed;inset:0;background:#0009;z-index:40;display:none}.overlay.visible{display:block}
+.cart-drawer{position:fixed;z-index:50;top:0;left:0;height:100%;width:min(410px,92vw);background:var(--store-surface);border-right:1px solid var(--store-border);transform:translateX(-105%);transition:.25s;padding:20px;display:flex;flex-direction:column}
+.cart-drawer.open{transform:translateX(0)}
+.drawer-head{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--store-border);padding-bottom:13px}
+.drawer-head h3{margin:0}.close-btn{border:1px solid var(--store-border);background:var(--store-surface-2);color:var(--store-text);border-radius:9px;padding:8px 11px}
+.cart-lines{flex:1;overflow:auto;padding:12px 0}
+.cart-line{display:flex;gap:10px;align-items:center;padding:12px 0;border-bottom:1px solid var(--store-border)}
+.cart-line img{width:52px;height:52px;object-fit:cover;border-radius:10px;background:var(--store-surface-2)}
+.cart-line-info{flex:1;font-size:12px}.cart-line-info small{display:block;color:var(--store-muted);margin-top:5px}
+.cart-summary{border-top:1px solid var(--store-border);padding-top:15px}.cart-summary div{display:flex;justify-content:space-between;margin-bottom:13px}
+.toast{position:fixed;z-index:70;bottom:20px;right:50%;transform:translate(50%,20px);opacity:0;pointer-events:none;background:var(--store-surface-2);border:1px solid var(--store-border);border-radius:12px;padding:11px 17px;font-size:12px;transition:.2s}
+.toast.show{opacity:1;transform:translate(50%,0)}
+@media(max-width:900px){.category-list{grid-template-columns:repeat(3,1fr)}.product-grid{grid-template-columns:repeat(3,1fr)}.footer-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:650px){
+ .header-inner{min-height:66px;gap:10px}.menu-btn{display:block}.nav{display:none;position:absolute;top:66px;right:0;left:0;padding:16px 5%;background:var(--store-bg);border-bottom:1px solid var(--store-border);flex-direction:column;align-items:flex-start}.nav.open{display:flex}
+ .brand{font-size:16px;min-width:0}.brand-logo{width:35px;height:35px}.header-actions{margin-right:auto}
+ .hero-panel.visible{display:block;padding:27px 22px}.hero-visual{min-height:150px}.hero-visual img{max-height:160px}.hero-placeholder{width:130px;height:130px}
+ .category-list{grid-template-columns:repeat(3,1fr);gap:8px}.category-card{padding:13px 5px}.category-icon{font-size:22px}
+ .product-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.product-image{height:145px}.product-info{padding:10px}.product-name{font-size:12px}
+ .section{margin:32px auto}.section-heading h2{font-size:19px}.features-grid{grid-template-columns:1fr}.promo-block.visible{grid-template-columns:1fr auto;padding:20px}.footer-grid{grid-template-columns:1fr 1fr}.footer-col:first-child{grid-column:1/-1}
+ .toolbar{flex-direction:column}.search-wrap,.sort-select{width:100%;min-height:44px}
+}
+</style>
+</head>
+<body>
+<div class="announcement" id="announcement"></div>
+<header class="site-header">
+ <div class="container header-inner">
+  <button class="icon-btn menu-btn" id="menuToggle" aria-label="القائمة">☰</button>
+  <a class="brand" href="#" aria-label="الرئيسية">
+   <img class="brand-logo" id="storeLogo" alt="شعار المتجر">
+   <span class="brand-name" id="storeName"></span>
+  </a>
+  <nav class="nav" id="mainNav"></nav>
+  <div class="header-actions">
+   <button class="icon-btn" id="favoriteButton" aria-label="المفضلة">♡</button>
+   <button class="icon-btn" id="cartButton" aria-label="سلة التسوق">🛒<span class="count" id="cartCount">0</span></button>
+  </div>
+ </div>
+</header>
+
+<main>
+ <section class="hero container">
+  <div class="hero-panel" id="heroPanel">
+   <div class="hero-copy">
+    <span class="hero-kicker" id="heroKicker"></span>
+    <h1 class="hero-title" id="heroTitle"></h1>
+    <p class="hero-description" id="heroDescription"></p>
+    <button class="primary-btn" id="heroButton"></button>
+   </div>
+   <div class="hero-visual" id="heroVisual"></div>
+  </div>
+ </section>
+
+ <section class="section container" id="categoriesSection" hidden>
+  <div class="section-heading"><div><h2 id="categoriesTitle"></h2><p id="categoriesSubtitle"></p></div></div>
+  <div class="category-list" id="categoryList"></div>
+ </section>
+
+ <section class="section container" id="productsSection" hidden>
+  <div class="section-heading"><div><h2 id="productsTitle"></h2><p id="productsSubtitle"></p></div></div>
+  <div class="toolbar">
+   <div class="search-wrap"><span>⌕</span><input id="productSearch" type="search" placeholder="ابحث في المنتجات..."></div>
+   <select class="sort-select" id="productSort"><option value="default">ترتيب المنتجات</option><option value="low">السعر: الأقل أولاً</option><option value="high">السعر: الأعلى أولاً</option></select>
+  </div>
+  <div class="product-grid" id="productList"></div>
+  <div class="empty-state" id="productsEmpty">لا توجد منتجات معروضة حالياً.</div>
+ </section>
+
+ <section class="section container" id="promoSection" hidden>
+  <div class="promo-block" id="promoBlock"><div><h3 id="promoTitle"></h3><p id="promoText"></p></div><img class="promo-image" id="promoImage" alt=""></div>
+ </section>
+
+ <section class="section container" id="featuresSection" hidden>
+  <div class="section-heading"><div><h2 id="featuresTitle"></h2><p id="featuresSubtitle"></p></div></div>
+  <div class="features-grid" id="featuresList"></div>
+ </section>
+
+ <section class="section container" id="customContentSection" hidden>
+  <div class="content-block visible" id="customContent"></div>
+ </section>
+</main>
+
+<footer class="site-footer" id="siteFooter">
+ <div class="container">
+  <div class="footer-grid" id="footerGrid"></div>
+  <div class="footer-bottom" id="footerBottom"></div>
+ </div>
+</footer>
+
+<div class="overlay" id="overlay"></div>
+<aside class="cart-drawer" id="cartDrawer" aria-label="سلة التسوق">
+ <div class="drawer-head"><h3>سلة التسوق</h3><button class="close-btn" id="closeCart">إغلاق</button></div>
+ <div class="cart-lines" id="cartLines"></div>
+ <div class="cart-summary"><div><span>الإجمالي</span><strong id="cartTotal">0</strong></div><button class="primary-btn" id="checkoutButton" style="width:100%">متابعة الشراء</button></div>
+</aside>
+<div class="toast" id="toast"></div>
+
+<script>
+/*
+  قالب متجر عام متعدد التجار.
+  بيانات المتجر تُمرر من لوحة التحكم في window.STORE_CONFIG.
+  لا توجد أسماء متاجر أو منتجات أو أسعار تجريبية ثابتة في القالب.
+  مثال بنية البيانات (تُمرر من النظام، ولا تُعرض كبيانات افتراضية):
+
+  window.STORE_CONFIG = {
+    identity: { name, logo, announcement, currency },
+    theme: { background, surface, text, muted, primary, secondary, radius, font },
+    navigation: [{ label, url }],
+    hero: { visible, kicker, title, description, buttonLabel, buttonUrl, image },
+    categories: [{ id, name, icon, visible }],
+    products: [{ id, name, categoryId, image, price, oldPrice, currency, visible, url }],
+    sections: {
+      categories: { visible, title, subtitle },
+      products: { visible, title, subtitle },
+      promo: { visible, title, text, image },
+      features: { visible, title, subtitle, items: [{ icon, title, text }] }
+    },
+    footer: { visible, columns: [{ title, links: [{label,url}] }], copyright }
+  };
+*/
+const STORE = window.STORE_CONFIG || {};
+const cart = [];
+const $ = id => document.getElementById(id);
+const safe = value => String(value ?? '');
+const show = (el, yes=true) => { el.hidden = !yes; el.classList.toggle('visible', yes); };
+
+function applyTheme(theme={}) {
+ const root=document.documentElement;
+ const vars={background:'--store-bg',surface:'--store-surface',text:'--store-text',muted:'--store-muted',primary:'--store-primary',secondary:'--store-secondary',radius:'--store-radius',font:'--store-font'};
+ Object.entries(vars).forEach(([key,css])=>{if(theme[key])root.style.setProperty(css,theme[key]);});
+}
+function renderIdentity() {
+ const identity=STORE.identity||{};
+ document.title=identity.name||'المتجر';
+ if(identity.name)$('storeName').textContent=identity.name;
+ if(identity.logo){$('storeLogo').src=identity.logo;$('storeLogo').style.display='block';}
+ if(identity.announcement){$('announcement').textContent=identity.announcement;show($('announcement'));}
+}
+function renderNavigation() {
+ const items=STORE.navigation||[];
+ $('mainNav').innerHTML=items.map(item=>`<a href="${safe(item.url||'#')}">${safe(item.label)}</a>`).join('');
+}
+function renderHero() {
+ const h=STORE.hero||{};
+ if(!h.visible || !(h.title||h.description||h.image))return;
+ show($('heroPanel'));
+ if(h.kicker){$('heroKicker').textContent=h.kicker;show($('heroKicker'));}
+ $('heroTitle').textContent=h.title||'';
+ $('heroDescription').textContent=h.description||'';
+ if(h.buttonLabel){$('heroButton').textContent=h.buttonLabel;$('heroButton').onclick=()=>{if(h.buttonUrl)location.href=h.buttonUrl;else $('productsSection').scrollIntoView({behavior:'smooth'});};}
+ else $('heroButton').style.display='none';
+ if(h.image){const img=document.createElement('img');img.src=h.image;img.alt='';$('heroVisual').append(img);}else $('heroVisual').innerHTML='<div class="hero-placeholder"></div>';
+}
+function renderCategories() {
+ const section=STORE.sections?.categories||{},items=(STORE.categories||[]).filter(x=>x.visible!==false);
+ if(section.visible===false||!items.length)return;
+ show($('categoriesSection'));$('categoriesTitle').textContent=section.title||'';$('categoriesSubtitle').textContent=section.subtitle||'';
+ $('categoryList').innerHTML=items.map(c=>`<button class="category-card visible" data-category="${safe(c.id)}"><span class="category-icon">${safe(c.icon||'◈')}</span><span class="category-name">${safe(c.name)}</span></button>`).join('');
+ $('categoryList').querySelectorAll('[data-category]').forEach(btn=>btn.addEventListener('click',()=>{activeCategory=btn.dataset.category;renderProducts();$('productsSection').scrollIntoView({behavior:'smooth'});}));
+}
+let activeCategory='all';
+function renderProducts() {
+ const section=STORE.sections?.products||{},items=(STORE.products||[]).filter(p=>p.visible!==false);
+ if(section.visible===false||!items.length)return;
+ show($('productsSection'));$('productsTitle').textContent=section.title||'';$('productsSubtitle').textContent=section.subtitle||'';
+ const query=$('productSearch').value.trim().toLocaleLowerCase('ar');
+ let filtered=items.filter(p=>(activeCategory==='all'||String(p.categoryId)===activeCategory)&&safe(p.name).toLocaleLowerCase('ar').includes(query));
+ const sort=$('productSort').value;if(sort==='low')filtered.sort((a,b)=>Number(a.price)-Number(b.price));if(sort==='high')filtered.sort((a,b)=>Number(b.price)-Number(a.price));
+ $('productList').innerHTML=filtered.map(p=>{
+  const category=(STORE.categories||[]).find(c=>String(c.id)===String(p.categoryId));
+  return `<article class="product-card visible"><div class="product-image">${p.image?`<img src="${safe(p.image)}" alt="${safe(p.name)}" loading="lazy">`:'<span class="image-placeholder">◇</span>'}</div><div class="product-info"><div class="product-category">${safe(category?.name||'')}</div><h3 class="product-name">${safe(p.name)}</h3><span class="product-price">${safe(p.price)} ${safe(p.currency||STORE.identity?.currency||'')}</span>${p.oldPrice?`<span class="product-old-price">${safe(p.oldPrice)}</span>`:''}<button class="product-action" data-add="${safe(p.id)}">إضافة إلى السلة</button></div></article>`;
+ }).join('');
+ $('productsEmpty').classList.toggle('visible',filtered.length===0);
+ $('productList').querySelectorAll('[data-add]').forEach(btn=>btn.addEventListener('click',()=>addToCart(btn.dataset.add)));
+}
+function renderPromo() {
+ const p=STORE.sections?.promo||{};if(p.visible!==true||!(p.title||p.text||p.image))return;
+ show($('promoSection'));show($('promoBlock'));$('promoTitle').textContent=p.title||'';$('promoText').textContent=p.text||'';
+ if(p.image){$('promoImage').src=p.image;$('promoImage').style.display='block';}else $('promoImage').style.display='none';
+}
+function renderFeatures() {
+ const f=STORE.sections?.features||{},items=f.items||[];if(f.visible===false||!items.length)return;
+ show($('featuresSection'));$('featuresTitle').textContent=f.title||'';$('featuresSubtitle').textContent=f.subtitle||'';
+ $('featuresList').innerHTML=items.map(x=>`<article class="feature visible"><span class="feature-icon">${safe(x.icon||'◇')}</span><h3>${safe(x.title)}</h3><p>${safe(x.text)}</p></article>`).join('');
+}
+function renderFooter() {
+ const f=STORE.footer||{};if(f.visible===false||!(f.columns||[]).length)return;
+ show($('siteFooter'));$('footerGrid').innerHTML=(f.columns||[]).map(col=>`<div class="footer-col"><h4>${safe(col.title)}</h4>${(col.links||[]).map(link=>`<a href="${safe(link.url||'#')}">${safe(link.label)}</a>`).join('')}</div>`).join('');
+ $('footerBottom').textContent=f.copyright||'';
+}
+function addToCart(id){const product=(STORE.products||[]).find(p=>String(p.id)===String(id));if(!product)return;const found=cart.find(x=>String(x.id)===String(id));if(found)found.qty++;else cart.push({...product,qty:1});renderCart();toast('تمت إضافة المنتج إلى السلة');}
+function renderCart(){
+ $('cartCount').textContent=cart.reduce((n,p)=>n+p.qty,0);
+ $('cartLines').innerHTML=cart.length?cart.map(p=>`<div class="cart-line">${p.image?`<img src="${safe(p.image)}" alt="">`:'<div class="image-placeholder">◇</div>'}<div class="cart-line-info"><b>${safe(p.name)}</b><small>${safe(p.price)} × ${p.qty}</small></div><button class="close-btn" data-remove="${safe(p.id)}">حذف</button></div>`).join(''):'<div class="empty-state visible">السلة فارغة.</div>';
+ $('cartTotal').textContent=cart.reduce((n,p)=>n+Number(p.price||0)*p.qty,0).toLocaleString('en-US')+' '+safe(STORE.identity?.currency||'');
+ $('cartLines').querySelectorAll('[data-remove]').forEach(b=>b.onclick=()=>{const i=cart.findIndex(p=>String(p.id)===b.dataset.remove);if(i>=0)cart.splice(i,1);renderCart();});
+}
+function openCart(){$('cartDrawer').classList.add('open');$('overlay').classList.add('visible');}
+function closeCart(){$('cartDrawer').classList.remove('open');$('overlay').classList.remove('visible');}
+let toastTimer;function toast(message){$('toast').textContent=message;$('toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('show'),2200);}
+$('cartButton').onclick=openCart;$('closeCart').onclick=closeCart;$('overlay').onclick=closeCart;
+$('menuToggle').onclick=()=>$('mainNav').classList.toggle('open');
+$('productSearch').addEventListener('input',renderProducts);$('productSort').addEventListener('change',renderProducts);
+$('favoriteButton').onclick=()=>toast('تُفعّل المفضلة عند ربط خدمات المتجر');
+$('checkoutButton').onclick=()=>toast('تُفعّل إتمام الطلب عند ربط نظام الطلبات');
+
+applyTheme(STORE.theme||{});renderIdentity();renderNavigation();renderHero();renderCategories();renderProducts();renderPromo();renderFeatures();renderFooter();renderCart();
+</script>
+</body>
+</html>
+</template>
+</body>
+</html>
