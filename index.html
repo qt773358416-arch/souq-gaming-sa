@@ -1160,18 +1160,20 @@ body.vendor-store-open #vendorSelectedStore .vendor-detail-head,body.vendor-stor
 </section>
 
 <section id="page-vendors" class="hidden">
- <div class="vendor-directory-stage">
-  <div class="vendor-directory-heading">
-   <span class="vendor-heading-flourish" aria-hidden="true">❧</span>
-   <span class="vendor-heading-icon" aria-hidden="true">♙</span>
-   <h1>المتاجر المعتمدة</h1>
-   <span class="vendor-heading-flourish" aria-hidden="true">❧</span>
+ <div class="vendor-page-intro">
+  <div class="vendor-pill">متاجر مستقلة داخل السوق</div>
+  <h1>متاجر القيمنق</h1>
+  <p>تصفح متاجر التجار المعتمدة ومنتجاتهم. لكل تاجر متجره وصفحته وإدارته المستقلة.</p>
+  <div class="actions">
+   <button class="primary" type="button" data-vendor-dashboard>افتح متجرك / إدارة متجري</button>
+   <button class="secondary" type="button" data-go="home">العودة للسوق الرئيسي</button>
   </div>
-  <div class="vendor-directory-toolbar">
-   <input id="vendorDirectorySearch" class="field" type="search" placeholder="ابحث عن متجر أو مدينة أو تصنيف..." aria-label="ابحث عن متجر أو مدينة أو تصنيف">
-  </div>
-  <div id="vendorDirectoryGrid" class="vendor-directory-grid"><div class="empty">جارٍ تحميل المتاجر...</div></div>
  </div>
+ <div class="vendor-toolbar">
+  <input id="vendorDirectorySearch" class="field" type="search" placeholder="ابحث عن متجر أو مدينة أو تصنيف...">
+  <button class="secondary" id="vendorDirectoryRefresh" type="button">تحديث المتاجر</button>
+ </div>
+ <div id="vendorDirectoryGrid" class="vendor-directory-grid"><div class="empty">جارٍ تحميل المتاجر...</div></div>
  <section id="vendorSelectedStore" class="hidden">
   <div class="vendor-detail-head">
    <button class="secondary" type="button" id="vendorBackToDirectory">← العودة إلى السوق</button>
@@ -1180,7 +1182,6 @@ body.vendor-store-open #vendorSelectedStore .vendor-detail-head,body.vendor-stor
   </div>
   <p id="vendorSelectedDescription" class="muted"></p>
   <div class="row space"><h2>منتجات المتجر</h2><span id="vendorSelectedProductCount" class="vendor-pill">0 منتج</span></div>
-  <div id="vendorSelectedCategories" class="categories" aria-label="تصنيفات المتجر"></div>
   <div id="vendorSelectedProducts" class="vendor-product-grid"><div class="empty">اختر متجراً لعرض منتجاته.</div></div>
   <div class="vendor-cart-box">
    <div class="row space"><h3 style="margin:0">🛒 سلة المتجر</h3><strong id="vendorCartTotal">0.00 ر.س</strong></div>
@@ -1239,26 +1240,17 @@ body.vendor-store-open #vendorSelectedStore .vendor-detail-head,body.vendor-stor
     </form>
    </section>
    <section class="vendor-dashboard-card full">
-    <div class="row space"><div><h3>تصنيفات متجري</h3><p class="vendor-muted-note">أنشئ أقسام متجرك وعدّلها أو احذفها. تظهر التصنيفات في واجهة متجرك تلقائياً.</p></div><span id="vendorCategoryCount" class="vendor-pill">0 تصنيف</span></div>
-    <form id="vendorCategoryForm" class="formgrid">
-     <input id="vendorCategoryId" type="hidden">
-     <div><label>اسم التصنيف *</label><input id="vendorCategoryName" class="field" required maxlength="100" placeholder="مثال: كروت الشاشة"></div>
-     <div class="row" style="align-items:end"><button class="primary" id="vendorCategorySave" type="submit">إضافة التصنيف</button><button class="secondary" id="vendorCategoryReset" type="button">إلغاء</button><span id="vendorCategoryMsg" class="muted" role="status"></span></div>
-    </form>
-    <div id="vendorMyCategories" class="stack"><div class="empty">جارٍ تحميل التصنيفات...</div></div>
-   </section>
-   <section class="vendor-dashboard-card full">
     <h3>إضافة منتج إلى متجري</h3>
     <form id="vendorProductForm" class="formgrid">
      <input id="vendorProductId" type="hidden">
      <div><label>اسم المنتج *</label><input id="vendorProductName" class="field" required maxlength="160"></div>
-     <div><label>التصنيف *</label><select id="vendorProductCategory" class="field" required><option value="">أضف تصنيفاً أولاً</option></select></div>
+     <div><label>التصنيف *</label><input id="vendorProductCategory" class="field" required maxlength="100"></div>
      <div><label>السعر بالريال *</label><input id="vendorProductPrice" class="field" type="number" min=".01" step=".01" required></div>
      <div><label>الكمية المتاحة *</label><input id="vendorProductStock" class="field" type="number" min="0" step="1" value="1" required></div>
      <div><label>نوع المنتج</label><select id="vendorProductType" class="field"><option value="physical">مادي</option><option value="digital">رقمي</option></select></div>
      <div><label>صورة المنتج من جهازك</label><input id="vendorProductImageFile" class="field" type="file" accept="image/jpeg,image/png,image/webp,image/avif"><small class="vendor-muted-note">JPG أو PNG أو WEBP — حتى 5 ميجابايت</small><div id="vendorProductImagePreview" class="media-preview"></div></div>
      <div class="full"><label>الوصف</label><textarea id="vendorProductDescription" class="field" rows="3" maxlength="3000"></textarea></div>
-     <div class="full row"><button class="primary" type="submit" id="vendorProductSave">نشر المنتج في المتجر</button><button class="secondary" type="button" id="vendorProductReset">منتج جديد</button><span id="vendorProductMsg" class="muted"></span></div>
+     <div class="full row"><button class="primary" type="submit" id="vendorProductSave">حفظ المنتج للمراجعة</button><button class="secondary" type="button" id="vendorProductReset">منتج جديد</button><span id="vendorProductMsg" class="muted"></span></div>
     </form>
     <h3 style="margin-top:22px">منتجاتي</h3>
     <div id="vendorMyProducts" class="stack"><div class="empty">جارٍ التحميل...</div></div>
@@ -1397,7 +1389,7 @@ body.vendor-store-open #vendorSelectedStore .vendor-detail-head,body.vendor-stor
   <button class="drawer-link" data-drawer-page="settings"><span>⚙ الإعدادات<small>تفضيلات الموقع والخصوصية</small></span><span>‹</span></button>
 </aside>
 
-<nav class="bottom"><button data-page="home" class="active"><span>⌂</span>الرئيسية</button><button data-page="doctor"><span>🎓</span>دكتور القيمنق</button><button data-page="add" class="bottom-add"><span>＋</span>أضف إعلان</button><button data-page="vendors"><span>▣</span>المتاجر</button><button id="bottomMore"><span>☰</span>المزيد</button></nav>
+<nav class="bottom"><button data-page="home" class="active"><span>⌂</span>الرئيسية</button><button data-page="doctor"><span>🎓</span>دكتور القيمنق</button><button data-page="add" class="bottom-add"><span>＋</span>أضف إعلان</button><button data-page="store"><span>▣</span>المتجر</button><button id="bottomMore"><span>☰</span>المزيد</button></nav>
 <div id="authGate" class="modalback hidden"><div class="modal"><div class="row space"><h2>تسجيل الدخول مطلوب</h2><button id="closeGate" class="secondary">×</button></div><p class="muted">سجّل الدخول أو أنشئ حسابًا للمتابعة.</p><button class="primary" id="goAuth">الانتقال إلى صفحة الحساب</button></div></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -1437,7 +1429,6 @@ const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&
 const msg=(id,t)=>$(id).textContent=t;
 function showPage(page){
  if(page!=='vendors' && document.body.classList.contains('vendor-store-open'))document.body.classList.remove('vendor-store-open');
- document.body.classList.toggle('vendors-page-active',page==='vendors');
  document.body.classList.toggle('store-view',page==='store');
  document.querySelectorAll('main>section').forEach(s=>s.classList.add('hidden'));
  const el=$('page-'+page); if(el)el.classList.remove('hidden');
@@ -1452,14 +1443,6 @@ function showPage(page){
  if(page==='favorites')loadFavorites();
  if(page==='profile')loadProfilePage();
  if(page==='searchpage')$('searchPageInput').value=$('search').value||'';
- if(page==='vendors'){
-  $('search').placeholder='ابحث عن متجر، منتج، أو علامة تجارية...';
-  const directorySearch=$('vendorDirectorySearch');
-  if(directorySearch){directorySearch.value=$('search').value||'';directorySearch.closest('.vendor-directory-toolbar')?.classList.add('vendor-directory-toolbar-hidden');}
- }else{
-  $('search').placeholder='ابحث عن كمبيوتر، كرت شاشة، بلايستيشن...';
-  $('vendorDirectorySearch')?.closest('.vendor-directory-toolbar')?.classList.remove('vendor-directory-toolbar-hidden');
- }
  window.scrollTo({top:0,behavior:'smooth'});
 }
 function needAuth(){if(currentUser)return true;$('authGate').classList.remove('hidden');return false;}
@@ -1473,7 +1456,7 @@ function closeDrawer(){$('sideDrawer').classList.add('hidden');$('drawerBackdrop
 $('closeDrawer').onclick=closeDrawer;$('drawerBackdrop').onclick=closeDrawer;
 document.querySelectorAll('[data-drawer-page]').forEach(b=>b.addEventListener('click',()=>{const page=b.dataset.drawerPage;closeDrawer();if(['myads','messages','community'].includes(page)&&!currentUser){showPage('account');msg('authMsg','سجّل الدخول أو أنشئ حسابًا أولًا.');return;}showPage(page)}));$('closeGate').onclick=()=>$('authGate').classList.add('hidden');$('goAuth').onclick=()=>{$('authGate').classList.add('hidden');showPage('account')};
 document.querySelectorAll('[data-category]').forEach(b=>b.onclick=()=>{selectedCategory=b.dataset.category;document.querySelectorAll('[data-category]').forEach(x=>x.classList.toggle('selected',x===b));renderAdsFromCache()});
-$('searchBtn').onclick=()=>{if(document.getElementById('page-vendors')&&!document.getElementById('page-vendors').classList.contains('hidden')){const q=$('search').value.trim();if($('vendorDirectorySearch')){$('vendorDirectorySearch').value=q;$('vendorDirectorySearch').dispatchEvent(new Event('input',{bubbles:true}));}return;}searchTerm=$('search').value.trim().toLowerCase();renderAdsFromCache()};$('searchPageBtn').onclick=()=>{searchTerm=$('searchPageInput').value.trim().toLowerCase();$('search').value=$('searchPageInput').value;showPage('home')};$('search').addEventListener('keydown',e=>{if(e.key==='Enter')$('searchBtn').click()});
+$('searchBtn').onclick=()=>{searchTerm=$('search').value.trim().toLowerCase();renderAdsFromCache()};$('searchPageBtn').onclick=()=>{searchTerm=$('searchPageInput').value.trim().toLowerCase();$('search').value=$('searchPageInput').value;showPage('home')};$('search').addEventListener('keydown',e=>{if(e.key==='Enter')$('searchBtn').click()});
 
 const FAV_KEY='souqGamingFavoritesV1';
 function getFavIds(){try{return JSON.parse(localStorage.getItem(FAV_KEY)||'[]').map(String)}catch{return []}}
@@ -1509,6 +1492,11 @@ async function openAdDetail(id){
 
  box.innerHTML=`
   <div class="ad-detail-layout">
+   <section id="reviewsPanel" class="detail-rating-section">
+    <h3>تقييمات البائع</h3>
+    <div class="empty">جارٍ تحميل التقييمات...</div>
+   </section>
+
    <header class="detail-summary">
     <div class="detail-title-row">
      <div class="detail-title-copy">
@@ -1518,62 +1506,50 @@ async function openAdDetail(id){
      <div class="detail-price">${Number(a.price||0).toLocaleString('ar-SA')} <small>ر.س</small></div>
     </div>
     <div class="detail-meta">
-     <span>📂 الفئة: ${esc(a.category||'غير مصنف')}</span>
-     <span>🏷️ الحالة: ${esc(a.condition||'غير محددة')}</span>
-     <span>📍 المدينة: ${esc(city)}</span>
-     ${added?`<span>🗓️ تاريخ النشر: ${esc(added)}</span>`:''}
+     <span>📂 ${esc(a.category||'غير مصنف')}</span>
+     <span>🏷️ ${esc(a.condition||'الحالة غير محددة')}</span>
+     <span>📍 ${esc(city)}</span>
+     ${added?`<span>🗓️ ${esc(added)}</span>`:''}
     </div>
    </header>
 
    <section class="detail-media-section" aria-label="صور وفيديو الإعلان">
+    <div class="detail-section-heading"><h3>صور وفيديو المنتج</h3><span class="muted">${images.length} صورة${a.video_url?' · يوجد فيديو':''}</span></div>
     <div class="detail-media-grid">${mediaMarkup}</div>
    </section>
 
    <section class="detail-description-section">
-    <h3>▤ وصف المنتج ومواصفاته</h3>
+    <h3>وصف المنتج ومواصفاته</h3>
     <p class="detail-description">${esc(a.description||'لم يضف البائع وصفًا لهذا المنتج.')}</p>
     ${a.ad_type==='marketing'&&a.external_product_url?`<a class="ad-external-link" href="${esc(a.external_product_url)}" target="_blank" rel="noopener noreferrer">↗ زيارة المنتج في المنصة الأصلية</a>`:''}
-   </section>
-
-   <section class="ad-pledge-panel detail-pledge-section">
-    <div class="pledge-icon" aria-hidden="true">✓</div>
-    <div class="pledge-copy">
+    <section class="ad-pledge-panel">
      <h3>إقرار البائع بحالة المنتج</h3>
      ${a.product_terms_accepted
-      ?`<span class="ad-pledge-badge ${a.product_condition_status==='defect'?'defect':''}">${a.product_condition_status==='defect'?'⚠ أفصح البائع عن وجود خلل':'✓ أتعهد بأن المنتج سليم'}</span>
-        ${a.product_condition_status==='defect'?`<p><strong>الخلل أو الملاحظة المعلنة:</strong> ${esc(a.product_issue||'لم يضف البائع تفاصيل.')}</p>`:'<p class="muted">أتعهد بأن المنتج سليم وخالٍ من العيوب الرئيسية.</p>'}`
+      ?`<span class="ad-pledge-badge ${a.product_condition_status==='defect'?'defect':''}">${a.product_condition_status==='defect'?'⚠ أفصح البائع عن وجود خلل':'✓ تعهّد البائع بأن المنتج سليم'}</span>
+        ${a.product_condition_status==='defect'?`<p><strong>الخلل أو الملاحظة المعلنة:</strong> ${esc(a.product_issue||'لم يضف البائع تفاصيل.')}</p>`:'<p class="muted">هذا إقرار من البائع وليس فحصًا فنيًا صادرًا عن المنصة.</p>'}`
       :'<p class="muted">لم يسجل هذا الإعلان إقرار حالة المنتج.</p>'}
-    </div>
+    </section>
    </section>
 
    <section id="adCommentsPanel" class="detail-comments-section">
-    <div class="detail-section-heading"><div><h3>◉ النقاش العام</h3><p class="muted">اكتب سؤالًا أو تعليقًا متعلقًا بالإعلان، ويمكن للبائع الرد تحته.</p></div></div>
-    <form id="adCommentForm" class="detail-comment-form">
-     <textarea id="adCommentText" class="field" rows="2" maxlength="1500" placeholder="اكتب تعليقًا أو سؤالًا..." required></textarea>
-     <div class="detail-comment-submit"><button class="primary" type="submit" aria-label="إرسال التعليق">➤</button><div id="adCommentMsg" class="muted" role="status"></div></div>
+    <div class="detail-section-heading"><div><h3>النقاش العام</h3><p class="muted">اكتب سؤالًا أو تعليقًا متعلقًا بالإعلان، ويمكن للبائع الرد تحته.</p></div></div>
+    <form id="adCommentForm" class="stack">
+     <textarea id="adCommentText" class="field" rows="3" maxlength="1500" placeholder="اكتب سؤالك أو تعليقك عن المنتج..." required></textarea>
+     <div class="detail-comment-submit"><button class="primary" type="submit">إرسال التعليق</button><div id="adCommentMsg" class="muted" role="status"></div></div>
     </form>
     <div id="adCommentsList" class="stack detail-comments-list">جارٍ تحميل التعليقات...</div>
    </section>
 
    <section class="detail-seller-section">
-    <div class="seller-profile-row">
-     <div class="seller-avatar" aria-hidden="true">${esc((a.seller_name||'ب').trim().slice(0,1))}</div>
-     <div class="seller-profile-copy"><strong>${esc(a.seller_name||'بائع سوق القيمنق')}</strong><span>صاحب الإعلان · تواصل مباشرة مع البائع</span></div>
-     <div class="seller-rating-mark">★ <b>بائع</b></div>
-    </div>
+    <div><span class="muted">صاحب الإعلان</span><strong>${esc(a.seller_name||'بائع سوق القيمنق')}</strong></div>
     <div class="detail-actions">
-     <button class="primary seller-whatsapp" type="button" onclick="contactWhatsApp('${esc(a.seller_phone||'')}','${esc(a.title||'')}')">◉ واتساب</button>
-     <button class="secondary" type="button" onclick="contactCall('${esc(a.seller_phone||'')}')">☎ اتصال</button>
-     <button class="secondary" type="button" onclick="startConversation('${a.id}','${esc(a.title||'')}','${a.seller_id||''}')">▢ رسالة خاصة</button>
-     <button class="fav-button" type="button" onclick="toggleFavorite('${a.id}')">♡ حفظ</button>
-     <button class="danger" type="button" onclick="openReport('${a.id}')">⚠ إبلاغ</button>
-     <button class="secondary" type="button" onclick="shareAd('${a.id}','${esc(a.title||'')}')">↗ مشاركة</button>
+     <button class="primary" type="button" onclick="contactWhatsApp('${esc(a.seller_phone||'')}','${esc(a.title||'')}')">واتساب البائع</button>
+     <button class="secondary" type="button" onclick="contactCall('${esc(a.seller_phone||'')}')">اتصال</button>
+     <button class="secondary" type="button" onclick="startConversation('${a.id}','${esc(a.title||'')}','${a.seller_id||''}')">مراسلة خاصة</button>
+     <button class="fav-button" type="button" onclick="toggleFavorite('${a.id}')">♡ حفظ بالمفضلة</button>
+     <button class="secondary" type="button" onclick="shareAd('${a.id}','${esc(a.title||'')}')">↗ مشاركة الإعلان</button>
+     <button class="danger" type="button" onclick="openReport('${a.id}')">إبلاغ عن الإعلان</button>
     </div>
-   </section>
-
-   <section id="reviewsPanel" class="detail-rating-section">
-    <h3>☆ تقييم البائع</h3>
-    <div class="empty">جارٍ تحميل التقييمات...</div>
    </section>
   </div>`;
 
@@ -2355,7 +2331,7 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
  'use strict';
  const vState = {
   stores: [], selectedStore: null, selectedProducts: [], selectedCategory: '',
-  myStore: null, myProducts: [], myCategories: [], storeCategories: [], cart: {}, cartProducts: {},
+  myStore: null, myProducts: [], cart: {}, cartProducts: {},
   promotedStores: new Set(), promotedProducts: new Set(), promotedAds: new Set()
  };
  const v$ = id => document.getElementById(id);
@@ -2487,14 +2463,18 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
    grid.innerHTML='<div class="empty" style="grid-column:1/-1">لا توجد متاجر معتمدة ضمن هذا التصنيف حالياً.</div>';
    return;
   }
-  grid.innerHTML=rows.map((store,index)=>`
-   <button class="vendor-directory-card vendor-round-card ${store.is_featured||vState.promotedStores.has(String(store.id))?'is-featured':''}"
-     type="button" onclick="openVendorStore('${vEsc(store.id)}')" aria-label="زيارة متجر ${vEsc(store.store_name)}">
-    <span class="vendor-round-avatar vendor-ring-${index%6}">${vendorLogoMarkup(store)}</span>
-    <strong class="vendor-round-name">${vEsc(store.store_name)}</strong>
-    <span class="vendor-round-meta">${vEsc(store.category||'متجر قيمنق')}</span>
-    ${store.is_featured||vState.promotedStores.has(String(store.id))?'<span class="vendor-round-featured">متجر مميز</span>':''}
-   </button>`).join('');
+  grid.innerHTML=rows.map(store=>`
+   <article class="vendor-directory-card">
+    <div class="vendor-directory-cover">${vSafeUrl(store.logo_url)?`<img src="${vEsc(vSafeUrl(store.logo_url))}" alt="" loading="lazy">`:'🎮'}</div>
+    <div class="vendor-directory-content">
+     <div class="vendor-directory-logo">${vendorLogoMarkup(store)}</div>
+     <h3>${vEsc(store.store_name)}</h3>
+     <div class="vendor-muted-note">${vEsc(store.category||'متجر قيمنق')} · ${vEsc(store.city||'السعودية')}</div>
+     <p class="vendor-muted-note">${vEsc((store.description||'').slice(0,130))}</p>
+     ${store.is_featured||vState.promotedStores.has(String(store.id))?'<span class="vendor-pill">متجر مميز / مروّج</span>':''}
+     <button class="primary" type="button" style="width:100%;margin-top:10px" onclick="openVendorStore('${store.id}')">زيارة المتجر</button>
+    </div>
+   </article>`).join('');
  }
  window.openVendorStore=async id=>{
   if(v$('page-vendors')?.classList.contains('hidden'))showPage('vendors');
@@ -2514,34 +2494,15 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
    .order('created_at',{ascending:false}).limit(100);
   if(error){v$('vendorSelectedProducts').innerHTML='<div class="empty">تعذر تحميل منتجات هذا المتجر.</div>';return;}
   vState.selectedProducts=data||[];
-  vState.selectedCategory='';
-  const cats=await sb.from('vendor_store_categories').select('id,name').eq('store_id',store.id).order('sort_order',{ascending:true}).order('name',{ascending:true});
-  vState.storeCategories=cats.error?[]:(cats.data||[]);
-  renderVendorStoreCategoryFilters();
+  v$('vendorSelectedProductCount').textContent=vState.selectedProducts.length.toLocaleString('ar-SA')+' منتج';
   renderSelectedVendorProducts();
   renderVendorCart();
   v$('vendorSelectedStore').scrollIntoView({behavior:'smooth',block:'start'});
  };
- function renderVendorStoreCategoryFilters(){
-  const box=v$('vendorSelectedCategories');if(!box)return;
-  const names=[...new Set(vState.storeCategories.map(c=>c.name).concat(vState.selectedProducts.map(p=>p.category).filter(Boolean)))];
-  box.innerHTML=[`<button type="button" class="chip ${!vState.selectedCategory?'selected':''}" data-vendor-category="">الكل</button>`,
-   ...names.map(name=>`<button type="button" class="chip ${vState.selectedCategory===name?'selected':''}" data-vendor-category="${vEsc(name)}">${vEsc(name)}</button>`)].join('');
-  box.querySelectorAll('[data-vendor-category]').forEach(button=>{
-   button.addEventListener('click',()=>window.filterVendorStoreCategory(button.dataset.vendorCategory||''));
-  });
- }
- window.filterVendorStoreCategory=name=>{
-  vState.selectedCategory=name||'';
-  renderVendorStoreCategoryFilters();
-  renderSelectedVendorProducts();
- };
  function renderSelectedVendorProducts(){
   const grid=v$('vendorSelectedProducts');if(!grid)return;
-  const rows=vState.selectedProducts.filter(p=>!vState.selectedCategory||p.category===vState.selectedCategory);
-  v$('vendorSelectedProductCount').textContent=rows.length.toLocaleString('ar-SA')+' منتج';
-  if(!rows.length){grid.innerHTML='<div class="empty" style="grid-column:1/-1">لا توجد منتجات منشورة في هذا التصنيف حالياً.</div>';return;}
-  grid.innerHTML=rows.map(p=>`
+  if(!vState.selectedProducts.length){grid.innerHTML='<div class="empty" style="grid-column:1/-1">لا توجد منتجات منشورة في هذا المتجر حالياً.</div>';return;}
+  grid.innerHTML=vState.selectedProducts.map(p=>`
    <article class="vendor-product-card">
     <div class="vendor-product-image">${vSafeUrl(p.image_url)?`<img src="${vEsc(vSafeUrl(p.image_url))}" alt="${vEsc(p.title)}" loading="lazy">`:'🎮'}</div>
     <div class="vendor-product-content">
@@ -2596,8 +2557,8 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   vState.selectedStore=null;
   vState.selectedProducts=[];
  });
- v$('vendorDirectorySearch').addEventListener('input',()=>{if($('search'))$('search').value=v$('vendorDirectorySearch').value;renderVendorDirectory();});
- v$('vendorDirectoryRefresh')?.addEventListener('click',()=>{vState.selectedCategory='';loadVendorDirectory();});
+ v$('vendorDirectorySearch').addEventListener('input',renderVendorDirectory);
+ v$('vendorDirectoryRefresh').addEventListener('click',()=>{vState.selectedCategory='';const h=v$('page-vendors')?.querySelector('.vendor-page-intro h1');if(h)h.textContent='متاجر القيمنق';loadVendorDirectory();});
  v$('vendorCategoryCircleRail')?.addEventListener('click',event=>{
   const button=event.target.closest('[data-vendor-category]');if(!button)return;
   vState.selectedCategory=button.dataset.vendorCategory||'';
@@ -2638,7 +2599,7 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
 
  function resetVendorProductForm(){
   v$('vendorProductForm').reset();v$('vendorProductId').value='';v$('vendorProductStock').value=1;v$('vendorProductImagePreview').innerHTML='';
-  v$('vendorProductSave').textContent='نشر المنتج في المتجر';
+  v$('vendorProductSave').textContent='حفظ المنتج للمراجعة';
  }
  v$('vendorProductReset').addEventListener('click',resetVendorProductForm);
   v$('vendorProductImageFile').addEventListener('change',()=>{
@@ -2650,67 +2611,6 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
    }
    const reader=new FileReader();reader.onload=()=>{box.innerHTML=`<img src="${reader.result}" alt="معاينة صورة المنتج">`};reader.readAsDataURL(file);
   });
-
- function resetVendorCategoryForm(){
-  v$('vendorCategoryForm').reset();v$('vendorCategoryId').value='';
-  v$('vendorCategorySave').textContent='إضافة التصنيف';
- }
- v$('vendorCategoryReset').addEventListener('click',resetVendorCategoryForm);
-
- async function loadVendorCategories(){
-  if(!vState.myStore)return;
-  const {data,error}=await sb.from('vendor_store_categories').select('*')
-   .eq('store_id',vState.myStore.id).order('sort_order',{ascending:true}).order('name',{ascending:true});
-  if(error){
-   v$('vendorMyCategories').innerHTML='<div class="empty">تعذر تحميل التصنيفات: '+vEsc(error.message)+' — تحقق من تنفيذ تحديث قاعدة البيانات.</div>';
-   return;
-  }
-  vState.myCategories=data||[];
-  v$('vendorCategoryCount').textContent=vState.myCategories.length.toLocaleString('ar-SA')+' تصنيف';
-  v$('vendorMyCategories').innerHTML=vState.myCategories.map(c=>`
-   <div class="vendor-state row space">
-    <strong>${vEsc(c.name)}</strong>
-    <div class="actions">
-     <button class="secondary" type="button" onclick="editVendorCategory('${c.id}')">تعديل</button>
-     <button class="danger" type="button" onclick="deleteVendorCategory('${c.id}')">حذف</button>
-    </div>
-   </div>`).join('')||'<div class="empty">لا توجد تصنيفات بعد. أضف أول تصنيف لمتجرك.</div>';
-  const select=v$('vendorProductCategory'),previous=select.value;
-  select.innerHTML='<option value="">اختر تصنيف المنتج</option>'+vState.myCategories.map(c=>`<option value="${vEsc(c.name)}">${vEsc(c.name)}</option>`).join('');
-  if(vState.myCategories.some(c=>c.name===previous))select.value=previous;
- }
- v$('vendorCategoryForm').addEventListener('submit',async e=>{
-  e.preventDefault();if(!vState.myStore||!currentUser)return;
-  const id=v$('vendorCategoryId').value,name=v$('vendorCategoryName').value.trim();
-  if(!name)return;
-  if(vState.myCategories.some(c=>c.name.toLocaleLowerCase()===name.toLocaleLowerCase()&&String(c.id)!==String(id))){
-   vMsg('vendorCategoryMsg','هذا التصنيف موجود بالفعل.');return;
-  }
-  const button=v$('vendorCategorySave');button.disabled=true;
-  try{
-   const row={name,store_id:vState.myStore.id,owner_id:currentUser.id,updated_at:new Date().toISOString()};
-   const query=id?sb.from('vendor_store_categories').update({name,updated_at:row.updated_at}).eq('id',id).eq('store_id',vState.myStore.id):
-    sb.from('vendor_store_categories').insert(row);
-   const {error}=await query;if(error)throw error;
-   vMsg('vendorCategoryMsg',id?'تم تعديل التصنيف.':'تمت إضافة التصنيف.');
-   resetVendorCategoryForm();await loadVendorCategories();
-  }catch(error){vMsg('vendorCategoryMsg','تعذر حفظ التصنيف: '+error.message);}
-  finally{button.disabled=false;}
- });
- window.editVendorCategory=id=>{
-  const c=vState.myCategories.find(x=>String(x.id)===String(id));if(!c)return;
-  v$('vendorCategoryId').value=c.id;v$('vendorCategoryName').value=c.name;
-  v$('vendorCategorySave').textContent='حفظ التعديل';
-  v$('vendorCategoryForm').scrollIntoView({behavior:'smooth',block:'center'});
- };
- window.deleteVendorCategory=async id=>{
-  const c=vState.myCategories.find(x=>String(x.id)===String(id));if(!c)return;
-  if(!confirm('حذف التصنيف "'+c.name+'"؟ المنتجات المرتبطة به ستبقى محفوظة، ويمكنك إعادة تصنيفها لاحقاً.'))return;
-  const {error}=await sb.from('vendor_store_categories').delete().eq('id',id).eq('store_id',vState.myStore.id);
-  if(error){alert('تعذر حذف التصنيف: '+error.message);return;}
-  await loadVendorCategories();
- };
-
  async function loadMyVendorProducts(){
   if(!vState.myStore)return;
   const {data,error}=await sb.from('vendor_store_products').select('*')
@@ -2719,7 +2619,7 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   vState.myProducts=data||[];
   v$('vendorMyProducts').innerHTML=vState.myProducts.map(p=>`
    <div class="vendor-state">
-    <div class="row space"><strong>${vEsc(p.title)}</strong><span class="vendor-pill">${vEsc(p.status==='active'?'منشور في المتجر':vStatusLabel(p.status))}</span></div>
+    <div class="row space"><strong>${vEsc(p.title)}</strong><span class="vendor-pill">${vEsc(vStatusLabel(p.status))}</span></div>
     <div class="vendor-muted-note">${vMoney(p.price)} · المخزون ${Number(p.stock_quantity)||0} · ${vEsc(p.category||'')}</div>
     <div class="actions"><button class="secondary" type="button" onclick="editMyVendorProduct('${p.id}')">تعديل</button><button class="danger" type="button" onclick="deleteMyVendorProduct('${p.id}')">حذف</button></div>
    </div>`).join('')||'<div class="empty">لم تضف منتجات بعد.</div>';
@@ -2727,13 +2627,10 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
  window.editMyVendorProduct=id=>{
   const p=vState.myProducts.find(x=>String(x.id)===String(id));if(!p)return;
   v$('vendorProductId').value=p.id;v$('vendorProductName').value=p.title;
-  if(p.category&&!Array.from(v$('vendorProductCategory').options).some(o=>o.value===p.category)){
-   v$('vendorProductCategory').insertAdjacentHTML('beforeend',`<option value="${vEsc(p.category)}">${vEsc(p.category)} (تصنيف قديم)</option>`);
-  }
   v$('vendorProductCategory').value=p.category||'';v$('vendorProductPrice').value=p.price;
   v$('vendorProductStock').value=p.stock_quantity;v$('vendorProductType').value=p.product_type||'physical';
   v$('vendorProductImageFile').value='';v$('vendorProductImagePreview').innerHTML=p.image_url?`<img src="${vEsc(p.image_url)}" alt="صورة المنتج الحالية"><small>الصورة الحالية — اختر صورة جديدة لاستبدالها</small>`:'';v$('vendorProductDescription').value=p.description||'';
-  v$('vendorProductSave').textContent='حفظ التعديل ونشره';
+  v$('vendorProductSave').textContent='حفظ التعديل وإعادة المراجعة';
   v$('vendorProductForm').scrollIntoView({behavior:'smooth',block:'center'});
  };
  window.deleteMyVendorProduct=async id=>{
@@ -2750,7 +2647,7 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
    price:Number(v$('vendorProductPrice').value),stock_quantity:Number(v$('vendorProductStock').value),
    product_type:v$('vendorProductType').value,
    image_url:(id?vState.myProducts.find(p=>String(p.id)===String(id))?.image_url:null)||null,
-   description:v$('vendorProductDescription').value.trim(),status:'active'
+   description:v$('vendorProductDescription').value.trim()
   };
   const button=v$('vendorProductSave');button.disabled=true;
   try{
@@ -2766,19 +2663,25 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
    const query=id?sb.from('vendor_store_products').update(row).eq('id',id).eq('store_id',vState.myStore.id):
     sb.from('vendor_store_products').insert({...row,store_id:vState.myStore.id,owner_id:currentUser.id});
    const {error}=await query;if(error)throw error;
-   resetVendorProductForm();vMsg('vendorProductMsg',id?'تم حفظ التعديل ونشر المنتج مباشرة في متجرك.':'تم نشر المنتج مباشرة في متجرك بنجاح.');
+   resetVendorProductForm();vMsg('vendorProductMsg',id?'تم حفظ التعديل وإرسال المنتج للمراجعة من جديد.':'تم استلام المنتج وسيظهر بعد موافقة الإدارة.');
    await loadMyVendorProducts();
   }catch(error){vMsg('vendorProductMsg','تعذر حفظ المنتج: '+error.message);}
   finally{button.disabled=false;}
  });
 
  async function loadVendorStoreWorkspace(){
-  if(!currentUser){v$('vendorDashboardAuth').classList.remove('hidden');v$('vendorApplicationBox').classList.add('hidden');v$('vendorWorkspace').classList.add('hidden');return;}
+  const merchantButtons=[...document.querySelectorAll('[data-vendor-dashboard]')];
+  const setMerchantButton=(label)=>merchantButtons.forEach(b=>{b.textContent=label;});
+  if(!currentUser){setMerchantButton('افتح متجرك');v$('vendorDashboardAuth').classList.remove('hidden');v$('vendorApplicationBox').classList.add('hidden');v$('vendorWorkspace').classList.add('hidden');return;}
   v$('vendorDashboardAuth').classList.add('hidden');
   const {data,error}=await sb.from('vendor_stores').select('*').eq('owner_id',currentUser.id).maybeSingle();
-  if(error){vMsg('vendorDashboardAuth','تعذر قراءة حالة المتجر: '+error.message+' — نفّذ ملف SQL الإضافي.');v$('vendorDashboardAuth').classList.remove('hidden');return;}
+  if(error){setMerchantButton('حالة المتجر');vMsg('vendorDashboardAuth','تعذر قراءة حالة المتجر: '+error.message);v$('vendorDashboardAuth').classList.remove('hidden');return;}
   vState.myStore=data||null;
-  if(!data){v$('vendorApplicationBox').classList.remove('hidden');v$('vendorWorkspace').classList.add('hidden');return;}
+  if(!data){setMerchantButton('افتح متجرك');v$('vendorApplicationBox').classList.remove('hidden');v$('vendorWorkspace').classList.add('hidden');return;}
+  if(data.status==='approved')setMerchantButton('إدارة متجري');
+  else if(data.status==='rejected')setMerchantButton('طلب المتجر مرفوض');
+  else if(data.status==='suspended')setMerchantButton('المتجر موقوف');
+  else setMerchantButton('طلبك قيد المراجعة');
   v$('vendorApplicationBox').classList.add('hidden');v$('vendorWorkspace').classList.remove('hidden');
   v$('vendorWorkspaceStatus').textContent='حالة المتجر: '+vStatusLabel(data.status)+'. '+(data.status==='approved'?'متجرك معتمد ويمكنك إدارة المنتجات وطلب الترويج.':'لن يظهر المتجر للعامة حتى تعتمد الإدارة الطلب، ولن تتمكن من نشر المنتجات أو طلب الترويج قبل الاعتماد.');
   const canOperate=data.status==='approved';
@@ -2788,7 +2691,7 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   v$('vendorEditCategory').value=data.category||'';v$('vendorEditCity').value=data.city||'';
   v$('vendorEditLogo').value=data.logo_url||'';v$('vendorEditWhatsapp').value=data.contact_whatsapp||'';
   v$('vendorEditDescription').value=data.description||'';
-  await Promise.all([loadVendorCategories(),loadMyVendorProducts(),loadMyVendorOrders(),loadVendorPromotables(),loadVendorFinance(),loadVendorPromotionHistory()]);
+  await Promise.all([loadMyVendorProducts(),loadMyVendorOrders(),loadVendorPromotables(),loadVendorFinance(),loadVendorPromotionHistory()]);
  }
  v$('vendorApplicationForm').addEventListener('submit',async e=>{
   e.preventDefault();if(!needAuth())return;
@@ -2892,7 +2795,7 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
    .eq('owner_id',currentUser.id).order('created_at',{ascending:false}).limit(100);
   const box=v$('vendorPromotionHistory');if(!box)return;
   if(error){box.innerHTML='<div class="vendor-muted-note">تعذر تحميل طلبات الترويج.</div>';return;}
-  box.innerHTML=(data||[]).map(p=>`<div class="vendor-state"><strong>${vEsc(p.target_type)} · ${vEsc(p.package_code)}</strong><div class="vendor-muted-note">${vMoney(p.amount_sar)} · ${p.duration_days} يوم · ${vEsc(p.status==='active'?'منشور في المتجر':vStatusLabel(p.status))} · ${vEsc(vStatusLabel(p.payment_status))}</div></div>`).join('')||'<div class="vendor-muted-note">لا توجد طلبات ترويج.</div>';
+  box.innerHTML=(data||[]).map(p=>`<div class="vendor-state"><strong>${vEsc(p.target_type)} · ${vEsc(p.package_code)}</strong><div class="vendor-muted-note">${vMoney(p.amount_sar)} · ${p.duration_days} يوم · ${vEsc(vStatusLabel(p.status))} · ${vEsc(vStatusLabel(p.payment_status))}</div></div>`).join('')||'<div class="vendor-muted-note">لا توجد طلبات ترويج.</div>';
  }
  async function loadVendorFinance(){
   if(!currentUser)return;
@@ -2960,9 +2863,11 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
 
  window.openVendorDashboard=async()=>{
   if(!needAuth())return;
-  window.open('vendor-portal.html','_blank','noopener');
+  if(typeof closeDrawer==='function')closeDrawer();
+  showPage('vendor-dashboard');
+  await loadVendorStoreWorkspace();
  };
- document.querySelectorAll('[data-vendor-dashboard]').forEach(button=>button.addEventListener('click',()=>{if(typeof closeDrawer==='function')closeDrawer();window.openVendorDashboard();}));
+ document.querySelectorAll('[data-vendor-dashboard]').forEach(button=>button.addEventListener('click',()=>window.openVendorDashboard()));
  v$('vendorCircleRail')?.addEventListener('click',e=>{
   const button=e.target.closest('[data-vendor-id]');if(button)window.openVendorStore(button.dataset.vendorId);
  });
@@ -3025,11 +2930,16 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   if(target==='store'&&typeof showPage==='function')showPage('store');else if(target==='searchpage'&&typeof showPage==='function')showPage('searchpage');else{vState.selectedCategory='';showPage('vendors');}
  });
  void fetchHomeBanner();
+ sb.auth.getSession().then(({data})=>{
+  if(data?.session?.user){currentUser=data.session.user;void loadVendorStoreWorkspace();}
+ });
  sb.auth.onAuthStateChange((_event,session)=>{
   if(session?.user){
-   setTimeout(()=>{if(!v$('page-vendor-dashboard')?.classList.contains('hidden'))loadVendorStoreWorkspace();},0);
+   currentUser=session.user;
+   setTimeout(()=>{void loadVendorStoreWorkspace();},0);
   }else{
-   vState.myStore=null;vState.myProducts=[];
+   currentUser=null;vState.myStore=null;vState.myProducts=[];
+   document.querySelectorAll('[data-vendor-dashboard]').forEach(b=>b.textContent='افتح متجرك');
   }
  });
  // Active paid placements only are ranked first. Pending/unpaid promotion requests never affect search order.
@@ -4915,420 +4825,5 @@ applyTheme(STORE.theme||{});renderIdentity();renderNavigation();renderHero();ren
 </body>
 </html>
 </template>
-
-
-
-
-<style id="souq-vendor-directory-reference-template">
-/* قالب قسم المتاجر مطابق للمرجع: مسرح ألعاب داكن، عنوان مضيء، وشعارات دائرية */
-#page-vendors{padding:10px 0 26px;min-height:70vh;position:relative;isolation:isolate}
-#page-vendors::before{content:"";position:absolute;z-index:-2;inset:0 -14px 0;background:
- radial-gradient(ellipse at 50% 12%,rgba(0,197,255,.16),transparent 38%),
- radial-gradient(ellipse at 0% 40%,rgba(166,55,255,.20),transparent 27%),
- radial-gradient(ellipse at 100% 43%,rgba(0,195,255,.18),transparent 28%),
- linear-gradient(180deg,#071522 0%,#061725 52%,#081b2a 100%)}
-#page-vendors::after{content:"";position:absolute;z-index:-1;top:100px;bottom:20px;left:-14px;right:-14px;pointer-events:none;opacity:.62;background:
- linear-gradient(90deg,transparent 0%,rgba(44,194,255,.0) 4%,rgba(44,194,255,.42) 4.4%,transparent 5.4%,transparent 94.6%,rgba(44,194,255,.42) 95.6%,transparent 96%);
-}
-#page-vendors .vendor-directory-stage{position:relative;margin:8px 0 16px;padding:15px 12px 20px;border:1px solid rgba(0,190,255,.58);border-radius:28px;background:linear-gradient(180deg,rgba(4,25,42,.94),rgba(3,19,33,.97));box-shadow:0 0 0 1px rgba(28,163,218,.12),0 0 32px rgba(0,178,255,.17),inset 0 0 35px rgba(0,147,205,.10);overflow:hidden}
-#page-vendors .vendor-directory-stage::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 50% 0%,rgba(0,218,255,.12),transparent 35%),linear-gradient(110deg,transparent 0%,rgba(255,255,255,.025) 50%,transparent 100%)}
-#page-vendors .vendor-directory-heading{position:relative;display:flex;align-items:center;justify-content:center;gap:10px;margin:0 auto 19px;padding:0 0 12px;border-bottom:1px solid rgba(0,205,255,.45);text-align:center}
-#page-vendors .vendor-directory-heading h1{margin:0;color:#f1fbff;font-size:clamp(20px,5vw,27px);font-weight:950;text-shadow:0 0 13px rgba(0,202,255,.52);letter-spacing:-.4px}
-#page-vendors .vendor-heading-icon{font-size:25px;color:#14d9ff;text-shadow:0 0 12px #00cfff}
-#page-vendors .vendor-heading-flourish{font-size:25px;color:#0fc9ee;text-shadow:0 0 10px #00cfff;transform:rotate(180deg)}
-#page-vendors .vendor-heading-flourish:last-child{transform:none}
-#page-vendors .vendor-directory-toolbar{display:block;margin:0 0 15px}
-#page-vendors .vendor-directory-toolbar-hidden{display:none!important}
-#page-vendors #vendorDirectorySearch{width:100%;min-height:46px;border:1px solid #267d9d;border-radius:999px;background:linear-gradient(100deg,#102e45,#0b2236);color:#f2fbff;text-align:right;padding:10px 18px;box-shadow:0 0 13px rgba(0,192,255,.12)}
-#page-vendors #vendorDirectorySearch::placeholder{color:#a9c3d2}
-#page-vendors .vendor-directory-grid{position:relative;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:19px 9px!important;align-items:start}
-#page-vendors .vendor-round-card{appearance:none;-webkit-appearance:none;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:flex-start!important;gap:7px!important;min-width:0!important;width:100%!important;padding:5px 2px 8px!important;border:0!important;border-radius:13px!important;background:transparent!important;color:#f4fbff!important;box-shadow:none!important;text-align:center!important;cursor:pointer}
-#page-vendors .vendor-round-avatar{position:relative;width:min(25vw,118px)!important;height:min(25vw,118px)!important;max-width:118px!important;max-height:118px!important;min-width:68px!important;min-height:68px!important;display:grid!important;place-items:center!important;overflow:hidden!important;border-radius:50%!important;border:2px solid #23d9ff!important;background:radial-gradient(circle at 35% 25%,#234f72,#071726 72%)!important;box-shadow:0 0 0 3px rgba(21,195,255,.12),0 0 15px rgba(0,207,255,.70),inset 0 0 18px rgba(0,183,255,.22)!important;font-size:33px!important}
-#page-vendors .vendor-round-avatar img{display:block;width:100%!important;height:100%!important;object-fit:cover!important;border-radius:50%!important}
-#page-vendors .vendor-ring-1{border-color:#35aaff!important;box-shadow:0 0 0 3px #248cff24,0 0 17px #178dffb8!important}
-#page-vendors .vendor-ring-2{border-color:#ff4568!important;box-shadow:0 0 0 3px #ff456824,0 0 17px #ff345eb8!important}
-#page-vendors .vendor-ring-3{border-color:#d44dff!important;box-shadow:0 0 0 3px #d44dff24,0 0 17px #c43cffb8!important}
-#page-vendors .vendor-ring-4{border-color:#36ed8b!important;box-shadow:0 0 0 3px #36ed8b24,0 0 17px #20dc77b8!important}
-#page-vendors .vendor-ring-5{border-color:#ffc34a!important;box-shadow:0 0 0 3px #ffc34a24,0 0 17px #ffb52db8!important}
-#page-vendors .vendor-round-name{display:block;width:100%;font-size:clamp(11px,2.8vw,15px);font-weight:950;line-height:1.35;color:#f7fbff!important;overflow-wrap:anywhere;text-shadow:0 1px 5px #000}
-#page-vendors .vendor-round-meta{display:inline-block;max-width:100%;font-size:10px;line-height:1.3;color:#e2f5ff!important;border:1px solid rgba(66,192,237,.65);border-radius:99px;padding:4px 8px;background:linear-gradient(90deg,#14344b,#1c3c54);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#page-vendors .vendor-round-featured{font-size:9px;font-weight:900;color:#b9f5ff;background:#07506a;border:1px solid #1acfff;border-radius:99px;padding:3px 8px}
-#page-vendors .vendor-round-card:active{transform:scale(.97)!important}
-#page-vendors .vendor-round-card:focus-visible{outline:2px solid #55e5ff;outline-offset:3px}
-#page-vendors #vendorSelectedStore{position:relative;z-index:2;padding:12px;border:1px solid rgba(0,195,255,.45);border-radius:20px;background:#071b2a}
-@media(min-width:760px){#page-vendors .vendor-directory-stage{padding:22px 26px 28px}#page-vendors .vendor-directory-grid{gap:26px 20px!important}#page-vendors .vendor-round-avatar{width:142px!important;height:142px!important}}
-@media(max-width:390px){#page-vendors .vendor-directory-stage{padding:12px 8px 16px;border-radius:22px}#page-vendors .vendor-directory-grid{gap:15px 5px!important}#page-vendors .vendor-round-avatar{width:24vw!important;height:24vw!important;min-width:62px!important;min-height:62px!important}#page-vendors .vendor-round-meta{font-size:9px;padding:3px 6px}}
-</style>
-
-
-<style id="souq-vendors-clean-screen">
-/* صفحة المتاجر: إزالة الإطار الخارجي ومحتوى التذييل والعناصر العائمة فقط */
-body.vendors-page-active #siteFooter,
-body.vendors-page-active #souqAiFloat,
-body.vendors-page-active #souqNewsFloat,
-body.vendors-page-active #souqAiPanel,
-body.vendors-page-active #souqNewsPanel{
- display:none!important;
-}
-body.vendors-page-active #page-vendors{
- padding-top:8px!important;
- padding-bottom:24px!important;
- min-height:calc(100vh - 210px)!important;
- background:transparent!important;
-}
-body.vendors-page-active #page-vendors::before,
-body.vendors-page-active #page-vendors::after{
- display:none!important;
- content:none!important;
-}
-body.vendors-page-active #page-vendors .vendor-directory-stage{
- margin:0!important;
- padding:8px 0 18px!important;
- border:0!important;
- border-radius:0!important;
- background:transparent!important;
- box-shadow:none!important;
- overflow:visible!important;
-}
-body.vendors-page-active #page-vendors .vendor-directory-stage::before,
-body.vendors-page-active #page-vendors .vendor-directory-stage::after{
- display:none!important;
- content:none!important;
-}
-body.vendors-page-active #page-vendors .vendor-directory-heading{
- margin:0 0 18px!important;
- padding:8px 0 13px!important;
- border-bottom:1px solid rgba(0,205,255,.42)!important;
- background:transparent!important;
- box-shadow:none!important;
-}
-body.vendors-page-active #page-vendors .vendor-directory-grid{
- margin-top:12px!important;
-}
-</style>
-
-
-<style id="souq-ad-detail-electronic-premium">
-/* تفاصيل الإعلان: خلفية إلكترونية مرتبة ومتناسقة مع هوية سوق القيمنق */
-#page-detail{
- position:relative;
- isolation:isolate;
- padding:12px 0 112px!important;
- background:
-  radial-gradient(ellipse at 50% 0%,rgba(0,197,255,.15),transparent 34%),
-  radial-gradient(ellipse at 0% 38%,rgba(31,117,255,.10),transparent 28%),
-  radial-gradient(ellipse at 100% 70%,rgba(0,220,255,.08),transparent 26%),
-  repeating-linear-gradient(135deg,rgba(35,174,220,.025) 0 1px,transparent 1px 24px),
-  linear-gradient(180deg,#0a1724 0%,#0d1b29 48%,#0a1723 100%)!important;
-}
-#page-detail .ad-detail-layout{position:relative;display:flex!important;flex-direction:column!important;gap:13px!important;max-width:980px;margin:0 auto}
-#page-detail .ad-detail-layout>header,
-#page-detail .ad-detail-layout>section{
- position:relative;min-width:0;padding:16px!important;
- border:1px solid rgba(65,153,190,.35)!important;border-radius:19px!important;
- background:linear-gradient(145deg,rgba(24,42,57,.97),rgba(13,29,43,.97))!important;
- box-shadow:0 8px 24px rgba(0,0,0,.20),inset 0 1px rgba(255,255,255,.025)!important;
- overflow:hidden;
-}
-#page-detail .ad-detail-layout>header::before,
-#page-detail .ad-detail-layout>section::before{
- content:"";position:absolute;inset:0 0 auto;height:2px;
- background:linear-gradient(90deg,transparent,rgba(25,211,244,.8),transparent);
- opacity:.65;pointer-events:none
-}
-#page-detail .detail-rating-section{order:6!important;margin:0!important}
-#page-detail .detail-summary{order:1!important}
-#page-detail .detail-media-section{order:2!important}
-#page-detail .detail-description-section{order:3!important}
-#page-detail .detail-comments-section{order:4!important}
-#page-detail .detail-seller-section{order:5!important}
-#page-detail .detail-title-row{align-items:center}
-#page-detail .detail-eyebrow{letter-spacing:.3px;text-shadow:0 0 12px rgba(22,199,217,.25)}
-#page-detail .detail-price{padding:7px 12px;border:1px solid rgba(22,199,217,.55);border-radius:13px;background:rgba(9,65,82,.28);text-shadow:0 0 14px rgba(22,199,217,.25)}
-#page-detail .detail-meta span{background:linear-gradient(135deg,#1b3548,#142a3a);border-color:#34566b;color:#c2d6e0;border-radius:11px}
-#page-detail .detail-section-heading{position:relative}
-#page-detail .detail-section-heading h3,
-#page-detail .detail-description-section>h3,
-#page-detail .detail-comments-section h3,
-#page-detail .detail-rating-section>h3{color:#eafaff}
-#page-detail .detail-media-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-#page-detail .detail-media-image{height:clamp(190px,58vw,390px);background:radial-gradient(circle at 50% 45%,#18334a,#0b1926 75%);border:1px solid #31546a;border-radius:15px}
-#page-detail .detail-media-video{border:1px solid #31546a;background:#07131f}
-#page-detail .detail-description{line-height:1.85;color:#d7e8ef}
-#page-detail .ad-pledge-panel{padding:13px!important;border:1px solid rgba(22,199,217,.34)!important;border-radius:15px!important;background:linear-gradient(120deg,rgba(14,65,77,.35),rgba(24,47,62,.72))!important}
-#page-detail .ad-pledge-panel h3{margin:0 0 9px;color:#65e4f1}
-#page-detail .ad-pledge-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:99px;border:1px solid #268ca0;background:#123a49;color:#aaf4fa;font-size:12px;font-weight:800}
-#page-detail .detail-comments-section .detail-section-heading{margin-bottom:12px}
-#page-detail #adCommentForm{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:9px}
-#page-detail #adCommentText{min-height:72px;max-height:140px;resize:vertical;border-radius:13px;background:#0d1a27!important;border-color:#34566b!important}
-#page-detail .detail-comment-submit{display:flex;flex-direction:column;align-items:stretch;gap:5px}
-#page-detail .detail-comment-submit .primary{min-height:48px;padding:10px 16px;white-space:nowrap;border-radius:13px}
-#page-detail .detail-comments-list{gap:9px!important;margin-top:12px}
-#page-detail .detail-comments-list .listitem{background:rgba(11,27,41,.65);border-color:#304d60!important;border-radius:14px!important}
-#page-detail .detail-seller-section{display:grid;gap:12px}
-#page-detail .detail-seller-section>div:first-child{display:flex;justify-content:space-between;align-items:center;gap:12px}
-#page-detail .detail-seller-section>div:first-child strong{color:#f1fbff;font-size:17px}
-#page-detail .detail-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-#page-detail .detail-actions button{min-width:0;min-height:46px;padding:9px 10px;border-radius:13px;font-size:13px;font-weight:800}
-#page-detail .detail-actions .primary{background:linear-gradient(135deg,#18d0df,#0da9c6)!important;color:#04232d!important}
-#page-detail .detail-actions .danger{background:rgba(117,28,52,.35)!important;border-color:#a63756!important;color:#ffc5d2!important}
-
-/* تقييم البائع: ملخص صغير، نجوم أفقية وزر إرسال مدمج لا يملأ عرض الشاشة */
-#page-detail .detail-rating-section{padding:14px!important}
-#page-detail .detail-rating-section>h3{font-size:17px;margin:0 0 10px!important}
-#page-detail #reviewsPanel .rating-summary{
- display:flex;align-items:center;justify-content:space-between;gap:12px;
- margin:0 0 10px!important;padding:10px 12px!important;
- border:1px solid rgba(22,199,217,.25)!important;border-radius:14px!important;
- background:linear-gradient(110deg,rgba(15,68,82,.52),rgba(25,47,62,.82))!important
-}
-#page-detail #reviewsPanel .rating-number{font-size:23px!important;white-space:nowrap}
-#page-detail #reviewsPanel .rating-summary .muted{font-size:11px;line-height:1.5}
-#page-detail #reviewsPanel .stars{font-size:16px!important;letter-spacing:1px!important}
-#page-detail #reviewsPanel .review-form{
- display:grid!important;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:9px;
- margin:10px 0 0!important;padding:12px!important;
- border:1px solid #315267!important;border-radius:15px!important;
- background:rgba(10,26,40,.68)!important
-}
-#page-detail #reviewsPanel .review-form>strong{grid-column:1/-1;font-size:14px;color:#eafaff}
-#page-detail #reviewsPanel .rating-pick{grid-column:1/-1;display:flex!important;flex-direction:row-reverse!important;justify-content:flex-start!important;gap:5px!important;margin:0!important}
-#page-detail #reviewsPanel .rating-pick button{
- width:34px!important;height:34px!important;min-width:34px!important;padding:0!important;
- display:grid!important;place-items:center!important;border:1px solid transparent!important;
- border-radius:9px!important;background:transparent!important;color:#667d8c!important;font-size:24px!important;line-height:1!important
-}
-#page-detail #reviewsPanel .rating-pick button.selected{color:#ffc247!important;text-shadow:0 0 9px rgba(255,194,71,.35)}
-#page-detail #reviewsPanel #reviewComment{
- grid-column:1;min-height:58px!important;max-height:90px;resize:vertical;
- border-radius:12px;background:#0d1a27!important;border-color:#34566b!important;font-size:13px
-}
-#page-detail #reviewsPanel .review-form>button[type="submit"]{
- grid-column:2!important;grid-row:3!important;align-self:stretch!important;
- width:auto!important;min-width:112px!important;max-width:145px!important;
- min-height:48px!important;padding:8px 13px!important;margin:0!important;
- border-radius:12px!important;font-size:13px!important;font-weight:900!important;
- white-space:nowrap;background:linear-gradient(135deg,#18d0df,#0da9c6)!important;color:#04232d!important
-}
-#page-detail #reviewsPanel #reviewMsg{grid-column:1/-1;font-size:11px}
-#page-detail #reviewsPanel .review-list{margin-top:10px}
-#page-detail #reviewsPanel .review-item{padding:10px 4px!important;border-bottom:1px solid rgba(67,111,135,.35)!important}
-#page-detail #reviewsPanel .review-item p{margin:5px 0;font-size:13px;line-height:1.6}
-#page-detail #reviewsPanel .notice{margin-top:8px;border-radius:12px}
-@media(max-width:480px){
- #page-detail .ad-detail-layout{gap:11px!important}
- #page-detail .ad-detail-layout>header,
- #page-detail .ad-detail-layout>section{padding:13px!important;border-radius:16px!important}
- #page-detail .detail-media-grid{grid-template-columns:1fr}
- #page-detail .detail-media-image{height:clamp(210px,68vw,330px)}
- #page-detail #adCommentForm{grid-template-columns:1fr}
- #page-detail .detail-comment-submit{align-items:flex-start}
- #page-detail .detail-comment-submit .primary{width:auto!important;min-width:135px}
- #page-detail .detail-actions{grid-template-columns:repeat(2,minmax(0,1fr))}
- #page-detail #reviewsPanel .review-form{grid-template-columns:minmax(0,1fr) auto;gap:7px}
- #page-detail #reviewsPanel #reviewComment{min-width:0}
- #page-detail #reviewsPanel .review-form>button[type="submit"]{min-width:100px!important;max-width:120px!important;padding:7px 9px!important}
-}
-@media(max-width:360px){
- #page-detail #reviewsPanel .review-form{grid-template-columns:1fr}
- #page-detail #reviewsPanel #reviewComment,
- #page-detail #reviewsPanel .review-form>button[type="submit"]{grid-column:1!important;grid-row:auto!important;width:100%!important;max-width:none!important}
-}
-</style>
-
-<style id="souq-detail-reference-match-v2">
-/* مطابقة صفحة تفاصيل الإعلان للتصميم المرجعي: واجهة قيمنق داكنة ونيون */
-#page-detail{
- position:relative!important;isolation:isolate;
- padding:10px 10px 112px!important;
- color:#e9f7ff!important;
- background:
-  radial-gradient(ellipse at 48% 0%,rgba(0,211,255,.19),transparent 38%),
-  radial-gradient(ellipse at 0% 42%,rgba(20,91,190,.13),transparent 34%),
-  radial-gradient(ellipse at 100% 82%,rgba(0,205,240,.11),transparent 32%),
-  linear-gradient(180deg,#061421 0%,#0a1c2b 55%,#061522 100%)!important;
-}
-#page-detail>.panel{background:transparent!important}
-#page-detail>.panel>.pagehead{
- display:flex!important;align-items:center!important;justify-content:space-between!important;
- gap:10px;padding:9px 12px!important;margin:0 0 12px!important;
- border:1px solid rgba(29,190,225,.25)!important;border-radius:14px!important;
- background:linear-gradient(110deg,rgba(7,32,49,.96),rgba(11,48,67,.88))!important;
- box-shadow:0 0 22px rgba(0,190,255,.08)!important;
-}
-#page-detail>.panel>.pagehead h2{font-size:19px!important;margin:0!important;color:#f1fbff!important}
-#page-detail>.panel>.pagehead p{display:none!important}
-#page-detail .ad-detail-layout{
- display:grid!important;grid-template-columns:minmax(0,1fr)!important;
- gap:11px!important;max-width:900px!important;margin:0 auto!important
-}
-#page-detail .ad-detail-layout>header,
-#page-detail .ad-detail-layout>section{
- min-width:0;padding:13px!important;border-radius:17px!important;
- border:1px solid rgba(59,154,194,.42)!important;
- background:linear-gradient(145deg,rgba(19,43,60,.97),rgba(9,27,43,.98))!important;
- box-shadow:0 7px 22px rgba(0,0,0,.22),inset 0 1px rgba(255,255,255,.035),0 0 13px rgba(0,183,232,.045)!important;
- overflow:hidden;
-}
-#page-detail .detail-summary{order:1!important;position:relative}
-#page-detail .detail-summary:after{
- content:"";position:absolute;inset:auto 8% 0;height:1px;
- background:linear-gradient(90deg,transparent,#16c9e8,transparent);opacity:.55
-}
-#page-detail .detail-title-row{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:nowrap}
-#page-detail .detail-title-copy{min-width:0;flex:1}
-#page-detail .detail-eyebrow{font-size:12px;font-weight:900;color:#22d6e9;margin-bottom:3px}
-#page-detail .detail-title-row h2{font-size:clamp(19px,4.8vw,27px)!important;line-height:1.35;color:#f1fbff;margin:0;overflow-wrap:anywhere}
-#page-detail .detail-price{
- flex:0 0 auto;padding:7px 10px;border:1px solid rgba(0,218,238,.65);
- border-radius:13px;background:rgba(0,111,139,.16);color:#20e0ef;
- font-size:22px;text-shadow:0 0 12px rgba(0,218,255,.3)
-}
-#page-detail .detail-price small{font-size:12px}
-#page-detail .detail-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:11px}
-#page-detail .detail-meta span{
- min-width:0;padding:7px 9px;border:1px solid #31566d;border-radius:10px;
- background:linear-gradient(110deg,#18394e,#102b3d);color:#d2e6f0;
- font-size:11px;line-height:1.4;overflow-wrap:anywhere
-}
-#page-detail .detail-media-section{order:2!important;padding:9px!important}
-#page-detail .detail-media-section .detail-section-heading{display:none!important}
-#page-detail .detail-media-grid{display:grid;grid-template-columns:1fr!important;gap:8px}
-#page-detail .detail-media-image{
- width:100%;height:clamp(230px,70vw,420px)!important;object-fit:contain;
- border:1px solid #315a72!important;border-radius:14px!important;
- background:radial-gradient(circle at 50% 50%,#18364e,#071725 78%)!important;
-}
-#page-detail .detail-media-video{width:100%;max-height:380px;border:1px solid #315a72;border-radius:14px}
-#page-detail .detail-description-section{order:3!important}
-#page-detail .detail-description-section>h3,
-#page-detail .detail-comments-section h3,
-#page-detail .detail-rating-section>h3{margin:0 0 8px!important;font-size:17px!important;color:#eafaff!important}
-#page-detail .detail-description{margin:5px 0 0!important;color:#d9e9f1!important;font-size:14px;line-height:1.8}
-#page-detail .detail-pledge-section{
- order:4!important;display:flex;align-items:center;gap:12px;
- padding:12px!important;border:1px solid rgba(22,202,222,.55)!important;
- background:linear-gradient(110deg,rgba(10,75,88,.62),rgba(15,43,60,.94))!important
-}
-#page-detail .pledge-icon{
- flex:0 0 38px;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;
- color:#071c27;background:linear-gradient(145deg,#24e2df,#08a9b8);
- font-size:24px;font-weight:900;box-shadow:0 0 18px rgba(0,220,230,.24)
-}
-#page-detail .pledge-copy{min-width:0;flex:1}
-#page-detail .ad-pledge-panel h3{margin:0 0 4px!important;color:#5fe3ef!important;font-size:15px!important}
-#page-detail .ad-pledge-badge{display:inline-flex;padding:5px 9px;border-radius:30px;border:1px solid #27899c;background:#103c4c;color:#b5f5fa;font-size:11px;font-weight:800}
-#page-detail .detail-pledge-section p{margin:5px 0 0!important;font-size:12px;line-height:1.55;color:#b9d0dc!important}
-#page-detail .detail-comments-section{order:5!important}
-#page-detail .detail-section-heading{margin:0 0 8px!important}
-#page-detail .detail-section-heading p{font-size:12px!important;line-height:1.5;margin:3px 0 0!important;color:#a9c2d0!important}
-#page-detail .detail-comment-form{
- display:grid!important;grid-template-columns:minmax(0,1fr) 46px!important;
- align-items:stretch;gap:7px;margin-top:9px!important
-}
-#page-detail #adCommentText{
- min-width:0;min-height:49px!important;height:49px!important;max-height:90px;
- padding:11px!important;resize:vertical;border-radius:12px!important;
- background:#071725!important;border:1px solid #365d73!important;color:#effaff!important;font-size:13px
-}
-#page-detail .detail-comment-submit{display:flex;align-items:center;justify-content:center}
-#page-detail .detail-comment-submit .primary{
- width:46px!important;min-width:46px!important;height:49px!important;min-height:49px!important;
- padding:0!important;border-radius:12px!important;background:linear-gradient(145deg,#19d7e6,#0aa9c5)!important;
- color:#03222d!important;font-size:22px!important
-}
-#page-detail #adCommentMsg{grid-column:1/-1;font-size:11px}
-#page-detail .detail-comments-list{margin-top:10px!important;gap:7px!important}
-#page-detail .detail-comments-list .listitem{
- background:rgba(7,26,42,.78)!important;border:1px solid #2b4c62!important;border-radius:12px!important;
- color:#e4f4fa!important
-}
-#page-detail .detail-seller-section{order:6!important;display:grid;gap:11px}
-#page-detail .seller-profile-row{display:flex;align-items:center;gap:10px;min-width:0}
-#page-detail .seller-avatar{
- flex:0 0 46px;width:46px;height:46px;display:grid;place-items:center;border-radius:50%;
- background:linear-gradient(145deg,#244d6b,#10293d);border:1px solid #2e91b1;
- color:#e7fbff;font-size:20px;font-weight:900
-}
-#page-detail .seller-profile-copy{display:grid;gap:3px;min-width:0;flex:1}
-#page-detail .seller-profile-copy strong{color:#f1fbff;font-size:16px}
-#page-detail .seller-profile-copy span{font-size:11px;color:#a8c1ce}
-#page-detail .seller-rating-mark{color:#ffd04d;font-size:20px;white-space:nowrap}
-#page-detail .seller-rating-mark b{font-size:11px;color:#b8d0dc}
-#page-detail .detail-actions{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:7px!important}
-#page-detail .detail-actions button{
- min-width:0!important;min-height:40px!important;padding:7px 5px!important;
- border-radius:11px!important;font-size:11px!important;font-weight:800!important
-}
-#page-detail .detail-actions .primary{background:linear-gradient(135deg,#19d3df,#0ba9c4)!important;color:#03242d!important}
-#page-detail .detail-actions .seller-whatsapp{background:linear-gradient(135deg,#0f9e68,#08794e)!important;color:#fff!important;border:1px solid #1cce8b!important}
-#page-detail .detail-actions .danger{background:rgba(130,27,51,.35)!important;border:1px solid #a83b58!important;color:#ffd5dd!important}
-#page-detail .detail-rating-section{order:7!important;padding:12px!important}
-#page-detail #reviewsPanel .rating-summary{
- display:flex!important;align-items:center;justify-content:space-between;gap:8px;
- margin:0 0 8px!important;padding:8px 10px!important;border:1px solid rgba(0,205,230,.35)!important;
- border-radius:12px!important;background:rgba(9,53,68,.58)!important
-}
-#page-detail #reviewsPanel .rating-number{font-size:22px!important;color:#4eddeb!important;white-space:nowrap}
-#page-detail #reviewsPanel .rating-summary .muted{font-size:10px!important;color:#a9c2d0!important}
-#page-detail #reviewsPanel .stars{font-size:16px!important;letter-spacing:1px!important;color:#ffbd32!important}
-#page-detail #reviewsPanel .review-form{
- display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;align-items:center;gap:7px;
- margin:8px 0 0!important;padding:9px!important;border:1px solid #31566c!important;
- border-radius:13px!important;background:rgba(6,25,40,.72)!important
-}
-#page-detail #reviewsPanel .review-form>strong{grid-column:1/-1;font-size:13px;color:#effaff}
-#page-detail #reviewsPanel .rating-pick{grid-column:1/-1;display:flex!important;flex-direction:row-reverse!important;justify-content:flex-start!important;gap:3px!important;margin:0!important}
-#page-detail #reviewsPanel .rating-pick button{width:30px!important;height:30px!important;min-width:30px!important;padding:0!important;background:transparent!important;color:#718797!important;font-size:22px!important}
-#page-detail #reviewsPanel .rating-pick button.selected{color:#ffbf36!important;text-shadow:0 0 8px rgba(255,191,54,.35)}
-#page-detail #reviewsPanel #reviewComment{
- grid-column:1!important;min-width:0;min-height:43px!important;height:43px!important;max-height:70px;
- padding:9px!important;border-radius:10px!important;background:#071725!important;border:1px solid #365d73!important;
- color:#effaff!important;font-size:11px!important
-}
-#page-detail #reviewsPanel .review-form>button[type="submit"]{
- grid-column:2!important;grid-row:3!important;align-self:stretch!important;width:auto!important;
- min-width:98px!important;max-width:116px!important;min-height:43px!important;padding:7px 9px!important;
- margin:0!important;border-radius:10px!important;font-size:11px!important;white-space:nowrap;
- background:linear-gradient(135deg,#19d3df,#0ba9c4)!important;color:#03242d!important
-}
-#page-detail #reviewsPanel #reviewMsg{grid-column:1/-1;font-size:10px}
-#page-detail #reviewsPanel .review-list{margin-top:8px}
-#page-detail #reviewsPanel .review-item{padding:8px 3px!important;border-bottom:1px solid rgba(67,111,135,.35)!important}
-#page-detail #reviewsPanel .review-item p{font-size:12px!important;line-height:1.5;margin:4px 0!important}
-#page-detail #reviewsPanel .notice{margin-top:7px;border-radius:10px;font-size:11px}
-@media(min-width:680px){
- #page-detail .ad-detail-layout{grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr)!important}
- #page-detail .detail-summary{grid-column:1/-1}
- #page-detail .detail-media-section{grid-column:1}
- #page-detail .detail-description-section,
- #page-detail .detail-pledge-section,
- #page-detail .detail-comments-section,
- #page-detail .detail-seller-section,
- #page-detail .detail-rating-section{grid-column:1/-1}
-}
-@media(max-width:480px){
- #page-detail{padding:8px 8px 105px!important}
- #page-detail>.panel>.pagehead{padding:8px 10px!important;margin-bottom:9px!important}
- #page-detail .ad-detail-layout{gap:9px!important}
- #page-detail .ad-detail-layout>header,
- #page-detail .ad-detail-layout>section{padding:11px!important;border-radius:15px!important}
- #page-detail .detail-meta{grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}
- #page-detail .detail-meta span{font-size:10px;padding:6px 7px}
- #page-detail .detail-media-section{padding:7px!important}
- #page-detail .detail-media-image{height:clamp(210px,64vw,310px)!important}
- #page-detail .detail-actions{grid-template-columns:repeat(3,minmax(0,1fr))!important}
- #page-detail .detail-actions button{font-size:10px!important;padding:6px 3px!important}
- #page-detail #reviewsPanel .review-form{grid-template-columns:minmax(0,1fr) auto!important}
- #page-detail #reviewsPanel .review-form>button[type="submit"]{min-width:95px!important}
-}
-@media(max-width:350px){
- #page-detail .detail-actions{grid-template-columns:repeat(2,minmax(0,1fr))!important}
- #page-detail #reviewsPanel .review-form{grid-template-columns:1fr!important}
- #page-detail #reviewsPanel #reviewComment,
- #page-detail #reviewsPanel .review-form>button[type="submit"]{grid-column:1!important;grid-row:auto!important;width:100%!important;max-width:none!important}
-}
-</style>
-
 </body>
 </html>
