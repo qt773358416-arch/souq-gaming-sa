@@ -131,6 +131,56 @@ hr,.divider{border-color:#24517e}
  .sidebar{background:#061326f5}
 }
 
+
+
+/* === مطابقة تخطيط المعاينة المرجعية الأولى: لوحة عمودية على الجوال === */
+@media(max-width:640px){
+  .shell{max-width:100%;padding:10px 12px 24px}
+  .head{margin-bottom:12px;min-height:58px;padding:9px 11px;background:linear-gradient(110deg,#08172d,#101b43);border-color:#31547e}
+  .brand h1{font-size:16px}
+  .brand .muted{font-size:11px}
+  #app>.grid:first-child{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;margin-bottom:14px!important}
+  #app>.grid:first-child .stat{min-height:104px;padding:13px 12px;border-radius:22px;background:linear-gradient(145deg,#102647,#0a1830);}
+  #app>.grid:first-child .stat strong{font-size:14px;overflow-wrap:anywhere}
+  #app>.grid:first-child .stat small{font-size:11px}
+  .layout{display:block}
+  .layout>.sidebar{display:none}
+  .main{width:100%}
+  #page-overview>.overview-banner{min-height:138px;padding:18px 17px;margin-bottom:16px;border-radius:22px;background:radial-gradient(circle at 16% 30%,#9b36ff 0,transparent 34%),linear-gradient(110deg,#21105d,#124c68);border:1px solid #397ca4;box-shadow:0 0 22px #713cff30}
+  .overview-kicker{font-size:10px;letter-spacing:1.2px}
+  .overview-banner h2{font-size:20px;line-height:1.5}
+  .overview-banner p{font-size:12px;line-height:1.8}
+  .overview-mark{font-size:38px}
+  #page-overview>.panel{padding:16px 14px;border-radius:24px;background:linear-gradient(150deg,#102744,#07172d);border-color:#315b87}
+  #page-overview .pagehead{align-items:center;margin-bottom:14px}
+  #page-overview .pagehead h2{font-size:21px}
+  #page-overview .pagehead .muted{font-size:12px;line-height:1.7}
+  #page-overview .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  #page-overview .grid>.stat{min-height:104px;padding:14px 12px;border-radius:22px;background:linear-gradient(145deg,#102849,#0a1830);border-width:1.5px}
+  #page-overview .grid>.stat:nth-child(4n+1){border-color:#a13ee8}
+  #page-overview .grid>.stat:nth-child(4n+2){border-color:#20aaa7}
+  #page-overview .grid>.stat:nth-child(4n+3){border-color:#258bd1}
+  #page-overview .grid>.stat:nth-child(4n){border-color:#8a42d4}
+  #page-overview .grid>.stat small{font-size:11px;color:#a9bfd8}
+  #page-overview .grid>.stat strong{font-size:23px;margin-top:10px}
+  #page-overview #platformLiveCounts{margin-top:10px!important}
+  #page-overview .grid[style*="1.5fr"]{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;margin-top:12px!important}
+  #page-overview .grid[style*="1.5fr"]>.panel{padding:12px 10px;border-radius:21px;min-width:0}
+  #page-overview .grid[style*="1.5fr"] h3{font-size:15px!important;line-height:1.6}
+  #page-overview .grid[style*="1.5fr"] svg{max-width:100%}
+  .overview-section,.notice{margin-top:12px}
+  .overview-tools{gap:7px}
+  .overview-tools button{font-size:11px;padding:8px}
+}
+@media(max-width:390px){
+  #page-overview>.overview-banner{padding:15px 13px}
+  .overview-banner h2{font-size:18px}
+  #page-overview .grid>.stat{padding:12px 10px;min-height:96px}
+  #page-overview .grid>.stat strong{font-size:20px}
+  #page-overview .grid[style*="1.5fr"]>.panel{padding:9px 7px}
+  #page-overview .grid[style*="1.5fr"] h3{font-size:13px!important}
+}
+
 </style>
 </head>
 <body>
