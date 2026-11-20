@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#101820">
-<title>مركز التحكم | سوق القيمنق السعودي</title>
+<title>Gaming Command Center | سوق القيمنق السعودي</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--bg:#f4f6fb;--panel:#fff;--panel2:#f7f8fc;--line:#e7eaf2;--text:#20243a;--muted:#7b8198;--brand:#6b5cff;--brand2:#22b8cf;--danger:#e85d75;--ok:#159b78;--shadow:0 10px 30px rgba(31,39,75,.06)}
@@ -14,18 +14,21 @@
 @media(max-width:640px){.shell{padding:9px}.head{padding:10px 12px;border-radius:14px;margin-bottom:10px}.brand{gap:9px}.logo{width:39px;height:39px;border-radius:12px}.brand h1{font-size:16px}.head .row{gap:6px}.head a{font-size:12px}.mobile-menu{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;padding:0;font-size:20px;background:#f1efff;color:#5548d8;border:0}.layout{display:block}.sidebar{display:none;position:fixed;z-index:100;top:0;right:0;bottom:0;width:min(84vw,310px);overflow:auto;border-radius:0 0 0 18px;box-shadow:-15px 0 40px #1a20452b;padding:18px}.sidebar.mobile-open{display:block}.nav{grid-template-columns:1fr;gap:4px}.nav button{padding:12px}.mobile-backdrop{display:none;position:fixed;inset:0;background:#11172b80;z-index:99}.mobile-backdrop.show{display:block}.panel{padding:13px;border-radius:14px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.stat{padding:12px}.stat strong{font-size:19px}.stat small{font-size:11px}.page h2{font-size:19px}.pagehead{margin-bottom:12px}.form{grid-template-columns:1fr}.full{grid-column:auto}.overview-banner{padding:16px;border-radius:14px}.overview-banner h2{font-size:18px}.overview-banner p{font-size:12px}.overview-mark{font-size:34px}.tablewrap{margin-top:10px}th,td{padding:10px;font-size:12px}.login{margin:5vh auto}.actions{min-width:150px}}
 @media(max-width:370px){.grid{grid-template-columns:1fr}.overview-mark{display:none}}
 
-/* GAMING COMMAND CENTER — premium dark neon skin */
-:root{--bg:#050914;--panel:#0b1428;--panel2:#101d36;--line:#20365b;--text:#eef5ff;--muted:#91a6c8;--brand:#9b4dff;--brand2:#08d9f2;--danger:#ff557d;--ok:#20e0b3;--shadow:0 16px 42px rgba(0,0,0,.38);color-scheme:dark}
-html{background:#050914}body{background:radial-gradient(ellipse at 82% -10%,rgba(133,43,255,.22),transparent 34%),radial-gradient(ellipse at 8% 45%,rgba(0,205,255,.10),transparent 32%),linear-gradient(145deg,#050914,#071126 55%,#050914);color:var(--text);font-family:Tahoma,Arial,sans-serif;min-height:100vh}
-.shell{max-width:1900px;padding:14px 18px 28px}.head{position:sticky;top:8px;z-index:30;padding:12px 18px;margin-bottom:16px;background:rgba(7,15,33,.88);backdrop-filter:blur(18px);border:1px solid #29416a;border-radius:18px;box-shadow:0 10px 35px #0008}
-.logo{width:52px;height:52px;border-radius:16px;background:radial-gradient(circle at 30% 25%,#ffb8ff,#a33cff 36%,#27105b 75%);border:1px solid #d39aff;box-shadow:0 0 22px #a43cff88,inset 0 0 14px #fff3;font-size:20px}.brand h1{color:#fff;font-weight:900}.muted{color:#91a6c8}
-.layout{grid-template-columns:264px minmax(0,1fr);gap:16px}.panel,.sidebar{background:linear-gradient(155deg,rgba(13,26,51,.96),rgba(7,15,31,.98));border:1px solid #29436e;border-radius:18px;box-shadow:var(--shadow)}.sidebar{top:88px;padding:14px}.sidebar h3{color:#70d6f4;letter-spacing:.4px}.nav{gap:6px}
-.nav button{color:#bdcce5;border:1px solid transparent;background:transparent;border-radius:12px;padding:11px 12px;font-weight:800}.nav button:before{content:'◈';color:#7e58ff;text-shadow:0 0 10px #974bff}.nav button.active,.nav button:hover{color:#fff;background:linear-gradient(100deg,#6926cf,#321078 72%,#15254a);border-color:#b76bff;box-shadow:0 0 18px #8b35ff55,inset 0 0 14px #ffffff0b}.nav button.active:before{color:#52eaff}
-.page h2{color:#f6f8ff}.pagehead{margin-bottom:16px}.grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.stat{background:linear-gradient(145deg,#101f3d,#09152c 78%);border:1px solid #294a79;border-radius:16px;padding:16px;box-shadow:inset 0 1px #ffffff0b,0 8px 22px #0003}.stat:after{background:radial-gradient(circle,#8e39ff35,transparent 70%);width:100px;height:100px;left:-30px;top:-35px}.stat small{color:#a9bddb}.stat strong{color:#fff}
-.field{background:#071329;color:#edf5ff;border:1px solid #2b4772;border-radius:11px}.field:focus{border-color:#a65aff;box-shadow:0 0 0 3px #9c4cff25}label{color:#b7c9e5}button{background:linear-gradient(145deg,#142748,#0b1830);color:#eaf3ff;border:1px solid #31517e;border-radius:11px}button:hover{border-color:#a65aff;box-shadow:0 0 14px #813dff44}button.primary{background:linear-gradient(110deg,#772be0,#a53bff 55%,#087eae);border:1px solid #c18aff;color:#fff;box-shadow:0 0 22px #873cff55}button.danger{background:#351426;color:#ff9db5;border-color:#74304b}
-.tablewrap{background:#08152b;border:1px solid #29436a;border-radius:14px}table{color:#e8f1ff}th{background:#10203d;color:#9fb9df;border-bottom:1px solid #2a4167}td{border-bottom:1px solid #1d3151;color:#e0eaff}tr:hover td{background:#14274766}.msg{background:#0b2940;border-color:#14617a;color:#8deaff}.notice{background:#302512;border-color:#745522;color:#f5d48a}.pill{background:#073b39;color:#55f3cf;border:1px solid #167d72}
-.overview-banner{position:relative;isolation:isolate;background:radial-gradient(circle at 82% 15%,#a23eff70,transparent 27%),radial-gradient(circle at 12% 90%,#00c9ef38,transparent 32%),linear-gradient(112deg,#071329,#151044 55%,#092d4b);border:1px solid #6846a9;box-shadow:0 12px 36px #0007,0 0 26px #762bff25}.overview-banner:after{content:"";position:absolute;inset:0;z-index:-1;opacity:.16;background-image:linear-gradient(#9abfff18 1px,transparent 1px),linear-gradient(90deg,#9abfff18 1px,transparent 1px);background-size:28px 28px}.overview-kicker{color:#73eaff}.overview-banner p{color:#c8d8f4}.overview-mark{filter:drop-shadow(0 0 16px #a23fff);font-size:58px}.overview-tools button{background:#10264a;color:#dceaff;border:1px solid #345b91}.overview-tools button:hover{background:#402078;border-color:#a75bff}.section-caption{color:#9ddfff}.login{border-color:#7443b7;box-shadow:0 0 42px #7835c733,var(--shadow)}.login h2{color:#fff}.login .msg{color:#8deaff}a{color:#7cecff!important}.mobile-menu{background:#17264a;color:#8ceaff;border:1px solid #36578c}
-@media(min-width:1200px){#page-overview>.panel>.grid{grid-template-columns:repeat(5,minmax(0,1fr))}}@media(max-width:980px){.layout{grid-template-columns:1fr}.sidebar{top:auto}}@media(max-width:640px){.shell{padding:8px}.head{top:4px;padding:9px 11px;background:rgba(7,15,33,.95)}.sidebar{background:#071329;border-color:#42618e}.nav button.active{background:linear-gradient(100deg,#6926cf,#321078)}.panel{padding:13px}.grid,#page-overview>.panel>.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.overview-mark{font-size:38px}}
+/* Platform Admin template skin adapted for the real Control Center */
+:root{--bg:#050d1b;--panel:#0b1b33;--panel2:#102542;--line:#24517e;--cyan:#00e5ff;--blue:#168cff;--purple:#a855f7;--pink:#ed3ca8;--green:#00dfa0;--gold:#ffbd3c;--red:#ff476f;--text:#edf7ff;--muted:#9bb2ca;--brand:#a855f7;--brand2:#00e5ff;--danger:#ff476f;--ok:#00dfa0;--shadow:0 12px 32px rgba(0,0,0,.30);color-scheme:dark}
+html{background:#050d1b}body{background:radial-gradient(ellipse at 65% -15%,#14345a,transparent 45%),linear-gradient(135deg,#040a15,#08172d 65%,#080e20);color:var(--text)}
+.shell{max-width:1800px;padding:18px}.head{background:#061225ef;border:1px solid #19446d;border-radius:16px;box-shadow:0 10px 28px #0005;backdrop-filter:blur(12px);color:var(--text)}
+.logo{background:radial-gradient(circle,#254777,#071426);border:1px solid var(--purple);box-shadow:0 0 18px #914cff77;color:#fff}
+.brand h1{color:#fff}.muted{color:#9bb2ca!important}.layout{grid-template-columns:258px minmax(0,1fr);gap:16px}.panel,.sidebar{background:linear-gradient(145deg,#102341f5,#07162cf5);border:1px solid #28558a;border-radius:16px;box-shadow:0 0 18px #00d5ff12;color:var(--text)}
+.sidebar{position:sticky;top:14px;padding:16px 12px}.sidebar h3{color:#78dfff}.nav button{color:#e2efff;background:transparent;border-color:transparent}.nav button:before{color:#a9d5ff}.nav button.active,.nav button:hover{background:linear-gradient(90deg,#2634a9,#6818a9);border-color:#a855f7;color:#fff;box-shadow:0 0 14px #914cff66}.nav button.active:before{color:#00e5ff}
+.page h2{color:#f5f9ff}.stat{background:linear-gradient(130deg,#102d4c,#0b1830 75%);border:1px solid #24517e;color:#fff;box-shadow:0 0 16px #00cfff12}.stat:after{background:#783cff25}.stat strong{color:#fff}.stat small{color:#9bb2ca}
+.field{background:#101f39;color:#fff;border:1px solid #45658d}.field:focus{border-color:#00e5ff;box-shadow:0 0 0 3px #00dfff22}label{color:#c4d8ee}
+button{background:#10213b;color:#edf7ff;border:1px solid #315174}button:hover{border-color:#00e5ff;box-shadow:0 0 12px #00dfff22}button.primary{background:linear-gradient(110deg,#2634a9,#6818a9);border:1px solid #a855f7;color:#fff;box-shadow:0 0 16px #914cff55}button.danger{background:#401629;color:#ff9db5;border-color:#74304b}
+.tablewrap{background:#08172d;border:1px solid #24517e}table{color:#edf7ff}th{background:#112541;color:#bad4ed;border-bottom:1px solid #24517e}td{border-bottom:1px solid #1b3655;color:#e5f0ff}tr:last-child td{border:0}
+.msg{background:#0d2946;border-color:#176080;color:#9deaff}.notice{background:#302512;border-color:#745522;color:#f5d48a}.pill{background:#073d3a;color:#55f3cf;border:1px solid #167d72}
+.overview-banner{background:radial-gradient(circle at 15% 20%,#8b35d9 0,transparent 29%),linear-gradient(115deg,#071329,#2634a9 62%,#087eae);border:1px solid #7a48bd;box-shadow:0 0 24px #914cff33}.overview-banner p{color:#e3efff}.overview-kicker{color:#a9f5ff}.overview-tools button{background:#10294a;color:#eaf6ff;border:1px solid #315174}.overview-tools button:hover{background:#2634a9;border-color:#a855f7}.section-caption{color:#8feaff}.mobile-menu{background:#10294a;color:#8feaff;border:1px solid #315174}
+@media(max-width:980px){.layout{grid-template-columns:1fr}.sidebar{position:static}}
+@media(max-width:640px){.shell{padding:9px}.head{background:#061225f5;padding:10px 12px}.sidebar{background:#061326ed;border-color:#28558a}.panel{padding:13px}.mobile-menu{background:#10294a}}
 
 </style>
 </head>
@@ -37,7 +40,7 @@ html{background:#050914}body{background:radial-gradient(ellipse at 82% -10%,rgba
   <div class="logo">SG</div>
   <div>
    <h1>مركز التحكم المركزي</h1>
-   <div class="muted">سوق القيمنق السعودي · GAMING COMMAND CENTER</div>
+   <div class="muted">سوق القيمنق السعودي · Gaming Command Center</div>
   </div>
  </div>
  <div class="row">
@@ -49,7 +52,7 @@ html{background:#050914}body{background:radial-gradient(ellipse at 82% -10%,rgba
 
 <section id="login" class="panel login">
  <h2>تسجيل دخول المدير</h2>
- <p class="muted">الدخول مخصص لمالك المنصة فقط. يتم التحقق من جدول admin_users عبر دالة is_platform_control_owner().</p>
+ <p class="muted">الدخول مخصص لمالك المنصة فقط. يتم التحقق من دور owner في جدول admin_users داخل قاعدة البيانات.</p>
  <form id="loginForm" class="form">
   <label class="full">البريد الإلكتروني
    <input id="email" class="field" type="email" required autocomplete="username">
@@ -59,7 +62,7 @@ html{background:#050914}body{background:radial-gradient(ellipse at 82% -10%,rgba
   </label>
   <button class="primary full" type="submit">دخول مركز التحكم</button>
  </form>
- <div id="loginMsg" class="msg" role="status">يتم التحقق من دور owner في admin_users. لا تمنح صلاحية المالك من المتصفح.</div>
+ <div id="loginMsg" class="msg" role="status">يتم التحقق من صلاحية مالك المنصة من قاعدة البيانات؛ لا تمنح صلاحية المالك من المتصفح.</div>
 </section>
 
 <section id="app" class="hidden">
@@ -261,10 +264,10 @@ let user=null;
 
 async function requireAdmin(u){
  if(!u?.id)throw new Error('تعذر التحقق من جلسة المستخدم.');
- // Verify ownership server-side against public.admin_users; never trust editable metadata.
+ // تحقق خادمي من public.admin_users حيث role = owner؛ لا نعتمد على metadata قابلة للتغيير.
  const {data,error}=await db.rpc('is_platform_control_owner');
- if(error)throw new Error('تعذر التحقق من صلاحية مالك المنصة. تأكد من تنفيذ دالة is_platform_control_owner في Supabase: '+error.message);
- if(data!==true)throw new Error('هذا الحساب ليس مالك المنصة (role=owner) في admin_users.');
+ if(error)throw new Error('تعذر التحقق من صلاحية مالك المنصة. تأكد من وجود دالة is_platform_control_owner في Supabase: '+error.message);
+ if(data!==true)throw new Error('هذا الحساب لا يملك صلاحية مالك المنصة (role=owner).');
 }
 
 async function start(u){
