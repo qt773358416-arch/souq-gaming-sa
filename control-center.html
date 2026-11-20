@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#101820">
-<title>Gaming Command Center | سوق القيمنق السعودي</title>
+<title>مركز التحكم | سوق القيمنق السعودي</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--bg:#f4f6fb;--panel:#fff;--panel2:#f7f8fc;--line:#e7eaf2;--text:#20243a;--muted:#7b8198;--brand:#6b5cff;--brand2:#22b8cf;--danger:#e85d75;--ok:#159b78;--shadow:0 10px 30px rgba(31,39,75,.06)}
@@ -14,21 +14,122 @@
 @media(max-width:640px){.shell{padding:9px}.head{padding:10px 12px;border-radius:14px;margin-bottom:10px}.brand{gap:9px}.logo{width:39px;height:39px;border-radius:12px}.brand h1{font-size:16px}.head .row{gap:6px}.head a{font-size:12px}.mobile-menu{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;padding:0;font-size:20px;background:#f1efff;color:#5548d8;border:0}.layout{display:block}.sidebar{display:none;position:fixed;z-index:100;top:0;right:0;bottom:0;width:min(84vw,310px);overflow:auto;border-radius:0 0 0 18px;box-shadow:-15px 0 40px #1a20452b;padding:18px}.sidebar.mobile-open{display:block}.nav{grid-template-columns:1fr;gap:4px}.nav button{padding:12px}.mobile-backdrop{display:none;position:fixed;inset:0;background:#11172b80;z-index:99}.mobile-backdrop.show{display:block}.panel{padding:13px;border-radius:14px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.stat{padding:12px}.stat strong{font-size:19px}.stat small{font-size:11px}.page h2{font-size:19px}.pagehead{margin-bottom:12px}.form{grid-template-columns:1fr}.full{grid-column:auto}.overview-banner{padding:16px;border-radius:14px}.overview-banner h2{font-size:18px}.overview-banner p{font-size:12px}.overview-mark{font-size:34px}.tablewrap{margin-top:10px}th,td{padding:10px;font-size:12px}.login{margin:5vh auto}.actions{min-width:150px}}
 @media(max-width:370px){.grid{grid-template-columns:1fr}.overview-mark{display:none}}
 
-/* Platform Admin template skin adapted for the real Control Center */
-:root{--bg:#050d1b;--panel:#0b1b33;--panel2:#102542;--line:#24517e;--cyan:#00e5ff;--blue:#168cff;--purple:#a855f7;--pink:#ed3ca8;--green:#00dfa0;--gold:#ffbd3c;--red:#ff476f;--text:#edf7ff;--muted:#9bb2ca;--brand:#a855f7;--brand2:#00e5ff;--danger:#ff476f;--ok:#00dfa0;--shadow:0 12px 32px rgba(0,0,0,.30);color-scheme:dark}
-html{background:#050d1b}body{background:radial-gradient(ellipse at 65% -15%,#14345a,transparent 45%),linear-gradient(135deg,#040a15,#08172d 65%,#080e20);color:var(--text)}
-.shell{max-width:1800px;padding:18px}.head{background:#061225ef;border:1px solid #19446d;border-radius:16px;box-shadow:0 10px 28px #0005;backdrop-filter:blur(12px);color:var(--text)}
-.logo{background:radial-gradient(circle,#254777,#071426);border:1px solid var(--purple);box-shadow:0 0 18px #914cff77;color:#fff}
-.brand h1{color:#fff}.muted{color:#9bb2ca!important}.layout{grid-template-columns:258px minmax(0,1fr);gap:16px}.panel,.sidebar{background:linear-gradient(145deg,#102341f5,#07162cf5);border:1px solid #28558a;border-radius:16px;box-shadow:0 0 18px #00d5ff12;color:var(--text)}
-.sidebar{position:sticky;top:14px;padding:16px 12px}.sidebar h3{color:#78dfff}.nav button{color:#e2efff;background:transparent;border-color:transparent}.nav button:before{color:#a9d5ff}.nav button.active,.nav button:hover{background:linear-gradient(90deg,#2634a9,#6818a9);border-color:#a855f7;color:#fff;box-shadow:0 0 14px #914cff66}.nav button.active:before{color:#00e5ff}
-.page h2{color:#f5f9ff}.stat{background:linear-gradient(130deg,#102d4c,#0b1830 75%);border:1px solid #24517e;color:#fff;box-shadow:0 0 16px #00cfff12}.stat:after{background:#783cff25}.stat strong{color:#fff}.stat small{color:#9bb2ca}
-.field{background:#101f39;color:#fff;border:1px solid #45658d}.field:focus{border-color:#00e5ff;box-shadow:0 0 0 3px #00dfff22}label{color:#c4d8ee}
-button{background:#10213b;color:#edf7ff;border:1px solid #315174}button:hover{border-color:#00e5ff;box-shadow:0 0 12px #00dfff22}button.primary{background:linear-gradient(110deg,#2634a9,#6818a9);border:1px solid #a855f7;color:#fff;box-shadow:0 0 16px #914cff55}button.danger{background:#401629;color:#ff9db5;border-color:#74304b}
-.tablewrap{background:#08172d;border:1px solid #24517e}table{color:#edf7ff}th{background:#112541;color:#bad4ed;border-bottom:1px solid #24517e}td{border-bottom:1px solid #1b3655;color:#e5f0ff}tr:last-child td{border:0}
-.msg{background:#0d2946;border-color:#176080;color:#9deaff}.notice{background:#302512;border-color:#745522;color:#f5d48a}.pill{background:#073d3a;color:#55f3cf;border:1px solid #167d72}
-.overview-banner{background:radial-gradient(circle at 15% 20%,#8b35d9 0,transparent 29%),linear-gradient(115deg,#071329,#2634a9 62%,#087eae);border:1px solid #7a48bd;box-shadow:0 0 24px #914cff33}.overview-banner p{color:#e3efff}.overview-kicker{color:#a9f5ff}.overview-tools button{background:#10294a;color:#eaf6ff;border:1px solid #315174}.overview-tools button:hover{background:#2634a9;border-color:#a855f7}.section-caption{color:#8feaff}.mobile-menu{background:#10294a;color:#8feaff;border:1px solid #315174}
-@media(max-width:980px){.layout{grid-template-columns:1fr}.sidebar{position:static}}
-@media(max-width:640px){.shell{padding:9px}.head{background:#061225f5;padding:10px 12px}.sidebar{background:#061326ed;border-color:#28558a}.panel{padding:13px}.mobile-menu{background:#10294a}}
+/* === مركز التحكم: الهوية الداكنة المعتمدة من الصورة المرجعية === */
+:root{--bg:#030b1b;--panel:#081a33;--panel2:#0c2342;--line:#17466e;--text:#f3f8ff;--muted:#9db7d3;--brand:#8b35ff;--brand2:#00d9ef;--danger:#ff4f83;--ok:#00d6a0;--shadow:0 0 22px #00bfff12,0 14px 35px #0008}
+body{background:radial-gradient(ellipse at 12% 0%,#17104a 0,transparent 32%),radial-gradient(ellipse at 85% 35%,#061d3b 0,transparent 38%),var(--bg);color:var(--text)}
+.shell{max-width:1800px;padding:12px 16px}
+.head{background:linear-gradient(100deg,#06132b,#0b1b39 55%,#100b31);border:1px solid #254a7b;border-radius:16px;box-shadow:0 0 24px #813cff22;min-height:70px}
+.brand h1{color:#fff}.logo{background:radial-gradient(circle at 50% 35%,#a94dff,#351078 70%);border:1px solid #bd75ff;box-shadow:0 0 20px #a238ff88}
+.head a{color:#00e5ff!important}
+.layout{grid-template-columns:245px minmax(0,1fr);gap:14px}
+.panel,.sidebar{background:linear-gradient(145deg,#0b1e3b,#06142b);border:1px solid #244d7c;box-shadow:0 0 18px #008dff13,0 12px 28px #0007}
+.sidebar{padding:13px}.sidebar h3{color:#91b6d8}
+.nav{gap:6px}.nav button{color:#d7e7fa;border:1px solid transparent;border-radius:10px;padding:10px 11px}
+.nav button:before{color:#75dfff}
+.nav button.active,.nav button:hover{background:linear-gradient(100deg,#5420a5,#171e56);border-color:#a34cff;color:white;box-shadow:0 0 16px #9d36ff55}
+.page h2{color:#f6f8ff}
+.stat{background:linear-gradient(135deg,#0c2c4c,#10113d);border:1px solid #235b8a;box-shadow:inset 0 0 20px #00cfff0b,0 0 13px #00bfff12}
+.stat:after{background:#7734bd30}.stat small{color:#b8cce4}.stat strong{color:#fff}
+.stat:nth-child(3n+1){border-color:#00a99a}.stat:nth-child(3n+2){border-color:#913be2}.stat:nth-child(3n){border-color:#087fca}
+button{background:#10284a;color:#edf7ff;border-color:#2a5c8c}
+button.primary{background:linear-gradient(110deg,#7b22df,#a43bff);box-shadow:0 0 17px #8e2aff55}
+button.danger{background:#40162e;color:#ffb6cc;border-color:#9e315b}
+.field{background:#06162c;color:#f4f8ff;border-color:#28527b}
+.field:focus{border-color:#00dfff;box-shadow:0 0 0 3px #00dfff18}
+label{color:#b9cce3}
+.tablewrap{background:#07172e;border-color:#1e4c76}
+th{background:#10284a;color:#c6e6ff}td{border-color:#173b60;color:#e8f3ff}
+.msg{background:#0b2a45;border-color:#17618b;color:#bdeeff}
+.notice{background:#302342;border-color:#7542a0;color:#e7caff}
+.pill{background:#063e3a;color:#52f2c5}
+.overview-banner{background:radial-gradient(circle at 15% 20%,#a63dff 0,transparent 29%),linear-gradient(115deg,#071b3b,#152c65 60%,#07556d);border:1px solid #386da0;box-shadow:0 0 22px #8b31ff22}
+.overview-tools button{background:#10294b;color:#e9f6ff;border:1px solid #2a5d8a}
+.section-caption{color:#b8d5f4}
+@media(max-width:980px){.sidebar{background:#06152c}}
+@media(max-width:640px){.sidebar{background:#06152c;border-left:1px solid #24608d}.mobile-backdrop.show{background:#000b}}
+
+
+/* Platform Admin template visual system adapted to the existing functional Control Center */
+:root{
+ --bg:#050d1b;--panel:#0b1b33;--panel2:#102542;--line:#24517e;
+ --cyan:#00e5ff;--blue:#168cff;--purple:#a855f7;--pink:#ed3ca8;
+ --green:#00dfa0;--gold:#ffbd3c;--red:#ff476f;
+ --text:#edf7ff;--muted:#9bb2ca;--brand:#00e5ff;--brand2:#a855f7;
+ --danger:#ff476f;--ok:#00dfa0;--shadow:0 12px 35px rgba(0,0,0,.34);
+ color-scheme:dark
+}
+html{background:#040a15;scroll-behavior:smooth}
+body{
+ background:radial-gradient(ellipse at 65% -15%,#14345a,transparent 45%),
+ linear-gradient(135deg,#040a15,#08172d 65%,#080e20);
+ color:var(--text);font-family:Tahoma,Arial,sans-serif
+}
+button,input,select,textarea{font:inherit}
+button{
+ border:1px solid #315174;background:#10213b;color:#edf7ff;
+ border-radius:11px;transition:.18s
+}
+button:hover{background:#10294a;border-color:#00e5ff;box-shadow:0 0 14px #00dfff22;transform:translateY(-1px)}
+button.primary{
+ background:linear-gradient(100deg,#2634a9,#6818a9);
+ border:1px solid #a855f7;color:#fff;box-shadow:0 0 14px #914cff44
+}
+button.danger{color:#ffdce2;background:#451c2a;border-color:#7f293d}
+button:disabled{opacity:.5;cursor:wait}
+input,select,textarea,.field{
+ background:#101f39!important;color:#edf7ff!important;border:1px solid #45658d!important;
+ border-radius:10px
+}
+input:focus,select:focus,textarea:focus,.field:focus{
+ outline:0;border-color:#00e5ff!important;box-shadow:0 0 0 3px #00dfff22
+}
+.shell{max-width:1700px}
+.head{
+ background:#061225ef;border:1px solid #19446d;border-radius:16px;
+ box-shadow:0 10px 28px #0005;backdrop-filter:blur(12px)
+}
+.brand h1,.page h2,.panel h2,.panel h3{color:#edf7ff}
+.logo{
+ background:radial-gradient(circle,#254777,#071426);
+ border:1px solid #a855f7;color:#fff;
+ box-shadow:0 0 18px #914cff77
+}
+.muted,.sidebar h3,.pagehead p{color:#9bb2ca}
+.layout{gap:16px}
+.panel,.sidebar,.card,.stat,.box{
+ background:linear-gradient(145deg,#102341f5,#07162cf5);
+ border:1px solid #28558a;border-radius:16px;
+ box-shadow:0 0 18px #00d5ff12
+}
+.sidebar{background:#061326ed;border-color:#1b4771}
+.sidebar h3{color:#7896b5}
+.nav{gap:6px}
+.nav button{
+ color:#e2efff;background:transparent;border:1px solid transparent;
+ border-radius:10px
+}
+.nav button.active,.nav button:hover{
+ background:linear-gradient(90deg,#2634a9,#6818a9);
+ border-color:#a855f7;color:#fff;box-shadow:0 0 14px #914cff66
+}
+.stat,.stats .stat,.metric{
+ border-color:#315174;background:linear-gradient(130deg,#102d5a,#0b1830 75%)
+}
+table{color:#edf7ff}
+th{background:#112541;color:#bad4ed}
+td{border-bottom:1px solid #1b3655}
+.tablewrap{border:1px solid #28558a;border-radius:12px;background:#08172d}
+tr:hover td{background:#10294a}
+.badge,.pill,.status{border-radius:7px}
+.notice,.msg{background:#0d2946;border:1px solid #24517e;color:#bfeeff}
+.toast{background:#0d2946;border:1px solid #00e5ff;color:#edf7ff;box-shadow:0 0 18px #00dfff33}
+a{color:#00e5ff}
+hr,.divider{border-color:#24517e}
+.hidden{display:none!important}
+@media(max-width:850px){
+ .head{top:0}
+ .sidebar{background:#061326f5}
+}
 
 </style>
 </head>
@@ -40,7 +141,7 @@ button{background:#10213b;color:#edf7ff;border:1px solid #315174}button:hover{bo
   <div class="logo">SG</div>
   <div>
    <h1>مركز التحكم المركزي</h1>
-   <div class="muted">سوق القيمنق السعودي · Gaming Command Center</div>
+   <div class="muted">سوق القيمنق السعودي · إدارة مستقلة</div>
   </div>
  </div>
  <div class="row">
@@ -52,7 +153,7 @@ button{background:#10213b;color:#edf7ff;border:1px solid #315174}button:hover{bo
 
 <section id="login" class="panel login">
  <h2>تسجيل دخول المدير</h2>
- <p class="muted">الدخول مخصص لمالك المنصة فقط. يتم التحقق من دور owner في جدول admin_users داخل قاعدة البيانات.</p>
+ <p class="muted">الدخول متاح للحساب المسجل في admin_users بدور owner فقط.</p>
  <form id="loginForm" class="form">
   <label class="full">البريد الإلكتروني
    <input id="email" class="field" type="email" required autocomplete="username">
@@ -62,7 +163,7 @@ button{background:#10213b;color:#edf7ff;border:1px solid #315174}button:hover{bo
   </label>
   <button class="primary full" type="submit">دخول مركز التحكم</button>
  </form>
- <div id="loginMsg" class="msg" role="status">يتم التحقق من صلاحية مالك المنصة من قاعدة البيانات؛ لا تمنح صلاحية المالك من المتصفح.</div>
+ <div id="loginMsg" class="msg" role="status">يتم التحقق من user_id و role=owner في جدول admin_users.</div>
 </section>
 
 <section id="app" class="hidden">
@@ -88,6 +189,7 @@ button{background:#10213b;color:#edf7ff;border:1px solid #315174}button:hover{bo
     <button data-page="orders">الطلبات</button>
     <button data-page="finance">المحافظ والعمولات</button>
     <button data-page="reviews">تقييمات المتاجر</button>
+    <button data-page="content">محتويات المنصة</button>
     <button data-page="settings">إعدادات متقدمة</button>
    </nav>
   </aside>
@@ -111,6 +213,21 @@ button{background:#10213b;color:#edf7ff;border:1px solid #315174}button:hover{bo
      <div class="stat"><small>منتجات المتجر</small><strong id="productCount">—</strong></div>
      <div class="stat"><small>الطلبات</small><strong id="orderCount">—</strong></div>
      <div class="stat"><small>جلسة المدير</small><strong>نشطة</strong></div>
+    </div>
+    <div class="grid" id="platformLiveCounts" style="margin-top:12px"></div>
+    <div class="grid" style="grid-template-columns:minmax(0,1.5fr) minmax(230px,1fr);margin-top:14px">
+     <div class="panel"><h3 style="margin:0 0 12px;color:#e8f6ff">مؤشرات نشاط المنصة <span style="color:#00dfff">◉</span></h3>
+      <div style="height:175px"><svg viewBox="0 0 700 190" width="100%" height="100%" preserveAspectRatio="none" role="img" aria-label="مخطط توضيحي">
+       <defs><linearGradient id="sgLine"><stop stop-color="#00dfff"/><stop offset="1" stop-color="#bd43ff"/></linearGradient><linearGradient id="sgFill" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#00bfff" stop-opacity=".35"/><stop offset="1" stop-color="#00bfff" stop-opacity="0"/></linearGradient></defs>
+       <g stroke="#24466b"><path d="M20 25H690M20 65H690M20 105H690M20 145H690"/></g>
+       <path d="M20 155 C70 145 75 110 125 125 S180 145 230 100 S290 125 340 85 S400 105 450 70 S510 95 560 50 S620 72 690 25 L690 170 L20 170Z" fill="url(#sgFill)"/>
+       <path d="M20 155 C70 145 75 110 125 125 S180 145 230 100 S290 125 340 85 S400 105 450 70 S510 95 560 50 S620 72 690 25" fill="none" stroke="url(#sgLine)" stroke-width="4"/>
+      </svg></div><small class="muted">مخطط توضيحي فقط؛ لا يمثل بيانات زمنية فعلية.</small>
+     </div>
+     <div class="panel"><h3 style="margin:0 0 12px;color:#e8f6ff">توزيع وحدات المنصة</h3><div style="display:flex;align-items:center;justify-content:center;gap:12px;min-height:145px">
+      <div style="width:125px;height:125px;border-radius:50%;background:conic-gradient(#00bfff 0 38%,#a33cff 38% 66%,#00d5a3 66% 83%,#ff9c3a 83%);display:grid;place-items:center"><div style="width:75px;height:75px;border-radius:50%;background:#091a33;display:grid;place-items:center;font-size:12px;font-weight:bold">الوحدات</div></div>
+      <div style="font-size:11px;line-height:2.1;color:#c5d9ef">🔵 الإعلانات<br>🟣 المتاجر<br>🟢 المجتمع<br>🟠 الطلبات</div>
+     </div><small class="muted">تقسيم بصري وليس نسباً محسوبة.</small></div>
     </div>
     </div>
     <div class="overview-section"><div class="section-caption">اختصارات الإدارة</div><div class="overview-tools"><button data-page="ads">مراجعة الإعلانات</button><button data-page="vendors">إدارة المتاجر</button><button data-page="products">المنتجات</button><button data-page="orders">الطلبات</button></div></div>
@@ -228,9 +345,26 @@ button{background:#10213b;color:#edf7ff;border:1px solid #315174}button:hover{bo
      <div class="notice">الملفات المرفوعة تحتوي على seller_reviews لتقييم البائعين المرتبطين بالإعلانات، لكنها لا تثبت وجود جدول مستقل لتقييم المتاجر vendor_store_reviews. لن أعرض تقييمات الإعلانات على أنها تقييمات متاجر أو أخلط بينها.</div>
      <div class="msg">بعد استلام ملف SQL سنربط جدول تقييمات المتاجر ونضيف متوسط التقييم وعدد المراجعات والبلاغات.</div>
     </section>
+   <section class="page panel" id="page-content">
+    <div class="pagehead"><div><h2>محتويات المنصة</h2><div class="muted">استعراض الجداول الموجودة في المشروع دون تغيير بنيتها أو حذف بياناتها</div></div><button id="reloadContent">تحديث المحتويات</button></div>
+    <label>اختر القسم<select id="contentTable" class="field">
+      <option value="profiles">المستخدمون — profiles</option><option value="public_posts">منشورات المجتمع — public_posts</option>
+      <option value="conversations">المحادثات — conversations</option><option value="messages">الرسائل — messages</option>
+      <option value="notifications">الإشعارات — notifications</option><option value="seller_reviews">تقييمات البائعين — seller_reviews</option>
+      <option value="ad_reports">بلاغات الإعلانات — ad_reports</option><option value="ad_comments">تعليقات الإعلانات — ad_comments</option>
+      <option value="store_digital_codes">الأكواد الرقمية — store_digital_codes</option><option value="vendor_promotions">عروض المتاجر — vendor_promotions</option>
+      <option value="vendor_promotion_packages">باقات الترويج — vendor_promotion_packages</option><option value="vendor_financial_ledger">السجل المالي — vendor_financial_ledger</option>
+      <option value="vendor_payouts">طلبات الصرف — vendor_payouts</option><option value="doctor_questions">دكتور القيمنق — doctor_questions</option>
+      <option value="doctor_specialists">المختصون — doctor_specialists</option><option value="channel_posts">منشورات القنوات — channel_posts</option>
+      <option value="support_messages">رسائل الدعم — support_messages</option>
+    </select></label>
+    <div id="contentMsg" class="msg">اختر جدولاً لعرض آخر السجلات. الحقول الحساسة مستبعدة من العرض.</div>
+    <div class="tablewrap"><table><thead id="contentHead"></thead><tbody id="contentRows"></tbody></table></div>
+   </section>
    <section class="page panel" id="page-settings">
     <h2>إعدادات متقدمة وملاحظات الربط</h2>
     <div class="notice">لا تضع مفاتيح سرية أو Service Role في المتصفح. إدارة المستخدمين والصلاحيات، تنفيذ المدفوعات، تغيير الأرصدة، وإرسال الإشعارات الجماعية تحتاج عمليات خادمية وسياسات أمان مستقلة.</div>
+    <p>المركز يستخدم صلاحية المالك من admin_users، ويقرأ/يدير الوحدات التي تم التأكد من استخدامها في الواجهة. الوحدات غير المكتملة المخطط لها تظهر في سجل المحتويات للقراءة فقط حتى لا نفترض أسماء أعمدة أو ننفذ عمليات غير آمنة.</p>
     <p>الجداول التي رصدتها في ملف المنصة: ads, profiles, conversations, messages, notifications, public_posts, seller_reviews, ad_comments, ad_reports, store_products, store_orders, store_order_items, store_digital_codes, vendor_stores, vendor_store_products, vendor_orders, vendor_promotions, vendor_promotion_packages, vendor_financial_ledger, vendor_payouts, marketplace_home_banner, site_settings.</p>
    </section>
 
@@ -263,11 +397,10 @@ const defaults={
 let user=null;
 
 async function requireAdmin(u){
- if(!u?.id)throw new Error('تعذر التحقق من جلسة المستخدم.');
- // تحقق خادمي من public.admin_users حيث role = owner؛ لا نعتمد على metadata قابلة للتغيير.
+ if(!u?.id) throw new Error('يلزم تسجيل الدخول أولاً.');
  const {data,error}=await db.rpc('is_platform_control_owner');
- if(error)throw new Error('تعذر التحقق من صلاحية مالك المنصة. تأكد من وجود دالة is_platform_control_owner في Supabase: '+error.message);
- if(data!==true)throw new Error('هذا الحساب لا يملك صلاحية مالك المنصة (role=owner).');
+ if(error) throw new Error('تعذر التحقق من صلاحية مالك المنصة. نفّذ ملف SQL المرفق أولاً: '+error.message);
+ if(data!==true) throw new Error('هذا الحساب ليس مالك المنصة (role=owner في admin_users).');
 }
 
 async function start(u){
@@ -330,7 +463,7 @@ function openPage(name){
  const loaders={
   categories:loadCategories,elements:loadElements,ads:loadAds,
   vendors:loadVendors,products:loadProducts,orders:loadOrders,
-  banner:loadBanner,appearance:loadAppearance,finance:loadFinance
+  banner:loadBanner,appearance:loadAppearance,finance:loadFinance,content:loadContent
  };
  if(loaders[name])loaders[name]();
 }
@@ -352,14 +485,17 @@ async function count(table){
 
 async function loadOverview(){
  const vals=await Promise.all([
-  count('platform_control_categories'),
-  count('ads'),
-  count('vendor_stores'),
-  count('store_products'),
-  count('store_orders')
+  count('platform_control_categories'),count('ads'),count('vendor_stores'),
+  count('store_products'),count('store_orders'),count('profiles'),
+  count('public_posts'),count('notifications'),count('ad_reports')
  ]);
  ['catCount','adCount','vendorCount','productCount','orderCount']
   .forEach((id,i)=>$(id).textContent=vals[i]);
+ const extra=$('platformLiveCounts');
+ if(extra) extra.innerHTML=[
+  ['المستخدمون',vals[5]],['منشورات المجتمع',vals[6]],
+  ['الإشعارات',vals[7]],['بلاغات الإعلانات',vals[8]]
+ ].map(([k,v])=>`<div class="stat"><small>${k}</small><strong>${v}</strong></div>`).join('');
 }
 
 async function loadAppearance(){
@@ -540,6 +676,27 @@ $('bannerForm').onsubmit=async e=>{
  const {error}=await db.from('marketplace_home_banner').upsert(row,{onConflict:'id'});
  msg('bannerMsg',error?.message||'تم حفظ البنر');
 };
+
+
+const contentTables=new Set(['profiles','public_posts','conversations','messages','notifications','seller_reviews','ad_reports','ad_comments','store_digital_codes','vendor_promotions','vendor_promotion_packages','vendor_financial_ledger','vendor_payouts','doctor_questions','doctor_specialists','channel_posts','support_messages']);
+const hiddenFields=/password|token|secret|code_value|otp|api_key|access_key|private|email|phone|mobile|iban|account_number/i;
+async function loadContent(){
+ const table=$('contentTable').value;
+ if(!contentTables.has(table))return;
+ msg('contentMsg','جارٍ تحميل آخر السجلات من '+table+'...');
+ const {data,error}=await db.from(table).select('*').limit(40);
+ if(error){msg('contentMsg','تعذر قراءة '+table+': '+error.message);$('contentHead').innerHTML='';$('contentRows').innerHTML='';return;}
+ const rows=data||[];
+ const keys=[...new Set(rows.flatMap(r=>Object.keys(r)))].filter(k=>!hiddenFields.test(k)).slice(0,7);
+ $('contentHead').innerHTML='<tr>'+keys.map(k=>'<th>'+esc(k)+'</th>').join('')+'</tr>';
+ $('contentRows').innerHTML=rows.map(r=>'<tr>'+keys.map(k=>{
+  let v=r[k]; if(v&&typeof v==='object')v=JSON.stringify(v);
+  return '<td>'+esc(String(v??'—').slice(0,180))+'</td>';
+ }).join('')+'</tr>').join('')||'<tr><td class="empty">لا توجد سجلات</td></tr>';
+ msg('contentMsg','تم تحميل '+rows.length+' سجل. هذا القسم للقراءة فقط حتى يتم اعتماد عمليات الإدارة ومخطط الأعمدة لكل جدول.');
+}
+$('contentTable').addEventListener('change',loadContent);
+$('reloadContent').onclick=loadContent;
 
 async function loadFinance(){
  const from=$('financeFrom').value,to=$('financeTo').value,vendor=$('financeVendor').value;
