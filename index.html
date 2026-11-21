@@ -999,6 +999,17 @@ body.vendor-store-open #vendorSelectedStore #souqStorefrontTools,body.vendor-sto
 body.vendor-store-open #vendorSelectedStore #vendorSelectedProducts{padding-bottom:24px}
 body.vendor-store-open #vendorSelectedStore .vendor-cart-box{margin-top:24px}
 body.vendor-store-open .bottom,body.vendor-store-open .footer{display:none!important}
+/* واجهة المتجر مستقلة: إخفاء رأس السوق وبحثه وتبويباته أثناء زيارة متجر */
+body.vendor-store-open .wrap>header.top,
+body.vendor-store-open #desktopTabs,
+body.vendor-store-open nav.bottom,
+body.vendor-store-open .global-search,
+body.vendor-store-open #souqAiLauncher,
+body.vendor-store-open #souqAiPanel{display:none!important}
+body.vendor-store-open .wrap{width:100%!important;max-width:none!important;margin:0!important;padding:0!important}
+body.vendor-store-open #app{margin:0!important;padding:0!important}
+body.vendor-store-open #page-vendors{padding:0!important;margin:0!important;min-height:100dvh!important;background:#0b1020!important}
+body.vendor-store-open #vendorSelectedStore{padding:0!important}
 </style>
 
 
@@ -1037,7 +1048,7 @@ body.vendor-store-open #vendorSelectedStore .vendor-detail-head,body.vendor-stor
 <section id="page-searchpage" class="hidden"><div class="panel"><h2>البحث</h2><input id="searchPageInput" class="field" placeholder="ابحث عن إعلان أو قطعة..."><button class="primary" id="searchPageBtn" style="margin-top:10px">بحث</button></div></section>
 <section id="page-notifications" class="hidden"><div class="panel"><div class="pagehead"><div><h2>الإشعارات</h2><p>تابع التحديثات المرتبطة بحسابك.</p></div><button class="secondary" type="button" onclick="loadNotifications()">تحديث</button></div><div id="notificationsList"><div class="empty">جارٍ تحميل الإشعارات...</div></div></div></section>
 <section id="page-detail" class="hidden"><div class="panel"><div class="pagehead"><div><h2>تفاصيل الإعلان</h2><p>صفحة مستقلة لكل إعلان داخل المنصة.</p></div><button class="secondary" data-go="home">← رجوع للإعلانات</button></div><div id="adDetailContent" class="page-note">اختر إعلانًا من الرئيسية لعرض تفاصيله هنا.</div></div></section>
-<section id="page-favorites" class="hidden"><div class="panel"><div class="pagehead"><div><h2>المفضلة</h2><p>الإعلانات التي تحفظها تظهر هنا على هذا الجهاز.</p></div><button class="secondary" data-go="home">تصفح الإعلانات</button></div><div id="favoritesList" class="grid"><div class="empty">اضغط «حفظ بالمفضلة» من بطاقة الإعلان لإضافته هنا.</div></div></div></section>
+<section id="page-favorites" class="hidden"><div class="panel"><div class="pagehead"><div><h2>المفضلة</h2><p>الإعلانات التي تحفظها تظهر هنا على هذا الجهاز في هذه النسخة.</p></div><button class="secondary" data-go="home">تصفح الإعلانات</button></div><div id="favoritesList" class="grid"><div class="empty">اضغط «حفظ بالمفضلة» من بطاقة الإعلان لإضافته هنا.</div></div></div></section>
 <section id="page-help" class="hidden"><div class="panel"><div class="pagehead"><div><h2>مركز المساعدة</h2><p>إرشادات استخدام سوق القيمنق السعودي.</p></div></div><h3>كيف أضيف إعلانًا؟</h3><p class="muted">سجّل الدخول، افتح «أضف إعلانًا»، اكتب المواصفات والسعر وأضف الصور ثم انشر الإعلان.</p><h3>كيف أتواصل مع البائع؟</h3><p class="muted">من بطاقة الإعلان يمكنك استخدام واتساب أو الاتصال أو بدء محادثة خاصة بعد تسجيل الدخول.</p><h3>كيف أحافظ على سلامتي؟</h3><p class="muted">عاين الجهاز واختبره قبل الدفع، ولا ترسل رموز التحقق أو كلمات المرور، وتجنب تحويل الأموال قبل التأكد من البائع.</p><div class="subnav"><button data-go="contact">تواصل مع الدعم</button><button data-go="policy">الشروط والسياسات</button></div></div></section>
 <section id="page-contact" class="hidden"><div class="panel"><div class="pagehead"><div><h2>تواصل معنا</h2><p>نموذج واجهة للتواصل مع الدعم.</p></div></div><form id="contactForm" class="stack"><label>الاسم<input id="contactName" class="field" maxlength="80" required></label><label>البريد الإلكتروني<input id="contactEmail" class="field" type="email" required></label><label>نوع الطلب<select id="contactTopic" class="field"><option>استفسار عام</option><option>بلاغ عن إعلان</option><option>مشكلة في الحساب</option><option>اقتراح تطوير</option></select></label><label>الرسالة<textarea id="contactMessage" class="field" rows="4" maxlength="2000" required></textarea></label><button class="primary" type="submit">عرض حالة النموذج</button><div id="contactMsg" class="muted"></div></form><div class="page-note">تنبيه: نموذج الدعم هنا واجهة فقط؛ لم يتم ربطه ببريد أو نظام تذاكر.</div></div></section>
 <section id="page-policy" class="hidden"><div class="panel"><div class="pagehead"><div><h2>الشروط وسياسة الاستخدام</h2><p>مسودة أولية تحتاج مراجعة قانونية قبل الإطلاق.</p></div></div><h3>طبيعة المنصة</h3><p class="muted">المنصة للإعلانات المبوبة والتواصل بين البائع والمشتري، ولا توفر حاليًا دفعًا أو ضمانًا وسيطًا.</p><h3>مسؤولية الإعلان</h3><p class="muted">يتحمل البائع مسؤولية صحة السعر والوصف والصور وملكية المنتج.</p><h3>التعامل الآمن</h3><p class="muted">افحص المنتج قبل الدفع، ولا تشارك رموز التحقق أو بياناتك السرية، وأبلغ عن أي إعلان مشتبه به.</p><h3>الخصوصية</h3><p class="muted">يجب توضيح بيانات المستخدم التي تجمعها المنصة وكيفية استخدامها وحفظها في سياسة خصوصية نهائية قبل الإطلاق.</p><div class="subnav"><button data-go="help">مركز المساعدة</button><button data-go="contact">تواصل معنا</button></div></div></section>
@@ -1947,6 +1958,22 @@ sb.auth.onAuthStateChange((_event,session)=>{
  else{profile=null;}
 });
 
+/* تحديث الإعلانات عند تغيّرها من مستخدم آخر، إذا كانت Realtime مفعّلة في Supabase. */
+let adsRealtimeChannel=null;
+try{
+ adsRealtimeChannel=sb.channel('public-ads-live')
+  .on('postgres_changes',{event:'*',schema:'public',table:'ads'},payload=>{
+   console.info('Ads realtime update received:',payload.eventType);
+   void loadAds(true);
+  })
+  .subscribe(status=>{
+   if(status==='CHANNEL_ERROR'||status==='TIMED_OUT')
+    console.warn('Ads realtime is unavailable; normal manual refresh remains available.');
+  });
+}catch(realtimeError){
+ console.warn('Ads realtime setup skipped:',realtimeError);
+}
+
 /* === ربط واجهة السوق بمركز التحكم === */
 (async function applyPlatformControl(){
   try {
@@ -2245,18 +2272,55 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   },err=>{status.textContent=err.code===1?'لم تسمح بالوصول للموقع. أدخل رابط الخرائط يدويًا.':'تعذر تحديد الموقع؛ حاول مجددًا أو أدخل الرابط يدويًا.';},{enableHighAccuracy:true,timeout:15000,maximumAge:30000});
  });
  byId('storeCheckoutForm').addEventListener('submit',async e=>{
-  e.preventDefault();const entries=Array.isArray(storeState.selected)?storeState.selected:[];if(!entries.length)return;
-  const btn=e.submitter;btn.disabled=true;storeMsg('checkoutMsg','جارٍ إنشاء طلبك…');
-  const first=entries[0].product,total=entries.reduce((sum,x)=>sum+Number(x.product.price||0)*x.quantity,0);
-  const payload={product_id:first.id,product_title:entries.length===1?first.title:`طلب متعدد المنتجات (${entries.length})`,unit_price:Number(first.price||0),quantity:entries.reduce((n,x)=>n+x.quantity,0),total_amount:total,customer_name:byId('checkoutName').value.trim(),phone:byId('checkoutPhone').value.trim(),city:byId('checkoutCity').value.trim(),address:byId('checkoutAddress').value.trim(),latitude:byId('checkoutLatitude').value?Number(byId('checkoutLatitude').value):null,longitude:byId('checkoutLongitude').value?Number(byId('checkoutLongitude').value):null,map_url:byId('checkoutMapUrl').value.trim()||null,notes:byId('checkoutNotes').value.trim(),delivery_method:first.delivery_method,payment_status:'pending',order_status:'awaiting_payment'};
-  const {data:order,error}=await sb.from('store_orders').insert(payload).select('id').single();
-  if(error){console.error(error);btn.disabled=false;storeMsg('checkoutMsg','تعذر إنشاء الطلب. تحقق من تشغيل تحديث قاعدة البيانات وسياسات Supabase.');return;}
-  const lines=entries.map(x=>({order_id:order.id,product_id:x.product.id,product_title:x.product.title,unit_price:Number(x.product.price||0),quantity:x.quantity,line_total:Number(x.product.price||0)*x.quantity}));
-  const {error:itemsError}=await sb.from('store_order_items').insert(lines);
-  btn.disabled=false;
-  if(itemsError){console.error(itemsError);storeMsg('checkoutMsg','تم إنشاء الطلب لكن تعذر حفظ تفاصيل المنتجات. رقم الطلب: '+order.id);return;}
-  storeState.cart={};renderStoreCart();storeMsg('checkoutMsg','تم تسجيل طلبك بنجاح. رقم الطلب: '+order.id+' — الحالة: بانتظار الدفع. لم يتم تحصيل مبلغ لأن بوابة الدفع غير مربوطة بعد.');
-  btn.textContent='تم إنشاء الطلب';btn.disabled=true;
+  e.preventDefault();
+  const entries=Array.isArray(storeState.selected)?storeState.selected:[];
+  if(!entries.length){storeMsg('checkoutMsg','السلة فارغة.');return;}
+  const btn=e.submitter||byId('storeCheckoutForm').querySelector('[type=submit]');
+  if(btn){btn.disabled=true;}
+  storeMsg('checkoutMsg','جارٍ مراجعة الأسعار والمخزون ثم إنشاء الطلب…');
+  let createdOrderId=null;
+  try{
+   // Refresh product data immediately before checkout; do not rely on stale cart prices/stock.
+   const ids=entries.map(x=>x.product.id);
+   const {data:liveProducts,error:productsError}=await sb.from('store_products')
+    .select('id,title,price,stock_quantity,delivery_method,is_active')
+    .in('id',ids);
+   if(productsError)throw productsError;
+   const byIdMap=new Map((liveProducts||[]).map(p=>[String(p.id),p]));
+   const verifiedEntries=[];
+   for(const item of entries){
+    const live=byIdMap.get(String(item.product.id));
+    const qty=Math.max(1,Math.floor(Number(item.quantity)||1));
+    if(!live||live.is_active===false)throw new Error('أحد المنتجات لم يعد متاحًا. حدّث السلة وحاول مجددًا.');
+    if(Number(live.stock_quantity||0)<qty)throw new Error('المخزون المتاح للمنتج «'+(live.title||item.product.title)+'» أقل من الكمية المطلوبة.');
+    const price=Number(live.price);
+    if(!Number.isFinite(price)||price<0)throw new Error('تعذر التحقق من سعر أحد المنتجات.');
+    verifiedEntries.push({product:live,quantity:qty});
+   }
+   const first=verifiedEntries[0].product;
+   const total=verifiedEntries.reduce((sum,x)=>sum+Number(x.product.price||0)*x.quantity,0);
+   const payload={product_id:first.id,product_title:verifiedEntries.length===1?first.title:`طلب متعدد المنتجات (${verifiedEntries.length})`,unit_price:Number(first.price||0),quantity:verifiedEntries.reduce((n,x)=>n+x.quantity,0),total_amount:total,customer_name:byId('checkoutName').value.trim(),phone:byId('checkoutPhone').value.trim(),city:byId('checkoutCity').value.trim(),address:byId('checkoutAddress').value.trim(),latitude:byId('checkoutLatitude').value?Number(byId('checkoutLatitude').value):null,longitude:byId('checkoutLongitude').value?Number(byId('checkoutLongitude').value):null,map_url:byId('checkoutMapUrl').value.trim()||null,notes:byId('checkoutNotes').value.trim(),delivery_method:first.delivery_method,payment_status:'pending',order_status:'awaiting_payment'};
+   const {data:order,error}=await sb.from('store_orders').insert(payload).select('id').single();
+   if(error)throw error;
+   createdOrderId=order.id;
+   const lines=verifiedEntries.map(x=>({order_id:order.id,product_id:x.product.id,product_title:x.product.title,unit_price:Number(x.product.price||0),quantity:x.quantity,line_total:Number(x.product.price||0)*x.quantity}));
+   const {error:itemsError}=await sb.from('store_order_items').insert(lines);
+   if(itemsError){
+    console.error('Store order items insert failed:',itemsError);
+    // Compensate for the split insert so an incomplete order is not left active.
+    const {error:rollbackError}=await sb.from('store_orders').delete().eq('id',order.id);
+    if(rollbackError)console.error('Incomplete order cleanup failed:',rollbackError);
+    createdOrderId=null;
+    throw new Error(rollbackError?'تعذر حفظ تفاصيل الطلب، كما تعذر إلغاء الطلب غير المكتمل. تواصل مع الدعم قبل إعادة المحاولة.':'تعذر حفظ تفاصيل المنتجات؛ ألغينا الطلب غير المكتمل. حاول مجددًا.');
+   }
+   storeState.cart={};renderStoreCart();
+   storeMsg('checkoutMsg','تم تسجيل طلبك بنجاح. رقم الطلب: '+order.id+' — الحالة: بانتظار الدفع. لم يتم تحصيل أي مبلغ لأن بوابة الدفع غير مربوطة بعد.');
+   if(btn){btn.textContent='تم إنشاء الطلب';btn.disabled=true;}
+  }catch(err){
+   console.error('Store checkout failed:',err);
+   storeMsg('checkoutMsg','تعذر إنشاء الطلب: '+(err?.message||'تحقق من الاتصال ثم حاول مجددًا.'));
+   if(btn){btn.disabled=false;}
+  }
  });
  async function checkStoreAdmin(){
   if(!currentUser){byId('storeAdminEntry').classList.add('hidden');return;}
@@ -4507,7 +4571,7 @@ window.__souqVendorContext={state:vState,money:vMoney,safeUrl:vSafeUrl,esc:vEsc,
   const products=(ctx.state.selectedProducts||[]).map(p=>({id:p.id,name:p.title,description:p.description,categoryId:String(p.category||''),image:ctx.safeUrl(p.image_url)||'',price:Number(p.price)||0,oldPrice:'',currency:'ر.س',visible:p.status==='active'&&Number(p.stock_quantity)>=0,stock:Number(p.stock_quantity)||0}));
   const cats=[...new Set(products.map(p=>p.categoryId).filter(Boolean))].map((name,i)=>({id:name,name,icon:'🎮',visible:true}));
   const f=shopPublic.storefront||{},heroImage=f.show_banner&&f.banner_url?ctx.safeUrl(f.banner_url):'';
-  const cfg={identity:{name:store.store_name||'المتجر',logo:ctx.safeUrl(store.logo_url)||'',announcement:f.show_announcement?f.announcement||'':'',currency:'ر.س'},
+  const cfg={identity:{name:String(store.store_name||'المتجر').trim()||'المتجر',logo:ctx.safeUrl(store.logo_url)||'',announcement:f.show_announcement?f.announcement||'':'',currency:'ر.س'},
    theme:{background:'#0b1020',surface:'#121a2b',text:'#f5f7fb',muted:'#a4afc3',primary:safeColor(f.theme_color||'#8b5cf6'),secondary:'#22d3ee',radius:'20px',font:"'IBM Plex Sans Arabic',Tahoma,sans-serif"},
    navigation:[{label:'الرئيسية',url:'#'},{label:'التصنيفات',url:'#categoriesSection'},{label:'المنتجات',url:'#productsSection'}],
    hero:{visible:!!f.show_banner&&(!!heroImage||!!f.hero_title||!!f.hero_description),title:f.hero_title||store.store_name||'مرحباً بكم في متجرنا',description:f.hero_description||store.description||'تصفح منتجات المتجر واختر ما يناسبك',buttonLabel:'تسوق الآن',image:heroImage},
@@ -4521,7 +4585,7 @@ window.__souqVendorContext={state:vState,money:vMoney,safeUrl:vSafeUrl,esc:vEsc,
    .replace("function addToCart(id){const product=(STORE.products||[]).find(p=>String(p.id)===String(id));if(!product)return;const found=cart.find(x=>String(x.id)===String(id));if(found)found.qty++;else cart.push({...product,qty:1});renderCart();toast('تمت إضافة المنتج إلى السلة');}","function addToCart(id){const product=(STORE.products||[]).find(p=>String(p.id)===String(id));if(!product)return;const found=cart.find(x=>String(x.id)===String(id));if(found)found.qty++;else cart.push({...product,qty:1});window.parent.addVendorCart(String(id));renderCart();toast('تمت إضافة المنتج إلى السلة');}")
    .replace("$('checkoutButton').onclick=()=>toast('تُفعّل إتمام الطلب عند ربط نظام الطلبات');","$('checkoutButton').onclick=()=>{window.parent.__souqStartVendorCheckout();};");
   const html='<!DOCTYPE html><html lang="ar" dir="rtl"><head>'+parsedTemplate.head.innerHTML+'</head><body>'+templateBody+'</body></html>';
-  host.innerHTML='<button id="souqMerchantBack" type="button">← العودة إلى السوق</button><iframe id="souqMerchantTemplateFrame" title="متجر التاجر" loading="eager"></iframe>';
+  host.innerHTML='<button id="souqMerchantBack" type="button" aria-label="العودة إلى قائمة المتاجر">← رجوع</button><iframe id="souqMerchantTemplateFrame" title="واجهة المتجر" loading="eager"></iframe>';
   $('souqMerchantBack').onclick=()=>{$('vendorBackToDirectory').click()};
   window.__souqStartVendorCheckout=()=>{closeVendorTemplateCart();const form=$('vendorCheckoutForm');form?.scrollIntoView({behavior:'smooth',block:'center'});};
   function closeVendorTemplateCart(){const frame=$('souqMerchantTemplateFrame');try{frame.contentWindow.postMessage({type:'SOUQ_CLOSE_CART'},'*')}catch{}}
