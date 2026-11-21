@@ -69,6 +69,17 @@ button,a,[data-go],[data-action]{cursor:pointer;touch-action:manipulation;-webki
 .admin-workspace .workspace-detail-field small{display:block;color:#8eabc8;margin-bottom:5px}
 @media(max-width:650px){.admin-workspace.active{padding:12px 10px 32px}.admin-workspace.active>.head{top:0}.admin-workspace .workspace-toolbar{top:64px}.admin-workspace .workspace-detail-grid{grid-template-columns:1fr}.admin-workspace .workspace-actions button{flex:1 1 auto}}
 
+
+.stat-link{cursor:pointer;transition:transform .18s ease,box-shadow .18s ease;position:relative}
+.stat-link:hover,.stat-link:focus-visible{transform:translateY(-3px);box-shadow:0 0 0 2px var(--c),0 10px 26px #0005;outline:none}
+.stat-link:focus-visible:after{content:"فتح التفاصيل ←";position:absolute;left:10px;bottom:8px;color:#8defff;font-size:10px}
+.quickgrid{grid-template-columns:repeat(auto-fit,minmax(105px,1fr))}
+
+
+.doctor-tabs{display:flex;gap:8px;flex-wrap:wrap;width:100%}
+.doctor-tabs button{min-height:42px}
+@media(max-width:650px){.doctor-tabs button{flex:1 1 calc(50% - 8px)}}
+
 </style></head>
 <body>
 <header class="top"><div class="brand"><div class="logo">👑</div><div><h1>سوق القيمنق السعودي</h1><small>لوحة التحكم الرئيسية للمنصة</small></div></div><div class="search"><input aria-label="البحث في المنصة" id="search" placeholder="ابحث في المنصة (مستخدم، إعلان، متجر، طلب...)"/><button aria-label="تنفيذ البحث" id="searchSubmit" type="button">⌕</button></div><div class="actions"><button class="ib" data-go="إعدادات المنصة">⚙</button><button class="ib" data-go="الإشعارات" title="الإشعارات">♧</button><button class="ib" data-go="الرسائل" title="الرسائل">✉</button><button class="ib" data-action="theme">☾</button></div><div class="admin"><div class="avatar">♛</div><div><b id="adminEmail">مدير المنصة</b><small id="adminState">● بانتظار تسجيل الدخول</small></div></div><button class="ib" id="logoutButton" title="تسجيل الخروج">↪</button><button aria-controls="adminSideMenu" aria-expanded="false" class="ib" data-action="menu">☰</button></header>
@@ -87,14 +98,14 @@ button,a,[data-go],[data-action]{cursor:pointer;touch-action:manipulation;-webki
 </section>
 <div class="head"><div><h2 id="title">نظرة عامة على المنصة</h2><p>بيانات مباشرة من قاعدة بيانات سوق القيمنق السعودي</p></div><div style="display:flex;gap:8px;align-items:center"><select class="select" data-range-filter="true" id="dashboardRange"><option>آخر 30 يوم</option><option>آخر 7 أيام</option><option>اليوم</option><option>هذا العام</option></select><button class="vendor-admin-btn" id="dashboardRefresh" type="button">تحديث ↻</button></div></div>
 <section class="stats">
-<div class="stat" style="--c:#00d9e8;--t:#073d4b"><div class="ico">♙</div><div><label>إجمالي المستخدمين</label><strong id="metricUsers">—</strong><span class="up">إجمالي مسجل</span></div></div>
-<div class="stat" style="--c:#ed3ca8;--t:#48163d"><div class="ico">⚑</div><div><label>إجمالي الإعلانات</label><strong id="metricAds">—</strong><span class="up">إجمالي مسجل</span></div></div>
-<div class="stat" style="--c:#168cff;--t:#102d5a"><div class="ico">▣</div><div><label>إجمالي المتاجر</label><strong id="metricStores">—</strong><span class="up">إجمالي مسجل</span></div></div>
-<div class="stat" style="--c:#a855f7;--t:#35154f"><div class="ico">🛒</div><div><label>الطلبات خلال الفترة</label><strong id="metricOrders">—</strong><span class="up" id="metricRangeOrders">آخر 30 يوم</span></div></div>
-<div class="stat" style="--c:#00d99a;--t:#064333"><div class="ico">◎</div><div><label>المبيعات المدفوعة خلال الفترة</label><strong id="metricSales">—</strong><span class="up" id="metricRangeSales">آخر 30 يوم</span></div></div></section>
+<div class="stat stat-link" role="button" tabindex="0" data-go="المستخدمون" aria-label="فتح صفحة المستخدمين" style="--c:#00d9e8;--t:#073d4b"><div class="ico">♙</div><div><label>إجمالي المستخدمين</label><strong id="metricUsers">—</strong><span class="up">إجمالي مسجل</span></div></div>
+<div class="stat stat-link" role="button" tabindex="0" data-go="إعلانات الأفراد" aria-label="فتح صفحة الإعلانات" style="--c:#ed3ca8;--t:#48163d"><div class="ico">⚑</div><div><label>إجمالي الإعلانات</label><strong id="metricAds">—</strong><span class="up">إجمالي مسجل</span></div></div>
+<div class="stat stat-link" role="button" tabindex="0" data-go="إدارة صفحات المتاجر" aria-label="فتح صفحة المتاجر" style="--c:#168cff;--t:#102d5a"><div class="ico">▣</div><div><label>إجمالي المتاجر</label><strong id="metricStores">—</strong><span class="up">إجمالي مسجل</span></div></div>
+<div class="stat stat-link" role="button" tabindex="0" data-go="الطلبات" aria-label="فتح صفحة الطلبات" style="--c:#a855f7;--t:#35154f"><div class="ico">🛒</div><div><label>الطلبات خلال الفترة</label><strong id="metricOrders">—</strong><span class="up" id="metricRangeOrders">آخر 30 يوم</span></div></div>
+<div class="stat stat-link" role="button" tabindex="0" data-go="المدفوعات والمحافظ" aria-label="فتح صفحة المبيعات والمحافظ" style="--c:#00d99a;--t:#064333"><div class="ico">◎</div><div><label>المبيعات المدفوعة خلال الفترة</label><strong id="metricSales">—</strong><span class="up" id="metricRangeSales">آخر 30 يوم</span></div></div></section>
 <section class="row2"><div class="panel"><h3>إحصائيات المنصة <span>▥</span></h3><div class="chart" id="dashboardChart"><p class="muted">جارٍ تحميل الطلبات خلال آخر 7 أيام...</p></div></div>
 <div class="panel"><h3>النشاط المباشر <span style="color:var(--green)">●</span></h3><div class="live" id="dashboardActivity"><p class="muted">جارٍ تحميل آخر أنشطة المنصة...</p></div></div></section>
-<section class="panel quick"><h3>إدارة سريعة <span>ϟ</span></h3><div class="quickgrid"><button data-go="إعلانات الأفراد" style="--c:#b45cff;--t:#291448"><i>＋</i>إدارة الإعلانات</button><button data-go="إدارة صفحات المتاجر" style="--c:#19bfff;--t:#0d3150"><i>▣</i>إدارة المتاجر</button><button data-go="إدارة المستخدمين" style="--c:#ffbd3c;--t:#3b2a13"><i>♙</i>إدارة المستخدمين</button><button data-go="مراجعة البلاغات" style="--c:#ff476f;--t:#401629"><i>⬡</i>مراجعة البلاغات</button><button data-go="اعتماد التجار" style="--c:#00d99a;--t:#073a32"><i>✓</i>اعتماد التجار</button><button data-go="إدارة الطلبات" style="--c:#12c9e8;--t:#073846"><i>🛒</i>إدارة الطلبات</button><button data-go="المدفوعات" style="--c:#f5a623;--t:#3b2b15"><i>◉</i>المدفوعات</button><button data-go="التقارير" style="--c:#a855f7;--t:#291448"><i>▥</i>التقارير</button></div></section>
+<section class="panel quick"><h3>إدارة سريعة <span>ϟ</span></h3><div class="quickgrid"><button data-go="إعلانات الأفراد" style="--c:#b45cff;--t:#291448"><i>＋</i>إدارة الإعلانات</button><button data-go="إدارة صفحات المتاجر" style="--c:#19bfff;--t:#0d3150"><i>▣</i>إدارة المتاجر</button><button data-go="إدارة المستخدمين" style="--c:#ffbd3c;--t:#3b2a13"><i>♙</i>إدارة المستخدمين</button><button data-go="مراجعة البلاغات" style="--c:#ff476f;--t:#401629"><i>⬡</i>مراجعة البلاغات</button><button data-go="اعتماد التجار" style="--c:#00d99a;--t:#073a32"><i>✓</i>اعتماد التجار</button><button data-go="إدارة الطلبات" style="--c:#12c9e8;--t:#073846"><i>🛒</i>إدارة الطلبات</button><button data-go="المدفوعات" style="--c:#f5a623;--t:#3b2b15"><i>◉</i>المدفوعات</button><button data-go="التقارير" style="--c:#a855f7;--t:#291448"><i>▥</i>التقارير</button><button data-go="دكتور القيمنق" style="--c:#00d9a0;--t:#073a32"><i>🎧</i>طلبات المختصين</button><button data-go="إعدادات المالك" style="--c:#ffbd3c;--t:#3b2a13"><i>👑</i>إعدادات المالك</button></div></section>
 <section class="bottom"><div class="panel"><h3>آخر الإعلانات <span>♢</span></h3><div id="adsData"><div class="ad"><div class="thumb">🎮</div><div><b>جهاز سوني PS5 Slim</b><small>2,299 ر.س</small></div><span class="status wait">معلق للمراجعة</span></div><div class="ad"><div class="thumb">🖥️</div><div><b>كرت شاشة RTX 4060</b><small>1,799 ر.س</small></div><span class="status ok">معتمد</span></div><div class="ad"><div class="thumb">🎮</div><div><b>حساب ستيم رسمي</b><small>199 ر.س</small></div><span class="status ok">معتمد</span></div><div class="ad"><div class="thumb">🪑</div><div><b>كرسي قيمنق احترافي</b><small>699 ر.س</small></div><span class="status wait">مراجعة</span></div><a class="link" data-go="جميع الإعلانات" data-nav-link="true" href="#">عرض جميع الإعلانات ←</a></div></div>
 <div class="panel"><h3>آخر الطلبات <span>🛒</span></h3><div class="tablewrap"><table><thead><tr><th>رقم الطلب</th><th>المشتري</th><th>المتجر</th><th>القيمة</th><th>الحالة</th></tr></thead><tbody id="ordersData"><tr><td colspan="5">بانتظار تحميل الطلبات…</td></tr></tbody></table></div><a class="link" data-go="جميع الطلبات" data-nav-link="true" href="#">عرض جميع الطلبات ←</a></div>
 <div class="panel distribution"><h3>توزيع النشاط <span>◉</span></h3><div class="donutbox"><div class="donut"><strong id="dashboardUserCount">—<small>المستخدمون</small></strong></div><div class="legend"><div><span style="background:#13a9ff"></span>المتاجر</div><div><span style="background:#963ef4"></span>الإعلانات</div><div><span style="background:#ff9c36"></span>الطلبات</div><div><span style="background:#00d9a0"></span>المبيعات المدفوعة</div></div></div></div></section>
@@ -114,7 +125,7 @@ button,a,[data-go],[data-action]{cursor:pointer;touch-action:manipulation;-webki
 <button class="nav" data-go="إدارة البنر"><i>🖼</i>إدارة البنر</button>
 <button class="nav" data-go="دكتور القيمنق"><i>🎧</i>دكتور القيمنق</button>
 <button class="nav" data-go="إدارة لوحة التجار"><i>🧩</i>إدارة لوحة التجار</button>
-<button class="nav" data-go="الطلبات"><i>🛒</i>الطلبات</button><button class="nav" data-go="المدفوعات والمحافظ"><i>▤</i>المدفوعات والمحافظ</button><button class="nav" data-go="العمولات والتسويات"><i>％</i>العمولات والتسويات</button><button class="nav" data-go="البلاغات والمخالفات"><i>⬡</i>البلاغات والمخالفات</button><button class="nav" data-go="التقييمات والمراجعات"><i>☆</i>التقييمات والمراجعات</button><button class="nav" data-go="المجتمع والمنشورات"><i>♧</i>المجتمع والمنشورات</button><button class="nav" data-go="الإشعارات"><i>♧</i>الإشعارات</button><button class="nav" data-go="التقارير والإحصائيات"><i>▥</i>التقارير والإحصائيات</button><button class="nav" data-go="إعدادات المنصة"><i>⚙</i>إعدادات المنصة</button><button class="preview" data-action="preview">↗ معاينة المنصة</button></aside></div><div class="toast" id="toast"></div>
+<button class="nav" data-go="الطلبات"><i>🛒</i>الطلبات</button><button class="nav" data-go="المدفوعات والمحافظ"><i>▤</i>المدفوعات والمحافظ</button><button class="nav" data-go="العمولات والتسويات"><i>％</i>العمولات والتسويات</button><button class="nav" data-go="البلاغات والمخالفات"><i>⬡</i>البلاغات والمخالفات</button><button class="nav" data-go="التقييمات والمراجعات"><i>☆</i>التقييمات والمراجعات</button><button class="nav" data-go="المجتمع والمنشورات"><i>♧</i>المجتمع والمنشورات</button><button class="nav" data-go="الإشعارات"><i>♧</i>الإشعارات</button><button class="nav" data-go="التقارير والإحصائيات"><i>▥</i>التقارير والإحصائيات</button><button class="nav" data-go="إعدادات المنصة"><i>⚙</i>إعدادات المنصة</button><button class="nav" data-go="إعدادات المالك"><i>👑</i>إعدادات المالك</button><button class="preview" data-action="preview">↗ معاينة المنصة</button></aside></div><div class="toast" id="toast"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 (()=>{'use strict';
@@ -129,7 +140,7 @@ window.go=function(s,e){
   'جميع الطلبات':'الطلبات','إدارة الطلبات':'الطلبات',
   'إضافة متجر':'إدارة صفحات المتاجر','إدارة المستخدمين':'المستخدمون','طلبات توثيق التجار':'التجار والمتاجر',
   'اعتماد التجار':'التجار والمتاجر','مراجعة البلاغات':'البلاغات والمخالفات',
-  'المدفوعات':'المدفوعات والمحافظ','التقارير':'التقارير والإحصائيات'
+  'المدفوعات':'المدفوعات والمحافظ','التقارير':'التقارير والإحصائيات','المالك':'إعدادات المالك'
  };
  s=aliases[s]||s;
  const side=document.getElementById('adminSideMenu');side?.classList.remove('open');
@@ -343,6 +354,7 @@ async function showAdminSection(name){
  $('workspaceRefresh').onclick=()=>showAdminSection(name);wsMsg('جارٍ تحميل البيانات...');
  try{
   if(name==='إدارة البنر'){await loadWorkspaceBanner();return;}
+  if(name==='إعدادات المالك'){await loadOwnerSettings();return;}
   if(name==='دكتور القيمنق'){await loadWorkspaceDoctor();return;}
   if(name==='تصنيفات المتاجر'){await loadVendorStoreCategories();return;}
   if(name==='إدارة لوحة التجار'){await loadWorkspaceTraderControls();return;}
@@ -464,22 +476,74 @@ async function loadWorkspaceBanner(){
  wsMsg('تم تحميل إعدادات البنر.');
 }
 async function loadWorkspaceDoctor(){
- const [q,s,r]=await Promise.all([
-  db.from('doctor_questions').select('id,user_id,title,body,category,status,created_at').order('created_at',{ascending:false}).limit(100),
-  db.from('doctor_specialists').select('user_id,display_name,specialty,bio,application_status,is_verified,created_at').order('created_at',{ascending:false}).limit(100),
-  db.from('doctor_reports').select('id,question_id,reporter_id,reason,status,created_at').order('created_at',{ascending:false}).limit(100)
- ]);
- const errors=[q.error,s.error,r.error].filter(Boolean);if(errors.length){wsMsg('تعذر تحميل بعض بيانات دكتور القيمنق: '+errors.map(x=>x.message).join(' | '));return;}
- const blocks=[['الأسئلة',q.data||[],'doctor_questions'],['المختصون',s.data||[],'doctor_specialists'],['البلاغات',r.data||[],'doctor_reports']];
- $('workspaceList').innerHTML=blocks.map(([label,rows,table])=>`<div class="panel"><h3>${label} (${rows.length})</h3>${rows.map(x=>`<div class="workspace-row"><div><b>${wsEsc(x.title||x.display_name||x.reason||x.user_id||x.id)}</b><small>${wsEsc([x.specialty,x.application_status,x.is_verified?'معتمد':'بانتظار المراجعة',x.category,x.status].filter(Boolean).join(' · '))}</small></div><div class="workspace-actions">${table==='doctor_specialists'?`${(x.is_verified||x.application_status==='approved')?`<span class="status ok">مختص معتمد</span><button data-doc-revoke="${wsEsc(x.user_id)}">إلغاء الاعتماد</button>`:`<button data-doc-approve="${wsEsc(x.user_id)}">قبول الطلب</button><button data-doc-reject="${wsEsc(x.user_id)}">رفض الطلب</button>`}`:table==='doctor_questions'?`<span class="muted">عرض فقط</span>`:`<button data-doc-report="${wsEsc(x.id)}">إغلاق البلاغ</button>`}</div></div>`).join('')||'<p class="muted">لا توجد سجلات.</p>'}</div>`).join('');
- $('workspaceList').onclick=async ev=>{const b=ev.target.closest('button');if(!b)return;let result;
+ let activeTab='requests',cache={specialists:[],questions:[],reports:[]};
+ $('workspaceToolbar').innerHTML=`
+ <div class="doctor-tabs" role="tablist" aria-label="أقسام دكتور القيمنق">
+  <button class="primary" data-doctor-tab="requests">طلبات المختصين</button>
+  <button data-doctor-tab="approved">المختصون المعتمدون</button>
+  <button data-doctor-tab="questions">الأسئلة</button>
+  <button data-doctor-tab="reports">البلاغات</button>
+ </div>
+ <button id="doctorRefresh">تحديث البيانات ↻</button>`;
+ $('workspaceList').innerHTML='<div class="workspace-message">جارٍ تحميل طلبات المختصين…</div>';
+ async function loadTab(tab){
+  activeTab=tab;
+  const [s,q,r]=await Promise.all([
+   db.from('doctor_specialists').select('user_id,display_name,specialty,bio,application_status,is_verified,created_at').order('created_at',{ascending:false}).limit(250),
+   db.from('doctor_questions').select('id,user_id,title,body,category,status,created_at').order('created_at',{ascending:false}).limit(150),
+   db.from('doctor_reports').select('id,question_id,reporter_id,reason,status,created_at').order('created_at',{ascending:false}).limit(150)
+  ]);
+  const errors=[s.error,q.error,r.error].filter(Boolean);
+  if(errors.length){wsMsg('تعذر تحميل دكتور القيمنق: '+errors.map(x=>x.message).join(' | '));$('workspaceList').innerHTML='<div class="workspace-message">تعذر تحميل البيانات. تحقق من صلاحيات قاعدة البيانات.</div>';return;}
+  cache={specialists:s.data||[],questions:q.data||[],reports:r.data||[]};
+  const tabs=[...$('workspaceToolbar').querySelectorAll('[data-doctor-tab]')];
+  tabs.forEach(b=>{b.classList.toggle('primary',b.dataset.doctorTab===tab);b.setAttribute('aria-selected',String(b.dataset.doctorTab===tab));});
+  let rows=[],title='';
+  if(tab==='requests'){rows=cache.specialists.filter(x=>!x.is_verified&&x.application_status!=='approved'&&x.application_status!=='rejected');title='طلبات المختصين قيد المراجعة';}
+  if(tab==='approved'){rows=cache.specialists.filter(x=>x.is_verified||x.application_status==='approved');title='المختصون المعتمدون';}
+  if(tab==='questions'){rows=cache.questions;title='أسئلة دكتور القيمنق';}
+  if(tab==='reports'){rows=cache.reports;title='بلاغات دكتور القيمنق';}
+  $('workspaceList').innerHTML=`<div class="panel"><div class="head"><div><h3>${title}</h3><p>${rows.length} سجل</p></div></div>
+  ${rows.map(x=>{
+   const specialist=tab==='requests'||tab==='approved';
+   const name=specialist?(x.display_name||'مختص بدون اسم'):tab==='questions'?(x.title||'سؤال بدون عنوان'):(x.reason||'بلاغ');
+   const meta=specialist?[x.specialty,x.application_status||'بانتظار المراجعة',x.is_verified?'معتمد':'غير معتمد',x.created_at?dateLabel(x.created_at):''].filter(Boolean).join(' · '):tab==='questions'?[x.category,x.status,x.created_at?dateLabel(x.created_at):''].filter(Boolean).join(' · '):['السؤال: '+x.question_id,'الحالة: '+(x.status||'—'),x.created_at?dateLabel(x.created_at):''].join(' · ');
+   return `<article class="workspace-row"><div><div class="record-title">${wsEsc(name)}</div><div class="record-meta"><span class="record-chip">${wsEsc(meta)}</span></div>${specialist&&x.bio?`<p>${wsEsc(x.bio)}</p>`:''}${tab==='questions'&&x.body?`<p>${wsEsc(String(x.body).slice(0,320))}</p>`:''}</div><div class="workspace-actions">${specialist?(tab==='requests'?`<button class="primary" data-doc-approve="${wsEsc(x.user_id)}">قبول المختص</button><button data-doc-reject="${wsEsc(x.user_id)}">رفض الطلب</button>`:`<button data-doc-revoke="${wsEsc(x.user_id)}">إلغاء الاعتماد</button>`):tab==='reports'?`<button data-doc-report="${wsEsc(x.id)}">وضع كمراجع</button>`:`<span class="muted">عرض السؤال</span>`}</div></article>`;
+  }).join('')||'<div class="workspace-message">لا توجد طلبات أو سجلات في هذا القسم حالياً.</div>'}</div>`;
+  wsMsg('تم تحميل '+rows.length+' سجل — '+title);
+ }
+ $('workspaceToolbar').onclick=async ev=>{
+  const tab=ev.target.closest('[data-doctor-tab]');
+  if(tab){await loadTab(tab.dataset.doctorTab);return;}
+  if(ev.target.closest('#doctorRefresh'))await loadTab(activeTab);
+ };
+ $('workspaceList').onclick=async ev=>{
+  const b=ev.target.closest('button');if(!b)return;
+  let result;
   if(b.dataset.docApprove)result=await db.from('doctor_specialists').update({is_verified:true,application_status:'approved',verified_at:new Date().toISOString()}).eq('user_id',b.dataset.docApprove);
   else if(b.dataset.docReject)result=await db.from('doctor_specialists').update({is_verified:false,application_status:'rejected'}).eq('user_id',b.dataset.docReject);
   else if(b.dataset.docRevoke)result=await db.from('doctor_specialists').update({is_verified:false,application_status:'pending'}).eq('user_id',b.dataset.docRevoke);
   else if(b.dataset.docReport)result=await db.from('doctor_reports').update({status:'reviewed'}).eq('id',b.dataset.docReport);
-  if(result?.error)wsMsg('تعذر الحفظ: '+result.error.message);else if(result)await loadWorkspaceDoctor();
+  if(result){if(result.error){wsMsg('لم يتم حفظ التغيير: '+result.error.message);window.toast('تعذر الحفظ');}else{window.toast('تم حفظ التغيير');await loadTab(activeTab);}}
  };
- wsMsg('تم تحميل أقسام دكتور القيمنق.');
+ await loadTab('requests');
+}
+async function loadOwnerSettings(){
+ const [sessionResult,ownerResult]=await Promise.all([db.auth.getUser(),db.rpc('is_platform_control_owner')]);
+ const user=sessionResult?.data?.user||null;
+ const isOwner=ownerResult?.data===true;
+ const ownerError=ownerResult?.error?.message||'';
+ $('workspaceToolbar').innerHTML='<button id="ownerRefresh" class="primary">تحديث التحقق ↻</button>';
+ $('workspaceList').innerHTML=`<div class="panel"><h3>هوية مالك المنصة</h3>
+ <div class="workspace-row"><div><b>حساب الدخول الحالي</b><small>${wsEsc(user?.email||'لا يوجد مستخدم مسجل')}</small></div><span class="record-chip">${isOwner?'مالك معتمد':'لم يتم تأكيد صلاحية المالك'}</span></div>
+ <div class="workspace-row"><div><b>التحقق من صلاحية المالك</b><small>${isOwner?'اجتاز الحساب فحص is_platform_control_owner':wsEsc(ownerError||'أعاد التحقق قيمة غير معتمدة')}</small></div></div>
+ <p class="muted">تُدار صلاحية المالك من آلية التحقق الموجودة في المشروع. لم أضف جدول مشرفين أو أدواراً غير مثبتة في قاعدة البيانات.</p></div>
+ <div class="panel"><h3>الإعدادات الأساسية</h3><div class="workspace-actions">
+ <button data-go="إعدادات المنصة">إعدادات المنصة</button><button data-go="إدارة لوحة التجار">إعدادات لوحة التجار</button><button data-go="إدارة البنر">إدارة البنر</button><button data-go="التقارير والإحصائيات">التقارير والإحصائيات</button>
+ </div></div>
+ <div class="panel"><h3>أمان الحساب</h3><p>تسجيل الدخول يعتمد على Supabase Auth والتحقق من مالك المنصة. لا تعرض هذه الصفحة مفاتيح سرية أو بيانات اعتماد حساسة.</p><button id="ownerLogout">تسجيل الخروج</button></div>`;
+ $('ownerRefresh').onclick=()=>showAdminSection('إعدادات المالك');
+ $('ownerLogout').onclick=()=>$('logoutButton')?.click();
 }
 async function loadWorkspaceTraderControls(){
  const [settings,elements]=await Promise.all([db.from('platform_control_settings').select('setting_key,setting_value').order('setting_key'),db.from('platform_control_elements').select('element_key,element_value,is_visible').order('element_key')]);
@@ -594,5 +658,10 @@ $('logoutButton').addEventListener('click',async()=>{activeShowUser=null;await d
 db.auth.getSession().then(async({data,error})=>{if(error||!data.session?.user)return;try{await safeShow(data.session.user);}catch(x){await db.auth.signOut();note(x.message||String(x),'error');}});
 db.auth.onAuthStateChange((e,session)=>{if(e==='SIGNED_OUT'){activeShowUser=null;$('dashboard').classList.add('hidden');$('loginGate').classList.remove('hidden');}else if(e==='SIGNED_IN'&&session?.user){setTimeout(()=>safeShow(session.user).catch(x=>{note(x.message||String(x),'error');db.auth.signOut();}),0);}});
 })();
+
+document.addEventListener('keydown',function(event){
+ const card=event.target.closest('.stat-link[data-go]');
+ if(card&&(event.key==='Enter'||event.key===' ')){event.preventDefault();window.go(card.dataset.go);}
+});
 </script>
 </body></html>
