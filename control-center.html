@@ -23,6 +23,23 @@
 
 
 .hidden{display:none!important}
+
+.admin-workspace{display:none;min-height:70vh}.admin-workspace.active{display:block}
+.admin-workspace .workspace-toolbar{display:flex;gap:9px;flex-wrap:wrap;margin:14px 0}
+.admin-workspace input,.admin-workspace select,.admin-workspace textarea{background:#0a1a30;color:#edf7ff;border:1px solid #31577d;border-radius:9px;padding:10px;min-width:0}
+.admin-workspace input{flex:1;min-width:180px}
+.admin-workspace .workspace-list{display:grid;gap:9px}
+.admin-workspace .workspace-row{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:13px;border:1px solid #28558a;border-radius:12px;background:#102341}
+.admin-workspace .workspace-row small{display:block;color:#9bb2ca;margin-top:5px;overflow-wrap:anywhere}
+.admin-workspace .workspace-actions{display:flex;gap:7px;flex-wrap:wrap}
+.admin-workspace button{border:1px solid #3a6795;background:#132d4d;color:#edf7ff;border-radius:8px;padding:8px 11px;cursor:pointer}
+.admin-workspace button.primary{background:linear-gradient(100deg,#5520a5,#087a9e);border-color:#a855f7}
+.admin-workspace .workspace-message{padding:12px;border:1px dashed #31577d;border-radius:10px;color:#9bb2ca}
+.admin-workspace .workspace-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0}
+.admin-workspace .workspace-form label{display:grid;gap:5px;color:#bad4ed;font-size:12px}
+.admin-workspace .workspace-form .wide{grid-column:1/-1}
+@media(max-width:650px){.admin-workspace .workspace-form{grid-template-columns:1fr}}
+
 </style></head>
 <body>
 <header class="top"><div class="brand"><div class="logo">👑</div><div><h1>سوق القيمنق السعودي</h1><small>لوحة التحكم الرئيسية للمنصة</small></div></div><div class="search"><input id="search" placeholder="ابحث في المنصة (مستخدم، إعلان، متجر، طلب...)"><b>⌕</b></div><div class="actions"><button class="ib" onclick="toast('الإعدادات')">⚙</button><button class="ib" onclick="toast('الإشعارات')">♧<span class="badge">12</span></button><button class="ib" onclick="toast('الرسائل')">✉<span class="badge">3</span></button><button class="ib" onclick="toast('تبديل المظهر')">☾</button></div><div class="admin"><div class="avatar">♛</div><div><b id="adminEmail">مدير المنصة</b><small id="adminState">● بانتظار تسجيل الدخول</small></div></div><button class="ib" id="logoutButton" title="تسجيل الخروج">↪</button><button class="ib" onclick="document.querySelector('.side').classList.toggle('open')">☰</button></header>
@@ -52,7 +69,23 @@
 <section class="bottom"><div class="panel"><h3>آخر الإعلانات <span>♢</span></h3><div id="adsData"><div class="ad"><div class="thumb">🎮</div><div><b>جهاز سوني PS5 Slim</b><small>2,299 ر.س</small></div><span class="status wait">معلق للمراجعة</span></div><div class="ad"><div class="thumb">🖥️</div><div><b>كرت شاشة RTX 4060</b><small>1,799 ر.س</small></div><span class="status ok">معتمد</span></div><div class="ad"><div class="thumb">🎮</div><div><b>حساب ستيم رسمي</b><small>199 ر.س</small></div><span class="status ok">معتمد</span></div><div class="ad"><div class="thumb">🪑</div><div><b>كرسي قيمنق احترافي</b><small>699 ر.س</small></div><span class="status wait">مراجعة</span></div><a class="link" href="#" onclick="go('جميع الإعلانات');return false">عرض جميع الإعلانات ←</a></div></div>
 <div class="panel"><h3>آخر الطلبات <span>🛒</span></h3><div class="tablewrap"><table><thead><tr><th>رقم الطلب</th><th>المشتري</th><th>المتجر</th><th>القيمة</th><th>الحالة</th></tr></thead><tbody id="ordersData"><tr><td colspan="5">بانتظار تحميل الطلبات…</td></tr></tbody></table></div><a class="link" href="#" onclick="go('جميع الطلبات');return false">عرض جميع الطلبات ←</a></div>
 <div class="panel distribution"><h3>توزيع النشاط <span>◉</span></h3><div class="donutbox"><div class="donut"><strong>52,780<small>المستخدمون</small></strong></div><div class="legend"><div><span style="background:#13a9ff"></span>المتسوقون 62%</div><div><span style="background:#963ef4"></span>التجار 24%</div><div><span style="background:#ff9c36"></span>المعلنون 8%</div><div><span style="background:#00d9a0"></span>الإداريون 6%</div></div></div></div></section>
-</main><aside class="side"><small>إدارة المنصة</small><button class="nav active" onclick="go('الرئيسية',this)"><i>⌂</i>الرئيسية</button><button class="nav" onclick="go('المستخدمون',this)"><i>♙</i>المستخدمون</button><button class="nav" onclick="go('التجار والمتاجر',this)"><i>▣</i>التجار والمتاجر</button><button class="nav" onclick="go('الإعلانات',this)"><i>⚑</i>الإعلانات</button><button class="nav" onclick="go('الطلبات',this)"><i>🛒</i>الطلبات</button><button class="nav" onclick="go('المدفوعات والمحافظ',this)"><i>▤</i>المدفوعات والمحافظ</button><button class="nav" onclick="go('العمولات والتسويات',this)"><i>％</i>العمولات والتسويات</button><button class="nav" onclick="go('البلاغات والمخالفات',this)"><i>⬡</i>البلاغات والمخالفات</button><button class="nav" onclick="go('التقييمات والمراجعات',this)"><i>☆</i>التقييمات والمراجعات</button><button class="nav" onclick="go('دكتور القيمنق',this)"><i>♧</i>دكتور القيمنق</button><button class="nav" onclick="go('المجتمع والمنشورات',this)"><i>♧</i>المجتمع والمنشورات</button><button class="nav" onclick="go('الإشعارات',this)"><i>♧</i>الإشعارات</button><button class="nav" onclick="go('التقارير والإحصائيات',this)"><i>▥</i>التقارير والإحصائيات</button><button class="nav" onclick="go('إعدادات المنصة',this)"><i>⚙</i>إعدادات المنصة</button><button class="preview" onclick="toast('معاينة المنصة')">↗ معاينة المنصة</button></aside></div><div class="toast" id="toast"></div>
+
+<section id="adminWorkspace" class="admin-workspace">
+ <div class="head"><div><h2 id="workspaceTitle">إدارة القسم</h2><p id="workspaceDescription">إدارة مباشرة لبيانات المنصة.</p></div><button class="vendor-admin-btn" id="workspaceBack">العودة للرئيسية</button></div>
+ <div id="workspaceToolbar" class="workspace-toolbar"></div>
+ <div id="workspaceForm" class="panel" hidden></div>
+ <div id="workspaceMessage" class="workspace-message">اختر قسماً من القائمة لعرض بياناته.</div>
+ <div id="workspaceList" class="workspace-list"></div>
+</section>
+</main><aside class="side"><small>إدارة المنصة</small><button class="nav active" onclick="go('الرئيسية',this)"><i>⌂</i>الرئيسية</button><button class="nav" onclick="go('المستخدمون',this)"><i>♙</i>المستخدمون</button><button class="nav" onclick="go('التجار والمتاجر',this)"><i>▣</i>التجار والمتاجر</button><button class="nav" onclick="go('الإعلانات',this)"><i>⚑</i>الإعلانات</button>
+<button class="nav" onclick="go('إعلانات الأفراد',this)"><i>📣</i>إعلانات الأفراد</button>
+<button class="nav" onclick="go('تصنيفات البحث للأفراد',this)"><i>⌕</i>تصنيفات البحث للأفراد</button>
+<button class="nav" onclick="go('تصنيفات المتاجر',this)"><i>▦</i>تصنيفات المتاجر</button>
+<button class="nav" onclick="go('إدارة صفحات المتاجر',this)"><i>🏬</i>إدارة صفحات المتاجر</button>
+<button class="nav" onclick="go('إدارة البنر',this)"><i>🖼</i>إدارة البنر</button>
+<button class="nav" onclick="go('دكتور القيمنق',this)"><i>🎧</i>دكتور القيمنق</button>
+<button class="nav" onclick="go('إدارة لوحة التجار',this)"><i>🧩</i>إدارة لوحة التجار</button>
+<button class="nav" onclick="go('الطلبات',this)"><i>🛒</i>الطلبات</button><button class="nav" onclick="go('المدفوعات والمحافظ',this)"><i>▤</i>المدفوعات والمحافظ</button><button class="nav" onclick="go('العمولات والتسويات',this)"><i>％</i>العمولات والتسويات</button><button class="nav" onclick="go('البلاغات والمخالفات',this)"><i>⬡</i>البلاغات والمخالفات</button><button class="nav" onclick="go('التقييمات والمراجعات',this)"><i>☆</i>التقييمات والمراجعات</button><button class="nav" onclick="go('دكتور القيمنق',this)"><i>♧</i>دكتور القيمنق</button><button class="nav" onclick="go('المجتمع والمنشورات',this)"><i>♧</i>المجتمع والمنشورات</button><button class="nav" onclick="go('الإشعارات',this)"><i>♧</i>الإشعارات</button><button class="nav" onclick="go('التقارير والإحصائيات',this)"><i>▥</i>التقارير والإحصائيات</button><button class="nav" onclick="go('إعدادات المنصة',this)"><i>⚙</i>إعدادات المنصة</button><button class="preview" onclick="toast('معاينة المنصة')">↗ معاينة المنصة</button></aside></div><div class="toast" id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -62,7 +95,7 @@ const $=id=>document.getElementById(id);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const money=n=>Number(n||0).toLocaleString('ar-SA')+' ر.س';
 window.toast=function(s){const t=$('toast');if(!t)return;t.textContent=s;t.style.display='block';clearTimeout(window.__toastTimer);window.__toastTimer=setTimeout(()=>t.style.display='none',2400);};
-window.go=function(s,e){if(s==='التجار والمتاجر'||s==='اعتماد التجار'){showVendorAdmin();return;}hideVendorAdmin();const title=$('title');if(title)title.textContent=s;document.querySelectorAll('.nav').forEach(n=>n.classList.remove('active'));if(e)e.classList.add('active');window.toast('القسم: '+s+' — ربط وظائف هذا القسم قيد الاستكمال');};
+window.go=function(s,e){if(s==='التجار والمتاجر'||s==='اعتماد التجار'){showVendorAdmin();return;}hideVendorAdmin();document.querySelectorAll('.nav').forEach(n=>n.classList.remove('active'));if(e)e.classList.add('active');if(s==='الرئيسية'){ $('adminWorkspace').classList.remove('active');[...$('dashboard').querySelector('main').children].forEach(el=>{if(el.id!=='adminWorkspace'&&el.id!=='vendorAdminView')el.hidden=false;});$('adminWorkspace').classList.remove('active');return;}showAdminSection(s);};
 const search=$('search');if(search)search.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.value.trim())window.toast('البحث المتقدم لم يُربط بعد');});
 function note(s,k=''){const e=$('loginMessage');e.textContent=s;e.className=k;}
 async function owner(u){if(!u?.id)throw Error('يلزم تسجيل الدخول أولاً.');const {data,error}=await db.rpc('is_platform_control_owner');if(error)throw Error('تعذر التحقق من صلاحية المدير: '+error.message);if(data!==true)throw Error('الحساب غير معتمد كمالك للمنصة (role=owner).');}
@@ -141,6 +174,103 @@ $('vendorAdminSearch').addEventListener('input',renderVendorRequests);
 $('vendorAdminStatus').addEventListener('change',renderVendorRequests);
 $('vendorAdminList').addEventListener('click',e=>{const b=e.target.closest('[data-vendor-open]');if(b)openVendorRequest(b.dataset.vendorOpen);});
 $('vendorAdminBack').addEventListener('click',hideVendorAdmin);
+
+
+// مركز إدارة المنصة: جميع الوحدات تعمل على نفس مشروع Supabase المستخدم في واجهة السوق.
+const workspaceConfigs={
+ 'إعلانات الأفراد':{desc:'مراجعة إعلانات الأفراد وتغيير حالة النشر.',table:'ads',select:'id,title,price,category,status,created_at',order:'created_at',actions:['publish','review','reject']},
+ 'الإعلانات':{desc:'إدارة إعلانات الأفراد المنشورة والمعلقة.',table:'ads',select:'id,title,price,category,status,created_at',order:'created_at',actions:['publish','review','reject']},
+ 'تصنيفات البحث للأفراد':{desc:'إدارة التصنيفات التي تقرؤها واجهة البحث للأفراد من platform_control_categories.',table:'platform_control_categories',select:'id,name,icon,section,sort_order,is_active',order:'sort_order',filter:{section:'ads'},actions:['edit','toggle','delete'],create:true},
+ 'تصنيفات المتاجر':{desc:'عرض وإدارة تصنيفات متاجر التجار المسجلة لكل متجر.',table:'vendor_store_categories',select:'id,store_id,name,sort_order',order:'sort_order',actions:['edit','delete'],create:true},
+ 'إدارة صفحات المتاجر':{desc:'إدارة ظهور صفحات المتاجر وحالة الاعتماد وإبراز المتجر.',table:'vendor_stores',select:'id,store_name,slug,owner_id,status,category,city,is_featured,created_at',order:'created_at',actions:['approve','pause','feature']},
+ 'دكتور القيمنق':{desc:'إدارة أسئلة دكتور القيمنق وطلبات اعتماد المختصين والبلاغات.',special:true},
+ 'إدارة البنر':{desc:'تعديل البنر الرئيسي الذي تقرؤه واجهة المنصة من marketplace_home_banner.',special:true},
+ 'إدارة لوحة التجار':{desc:'إدارة إعدادات وعناصر لوحة التجار المشتركة عبر platform_control_settings و platform_control_elements.',special:true}
+};
+const wsEsc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function wsMsg(s){$('workspaceMessage').textContent=s;$('workspaceMessage').hidden=false;}
+function wsHomeHide(){[...$('dashboard').querySelector('main').children].forEach(el=>{if(el.id!=='adminWorkspace'&&el.id!=='vendorAdminView')el.hidden=true;});$('adminWorkspace').classList.add('active');$('vendorAdminView').classList.remove('active');}
+async function showAdminSection(name){
+ const cfg=workspaceConfigs[name];if(!cfg){window.toast('القسم غير مهيأ بعد: '+name);return;}
+ wsHomeHide();$('workspaceTitle').textContent=name;$('workspaceDescription').textContent=cfg.desc;
+ $('workspaceForm').hidden=true;$('workspaceForm').innerHTML='';$('workspaceList').innerHTML='';$('workspaceToolbar').innerHTML='';
+ wsMsg('جارٍ تحميل البيانات...');
+ if(name==='إدارة البنر'){await loadWorkspaceBanner();return;}
+ if(name==='دكتور القيمنق'){await loadWorkspaceDoctor();return;}
+ if(name==='إدارة لوحة التجار'){await loadWorkspaceTraderControls();return;}
+ await loadWorkspaceTable(cfg);
+}
+async function loadWorkspaceTable(cfg){
+ let q=db.from(cfg.table).select(cfg.select).order(cfg.order||'created_at',{ascending:false}).limit(250);
+ if(cfg.filter)for(const [k,v] of Object.entries(cfg.filter))q=q.eq(k,v);
+ const {data,error}=await q;if(error){wsMsg('تعذر تحميل '+cfg.table+': '+error.message+' — تحقق من صلاحيات RLS وأسماء الأعمدة.');return;}
+ const rows=data||[];$('workspaceList').innerHTML=rows.map(r=>{
+  const title=r.title||r.name||r.store_name||r.slug||('سجل '+r.id);
+  const meta=Object.entries(r).filter(([k])=>!['id','title','name','store_name'].includes(k)).map(([k,v])=>k+': '+(typeof v==='object'?JSON.stringify(v):String(v??'—'))).join(' · ');
+  return `<article class="workspace-row"><div><b>${wsEsc(title)}</b><small>${wsEsc(meta)}</small></div><div class="workspace-actions">${(cfg.actions||[]).map(a=>`<button data-ws-action="${a}" data-ws-id="${wsEsc(r.id)}">${({publish:'نشر',review:'قيد المراجعة',reject:'رفض',edit:'تعديل',toggle:'تفعيل / إيقاف',delete:'حذف',approve:'اعتماد المتجر',pause:'إيقاف الظهور',feature:'إبراز / إلغاء الإبراز'}[a]||a)}</button>`).join('')}</div></article>`;
+ }).join('')||'<div class="workspace-message">لا توجد سجلات حالياً.</div>';
+ $('workspaceMessage').textContent=`تم تحميل ${rows.length} سجل.`;$('workspaceMessage').hidden=false;
+ if(cfg.create){$('workspaceToolbar').innerHTML='<button class="primary" id="wsAdd">إضافة سجل</button>'; $('wsAdd').onclick=()=>workspaceEditForm(cfg,null);}
+ $('workspaceList').onclick=async ev=>{const b=ev.target.closest('[data-ws-action]');if(!b)return;const row=rows.find(x=>String(x.id)===b.dataset.wsId);if(!row)return;await workspaceAction(cfg,row,b.dataset.wsAction);};
+}
+function workspaceEditForm(cfg,row){
+ const isCategory=cfg.table==='platform_control_categories',isStoreCat=cfg.table==='vendor_store_categories';
+ const fields=isCategory?[['name','اسم التصنيف'],['icon','الأيقونة'],['sort_order','ترتيب العرض'],['is_active','مفعل (true/false)']]:isStoreCat?[['name','اسم التصنيف'],['store_id','معرّف المتجر'],['sort_order','ترتيب العرض']]:[];
+ if(!fields.length){window.toast('تعديل هذا النوع يحتاج حقولاً إضافية لم تُحدد في المخطط الحالي.');return;}
+ const form=$('workspaceForm');form.hidden=false;form.innerHTML=`<h3>${row?'تعديل سجل':'إضافة سجل'}</h3><div class="workspace-form">${fields.map(([k,l])=>`<label>${l}<input id="wsf_${k}" value="${wsEsc(row?.[k]??(k==='is_active'?'true':''))}"></label>`).join('')}</div><button class="primary" id="wsSave">حفظ</button> <button id="wsCancel">إلغاء</button><span id="wsFormMsg"></span>`;
+ $('wsCancel').onclick=()=>form.hidden=true;
+ $('wsSave').onclick=async()=>{const payload={};for(const [k] of fields){let v=$('wsf_'+k).value.trim();if(k==='sort_order')v=Number(v||0);if(k==='is_active')v=v==='true';payload[k]=v;}if(isCategory){payload.section='ads';}if(isStoreCat&&!payload.store_id){$('wsFormMsg').textContent='معرّف المتجر مطلوب لإضافة تصنيف متجر.';return;}
+ const result=row?await db.from(cfg.table).update(payload).eq('id',row.id):await db.from(cfg.table).insert(payload);
+ $('wsFormMsg').textContent=result.error?'تعذر الحفظ: '+result.error.message:'تم الحفظ.';if(!result.error){form.hidden=true;await loadWorkspaceTable(cfg);}
+ };
+}
+async function workspaceAction(cfg,row,action){
+ let patch=null;
+ if(cfg.table==='ads'){patch={status:action==='publish'?'published':action==='review'?'pending':'rejected'};}
+ if(cfg.table==='vendor_stores'){if(action==='approve')patch={status:'approved'};if(action==='pause')patch={status:'paused'};if(action==='feature')patch={is_featured:!row.is_featured};}
+ if(action==='toggle'&&cfg.table==='platform_control_categories')patch={is_active:!row.is_active};
+ if(action==='edit'){workspaceEditForm(cfg,row);return;}
+ if(action==='delete'){if(!confirm('هل تريد حذف هذا التصنيف؟'))return;const {error}=await db.from(cfg.table).delete().eq('id',row.id);if(error)wsMsg('تعذر الحذف: '+error.message);else await loadWorkspaceTable(cfg);return;}
+ if(!patch){window.toast('الإجراء غير متاح لهذا السجل.');return;}
+ const {error}=await db.from(cfg.table).update(patch).eq('id',row.id);if(error)wsMsg('تعذر تنفيذ الإجراء: '+error.message);else await loadWorkspaceTable(cfg);
+}
+async function loadWorkspaceBanner(){
+ const {data,error}=await db.from('marketplace_home_banner').select('*').eq('id',1).maybeSingle();
+ if(error){wsMsg('تعذر قراءة البنر: '+error.message);return;}
+ const r=data||{};const form=$('workspaceForm');form.hidden=false;
+ form.innerHTML=`<h3>إعدادات البنر الرئيسي</h3><div class="workspace-form">
+ <label>العنوان<input id="wsBannerTitle" value="${wsEsc(r.title||'')}"></label>
+ <label>العنوان الفرعي<input id="wsBannerSubtitle" value="${wsEsc(r.subtitle||'')}"></label>
+ <label>نص الزر<input id="wsBannerButton" value="${wsEsc(r.button_text||'')}"></label>
+ <label>وجهة الزر<input id="wsBannerTarget" value="${wsEsc(r.target_page||'vendors')}"></label>
+ <label class="wide">رابط صورة البنر<input id="wsBannerImage" value="${wsEsc(r.image_url||'')}"></label></div>
+ <button class="primary" id="wsBannerSave">حفظ وتحديث الواجهة</button><span id="wsBannerMsg"></span>`;
+ $('wsBannerSave').onclick=async()=>{const row={id:1,title:$('wsBannerTitle').value.trim(),subtitle:$('wsBannerSubtitle').value.trim(),button_text:$('wsBannerButton').value.trim(),target_page:$('wsBannerTarget').value.trim(),image_url:$('wsBannerImage').value.trim(),updated_at:new Date().toISOString()};const {error}=await db.from('marketplace_home_banner').upsert(row,{onConflict:'id'});$('wsBannerMsg').textContent=error?'تعذر الحفظ: '+error.message:'تم حفظ البنر. ستقرأه واجهة المنصة عند تحديثها.';};
+ wsMsg('تم تحميل إعدادات البنر.');$('workspaceList').innerHTML='';
+}
+async function loadWorkspaceDoctor(){
+ const [q,s,r]=await Promise.all([
+  db.from('doctor_questions').select('id,title,category,status,created_at').order('created_at',{ascending:false}).limit(100),
+  db.from('doctor_specialists').select('user_id,display_name,specialty,is_verified,application_status').order('created_at',{ascending:false}).limit(100),
+  db.from('doctor_reports').select('id,question_id,reason,status,created_at').order('created_at',{ascending:false}).limit(100)
+ ]);
+ const errors=[q.error,s.error,r.error].filter(Boolean);if(errors.length){wsMsg('تعذر تحميل بعض بيانات دكتور القيمنق: '+errors.map(x=>x.message).join(' | '));return;}
+ const blocks=[['الأسئلة',q.data||[],'doctor_questions'],['المختصون',s.data||[],'doctor_specialists'],['البلاغات',r.data||[],'doctor_reports']];
+ $('workspaceList').innerHTML=blocks.map(([label,rows,table])=>`<div class="panel"><h3>${label} (${rows.length})</h3>${rows.map(x=>`<div class="workspace-row"><div><b>${wsEsc(x.title||x.display_name||x.reason||x.user_id||x.id)}</b><small>${wsEsc(JSON.stringify(x))}</small></div><div class="workspace-actions">${table==='doctor_specialists'?`<button data-doc-approve="${wsEsc(x.user_id)}">اعتماد المختص</button><button data-doc-revoke="${wsEsc(x.user_id)}">إلغاء الاعتماد</button>`:table==='doctor_questions'?`<button data-doc-question="${wsEsc(x.id)}" data-doc-status="published">نشر السؤال</button><button data-doc-question="${wsEsc(x.id)}" data-doc-status="hidden">إخفاء السؤال</button>`:`<button data-doc-report="${wsEsc(x.id)}">إغلاق البلاغ</button>`}</div></div>`).join('')||'<p class="muted">لا توجد سجلات.</p>'}</div>`).join('');
+ $('workspaceList').onclick=async ev=>{const b=ev.target.closest('button');if(!b)return;let result;if(b.dataset.docApprove||b.dataset.docRevoke){const yes=!!b.dataset.docApprove;result=await db.from('doctor_specialists').update({is_verified:yes,application_status:yes?'approved':'pending'}).eq('user_id',b.dataset.docApprove||b.dataset.docRevoke);}else if(b.dataset.docQuestion){result=await db.from('doctor_questions').update({status:b.dataset.docStatus}).eq('id',b.dataset.docQuestion);}else if(b.dataset.docReport){result=await db.from('doctor_reports').update({status:'reviewed'}).eq('id',b.dataset.docReport);}if(result?.error)wsMsg('تعذر الحفظ: '+result.error.message);else await loadWorkspaceDoctor();};
+ wsMsg('تم تحميل أقسام دكتور القيمنق.'); 
+}
+async function loadWorkspaceTraderControls(){
+ const [settings,elements]=await Promise.all([
+  db.from('platform_control_settings').select('*').order('setting_key'),
+  db.from('platform_control_elements').select('*').order('element_key')
+ ]);
+ if(settings.error||elements.error){wsMsg('تعذر تحميل إعدادات لوحة التجار: '+[settings.error,elements.error].filter(Boolean).map(x=>x.message).join(' | '));return;}
+ $('workspaceList').innerHTML=`<div class="panel"><h3>إعدادات التحكم (${(settings.data||[]).length})</h3>${(settings.data||[]).map(x=>`<div class="workspace-row"><div><b>${wsEsc(x.setting_key)}</b><small>${wsEsc(JSON.stringify(x.setting_value))}</small></div><button data-setting="${wsEsc(x.setting_key)}">تعديل القيمة</button></div>`).join('')||'<p class="muted">لا توجد إعدادات.</p>'}</div><div class="panel"><h3>عناصر لوحة التجار (${(elements.data||[]).length})</h3>${(elements.data||[]).map(x=>`<div class="workspace-row"><div><b>${wsEsc(x.element_key)}</b><small>${wsEsc(JSON.stringify(x.element_value))} · ظاهر: ${x.is_visible?'نعم':'لا'}</small></div><button data-element="${wsEsc(x.element_key)}" data-visible="${!x.is_visible}">${x.is_visible?'إخفاء':'إظهار'}</button></div>`).join('')||'<p class="muted">لا توجد عناصر.</p>'}</div>`;
+ $('workspaceList').onclick=async ev=>{const b=ev.target.closest('button');if(!b)return;if(b.dataset.setting){const row=(settings.data||[]).find(x=>x.setting_key===b.dataset.setting);const v=prompt('أدخل قيمة JSON للإعداد '+row.setting_key,JSON.stringify(row.setting_value));if(v===null)return;let parsed;try{parsed=JSON.parse(v);}catch(e){wsMsg('القيمة ليست JSON صالحاً.');return;}const {error}=await db.from('platform_control_settings').update({setting_value:parsed,updated_at:new Date().toISOString()}).eq('setting_key',row.setting_key);wsMsg(error?'تعذر الحفظ: '+error.message:'تم تحديث الإعداد.');}else if(b.dataset.element){const {error}=await db.from('platform_control_elements').update({is_visible:b.dataset.visible==='true'}).eq('element_key',b.dataset.element);wsMsg(error?'تعذر تحديث العنصر: '+error.message:'تم تحديث ظهور العنصر.');}};
+ wsMsg('هذه الإعدادات والعناصر تقرؤها واجهة المنصة؛ التغييرات تظهر وفق إعدادات القراءة والتخزين المؤقت.');
+}
+$('workspaceBack').addEventListener('click',()=>{ $('adminWorkspace').classList.remove('active');[...$('dashboard').querySelector('main').children].forEach(el=>{if(el.id!=='adminWorkspace'&&el.id!=='vendorAdminView')el.hidden=false;});document.querySelectorAll('.nav').forEach(n=>n.classList.remove('active'));});
 
 $('loginForm').addEventListener('submit',async e=>{e.preventDefault();const b=$('loginButton');b.disabled=true;note('جارٍ تسجيل الدخول والتحقق من الصلاحية…');try{const {data,error}=await db.auth.signInWithPassword({email:$('loginEmail').value.trim(),password:$('loginPassword').value});if(error)throw error;await show(data.user);note('تم تسجيل الدخول بنجاح.','success');}catch(x){await db.auth.signOut();note(x.message||String(x),'error');}finally{b.disabled=false;}});
 $('logoutButton').addEventListener('click',async()=>{await db.auth.signOut();$('dashboard').classList.add('hidden');$('loginGate').classList.remove('hidden');$('adminState').textContent='● غير متصل';$('loginPassword').value='';note('تم تسجيل الخروج.');});
