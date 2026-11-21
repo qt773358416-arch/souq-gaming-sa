@@ -95,7 +95,7 @@ const $=id=>document.getElementById(id);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const money=n=>Number(n||0).toLocaleString('ar-SA')+' ر.س';
 window.toast=function(s){const t=$('toast');if(!t)return;t.textContent=s;t.style.display='block';clearTimeout(window.__toastTimer);window.__toastTimer=setTimeout(()=>t.style.display='none',2400);};
-window.go=function(s,e){if(s==='التجار والمتاجر'||s==='اعتماد التجار'){showVendorAdmin();return;}hideVendorAdmin();document.querySelectorAll('.nav').forEach(n=>n.classList.remove('active'));if(e)e.classList.add('active');if(s==='الرئيسية'){ $('adminWorkspace').classList.remove('active');[...$('dashboard').querySelector('main').children].forEach(el=>{if(el.id!=='adminWorkspace'&&el.id!=='vendorAdminView')el.hidden=false;});$('adminWorkspace').classList.remove('active');return;}showAdminSection(s);};
+window.go=function(s,e){if(s==='التجار والمتاجر'||s==='اعتماد التجار'){showVendorAdmin();return;}hideVendorAdmin();document.querySelectorAll('.nav').forEach(n=>n.classList.remove('active'));if(e)e.classList.add('active');if(s==='الرئيسية'){ $('adminWorkspace').classList.remove('active');[...$('dashboard').querySelector('main').children].forEach(el=>{if(el.id!=='adminWorkspace'&&el.id!=='vendorAdminView')el.hidden=false;});$('adminWorkspace').classList.remove('active');return;}const aliases={'إضافة إعلان':'إعلانات الأفراد','إضافة متجر':'إدارة صفحات المتاجر','إدارة المستخدمين':'المستخدمون','مراجعة البلاغات':'دكتور القيمنق','إدارة الطلبات':'إدارة الطلبات'};showAdminSection(aliases[s]||s);};
 const search=$('search');if(search)search.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.value.trim())window.toast('البحث المتقدم لم يُربط بعد');});
 function note(s,k=''){const e=$('loginMessage');e.textContent=s;e.className=k;}
 async function owner(u){if(!u?.id)throw Error('يلزم تسجيل الدخول أولاً.');const {data,error}=await db.rpc('is_platform_control_owner');if(error)throw Error('تعذر التحقق من صلاحية المدير: '+error.message);if(data!==true)throw Error('الحساب غير معتمد كمالك للمنصة (role=owner).');}
@@ -178,11 +178,16 @@ $('vendorAdminBack').addEventListener('click',hideVendorAdmin);
 
 // مركز إدارة المنصة: جميع الوحدات تعمل على نفس مشروع Supabase المستخدم في واجهة السوق.
 const workspaceConfigs={
- 'إعلانات الأفراد':{desc:'مراجعة إعلانات الأفراد وتغيير حالة النشر.',table:'ads',select:'id,title,price,category,status,created_at',order:'created_at',actions:['publish','review','reject']},
- 'الإعلانات':{desc:'إدارة إعلانات الأفراد المنشورة والمعلقة.',table:'ads',select:'id,title,price,category,status,created_at',order:'created_at',actions:['publish','review','reject']},
+ 'إعلانات الأفراد':{desc:'مراجعة إعلانات الأفراد وتغيير حالة النشر.',table:'ads',select:'*',order:'created_at',actions:['publish','review','reject']},
+ 'المستخدمون':{desc:'استعراض حسابات المستخدمين المسجلة في المنصة.',table:'profiles',select:'*',order:'created_at',actions:[]},
+ 'إدارة المستخدمين':{desc:'استعراض ملفات المستخدمين المسجلة في المنصة.',table:'profiles',select:'*',order:'created_at',actions:[]},
+ 'إدارة الطلبات':{desc:'استعراض طلبات المتاجر المسجلة في المنصة.',table:'store_orders',select:'*',order:'created_at',actions:[]},
+ 'المنتجات':{desc:'استعراض منتجات المتاجر المسجلة في المنصة.',table:'store_products',select:'*',order:'created_at',actions:[]},
+ 'مراجعة البلاغات':{desc:'استعراض بلاغات إعلانات الأفراد.',table:'ad_reports',select:'*',order:'created_at',actions:[]},
+ 'الإعلانات':{desc:'إدارة إعلانات الأفراد المنشورة والمعلقة.',table:'ads',select:'*',order:'created_at',actions:['publish','review','reject']},
  'تصنيفات البحث للأفراد':{desc:'إدارة التصنيفات التي تقرؤها واجهة البحث للأفراد من platform_control_categories.',table:'platform_control_categories',select:'id,name,icon,section,sort_order,is_active',order:'sort_order',filter:{section:'ads'},actions:['edit','toggle','delete'],create:true},
  'تصنيفات المتاجر':{desc:'عرض وإدارة تصنيفات متاجر التجار المسجلة لكل متجر.',table:'vendor_store_categories',select:'id,store_id,name,sort_order',order:'sort_order',actions:['edit','delete'],create:true},
- 'إدارة صفحات المتاجر':{desc:'إدارة ظهور صفحات المتاجر وحالة الاعتماد وإبراز المتجر.',table:'vendor_stores',select:'id,store_name,slug,owner_id,status,category,city,is_featured,created_at',order:'created_at',actions:['approve','pause','feature']},
+ 'إدارة صفحات المتاجر':{desc:'إدارة ظهور صفحات المتاجر وحالة الاعتماد وإبراز المتجر.',table:'vendor_stores',select:'id,store_name,slug,description,city,category,logo_url,is_featured,status,created_at',order:'created_at',actions:['approve','pause','feature']},
  'دكتور القيمنق':{desc:'إدارة أسئلة دكتور القيمنق وطلبات اعتماد المختصين والبلاغات.',special:true},
  'إدارة البنر':{desc:'تعديل البنر الرئيسي الذي تقرؤه واجهة المنصة من marketplace_home_banner.',special:true},
  'إدارة لوحة التجار':{desc:'إدارة إعدادات وعناصر لوحة التجار المشتركة عبر platform_control_settings و platform_control_elements.',special:true}
@@ -193,7 +198,8 @@ function wsHomeHide(){[...$('dashboard').querySelector('main').children].forEach
 async function showAdminSection(name){
  const cfg=workspaceConfigs[name];if(!cfg){window.toast('القسم غير مهيأ بعد: '+name);return;}
  wsHomeHide();$('workspaceTitle').textContent=name;$('workspaceDescription').textContent=cfg.desc;
- $('workspaceForm').hidden=true;$('workspaceForm').innerHTML='';$('workspaceList').innerHTML='';$('workspaceToolbar').innerHTML='';
+ $('workspaceForm').hidden=true;$('workspaceForm').innerHTML='';$('workspaceList').innerHTML='';$('workspaceToolbar').innerHTML='<button class="primary" id="workspaceRefresh">تحديث البيانات ↻</button>';
+ $('workspaceRefresh').onclick=()=>showAdminSection(name);
  wsMsg('جارٍ تحميل البيانات...');
  if(name==='إدارة البنر'){await loadWorkspaceBanner();return;}
  if(name==='دكتور القيمنق'){await loadWorkspaceDoctor();return;}
@@ -205,13 +211,13 @@ async function loadWorkspaceTable(cfg){
  if(cfg.filter)for(const [k,v] of Object.entries(cfg.filter))q=q.eq(k,v);
  const {data,error}=await q;if(error){wsMsg('تعذر تحميل '+cfg.table+': '+error.message+' — تحقق من صلاحيات RLS وأسماء الأعمدة.');return;}
  const rows=data||[];$('workspaceList').innerHTML=rows.map(r=>{
-  const title=r.title||r.name||r.store_name||r.slug||('سجل '+r.id);
+  const title=r.title||r.name||r.store_name||r.display_name||r.email||r.slug||('سجل '+(r.id||r.user_id||''));
   const meta=Object.entries(r).filter(([k])=>!['id','title','name','store_name'].includes(k)).map(([k,v])=>k+': '+(typeof v==='object'?JSON.stringify(v):String(v??'—'))).join(' · ');
-  return `<article class="workspace-row"><div><b>${wsEsc(title)}</b><small>${wsEsc(meta)}</small></div><div class="workspace-actions">${(cfg.actions||[]).map(a=>`<button data-ws-action="${a}" data-ws-id="${wsEsc(r.id)}">${({publish:'نشر',review:'قيد المراجعة',reject:'رفض',edit:'تعديل',toggle:'تفعيل / إيقاف',delete:'حذف',approve:'اعتماد المتجر',pause:'إيقاف الظهور',feature:'إبراز / إلغاء الإبراز'}[a]||a)}</button>`).join('')}</div></article>`;
+  return `<article class="workspace-row"><div><b>${wsEsc(title)}</b><small>${wsEsc(meta)}</small></div><div class="workspace-actions"><button data-ws-details="${wsEsc(r.id||r.user_id||'')}">عرض التفاصيل</button>${(cfg.actions||[]).map(a=>`<button data-ws-action="${a}" data-ws-id="${wsEsc(r.id)}">${({publish:'نشر',review:'قيد المراجعة',reject:'رفض',edit:'تعديل',toggle:'تفعيل / إيقاف',delete:'حذف',approve:'اعتماد المتجر',pause:'إيقاف الظهور',feature:'إبراز / إلغاء الإبراز'}[a]||a)}</button>`).join('')}</div></article>`;
  }).join('')||'<div class="workspace-message">لا توجد سجلات حالياً.</div>';
  $('workspaceMessage').textContent=`تم تحميل ${rows.length} سجل.`;$('workspaceMessage').hidden=false;
  if(cfg.create){$('workspaceToolbar').innerHTML='<button class="primary" id="wsAdd">إضافة سجل</button>'; $('wsAdd').onclick=()=>workspaceEditForm(cfg,null);}
- $('workspaceList').onclick=async ev=>{const b=ev.target.closest('[data-ws-action]');if(!b)return;const row=rows.find(x=>String(x.id)===b.dataset.wsId);if(!row)return;await workspaceAction(cfg,row,b.dataset.wsAction);};
+ $('workspaceList').onclick=async ev=>{const detail=ev.target.closest('[data-ws-details]');if(detail){const row=rows.find(x=>String(x.id||x.user_id||'')===detail.dataset.wsDetails);if(row)alert(JSON.stringify(row,null,2));return;}const b=ev.target.closest('[data-ws-action]');if(!b)return;const row=rows.find(x=>String(x.id)===b.dataset.wsId);if(!row)return;await workspaceAction(cfg,row,b.dataset.wsAction);};
 }
 function workspaceEditForm(cfg,row){
  const isCategory=cfg.table==='platform_control_categories',isStoreCat=cfg.table==='vendor_store_categories';
@@ -250,9 +256,9 @@ async function loadWorkspaceBanner(){
 }
 async function loadWorkspaceDoctor(){
  const [q,s,r]=await Promise.all([
-  db.from('doctor_questions').select('id,title,category,status,created_at').order('created_at',{ascending:false}).limit(100),
-  db.from('doctor_specialists').select('user_id,display_name,specialty,is_verified,application_status').order('created_at',{ascending:false}).limit(100),
-  db.from('doctor_reports').select('id,question_id,reason,status,created_at').order('created_at',{ascending:false}).limit(100)
+  db.from('doctor_questions').select('id,user_id,title,body,category,status,created_at').order('created_at',{ascending:false}).limit(100),
+  db.from('doctor_specialists').select('user_id,display_name,specialty,bio,application_status,is_verified,created_at').order('created_at',{ascending:false}).limit(100),
+  db.from('doctor_reports').select('id,question_id,reporter_id,reason,status,created_at,doctor_questions(title)').order('created_at',{ascending:false}).limit(100)
  ]);
  const errors=[q.error,s.error,r.error].filter(Boolean);if(errors.length){wsMsg('تعذر تحميل بعض بيانات دكتور القيمنق: '+errors.map(x=>x.message).join(' | '));return;}
  const blocks=[['الأسئلة',q.data||[],'doctor_questions'],['المختصون',s.data||[],'doctor_specialists'],['البلاغات',r.data||[],'doctor_reports']];
@@ -270,12 +276,12 @@ async function loadWorkspaceTraderControls(){
  $('workspaceList').onclick=async ev=>{const b=ev.target.closest('button');if(!b)return;if(b.dataset.setting){const row=(settings.data||[]).find(x=>x.setting_key===b.dataset.setting);const v=prompt('أدخل قيمة JSON للإعداد '+row.setting_key,JSON.stringify(row.setting_value));if(v===null)return;let parsed;try{parsed=JSON.parse(v);}catch(e){wsMsg('القيمة ليست JSON صالحاً.');return;}const {error}=await db.from('platform_control_settings').update({setting_value:parsed,updated_at:new Date().toISOString()}).eq('setting_key',row.setting_key);wsMsg(error?'تعذر الحفظ: '+error.message:'تم تحديث الإعداد.');}else if(b.dataset.element){const {error}=await db.from('platform_control_elements').update({is_visible:b.dataset.visible==='true'}).eq('element_key',b.dataset.element);wsMsg(error?'تعذر تحديث العنصر: '+error.message:'تم تحديث ظهور العنصر.');}};
  wsMsg('هذه الإعدادات والعناصر تقرؤها واجهة المنصة؛ التغييرات تظهر وفق إعدادات القراءة والتخزين المؤقت.');
 }
-$('workspaceBack').addEventListener('click',()=>{ $('adminWorkspace').classList.remove('active');[...$('dashboard').querySelector('main').children].forEach(el=>{if(el.id!=='adminWorkspace'&&el.id!=='vendorAdminView')el.hidden=false;});document.querySelectorAll('.nav').forEach(n=>n.classList.remove('active'));});
+$('workspaceBack').addEventListener('click',()=>{ $('adminWorkspace').classList.remove('active');[...$('dashboard').querySelector('main').children].forEach(el=>{if(el.id!=='adminWorkspace'&&el.id!=='vendorAdminView')el.hidden=false;});$('vendorAdminView').classList.remove('active');$('vendorAdminDetail').hidden=true;document.querySelectorAll('.nav').forEach(n=>n.classList.remove('active'));const home=document.querySelector('.nav[onclick*="الرئيسية"]');if(home)home.classList.add('active');});
 
 $('loginForm').addEventListener('submit',async e=>{e.preventDefault();const b=$('loginButton');b.disabled=true;note('جارٍ تسجيل الدخول والتحقق من الصلاحية…');try{const {data,error}=await db.auth.signInWithPassword({email:$('loginEmail').value.trim(),password:$('loginPassword').value});if(error)throw error;await show(data.user);note('تم تسجيل الدخول بنجاح.','success');}catch(x){await db.auth.signOut();note(x.message||String(x),'error');}finally{b.disabled=false;}});
 $('logoutButton').addEventListener('click',async()=>{await db.auth.signOut();$('dashboard').classList.add('hidden');$('loginGate').classList.remove('hidden');$('adminState').textContent='● غير متصل';$('loginPassword').value='';note('تم تسجيل الخروج.');});
 db.auth.getSession().then(async({data,error})=>{if(error||!data.session?.user)return;try{await show(data.session.user);}catch(x){await db.auth.signOut();note(x.message||String(x),'error');}});
-db.auth.onAuthStateChange(e=>{if(e==='SIGNED_OUT'){$('dashboard').classList.add('hidden');$('loginGate').classList.remove('hidden');}});
+db.auth.onAuthStateChange((e,session)=>{if(e==='SIGNED_OUT'){$('dashboard').classList.add('hidden');$('loginGate').classList.remove('hidden');}else if(e==='SIGNED_IN'&&session?.user){show(session.user).catch(x=>{note(x.message||String(x),'error');db.auth.signOut();});}});
 })();
 </script>
 
