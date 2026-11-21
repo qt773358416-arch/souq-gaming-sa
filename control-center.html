@@ -80,6 +80,36 @@ button,a,[data-go],[data-action]{cursor:pointer;touch-action:manipulation;-webki
 .doctor-tabs button{min-height:42px}
 @media(max-width:650px){.doctor-tabs button{flex:1 1 calc(50% - 8px)}}
 
+
+/* V5: fully opaque, accessible mobile drawer and true section workspace */
+#adminMenuBackdrop{display:none;position:fixed;inset:66px 0 0;background:rgba(1,7,18,.82);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);z-index:1090;border:0;padding:0}
+body.admin-menu-open #adminMenuBackdrop{display:block}
+#adminSideMenu{background:#061326!important;opacity:1!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;box-shadow:-22px 0 45px rgba(0,0,0,.55);z-index:1100}
+body.admin-menu-open #adminSideMenu{right:0!important;visibility:visible}
+.layout.section-open{grid-template-columns:minmax(0,1fr)!important}
+.layout.section-open>main{grid-column:1/-1;width:100%;max-width:1500px;margin:0 auto;padding:18px clamp(12px,2vw,28px)}
+.layout.section-open>#adminSideMenu{display:none}
+.layout.section-open>#adminSideMenu.open{display:block}
+.admin-workspace.active{display:block!important;width:100%;max-width:100%;min-height:calc(100dvh - 100px);margin:0 auto;padding:4px 0 36px}
+.admin-workspace.active>.head{display:flex;position:sticky;top:0;z-index:20;background:#07152a;border-bottom:1px solid #24496e;padding:14px 0;margin:0 0 14px}
+.admin-workspace .workspace-toolbar{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.admin-workspace .workspace-list{display:grid;gap:14px;width:100%}
+.admin-workspace .workspace-row{min-width:0}
+.admin-workspace .panel{min-width:0}
+.stat-link{cursor:pointer;touch-action:manipulation}
+@media(max-width:850px){
+ #adminSideMenu{position:fixed!important;top:66px!important;right:-100%!important;width:min(86vw,350px)!important;height:calc(100dvh - 66px)!important;max-height:calc(100dvh - 66px)!important;overflow-y:auto!important;overscroll-behavior:contain;padding:14px 12px 28px!important;transition:right .22s ease!important;border-left:1px solid #2b527b!important;border-right:0!important;border-radius:0 0 0 16px}
+ #adminSideMenu.open{right:0!important}
+ .layout.section-open{display:block!important;min-height:calc(100dvh - 66px)}
+ .layout.section-open>main{padding:12px 12px 34px!important;width:100%!important;max-width:none!important}
+ .layout.section-open>#adminSideMenu{display:block;right:-100%!important}
+ .layout.section-open>#adminSideMenu.open{right:0!important}
+ .admin-workspace.active{min-height:calc(100dvh - 90px);padding:0 0 26px}
+ .admin-workspace.active>.head{top:0;padding:12px 0 14px}
+ .admin-workspace .workspace-toolbar{position:relative;top:auto;background:transparent;padding:8px 0}
+ #adminMenuBackdrop{inset:66px 0 0}
+}
+
 </style></head>
 <body>
 <header class="top"><div class="brand"><div class="logo">👑</div><div><h1>سوق القيمنق السعودي</h1><small>لوحة التحكم الرئيسية للمنصة</small></div></div><div class="search"><input aria-label="البحث في المنصة" id="search" placeholder="ابحث في المنصة (مستخدم، إعلان، متجر، طلب...)"/><button aria-label="تنفيذ البحث" id="searchSubmit" type="button">⌕</button></div><div class="actions"><button class="ib" data-go="إعدادات المنصة">⚙</button><button class="ib" data-go="الإشعارات" title="الإشعارات">♧</button><button class="ib" data-go="الرسائل" title="الرسائل">✉</button><button class="ib" data-action="theme">☾</button></div><div class="admin"><div class="avatar">♛</div><div><b id="adminEmail">مدير المنصة</b><small id="adminState">● بانتظار تسجيل الدخول</small></div></div><button class="ib" id="logoutButton" title="تسجيل الخروج">↪</button><button aria-controls="adminSideMenu" aria-expanded="false" class="ib" data-action="menu">☰</button></header>
@@ -138,26 +168,43 @@ window.go=function(s,e){
  const aliases={
   'الإعلانات':'إعلانات الأفراد','جميع الإعلانات':'إعلانات الأفراد','إضافة إعلان':'إعلانات الأفراد',
   'جميع الطلبات':'الطلبات','إدارة الطلبات':'الطلبات',
-  'إضافة متجر':'إدارة صفحات المتاجر','إدارة المستخدمين':'المستخدمون','طلبات توثيق التجار':'التجار والمتاجر',
-  'اعتماد التجار':'التجار والمتاجر','مراجعة البلاغات':'البلاغات والمخالفات',
-  'المدفوعات':'المدفوعات والمحافظ','التقارير':'التقارير والإحصائيات','المالك':'إعدادات المالك'
+  'إضافة متجر':'إدارة صفحات المتاجر','إدارة المستخدمين':'المستخدمون',
+  'طلبات توثيق التجار':'التجار والمتاجر','اعتماد التجار':'التجار والمتاجر',
+  'مراجعة البلاغات':'البلاغات والمخالفات','بلاغات الإعلانات':'البلاغات والمخالفات',
+  'المدفوعات':'المدفوعات والمحافظ','التقارير':'التقارير والإحصائيات',
+  'المالك':'إعدادات المالك','إعدادات المالك':'إعدادات المالك'
  };
  s=aliases[s]||s;
- const side=document.getElementById('adminSideMenu');side?.classList.remove('open');
- document.querySelector('[data-action="menu"]')?.setAttribute('aria-expanded','false');
- const navs=[...document.querySelectorAll('.nav')];navs.forEach(n=>n.classList.remove('active'));
+ closeAdminMenu();
+ const layout=document.getElementById('dashboard');
+ const side=document.getElementById('adminSideMenu');
+ const navs=[...document.querySelectorAll('.nav')];
+ navs.forEach(n=>n.classList.remove('active'));
  const matched=e?.classList?.contains('nav')?e:navs.find(n=>(aliases[n.dataset.go]||n.dataset.go)===s);
  if(matched)matched.classList.add('active');
  if(s==='الرئيسية'){
-  hideVendorAdmin();$('adminWorkspace').classList.remove('active');
+  layout?.classList.remove('section-open');
+  hideVendorAdmin();
+  $('adminWorkspace').classList.remove('active');
   [...$('dashboard').querySelector('main').children].forEach(el=>{if(el.id!=='adminWorkspace'&&el.id!=='vendorAdminView')el.hidden=false;});
-  const home=navs.find(n=>n.dataset.go==='الرئيسية');if(home)home.classList.add('active');return;
+  const home=navs.find(n=>n.dataset.go==='الرئيسية');if(home)home.classList.add('active');
+  window.scrollTo({top:0,behavior:'instant'});
+  return;
  }
+ layout?.classList.add('section-open');
  if(s==='التجار والمتاجر'){
-  showVendorAdmin();if(matched)matched.classList.add('active');return;
+  showVendorAdmin();
+  if(matched)matched.classList.add('active');
+  window.scrollTo({top:0,behavior:'instant'});
+  return;
  }
  hideVendorAdmin();
- showAdminSection(s).catch(err=>{const message='تعذر فتح '+s+': '+(err?.message||String(err));wsMsg(message);window.toast(message);});
+ showAdminSection(s).then(()=>{
+  window.scrollTo({top:0,behavior:'instant'});
+ }).catch(err=>{
+  const message='تعذر فتح '+s+': '+(err?.message||String(err));
+  wsMsg(message);window.toast(message);
+ });
 };
 window.openMarketplacePreview=function(){window.open('https://souq-gaming-sa-82x4.vercel.app/','_blank','noopener,noreferrer');};
 window.toggleAdminTheme=function(){document.body.classList.toggle('admin-light');window.toast(document.body.classList.contains('admin-light')?'تم تفعيل المظهر الفاتح':'تم تفعيل المظهر الداكن');};
@@ -364,7 +411,11 @@ async function showAdminSection(name){
   if(name==='العمولات والتسويات'){await loadCommissionsWorkspace();return;}
   if(name==='البلاغات والمخالفات'){await loadReportsWorkspace();return;}
   if(name==='التقارير والإحصائيات'){await loadAnalyticsWorkspace();return;}
-  if(!cfg){wsMsg('هذا القسم غير مهيأ في قاعدة بيانات المشروع.');return;}
+  if(!cfg){
+   $('workspaceList').innerHTML='<div class="panel"><h3>القسم غير مهيأ</h3><p>لم يتم العثور على تعريف بيانات موثوق لهذا القسم في ملفات المشروع الحالية. لا يتم إنشاء بيانات وهمية أو تنفيذ عمليات على جداول غير مؤكدة.</p></div>';
+   wsMsg('تم فتح صفحة القسم. يلزم ربط مصدر بياناته بعد التحقق من جدول المشروع.');
+   return;
+  }
   await loadWorkspaceTable(cfg);
  }catch(e){wsMsg('تعذر تحميل القسم: '+(e?.message||String(e)));}
 }
@@ -624,30 +675,50 @@ async function loadAnalyticsWorkspace(){
  wsMsg('هذه أعداد السجلات التي أمكن قراءتها من قاعدة البيانات في وقت التحديث.');
 }
 $('dashboardRefresh')?.addEventListener('click',window.refreshDashboardData);
-$('workspaceBack').addEventListener('click',()=>{ $('adminWorkspace').classList.remove('active');[...$('dashboard').querySelector('main').children].forEach(el=>{if(el.id!=='adminWorkspace'&&el.id!=='vendorAdminView')el.hidden=false;});$('vendorAdminView').classList.remove('active');$('vendorAdminDetail').hidden=true;document.querySelectorAll('.nav').forEach(n=>n.classList.remove('active'));const home=document.querySelector('.nav[onclick*="الرئيسية"]');if(home)home.classList.add('active');});
+$('workspaceBack').addEventListener('click',()=>{ $('dashboard').classList.remove('section-open');$('dashboard').classList.remove('section-open');$('adminWorkspace').classList.remove('active');[...$('dashboard').querySelector('main').children].forEach(el=>{if(el.id!=='adminWorkspace'&&el.id!=='vendorAdminView')el.hidden=false;});$('vendorAdminView').classList.remove('active');$('vendorAdminDetail').hidden=true;document.querySelectorAll('.nav').forEach(n=>n.classList.remove('active'));const home=document.querySelector('.nav[onclick*="الرئيسية"]');if(home)home.classList.add('active');});
 
 let activeShowUser=null;let showInFlight=null;
 const safeShow=async user=>{if(activeShowUser===user.id)return;if(showInFlight){await showInFlight;if(activeShowUser===user.id)return;}showInFlight=(async()=>{await show(user);activeShowUser=user.id;})();try{await showInFlight;}finally{showInFlight=null;}};
 
-// Global interaction router: handles taps even on mobile WebViews/CSP setups that ignore inline handlers.
-document.addEventListener('click', function(event){
- const control=event.target.closest('[data-go],[data-action]');
- if(!control) return;
- if(control.dataset.navLink==='true' || control.tagName==='A') event.preventDefault();
- if(control.dataset.go){
-  try{ window.go(control.dataset.go, control.classList.contains('nav') ? control : null); }
-  catch(err){ const msg='تعذر فتح القسم: '+(err?.message||String(err)); try{wsMsg(msg);}catch(_){} window.toast(msg); }
-  return;
- }
- if(control.dataset.action==='menu'){
-  const side=document.getElementById('adminSideMenu');
-  const opened=side?.classList.toggle('open')||false;
-  control.setAttribute('aria-expanded',String(opened));
-  return;
- }
- if(control.dataset.action==='theme'){ window.toggleAdminTheme(); return; }
- if(control.dataset.action==='preview'){ window.openMarketplacePreview(); return; }
-});
+// V5: central click routing in capture phase so all sidebar and dashboard controls navigate consistently.
+(function(){
+ const side=document.getElementById('adminSideMenu');
+ if(!side)return;
+ let backdrop=document.getElementById('adminMenuBackdrop');
+ if(!backdrop){backdrop=document.createElement('button');backdrop.id='adminMenuBackdrop';backdrop.type='button';backdrop.setAttribute('aria-label','إغلاق القائمة الجانبية');side.parentNode.insertBefore(backdrop,side);}
+ window.closeAdminMenu=function(){
+  side.classList.remove('open');
+  document.body.classList.remove('admin-menu-open');
+  document.querySelector('[data-action="menu"]')?.setAttribute('aria-expanded','false');
+ };
+ window.openAdminMenu=function(){
+  side.classList.add('open');
+  document.body.classList.add('admin-menu-open');
+  document.querySelector('[data-action="menu"]')?.setAttribute('aria-expanded','true');
+ };
+ backdrop.addEventListener('click',window.closeAdminMenu);
+ document.addEventListener('click',function(event){
+  const control=event.target.closest('[data-go],[data-action]');
+  if(!control)return;
+  if(control.dataset.go){
+   if(control.tagName==='A'||control.dataset.navLink==='true')event.preventDefault();
+   event.preventDefault?.();
+   event.stopPropagation();
+   event.stopImmediatePropagation();
+   try{window.go(control.dataset.go,control.classList.contains('nav')?control:null);}
+   catch(err){const msg='تعذر فتح القسم: '+(err?.message||String(err));try{wsMsg(msg);}catch(_){}window.toast(msg);}
+   return;
+  }
+  if(control.dataset.action==='menu'){
+   event.preventDefault();event.stopPropagation();event.stopImmediatePropagation();
+   if(side.classList.contains('open'))window.closeAdminMenu();else window.openAdminMenu();
+   return;
+  }
+  if(control.dataset.action==='theme'){event.preventDefault();window.toggleAdminTheme();return;}
+  if(control.dataset.action==='preview'){event.preventDefault();window.openMarketplacePreview();return;}
+ },true);
+ document.addEventListener('keydown',function(event){if(event.key==='Escape'&&side.classList.contains('open'))window.closeAdminMenu();});
+})();
 const rangeControl=document.getElementById('dashboardRange');
 rangeControl?.addEventListener('change',function(){
  Promise.resolve(window.setDashboardRange(this.value)).catch(err=>window.toast('تعذر تحديث الفترة: '+(err?.message||String(err))));
