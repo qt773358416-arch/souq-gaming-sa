@@ -98,6 +98,120 @@ tr:last-child td{border:0}
 .stat strong{font-size:18px}
 .page h2{font-size:20px}
 }
+
+/* ===== Professional visual refinement: CSS only; existing HTML and JavaScript preserved ===== */
+:root{
+ --bg:#08111d;--panel:#101e2d;--panel2:#172a3c;--line:#263d52;
+ --text:#f2f7fb;--muted:#9eb2c4;--brand:#55d7ee;--danger:#ff7188;--ok:#54d6a3;
+ --shadow:0 18px 48px rgba(0,0,0,.24);
+}
+html{scroll-behavior:smooth}
+body{
+ background:
+  radial-gradient(ellipse at 85% -10%,rgba(46,139,177,.19),transparent 34%),
+  radial-gradient(ellipse at 0% 35%,rgba(59,104,172,.12),transparent 30%),
+  var(--bg);
+ color:var(--text);letter-spacing:.05px
+}
+.shell{max-width:1600px;padding:24px clamp(12px,2vw,30px)}
+.head{
+ padding:14px 18px;border:1px solid rgba(100,160,190,.18);
+ background:rgba(13,27,41,.82);backdrop-filter:blur(14px);
+ border-radius:20px;box-shadow:var(--shadow);margin-bottom:20px
+}
+.brand{gap:14px}
+.logo{
+ width:54px;height:54px;border-radius:17px;
+ box-shadow:0 8px 24px rgba(44,190,220,.2);
+ font-size:20px;letter-spacing:-1px
+}
+.brand h1{font-weight:900;letter-spacing:-.4px}
+.brand .muted{font-size:12px;margin-top:2px}
+.layout{grid-template-columns:275px minmax(0,1fr);gap:20px}
+.panel{
+ background:linear-gradient(155deg,rgba(19,37,55,.97),rgba(12,25,39,.98));
+ border:1px solid rgba(105,151,181,.2);border-radius:21px;
+ padding:21px;box-shadow:var(--shadow)
+}
+.sidebar{top:18px}
+.sidebar h3{font-size:15px;color:#dff7ff;margin:2px 8px 15px}
+.nav{gap:7px}
+.nav button{
+ min-height:44px;padding:10px 13px;border-radius:12px;
+ font-size:13px;font-weight:750;transition:background .18s,border-color .18s,transform .18s
+}
+.nav button:hover{transform:translateX(-2px)}
+.nav button.active{
+ background:linear-gradient(100deg,rgba(45,174,201,.2),rgba(72,128,190,.13));
+ border-color:rgba(85,215,238,.38);box-shadow:inset -3px 0 0 var(--brand)
+}
+.page h2{font-weight:900;letter-spacing:-.35px}
+.pagehead{margin-bottom:20px}
+.pagehead .muted{font-size:13px;margin-top:3px}
+.grid{gap:14px}
+.stat{
+ position:relative;overflow:hidden;
+ background:linear-gradient(145deg,#172d40,#122437);
+ border:1px solid rgba(104,160,190,.19);border-radius:17px;padding:17px;
+ transition:transform .18s,border-color .18s
+}
+.stat:hover{transform:translateY(-2px);border-color:rgba(85,215,238,.38)}
+.stat small{font-size:12px;margin-bottom:5px}
+.stat strong{font-size:25px;font-weight:900}
+.field{
+ min-height:44px;background:#0a1725;border-color:#2a4358;
+ border-radius:12px;padding:11px 13px;transition:border-color .18s,box-shadow .18s
+}
+.field:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(85,215,238,.1)}
+label{font-weight:700;line-height:1.5}
+button{
+ border-radius:12px;padding:10px 15px;transition:filter .18s,transform .18s,border-color .18s
+}
+button:hover:not(:disabled){filter:brightness(1.12);transform:translateY(-1px)}
+button.primary{box-shadow:0 7px 20px rgba(22,199,217,.16)}
+button.danger{background:rgba(119,31,52,.32)}
+.tablewrap{
+ margin-top:16px;border:1px solid rgba(105,151,181,.2);
+ border-radius:15px;background:rgba(7,18,29,.35)
+}
+table{min-width:680px}
+th{
+ position:sticky;top:0;background:#1a3043;color:#c9f4fb;
+ font-size:12px;font-weight:900;white-space:nowrap
+}
+td{font-size:13px;color:#e0eaf1}
+tbody tr{transition:background .15s}
+tbody tr:hover{background:rgba(77,160,190,.07)}
+.actions{gap:7px}
+.actions button{border-radius:10px}
+.msg,.notice{border-radius:14px;line-height:1.7}
+.msg{background:rgba(18,55,69,.52);border-color:rgba(77,180,205,.3)}
+.notice{background:rgba(99,75,26,.2);border-color:rgba(210,168,76,.3)}
+.pill{font-weight:850;letter-spacing:.1px}
+.login{padding:26px;max-width:500px}
+.login h2{font-size:23px}
+a{transition:opacity .18s}
+a:hover{opacity:.82}
+input[type="checkbox"]{accent-color:#48c9df}
+@media(max-width:1000px){
+ .layout{grid-template-columns:1fr}
+ .sidebar{position:static}
+ .nav{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:650px){
+ .shell{padding:10px}
+ .head{padding:12px;border-radius:16px}
+ .logo{width:45px;height:45px;border-radius:14px}
+ .panel{padding:14px}
+ .nav{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .nav button{min-height:42px}
+ .pagehead{align-items:flex-start}
+ .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .stat{padding:12px}
+ .stat strong{font-size:19px}
+ table{min-width:640px}
+}
+
 </style>
 </head>
 <body>
