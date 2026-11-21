@@ -293,10 +293,10 @@ $('vendorAdminBack').addEventListener('click',hideVendorAdmin);
 // مركز إدارة المنصة — الأقسام مربوطة بالجداول المثبتة في ملف واجهة السوق الحالي.
 const workspaceConfigs={
  'المستخدمون':{desc:'ملفات المستخدمين العامة المسجلة في المنصة.',table:'profiles',select:'id,display_name,phone,city,created_at',order:'created_at'},
- 'إعلانات الأفراد':{desc:'إدارة إعلانات الأفراد وحالات نشرها.',table:'ads',select:'id,title,price,category,city,status,seller_id,created_at',order:'created_at',actions:['publish','review','archive']},
+ 'إعلانات الأفراد':{desc:'إدارة الإعلانات: مراجعة ونشر وأرشفة وحذف.',table:'ads',select:'id,title,price,category,city,status,seller_id,created_at',order:'created_at',actions:['publish','review','archive','deleteAd']},
  'إدارة صفحات المتاجر':{desc:'إدارة صفحات المتاجر وحالة ظهورها في دليل المتاجر.',table:'vendor_stores',select:'id,store_name,slug,description,city,category,logo_url,is_featured,status,created_at',order:'created_at',actions:['approve','suspend','feature']},
  'تصنيفات البحث للأفراد':{desc:'التصنيفات التي تقرؤها واجهة إعلانات الأفراد.',table:'platform_control_categories',select:'id,name,icon,section,sort_order,is_active',order:'sort_order',filter:{section:'ads'},actions:['edit','toggle','delete'],create:true},
- 'تصنيفات المتاجر':{desc:'تصنيفات المنتجات المرتبطة بمتجر تاجر محدد.',table:'vendor_store_categories',select:'id,store_id,name,sort_order',order:'sort_order',actions:['edit','delete'],create:true},
+ 'تصنيفات المتاجر':{desc:'إدارة تصنيفات كل متجر على حدة: إضافة وتعديل وحذف.',table:'vendor_store_categories',select:'id,store_id,name,sort_order',order:'sort_order',actions:[],create:true},
  'المنتجات':{desc:'منتجات المتجر الرئيسي التي تظهر في قسم المتجر.',table:'store_products',select:'id,title,category,price,stock_quantity,is_active',order:'created_at',actions:['toggleProduct']},
  'بلاغات الإعلانات':{desc:'البلاغات المرسلة على إعلانات الأفراد.',table:'ad_reports',select:'id,ad_id,reporter_id,reason,details'},
  'التقييمات والمراجعات':{desc:'تقييمات البائعين المسجلة على الإعلانات.',table:'seller_reviews',select:'id,ad_id,seller_id,reviewer_id,rating,comment,created_at',order:'created_at'},
@@ -324,6 +324,7 @@ async function showAdminSection(name){
  try{
   if(name==='إدارة البنر'){await loadWorkspaceBanner();return;}
   if(name==='دكتور القيمنق'){await loadWorkspaceDoctor();return;}
+  if(name==='تصنيفات المتاجر'){await loadVendorStoreCategories();return;}
   if(name==='إدارة لوحة التجار'){await loadWorkspaceTraderControls();return;}
   if(name==='إعدادات المنصة'){await loadPlatformSettings();return;}
   if(name==='الطلبات'){await loadAdminOrdersWorkspace();return;}
@@ -345,7 +346,7 @@ async function loadWorkspaceTable(cfg){
   const title=r.title||r.name||r.store_name||r.display_name||r.email||r.body||r.slug||('سجل '+(r.id||r.user_id||''));
   const fields=Object.entries(r).filter(([k])=>!['id','title','name','store_name','body'].includes(k));
   const meta=fields.map(([k,v])=>k+': '+(typeof v==='object'?JSON.stringify(v):String(v??'—'))).join(' · ');
-  const actionNames={publish:'نشر',review:'إرجاع للمراجعة',archive:'أرشفة',approve:'اعتماد المتجر',suspend:'إيقاف المتجر',feature:'تمييز / إلغاء التمييز',edit:'تعديل',toggle:'تفعيل / إيقاف',delete:'حذف',toggleProduct:r.is_active?'إخفاء المنتج':'نشر المنتج',deletePost:'حذف المنشور'};
+  const actionNames={publish:'نشر',review:'إرجاع للمراجعة',archive:'أرشفة',approve:'اعتماد المتجر',suspend:'إيقاف المتجر',feature:'تمييز / إلغاء التمييز',edit:'تعديل',toggle:'تفعيل / إيقاف',delete:'حذف',toggleProduct:r.is_active?'إخفاء المنتج':'نشر المنتج',deletePost:'حذف المنشور',deleteAd:'حذف الإعلان'};
   return `<article class="workspace-row"><div><b>${wsEsc(title)}</b><small>${wsEsc(meta)}</small>${r.body?`<p>${wsEsc(String(r.body).slice(0,500))}</p>`:''}</div><div class="workspace-actions"><button data-ws-details="${wsEsc(r.id||r.user_id||'')}">التفاصيل</button>${(cfg.actions||[]).map(a=>`<button data-ws-action="${a}" data-ws-id="${wsEsc(r.id)}">${actionNames[a]||a}</button>`).join('')}</div></article>`;
  }).join('')||'<div class="workspace-message">لا توجد سجلات حالياً.</div>';
  wsMsg(`تم تحميل ${rows.length} سجل من ${cfg.table}.`);
@@ -379,12 +380,58 @@ async function workspaceAction(cfg,row,action){
  if(action==='toggle'&&cfg.table==='platform_control_categories')patch={is_active:!row.is_active};
  if(action==='toggleProduct'&&cfg.table==='store_products')patch={is_active:!row.is_active};
  if(action==='edit'){workspaceEditForm(cfg,row);return;}
+ if(action==='deleteAd'&&cfg.table==='ads'){if(!confirm('حذف الإعلان نهائياً؟'))return;const {error}=await db.from('ads').delete().eq('id',row.id);if(error)wsMsg('تعذر حذف الإعلان: '+error.message);else await loadWorkspaceTable(cfg);return;}
  if(action==='delete'&&cfg.table==='platform_control_categories'||action==='delete'&&cfg.table==='vendor_store_categories'||action==='deletePost'&&(cfg.table==='public_posts'||cfg.table==='channel_posts')){
   if(!confirm('هل تريد حذف هذا السجل نهائياً؟'))return;const {error}=await db.from(cfg.table).delete().eq('id',row.id);if(error)wsMsg('تعذر الحذف: '+error.message);else await loadWorkspaceTable(cfg);return;
  }
  if(!patch){window.toast('هذا الإجراء غير معرف لهذا النوع من السجلات.');return;}
  const {error}=await db.from(cfg.table).update(patch).eq('id',row.id);if(error)wsMsg('تعذر تنفيذ الإجراء: '+error.message);else await loadWorkspaceTable(cfg);
 }
+
+async function loadVendorStoreCategories(){
+ const [stores,cats]=await Promise.all([
+  db.from('vendor_stores').select('id,store_name,owner_id,status').order('store_name').limit(500),
+  db.from('vendor_store_categories').select('id,store_id,name,sort_order').order('sort_order').limit(1000)
+ ]);
+ if(stores.error||cats.error){wsMsg('تعذر تحميل تصنيفات المتاجر: '+[stores.error,cats.error].filter(Boolean).map(x=>x.message).join(' | '));return;}
+ const allStores=stores.data||[],allCats=cats.data||[];
+ $('workspaceToolbar').innerHTML=`<label style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">اختر المتجر <select id="storeCategoryFilter" class="select"><option value="">كل المتاجر</option>${allStores.map(s=>`<option value="${wsEsc(s.id)}">${wsEsc(s.store_name)}</option>`).join('')}</select></label><button class="primary" id="addStoreCategory">＋ إضافة تصنيف</button><button id="workspaceRefresh">تحديث ↻</button>`;
+ const filter=$('storeCategoryFilter');
+ function render(){
+  const sid=filter.value,rows=allCats.filter(c=>!sid||String(c.store_id)===sid);
+  $('workspaceList').innerHTML=rows.map(c=>{
+   const store=allStores.find(s=>String(s.id)===String(c.store_id));
+   return `<article class="workspace-row"><div><b>${wsEsc(c.name)}</b><small>المتجر: ${wsEsc(store?.store_name||c.store_id)} · الترتيب: ${wsEsc(c.sort_order??0)} · ID: ${wsEsc(c.id)}</small></div><div class="workspace-actions"><button data-cat-edit="${wsEsc(c.id)}">تعديل</button><button data-cat-delete="${wsEsc(c.id)}" class="danger">حذف</button></div></article>`;
+  }).join('')||'<div class="workspace-message">لا توجد تصنيفات لهذا المتجر.</div>';
+ }
+ filter.onchange=render;render();
+ $('workspaceRefresh').onclick=()=>loadVendorStoreCategories();
+ $('addStoreCategory').onclick=()=>editStoreCategory(null);
+ $('workspaceList').onclick=async ev=>{
+  const edit=ev.target.closest('[data-cat-edit]'),del=ev.target.closest('[data-cat-delete]');
+  if(edit){const row=allCats.find(c=>String(c.id)===edit.dataset.catEdit);editStoreCategory(row);return;}
+  if(del){const row=allCats.find(c=>String(c.id)===del.dataset.catDelete);if(!row||!confirm('حذف التصنيف نهائياً؟'))return;
+   const {error}=await db.from('vendor_store_categories').delete().eq('id',row.id);
+   if(error)wsMsg('تعذر الحذف: '+error.message);else{wsMsg('تم حذف التصنيف.');await loadVendorStoreCategories();}return;
+  }
+ };
+ function editStoreCategory(row){
+  const form=$('workspaceForm');form.hidden=false;
+  form.innerHTML=`<h3>${row?'تعديل تصنيف متجر':'إضافة تصنيف متجر'}</h3><div class="workspace-form"><label>المتجر<select id="scStore">${allStores.map(s=>`<option value="${wsEsc(s.id)}" ${String(row?.store_id||filter.value)===String(s.id)?'selected':''}>${wsEsc(s.store_name)}</option>`).join('')}</select></label><label>اسم التصنيف<input id="scName" maxlength="100" value="${wsEsc(row?.name||'')}"></label><label>ترتيب العرض<input id="scOrder" type="number" value="${wsEsc(row?.sort_order??0)}"></label></div><button class="primary" id="scSave">حفظ التصنيف</button> <button id="scCancel">إلغاء</button><span id="scMsg"></span>`;
+  $('scCancel').onclick=()=>form.hidden=true;
+  $('scSave').onclick=async()=>{
+   const storeId=$('scStore').value,name=$('scName').value.trim(),sort_order=Number($('scOrder').value||0),msg=$('scMsg');
+   if(!storeId||!name){msg.textContent='اختر المتجر واكتب اسم التصنيف.';return;}
+   const store=allStores.find(s=>String(s.id)===String(storeId));if(!store){msg.textContent='المتجر غير موجود.';return;}
+   const payload={name,store_id:storeId,sort_order,owner_id:store.owner_id,updated_at:new Date().toISOString()};
+   const result=row?await db.from('vendor_store_categories').update({name,sort_order,updated_at:new Date().toISOString()}).eq('id',row.id):await db.from('vendor_store_categories').insert(payload);
+   if(result.error){msg.textContent='تعذر الحفظ: '+result.error.message;return;}
+   form.hidden=true;wsMsg('تم حفظ تصنيف المتجر.');await loadVendorStoreCategories();
+  };
+ }
+ wsMsg(`تم تحميل ${allStores.length} متجر و${allCats.length} تصنيف.`);
+}
+
 async function loadWorkspaceBanner(){
  const {data,error}=await db.from('marketplace_home_banner').select('id,title,subtitle,button_text,target_page,image_url').eq('id',1).maybeSingle();if(error){wsMsg('تعذر قراءة البنر: '+error.message);return;}
  const r=data||{};const form=$('workspaceForm');form.hidden=false;
@@ -400,8 +447,14 @@ async function loadWorkspaceDoctor(){
  ]);
  const errors=[q.error,s.error,r.error].filter(Boolean);if(errors.length){wsMsg('تعذر تحميل بعض بيانات دكتور القيمنق: '+errors.map(x=>x.message).join(' | '));return;}
  const blocks=[['الأسئلة',q.data||[],'doctor_questions'],['المختصون',s.data||[],'doctor_specialists'],['البلاغات',r.data||[],'doctor_reports']];
- $('workspaceList').innerHTML=blocks.map(([label,rows,table])=>`<div class="panel"><h3>${label} (${rows.length})</h3>${rows.map(x=>`<div class="workspace-row"><div><b>${wsEsc(x.title||x.display_name||x.reason||x.user_id||x.id)}</b><small>${wsEsc(JSON.stringify(x))}</small></div><div class="workspace-actions">${table==='doctor_specialists'?`${(x.is_verified||x.application_status==='approved')?'<span class="status ok">مختص معتمد</span>':`<button data-doc-approve="${wsEsc(x.user_id)}">اعتماد المختص</button>`}`:table==='doctor_questions'?`<span class="muted">عرض فقط</span>`:`<button data-doc-report="${wsEsc(x.id)}">إغلاق البلاغ</button>`}</div></div>`).join('')||'<p class="muted">لا توجد سجلات.</p>'}</div>`).join('');
- $('workspaceList').onclick=async ev=>{const b=ev.target.closest('button');if(!b)return;let result;if(b.dataset.docApprove||b.dataset.docRevoke){const yes=!!b.dataset.docApprove;result=await db.from('doctor_specialists').update({is_verified:true,application_status:'approved',verified_at:new Date().toISOString()}).eq('user_id',b.dataset.docApprove||b.dataset.docRevoke);}else if(b.dataset.docReport){result=await db.from('doctor_reports').update({status:'reviewed'}).eq('id',b.dataset.docReport);}if(result?.error)wsMsg('تعذر الحفظ: '+result.error.message);else await loadWorkspaceDoctor();};
+ $('workspaceList').innerHTML=blocks.map(([label,rows,table])=>`<div class="panel"><h3>${label} (${rows.length})</h3>${rows.map(x=>`<div class="workspace-row"><div><b>${wsEsc(x.title||x.display_name||x.reason||x.user_id||x.id)}</b><small>${wsEsc(JSON.stringify(x))}</small></div><div class="workspace-actions">${table==='doctor_specialists'?`${(x.is_verified||x.application_status==='approved')?`<span class="status ok">مختص معتمد</span><button data-doc-revoke="${wsEsc(x.user_id)}">إلغاء الاعتماد</button>`:`<button data-doc-approve="${wsEsc(x.user_id)}">قبول الطلب</button><button data-doc-reject="${wsEsc(x.user_id)}">رفض الطلب</button>`}`:table==='doctor_questions'?`<span class="muted">عرض فقط</span>`:`<button data-doc-report="${wsEsc(x.id)}">إغلاق البلاغ</button>`}</div></div>`).join('')||'<p class="muted">لا توجد سجلات.</p>'}</div>`).join('');
+ $('workspaceList').onclick=async ev=>{const b=ev.target.closest('button');if(!b)return;let result;
+  if(b.dataset.docApprove)result=await db.from('doctor_specialists').update({is_verified:true,application_status:'approved',verified_at:new Date().toISOString()}).eq('user_id',b.dataset.docApprove);
+  else if(b.dataset.docReject)result=await db.from('doctor_specialists').update({is_verified:false,application_status:'rejected'}).eq('user_id',b.dataset.docReject);
+  else if(b.dataset.docRevoke)result=await db.from('doctor_specialists').update({is_verified:false,application_status:'pending'}).eq('user_id',b.dataset.docRevoke);
+  else if(b.dataset.docReport)result=await db.from('doctor_reports').update({status:'reviewed'}).eq('id',b.dataset.docReport);
+  if(result?.error)wsMsg('تعذر الحفظ: '+result.error.message);else if(result)await loadWorkspaceDoctor();
+ };
  wsMsg('تم تحميل أقسام دكتور القيمنق.');
 }
 async function loadWorkspaceTraderControls(){
@@ -440,12 +493,23 @@ async function loadAdminOrdersWorkspace(){
 }
 async function loadPaymentsWorkspace(){
  const [l,p]=await Promise.all([
-  db.from('vendor_financial_ledger').select('id,owner_id,entry_type,description,amount_sar,created_at,reference_code').order('created_at',{ascending:false}).limit(200),
-  db.from('vendor_payouts').select('id,owner_id,amount_sar,status,scheduled_for,paid_at,provider_reference,created_at').order('created_at',{ascending:false}).limit(200)
+  db.from('vendor_financial_ledger').select('id,owner_id,entry_type,description,amount_sar,created_at,reference_code').order('created_at',{ascending:false}).limit(500),
+  db.from('vendor_payouts').select('id,owner_id,amount_sar,status,scheduled_for,paid_at,provider_reference,created_at').order('created_at',{ascending:false}).limit(500)
  ]);
- if(l.error||p.error){wsMsg('تعذر تحميل سجلات الأموال: '+[l.error,p.error].filter(Boolean).map(x=>x.message).join(' | '));return;}
- $('workspaceList').innerHTML=workspaceTable('السجل المالي للتجار',l.data||[],[{key:'owner_id',label:'التاجر'},{key:'entry_type',label:'النوع'},{key:'description',label:'الوصف'},{key:'amount_sar',label:'المبلغ',render:r=>money(r.amount_sar)},{key:'reference_code',label:'المرجع'},{key:'created_at',label:'التاريخ',render:r=>wsEsc(dateLabel(r.created_at))}])+workspaceTable('طلبات التحويلات',p.data||[],[{key:'owner_id',label:'التاجر'},{key:'amount_sar',label:'المبلغ',render:r=>money(r.amount_sar)},{key:'status',label:'الحالة'},{key:'scheduled_for',label:'موعد التحويل'},{key:'paid_at',label:'تاريخ الدفع'},{key:'provider_reference',label:'مرجع المزود'}]);
- wsMsg('عرض مالي للقراءة فقط. لا يتم إنشاء تحويل أو تغيير حالة دفع من لوحة الإدارة.');
+ if(l.error||p.error){wsMsg('تعذر تحميل سجلات المحافظ: '+[l.error,p.error].filter(Boolean).map(x=>x.message).join(' | '));return;}
+ const ledger=l.data||[],payouts=p.data||[];
+ const owners=new Set([...ledger.map(x=>x.owner_id),...payouts.map(x=>x.owner_id)].filter(Boolean));
+ $('workspaceToolbar').innerHTML='<button class="primary" id="workspaceRefresh">تحديث المحافظ ↻</button>';
+ $('workspaceList').innerHTML=`<div class="grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px">
+ <div class="panel"><small>عدد حسابات التجار الظاهرة</small><h2>${owners.size}</h2></div>
+ <div class="panel"><small>حركات السجل المالي</small><h2>${ledger.length}</h2></div>
+ <div class="panel"><small>طلبات التحويل</small><h2>${payouts.length}</h2></div>
+ </div>
+ <div class="panel"><h3>كشف حركات المحافظ</h3><p class="muted">السجل المالي محفوظ في vendor_financial_ledger. تعرض اللوحة القيود دون تخمين رصيد افتتاحي أو معنى إشارة المبلغ.</p>${workspaceTable('الحركات المالية',ledger,[{key:'owner_id',label:'التاجر'},{key:'entry_type',label:'نوع الحركة'},{key:'description',label:'الوصف'},{key:'amount_sar',label:'المبلغ',render:r=>money(r.amount_sar)},{key:'reference_code',label:'المرجع'},{key:'created_at',label:'التاريخ',render:r=>wsEsc(dateLabel(r.created_at))}])}</div>
+ <div class="panel"><h3>طلبات سحب أرصدة التجار</h3>${workspaceTable('طلبات السحب',payouts,[{key:'owner_id',label:'التاجر'},{key:'amount_sar',label:'المبلغ',render:r=>money(r.amount_sar)},{key:'status',label:'الحالة'},{key:'scheduled_for',label:'موعد التحويل'},{key:'paid_at',label:'تاريخ الدفع'},{key:'provider_reference',label:'مرجع مزود الدفع'}])}</div>
+ <div class="panel"><h3>تفعيل العمليات المالية</h3><p>تم ربط شاشة المحافظ بكشف الحركات وطلبات السحب الحالية. لا يوجد في ملفات المنصة التي تمت مراجعتها جدول رصيد موحد أو تكامل مزود تحويل يثبت تنفيذ الإيداع والسحب؛ لذلك لم أضف أزراراً وهمية لتحويل الأموال أو تعديل الأرصدة.</p></div>`;
+ $('workspaceRefresh').onclick=loadPaymentsWorkspace;
+ wsMsg('تم تحميل كشف المحافظ وطلبات السحب من قاعدة البيانات. العمليات النقدية الفعلية تتطلب مزود الدفع وصلاحياته.');
 }
 async function loadCommissionsWorkspace(){
  const [sales,vendor]=await Promise.all([
