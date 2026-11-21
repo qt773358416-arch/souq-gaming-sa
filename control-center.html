@@ -49,6 +49,26 @@ button,a,[data-go],[data-action]{cursor:pointer;touch-action:manipulation;-webki
 .nav{min-height:44px;user-select:none;-webkit-user-select:none}
 .side{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
 @media(max-width:850px){.side{width:min(86vw,330px);right:calc(-1 * min(86vw,330px));z-index:40}.side.open{right:0}.side .nav{min-height:48px;font-size:14px}.side .preview{min-height:48px}}
+
+/* Dedicated admin section view: one section per screen, not appended below dashboard */
+.admin-workspace.active{display:block!important;min-height:calc(100dvh - 90px);width:100%;max-width:100%;padding:18px 16px 42px;margin:0;position:relative;isolation:isolate}
+.admin-workspace.active>.head{position:sticky;top:0;z-index:15;padding:12px 0 14px;margin:0 0 14px;background:linear-gradient(180deg,#07152a 85%,rgba(7,21,42,.94));border-bottom:1px solid #24496e}
+.admin-workspace .workspace-toolbar{padding:10px 0;position:sticky;top:70px;z-index:12;background:#07152a}
+.admin-workspace .workspace-list{gap:14px}
+.admin-workspace .workspace-row{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;padding:17px;border-radius:16px;background:linear-gradient(145deg,#122a49,#0b1d35);box-shadow:0 8px 22px #0002}
+.admin-workspace .workspace-row .record-title{font-size:17px;font-weight:800;color:#f3f8ff;margin-bottom:8px}
+.admin-workspace .record-meta{display:flex;gap:7px;flex-wrap:wrap}
+.admin-workspace .record-chip{display:inline-flex;align-items:center;padding:5px 9px;border-radius:20px;background:#0a1a30;border:1px solid #2c527a;color:#bdd5ed;font-size:12px}
+.admin-workspace .record-status{font-weight:800}
+.admin-workspace .workspace-actions{border-top:1px solid #284665;padding-top:10px;display:flex;gap:8px;flex-wrap:wrap}
+.admin-workspace .workspace-actions button{min-height:42px}
+.admin-workspace .workspace-detail-overlay{position:fixed;inset:0;z-index:100000;background:#020817d9;display:grid;place-items:center;padding:16px}
+.admin-workspace .workspace-detail-card{width:min(720px,100%);max-height:85dvh;overflow:auto;background:#0c1e36;border:1px solid #32618d;border-radius:18px;padding:18px;box-shadow:0 20px 70px #0009}
+.admin-workspace .workspace-detail-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.admin-workspace .workspace-detail-field{padding:10px;border:1px solid #27496d;border-radius:10px;background:#102743;min-width:0;overflow-wrap:anywhere}
+.admin-workspace .workspace-detail-field small{display:block;color:#8eabc8;margin-bottom:5px}
+@media(max-width:650px){.admin-workspace.active{padding:12px 10px 32px}.admin-workspace.active>.head{top:0}.admin-workspace .workspace-toolbar{top:64px}.admin-workspace .workspace-detail-grid{grid-template-columns:1fr}.admin-workspace .workspace-actions button{flex:1 1 auto}}
+
 </style></head>
 <body>
 <header class="top"><div class="brand"><div class="logo">👑</div><div><h1>سوق القيمنق السعودي</h1><small>لوحة التحكم الرئيسية للمنصة</small></div></div><div class="search"><input aria-label="البحث في المنصة" id="search" placeholder="ابحث في المنصة (مستخدم، إعلان، متجر، طلب...)"/><button aria-label="تنفيذ البحث" id="searchSubmit" type="button">⌕</button></div><div class="actions"><button class="ib" data-go="إعدادات المنصة">⚙</button><button class="ib" data-go="الإشعارات" title="الإشعارات">♧</button><button class="ib" data-go="الرسائل" title="الرسائل">✉</button><button class="ib" data-action="theme">☾</button></div><div class="admin"><div class="avatar">♛</div><div><b id="adminEmail">مدير المنصة</b><small id="adminState">● بانتظار تسجيل الدخول</small></div></div><button class="ib" id="logoutButton" title="تسجيل الخروج">↪</button><button aria-controls="adminSideMenu" aria-expanded="false" class="ib" data-action="menu">☰</button></header>
@@ -135,7 +155,7 @@ if(search){search.addEventListener('keydown',async e=>{if(e.key!=='Enter')return
 async function runGlobalSearch(term){
  const host=$('adminWorkspace');hideVendorAdmin();
  [...$('dashboard').querySelector('main').children].forEach(el=>{if(el.id!=='adminWorkspace'&&el.id!=='vendorAdminView')el.hidden=true;});
- host.classList.add('active');$('workspaceTitle').textContent='نتائج البحث';$('workspaceDescription').textContent='بحث مباشر في الإعلانات والمتاجر والمستخدمين.';
+ host.classList.add('active');window.scrollTo({top:0,behavior:'instant'});$('workspaceTitle').textContent='نتائج البحث';$('workspaceDescription').textContent='بحث مباشر في الإعلانات والمتاجر والمستخدمين.';
  $('workspaceForm').hidden=true;$('workspaceToolbar').innerHTML='<button class="primary" id="searchAgain">تحديث البحث</button>';$('searchAgain').onclick=()=>runGlobalSearch(term);
  wsMsg('جارٍ البحث...');$('workspaceList').innerHTML='';
  const like='%'+term.replace(/[,%()]/g,'')+'%';
@@ -317,7 +337,7 @@ function dateLabel(v){return v?new Date(v).toLocaleString('ar-SA'):'—';}
 function jsonValue(v){return JSON.stringify(v??null,null,2);}
 async function showAdminSection(name){
  const cfg=workspaceConfigs[name];
- wsHomeHide();$('workspaceTitle').textContent=name;$('workspaceDescription').textContent=cfg?.desc||'إدارة بيانات المنصة مباشرة من قاعدة البيانات.';
+ wsHomeHide();window.scrollTo({top:0,behavior:'instant'});$('workspaceTitle').textContent=name;$('workspaceDescription').textContent=cfg?.desc||'إدارة بيانات المنصة مباشرة من قاعدة البيانات.';
  $('workspaceForm').hidden=true;$('workspaceForm').innerHTML='';$('workspaceList').innerHTML='';
  $('workspaceToolbar').innerHTML='<button class="primary" id="workspaceRefresh">تحديث البيانات ↻</button>';
  $('workspaceRefresh').onclick=()=>showAdminSection(name);wsMsg('جارٍ تحميل البيانات...');
@@ -343,16 +363,20 @@ async function loadWorkspaceTable(cfg){
  const {data,error}=await q.limit(250);if(error){wsMsg('تعذر تحميل '+cfg.table+': '+error.message+' — تحقق من صلاحيات RLS.');return;}
  const rows=data||[];
  $('workspaceList').innerHTML=rows.map(r=>{
-  const title=r.title||r.name||r.store_name||r.display_name||r.email||r.body||r.slug||('سجل '+(r.id||r.user_id||''));
-  const fields=Object.entries(r).filter(([k])=>!['id','title','name','store_name','body'].includes(k));
-  const meta=fields.map(([k,v])=>k+': '+(typeof v==='object'?JSON.stringify(v):String(v??'—'))).join(' · ');
-  const actionNames={publish:'نشر',review:'إرجاع للمراجعة',archive:'أرشفة',approve:'اعتماد المتجر',suspend:'إيقاف المتجر',feature:'تمييز / إلغاء التمييز',edit:'تعديل',toggle:'تفعيل / إيقاف',delete:'حذف',toggleProduct:r.is_active?'إخفاء المنتج':'نشر المنتج',deletePost:'حذف المنشور',deleteAd:'حذف الإعلان'};
-  return `<article class="workspace-row"><div><b>${wsEsc(title)}</b><small>${wsEsc(meta)}</small>${r.body?`<p>${wsEsc(String(r.body).slice(0,500))}</p>`:''}</div><div class="workspace-actions"><button data-ws-details="${wsEsc(r.id||r.user_id||'')}">التفاصيل</button>${(cfg.actions||[]).map(a=>`<button data-ws-action="${a}" data-ws-id="${wsEsc(r.id)}">${actionNames[a]||a}</button>`).join('')}</div></article>`;
+  const title=r.title||r.name||r.store_name||r.display_name||r.email||r.slug||('سجل');
+  const labelMap={price:'السعر',category:'التصنيف',city:'المدينة',status:'الحالة',is_active:'التفعيل',is_featured:'مميز',stock_quantity:'المخزون',rating:'التقييم',created_at:'تاريخ الإضافة',section:'القسم',sort_order:'الترتيب',phone:'الجوال',description:'الوصف'};
+  const visibleKeys=['price','category','city','status','is_active','is_featured','stock_quantity','rating','created_at','section','sort_order','phone'];
+  const chips=visibleKeys.filter(k=>r[k]!==undefined&&r[k]!==null&&r[k]!=='').slice(0,6).map(k=>{
+   let v=r[k];if(k==='created_at')v=dateLabel(v);if(k==='is_active'||k==='is_featured')v=v?'نعم':'لا';
+   return `<span class="record-chip ${k==='status'?'record-status':''}">${labelMap[k]||k}: ${wsEsc(v)}</span>`;
+  }).join('');
+  const actionNames={publish:'نشر الإعلان',review:'إرجاع للمراجعة',archive:'أرشفة',approve:'اعتماد المتجر',suspend:'إيقاف المتجر',feature:'تمييز / إلغاء التمييز',edit:'تعديل',toggle:'تفعيل / إيقاف',delete:'حذف',toggleProduct:r.is_active?'إخفاء المنتج':'نشر المنتج',deletePost:'حذف المنشور',deleteAd:'حذف الإعلان'};
+  return `<article class="workspace-row"><div><div class="record-title">${wsEsc(title)}</div><div class="record-meta">${chips}</div>${r.body?`<p>${wsEsc(String(r.body).slice(0,280))}</p>`:''}</div><div class="workspace-actions"><button data-ws-details="${wsEsc(r.id||r.user_id||'')}">عرض التفاصيل</button>${(cfg.actions||[]).map(a=>`<button data-ws-action="${a}" data-ws-id="${wsEsc(r.id)}">${actionNames[a]||a}</button>`).join('')}</div></article>`;
  }).join('')||'<div class="workspace-message">لا توجد سجلات حالياً.</div>';
  wsMsg(`تم تحميل ${rows.length} سجل من ${cfg.table}.`);
  if(cfg.create){$('workspaceToolbar').innerHTML='<button class="primary" id="wsAdd">إضافة تصنيف</button><button id="workspaceRefresh">تحديث ↻</button>';$('wsAdd').onclick=()=>workspaceEditForm(cfg,null);$('workspaceRefresh').onclick=()=>showAdminSection(cfg.table==='platform_control_categories'?'تصنيفات البحث للأفراد':'تصنيفات المتاجر');}
  $('workspaceList').onclick=async ev=>{
-  const detail=ev.target.closest('[data-ws-details]');if(detail){const row=rows.find(x=>String(x.id||x.user_id||'')===detail.dataset.wsDetails);if(row){const form=$('workspaceForm');form.hidden=false;form.innerHTML=`<h3>تفاصيل السجل</h3><pre style="white-space:pre-wrap;overflow-wrap:anywhere;color:#c6ddf5">${wsEsc(jsonValue(row))}</pre><button id="wsCloseDetails">إغلاق</button>`;$('wsCloseDetails').onclick=()=>form.hidden=true;}return;}
+  const detail=ev.target.closest('[data-ws-details]');if(detail){const row=rows.find(x=>String(x.id||x.user_id||'')===detail.dataset.wsDetails);if(row){const form=$('workspaceForm');const pretty={id:'رقم السجل',user_id:'معرّف المستخدم',title:'العنوان',name:'الاسم',display_name:'اسم العرض',store_name:'اسم المتجر',price:'السعر',category:'التصنيف',city:'المدينة',status:'الحالة',seller_id:'معرّف البائع',created_at:'تاريخ الإضافة',description:'الوصف',body:'المحتوى',phone:'رقم الجوال',is_active:'مفعل',is_featured:'متجر مميز',sort_order:'ترتيب العرض',section:'القسم',slug:'الرابط المختصر',logo_url:'رابط الشعار'};const cells=Object.entries(row).map(([k,v])=>`<div class="workspace-detail-field"><small>${wsEsc(pretty[k]||k)}</small><b>${wsEsc(v===null?'—':typeof v==='object'?JSON.stringify(v):k==='created_at'?dateLabel(v):String(v))}</b></div>`).join('');form.hidden=false;form.className='workspace-detail-overlay';form.innerHTML=`<div class="workspace-detail-card" role="dialog" aria-modal="true"><div class="head"><h3>تفاصيل ${wsEsc(row.title||row.store_name||row.name||'السجل')}</h3><button id="wsCloseDetails">إغلاق ×</button></div><div class="workspace-detail-grid">${cells}</div><div style="margin-top:16px;text-align:left"><button class="primary" id="wsCloseDetails2">تم</button></div></div>`;const close=()=>{form.hidden=true;form.className='panel';};$('wsCloseDetails').onclick=close;$('wsCloseDetails2').onclick=close;form.onclick=e=>{if(e.target===form)close();};}return;}
   const b=ev.target.closest('[data-ws-action]');if(!b)return;const row=rows.find(x=>String(x.id)===b.dataset.wsId);if(row)await workspaceAction(cfg,row,b.dataset.wsAction);
  };
 }
@@ -447,7 +471,7 @@ async function loadWorkspaceDoctor(){
  ]);
  const errors=[q.error,s.error,r.error].filter(Boolean);if(errors.length){wsMsg('تعذر تحميل بعض بيانات دكتور القيمنق: '+errors.map(x=>x.message).join(' | '));return;}
  const blocks=[['الأسئلة',q.data||[],'doctor_questions'],['المختصون',s.data||[],'doctor_specialists'],['البلاغات',r.data||[],'doctor_reports']];
- $('workspaceList').innerHTML=blocks.map(([label,rows,table])=>`<div class="panel"><h3>${label} (${rows.length})</h3>${rows.map(x=>`<div class="workspace-row"><div><b>${wsEsc(x.title||x.display_name||x.reason||x.user_id||x.id)}</b><small>${wsEsc(JSON.stringify(x))}</small></div><div class="workspace-actions">${table==='doctor_specialists'?`${(x.is_verified||x.application_status==='approved')?`<span class="status ok">مختص معتمد</span><button data-doc-revoke="${wsEsc(x.user_id)}">إلغاء الاعتماد</button>`:`<button data-doc-approve="${wsEsc(x.user_id)}">قبول الطلب</button><button data-doc-reject="${wsEsc(x.user_id)}">رفض الطلب</button>`}`:table==='doctor_questions'?`<span class="muted">عرض فقط</span>`:`<button data-doc-report="${wsEsc(x.id)}">إغلاق البلاغ</button>`}</div></div>`).join('')||'<p class="muted">لا توجد سجلات.</p>'}</div>`).join('');
+ $('workspaceList').innerHTML=blocks.map(([label,rows,table])=>`<div class="panel"><h3>${label} (${rows.length})</h3>${rows.map(x=>`<div class="workspace-row"><div><b>${wsEsc(x.title||x.display_name||x.reason||x.user_id||x.id)}</b><small>${wsEsc([x.specialty,x.application_status,x.is_verified?'معتمد':'بانتظار المراجعة',x.category,x.status].filter(Boolean).join(' · '))}</small></div><div class="workspace-actions">${table==='doctor_specialists'?`${(x.is_verified||x.application_status==='approved')?`<span class="status ok">مختص معتمد</span><button data-doc-revoke="${wsEsc(x.user_id)}">إلغاء الاعتماد</button>`:`<button data-doc-approve="${wsEsc(x.user_id)}">قبول الطلب</button><button data-doc-reject="${wsEsc(x.user_id)}">رفض الطلب</button>`}`:table==='doctor_questions'?`<span class="muted">عرض فقط</span>`:`<button data-doc-report="${wsEsc(x.id)}">إغلاق البلاغ</button>`}</div></div>`).join('')||'<p class="muted">لا توجد سجلات.</p>'}</div>`).join('');
  $('workspaceList').onclick=async ev=>{const b=ev.target.closest('button');if(!b)return;let result;
   if(b.dataset.docApprove)result=await db.from('doctor_specialists').update({is_verified:true,application_status:'approved',verified_at:new Date().toISOString()}).eq('user_id',b.dataset.docApprove);
   else if(b.dataset.docReject)result=await db.from('doctor_specialists').update({is_verified:false,application_status:'rejected'}).eq('user_id',b.dataset.docReject);
