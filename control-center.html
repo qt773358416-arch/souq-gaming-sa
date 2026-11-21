@@ -443,6 +443,18 @@ input[type="checkbox"]{accent-color:#48c9df}
 
    <section class="page panel" id="page-templates">
     <div class="pagehead"><div><h2>قوالب المتاجر</h2><div class="muted">تعريف قوالب واجهات التجار وإصداراتها وإعداداتها</div></div><button id="reloadTemplates">تحديث</button></div>
+    <div class="panel" style="margin:14px 0;padding:16px;border:1px solid var(--line);border-radius:14px">
+     <div class="pagehead"><div><h3 style="margin:0">إدارة قالب لوحة التاجر</h3><div class="muted">تحكم مركزي بترتيب الأقسام وشكل البطاقات وأزرار الاختصار لكل المتاجر التي تستخدم القالب الافتراضي.</div></div><button type="button" class="primary" id="updateVendorDashboardTemplate">تحديث قالب المنصة</button></div>
+     <div class="form" style="margin-top:12px">
+      <label>لون إبراز لوحة التاجر<input id="vendorTplAccent" class="field" type="color" value="#16c7d9"></label>
+      <label>استدارة البطاقات<input id="vendorTplRadius" class="field" type="number" min="8" max="28" value="18"></label>
+      <label class="full">ترتيب الأقسام (اكتب الرموز مفصولة بفواصل)<input id="vendorTplOrder" class="field" value="store-profile,products,performance,orders,marketing,finance" dir="ltr"></label>
+      <label class="full">إخفاء أقسام (اختياري، اكتب الرموز مفصولة بفواصل)<input id="vendorTplHidden" class="field" placeholder="مثال: finance" dir="ltr"></label>
+      <label class="row"><input id="vendorTplCompact" type="checkbox" style="width:18px;height:18px"> عرض مضغوط</label>
+     </div>
+     <div id="vendorDashboardTemplateMsg" class="msg" role="status"></div>
+     <div class="muted">الرموز المتاحة: store-profile، products، performance، orders، marketing، finance. التحديث يغيّر القالب الافتراضي ولا يغيّر بيانات المتاجر.</div>
+    </div>
     <form id="templateForm" class="form">
      <input type="hidden" id="templateId">
      <label>اسم القالب<input id="templateName" class="field" required maxlength="100"></label>
@@ -587,7 +599,7 @@ function openPage(name){
   categories:loadCategories,elements:loadElements,ads:loadAds,
   vendors:loadVendors,verification:loadVerificationRequests,products:loadProducts,orders:loadOrders,
   banner:loadBanner,appearance:loadAppearance,finance:loadFinance,
-  shipping:loadShipping,templates:loadTemplates,features:loadFeatures
+  shipping:loadShipping,templates:()=>{loadTemplates();loadVendorDashboardTemplateEditor();},features:loadFeatures
  };
  if(loaders[name])loaders[name]();
 }
@@ -989,6 +1001,21 @@ window.deleteTemplate=async id=>{if(!confirm('حذف القالب؟'))return;con
 $('templateReset').onclick=()=>{$('templateForm').reset();$('templateId').value='';$('templateVersion').value='1.0.0';$('templateConfig').value='{}';$('templateEnabled').checked=true;};
 $('templateForm').onsubmit=async e=>{e.preventDefault();let config;try{config=JSON.parse($('templateConfig').value||'{}');}catch{msg('templateMsg','إعدادات JSON غير صالحة');return;}const id=$('templateId').value,row={template_name:$('templateName').value.trim(),template_code:$('templateCode').value.trim().toLowerCase(),version:$('templateVersion').value.trim()||'1.0.0',preview_image_url:$('templatePreview').value.trim()||null,description:$('templateDescription').value.trim(),is_default:$('templateDefault').checked,is_enabled:$('templateEnabled').checked,config,updated_at:new Date().toISOString()};if(row.is_default)await db.from('platform_store_templates').update({is_default:false}).neq('id',id||'00000000-0000-0000-0000-000000000000');const {error}=id?await db.from('platform_store_templates').update(row).eq('id',id):await db.from('platform_store_templates').insert(row);msg('templateMsg',error?.message||'تم حفظ القالب');if(!error){$('templateReset').click();loadTemplates();}};
 
+
+async function loadVendorDashboardTemplateEditor(){
+ const {data,error}=await db.from('platform_store_templates').select('id,config').eq('is_default',true).eq('is_enabled',true).maybeSingle();
+ if(error){$('vendorDashboardTemplateMsg').textContent='تعذر قراءة القالب الافتراضي: '+error.message;return}
+ if(!data){$('vendorDashboardTemplateMsg').textContent='لا يوجد قالب افتراضي مفعّل. حدّد قالباً افتراضياً أولاً.';return}
+ const cfg=data.config?.vendor_dashboard||{}; $('vendorTplAccent').value=/^#[0-9a-f]{6}$/i.test(cfg.accent_color||'')?cfg.accent_color:'#16c7d9';$('vendorTplRadius').value=cfg.card_radius||18;$('vendorTplOrder').value=(cfg.module_order||['store-profile','products','performance','orders','marketing','finance']).join(',');$('vendorTplHidden').value=(cfg.hidden_modules||[]).join(',');$('vendorTplCompact').checked=cfg.compact===true;
+ $('vendorDashboardTemplateMsg').dataset.templateId=data.id;$('vendorDashboardTemplateMsg').textContent='تم تحميل إعدادات القالب الافتراضي.';
+}
+$('updateVendorDashboardTemplate').onclick=async()=>{
+ const id=$('vendorDashboardTemplateMsg').dataset.templateId;if(!id){await loadVendorDashboardTemplateEditor();return}
+ const {data,error:readError}=await db.from('platform_store_templates').select('config').eq('id',id).single();if(readError){$('vendorDashboardTemplateMsg').textContent='تعذر قراءة إعدادات القالب: '+readError.message;return}
+ const allowed=['store-profile','products','performance','orders','marketing','finance'];const parseList=v=>String(v||'').split(',').map(x=>x.trim()).filter(x=>allowed.includes(x));let order=parseList($('vendorTplOrder').value);order=[...order,...allowed.filter(x=>!order.includes(x))];const hidden=parseList($('vendorTplHidden').value);
+ const config={...(data.config||{}),vendor_dashboard:{...(data.config?.vendor_dashboard||{}),accent_color:$('vendorTplAccent').value,card_radius:Math.max(8,Math.min(28,Number($('vendorTplRadius').value)||18)),module_order:order,hidden_modules:hidden,compact:$('vendorTplCompact').checked}};
+ const {error}=await db.from('platform_store_templates').update({config,updated_at:new Date().toISOString()}).eq('id',id);$('vendorDashboardTemplateMsg').textContent=error?'تعذر تحديث القالب: '+error.message:'تم تحديث قالب المنصة. ستظهر التغييرات للتجار عند إعادة تحميل لوحة التاجر.';
+};
 async function loadFeatures(){const [{data:features,error},{data:stores}] = await Promise.all([db.from('platform_features').select('*').order('feature_name'),db.from('vendor_stores').select('id,store_name').order('store_name')]);if(error){msg('featureMsg',error.message);return}const f=features||[],st=stores||[];$('featureRows').innerHTML=f.map(r=>`<tr><td>${esc(r.feature_name)}</td><td>${esc(r.feature_code)}</td><td>${esc(r.applies_to)}</td><td>${r.is_enabled?'مفعلة':'معطلة'}</td><td><div class="actions"><button onclick="editFeature('${r.id}')">تعديل</button><button class="danger" onclick="deleteFeature('${r.id}')">حذف</button></div></td></tr>`).join('')||'<tr><td colspan="5" class="empty">لا توجد ميزات</td></tr>';$('grantStore').innerHTML=st.map(r=>`<option value="${r.id}">${esc(r.store_name)}</option>`).join('');$('grantFeature').innerHTML=f.map(r=>`<option value="${r.id}">${esc(r.feature_name)}</option>`).join('');await loadFeatureGrants();}
 window.editFeature=async id=>{const {data}=await db.from('platform_features').select('*').eq('id',id).single();if(!data)return;$('featureId').value=data.id;$('featureName').value=data.feature_name;$('featureCode').value=data.feature_code;$('featureApplies').value=data.applies_to;$('featureEnabled').checked=data.is_enabled;$('featureDescription').value=data.description||'';$('featureConfig').value=JSON.stringify(data.config||{},null,2);openPage('features');};
 window.deleteFeature=async id=>{if(!confirm('حذف الميزة؟'))return;const {error}=await db.from('platform_features').delete().eq('id',id);msg('featureMsg',error?.message||'تم الحذف');loadFeatures();};
