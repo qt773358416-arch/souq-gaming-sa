@@ -4569,10 +4569,10 @@ window.__souqVendorContext={state:vState,money:vMoney,safeUrl:vSafeUrl,esc:vEsc,
   let host=$('souqMerchantTemplateHost');if(!host){host=document.createElement('div');host.id='souqMerchantTemplateHost';root.insertBefore(host,root.firstChild)}
   const source=$('souqMerchantTemplateSource');if(!source){renderHeader(store);renderTools();renderProducts();return}
   const products=(ctx.state.selectedProducts||[]).map(p=>({id:p.id,name:p.title,description:p.description,categoryId:String(p.category||''),image:ctx.safeUrl(p.image_url)||'',price:Number(p.price)||0,oldPrice:'',currency:'ر.س',visible:p.status==='active'&&Number(p.stock_quantity)>=0,stock:Number(p.stock_quantity)||0}));
-  const cats=[...new Set(products.map(p=>p.categoryId).filter(Boolean))].map((name,i)=>({id:name,name,icon:'🎮',visible:true}));
+  const categoryIcon=name=>{const n=String(name||'').toLowerCase();if(/شاش|monitor|screen/.test(n))return '🖥️';if(/كمبيوتر|pc|لابتوب|laptop/.test(n))return '💻';if(/كيبورد|ماوس|ملحق|اكسسوار|accessor/.test(n))return '⌨️';if(/سماعة|headset|audio/.test(n))return '🎧';if(/كرسي|chair/.test(n))return '🪑';if(/بلايستيشن|اكس بوكس|xbox|playstation|console|جهاز ألعاب/.test(n))return '🎮';if(/كرت|بطاقة|gpu|graphic/.test(n))return '🧩';if(/جوال|هاتف|mobile|phone/.test(n))return '📱';return '◈'};const cats=[...new Set(products.map(p=>p.categoryId).filter(Boolean))].map(name=>({id:name,name,icon:categoryIcon(name),visible:true}));
   const f=shopPublic.storefront||{},heroImage=f.show_banner&&f.banner_url?ctx.safeUrl(f.banner_url):'';
   const cfg={identity:{name:String(store.store_name||'المتجر').trim()||'المتجر',logo:ctx.safeUrl(store.logo_url)||'',announcement:f.show_announcement?f.announcement||'':'',currency:'ر.س'},
-   theme:{background:'#0b1020',surface:'#121a2b',text:'#f5f7fb',muted:'#a4afc3',primary:safeColor(f.theme_color||'#8b5cf6'),secondary:'#22d3ee',radius:'20px',font:"'IBM Plex Sans Arabic',Tahoma,sans-serif"},
+   theme:{background:'#080f1b',surface:'#111c2b',text:'#f4f8fc',muted:'#9eafc2',primary:safeColor(f.theme_color||'#22c5dd'),secondary:'#22d3ee',radius:'16px',font:"'IBM Plex Sans Arabic',Tahoma,sans-serif"},
    navigation:[{label:'الرئيسية',url:'#'},{label:'التصنيفات',url:'#categoriesSection'},{label:'المنتجات',url:'#productsSection'}],
    hero:{visible:!!f.show_banner&&(!!heroImage||!!f.hero_title||!!f.hero_description),title:f.hero_title||store.store_name||'مرحباً بكم في متجرنا',description:f.hero_description||store.description||'تصفح منتجات المتجر واختر ما يناسبك',buttonLabel:'تسوق الآن',image:heroImage},
    categories:cats,products,
@@ -4789,6 +4789,24 @@ a{color:inherit;text-decoration:none}.container{width:min(1220px,92%);margin:aut
  .section{margin:32px auto}.section-heading h2{font-size:19px}.features-grid{grid-template-columns:1fr}.promo-block.visible{grid-template-columns:1fr auto;padding:20px}.footer-grid{grid-template-columns:1fr 1fr}.footer-col:first-child{grid-column:1/-1}
  .toolbar{flex-direction:column}.search-wrap,.sort-select{width:100%;min-height:44px}
 }
+
+/* SOUQ GAMING MERCHANT STOREFRONT — DARK COMPACT ELECTRONICS */
+:root{--store-bg:#080f1b;--store-surface:#111c2b;--store-surface-2:#19283a;--store-text:#f4f8fc;--store-muted:#9eafc2;--store-primary:#22c5dd;--store-secondary:#67e8f9;--store-border:rgba(148,190,211,.16);--store-radius:16px}
+body{background:radial-gradient(ellipse at 50% -18%,rgba(34,197,221,.10),transparent 42%),var(--store-bg)}
+.container{width:min(1280px,94%)}
+.site-header{background:rgba(8,15,27,.94);border-bottom:1px solid var(--store-border);box-shadow:0 8px 28px rgba(0,0,0,.18)}
+.header-inner{min-height:70px;gap:20px}.brand{font-weight:800}.brand-logo{border:1px solid var(--store-border);background:var(--store-surface);padding:4px}.nav a{font-weight:600}.icon-btn{background:var(--store-surface);border-color:var(--store-border);transition:.18s}.icon-btn:hover{border-color:var(--store-primary);color:var(--store-secondary)}
+.announcement{background:linear-gradient(90deg,#0c3442,#124052);color:#dffaff}
+.hero{padding:22px 0 8px}.hero-panel{min-height:230px;border-radius:20px;background:linear-gradient(115deg,#122638,#10202f 58%,#143745);box-shadow:0 18px 45px rgba(0,0,0,.20)}.hero-title{font-weight:800}.hero-description{max-width:620px}.primary-btn{background:linear-gradient(135deg,#24c7dd,#1599b8);color:#06141d;box-shadow:0 8px 22px rgba(34,197,221,.16)}.secondary-btn{background:var(--store-surface-2);border:1px solid var(--store-border)}
+.section{margin:28px auto}.section-heading{margin-bottom:13px}.section-heading h2{font-size:clamp(18px,2vw,23px);font-weight:800}.section-heading p{font-size:12px}
+.category-list{grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}.category-card{background:linear-gradient(145deg,#142337,#101b2a);border-color:var(--store-border);padding:13px 8px;min-height:78px}.category-card:hover{border-color:var(--store-primary);box-shadow:0 8px 24px rgba(34,197,221,.09)}.category-icon{font-size:23px}.category-name{font-size:12px}
+.toolbar{margin-bottom:12px}.search-wrap input,.sort-select{background:#101b29;border-color:var(--store-border);border-radius:12px;min-height:44px}.search-wrap input:focus,.sort-select:focus{border-color:var(--store-primary);outline:2px solid rgba(34,197,221,.12)}
+.product-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.product-card{background:linear-gradient(180deg,#142235,#101a28);border-color:var(--store-border);border-radius:15px;box-shadow:0 7px 22px rgba(0,0,0,.13);min-width:0}.product-card:hover{border-color:rgba(34,197,221,.65);box-shadow:0 12px 28px rgba(0,0,0,.22)}.product-image{height:auto;aspect-ratio:1/1;background:linear-gradient(145deg,#1b2c42,#101b2b)}.product-image img{object-fit:contain;padding:8px}.product-info{padding:11px}.product-category{display:inline-block;color:#74d9e8;background:rgba(34,197,221,.09);border:1px solid rgba(34,197,221,.15);border-radius:99px;padding:2px 7px;font-size:10px}.product-name{font-size:13px;line-height:1.55;min-height:40px;margin:7px 0 6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.product-price{font-size:15px;color:#6ce1ef;font-weight:800}.product-old-price{font-size:10px}.product-action{margin-top:9px;padding:9px 8px;background:rgba(34,197,221,.10);border:1px solid rgba(34,197,221,.42);color:#c9f8ff;font-size:12px;font-weight:800}.product-action:hover{background:rgba(34,197,221,.2)}
+.empty-state{border-color:var(--store-border);background:var(--store-surface)}.promo-block,.content-block,.feature{background:var(--store-surface);border-color:var(--store-border)}.site-footer{background:#070d16;border-color:var(--store-border)}.cart-drawer{background:#101b29;border-color:var(--store-border)}.close-btn{background:var(--store-surface-2);border-color:var(--store-border);color:var(--store-text)}
+@media(max-width:900px){.category-list{grid-template-columns:repeat(4,minmax(0,1fr))}.product-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}}
+@media(max-width:650px){.container{width:calc(100% - 22px)}.header-inner{min-height:62px}.brand{font-size:15px}.brand-logo{width:34px;height:34px}.hero{padding-top:14px}.hero-panel.visible{padding:22px 17px;min-height:0}.hero-title{font-size:25px}.hero-visual{min-height:115px}.hero-visual img{max-height:125px}.section{margin:24px auto}.category-list{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.category-card{padding:10px 5px;min-height:70px}.category-icon{font-size:21px}.category-name{font-size:11px}.toolbar{gap:8px}.product-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.product-image{aspect-ratio:1/1;height:auto}.product-info{padding:9px}.product-name{font-size:12px;min-height:37px}.product-price{font-size:14px}.product-action{font-size:11px;padding:8px 6px}.section-heading h2{font-size:18px}.cart-drawer{width:min(390px,94vw)}}
+@media(max-width:360px){.product-grid{gap:7px}.product-info{padding:8px}.product-name{font-size:11px}.product-action{font-size:10px}}
+
 </style>
 </head>
 <body>
@@ -4891,7 +4909,7 @@ a{color:inherit;text-decoration:none}.container{width:min(1220px,92%);margin:aut
 const STORE = window.STORE_CONFIG || {};
 const cart = [];
 const $ = id => document.getElementById(id);
-const safe = value => String(value ?? '');
+const safe = value => String(value ?? '').replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]));
 const show = (el, yes=true) => { el.hidden = !yes; el.classList.toggle('visible', yes); };
 
 function applyTheme(theme={}) {
@@ -4931,7 +4949,7 @@ function renderCategories() {
 let activeCategory='all';
 function renderProducts() {
  const section=STORE.sections?.products||{},items=(STORE.products||[]).filter(p=>p.visible!==false);
- if(section.visible===false||!items.length)return;
+ if(section.visible===false)return;
  show($('productsSection'));$('productsTitle').textContent=section.title||'';$('productsSubtitle').textContent=section.subtitle||'';
  const query=$('productSearch').value.trim().toLocaleLowerCase('ar');
  let filtered=items.filter(p=>(activeCategory==='all'||String(p.categoryId)===activeCategory)&&safe(p.name).toLocaleLowerCase('ar').includes(query));
