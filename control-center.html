@@ -264,6 +264,7 @@ input[type="checkbox"]{accent-color:#48c9df}
     <button data-page="banner">البنر الرئيسي</button>
     <button data-page="ads">الإعلانات</button>
     <button data-page="vendors">المتاجر والبائعون</button>
+    <button data-page="verification">توثيق التجار</button>
     <button data-page="products">منتجات المتجر</button>
     <button data-page="orders">الطلبات</button>
     <button data-page="finance">المحافظ والعمولات</button>
@@ -367,6 +368,25 @@ input[type="checkbox"]{accent-color:#48c9df}
     <div class="pagehead"><div><h2>المتاجر والبائعون</h2><div class="muted">اعتماد المتجر أو رفضه أو إيقافه وإبراز المتجر</div></div><button id="reloadVendors">تحديث</button></div>
     <div class="tablewrap"><table><thead><tr><th>المتجر</th><th>المالك</th><th>المدينة</th><th>الحالة</th><th>الإجراءات</th></tr></thead><tbody id="vendorsRows"></tbody></table></div>
     <div id="vendorsMsg" class="msg"></div>
+    <div id="vendorCenterDetails" class="panel hidden" style="margin-top:16px;background:#0d1925"><div class="pagehead"><h3 style="margin:0">ملف التاجر وإعدادات بوابته</h3><button id="closeVendorCenterDetails">إغلاق</button></div><div id="vendorCenterDetailsBody"></div></div>
+   </section>
+
+   <section class="page panel" id="page-verification">
+    <div class="pagehead"><div><h2>طلبات توثيق التجار</h2><div class="muted">طلبات التوثيق المرسلة من بوابة التاجر والمستندات المرتبطة بها</div></div><button id="reloadVerification">تحديث</button></div>
+    <div class="row" style="margin:10px 0"><select id="verificationFilter" class="field" style="max-width:240px"><option value="">كل الحالات</option><option value="pending">قيد الانتظار</option><option value="under_review">قيد المراجعة</option><option value="verified">موثق</option><option value="rejected">مرفوض</option><option value="needs_more_info">يتطلب استكمالاً</option></select><input id="verificationSearch" class="field" style="max-width:360px" placeholder="بحث بالاسم أو رقم الطلب أو الحساب"></div>
+    <div class="tablewrap"><table><thead><tr><th>الاسم النظامي</th><th>نوع التوثيق</th><th>المدينة</th><th>الحالة</th><th>تاريخ الطلب</th><th>التفاصيل</th></tr></thead><tbody id="verificationRows"></tbody></table></div>
+    <div id="verificationMsg" class="msg"></div>
+    <div id="verificationDetail" class="panel hidden" style="margin-top:16px;background:#0d1925">
+     <div class="pagehead"><div><h3 style="margin:0">تفاصيل طلب التوثيق</h3><div id="verificationDetailMeta" class="muted"></div></div><button id="closeVerificationDetail">إغلاق</button></div>
+     <div id="verificationDetailBody"></div>
+     <form id="verificationReviewForm" class="form" style="margin-top:14px">
+      <input type="hidden" id="verificationRequestId">
+      <label>قرار المراجعة<select id="verificationDecision" class="field"><option value="under_review">قيد المراجعة</option><option value="verified">اعتماد التوثيق</option><option value="needs_more_info">طلب استكمال</option><option value="rejected">رفض الطلب</option></select></label>
+      <label class="full">سبب الرفض / ملاحظة المراجع<textarea id="verificationReviewerNote" class="field" rows="3" placeholder="اكتب الملاحظة التي ستظهر للتاجر"></textarea></label>
+      <button class="primary full" type="submit">حفظ قرار المراجعة</button>
+     </form>
+     <div id="verificationReviewMsg" class="msg"></div>
+    </div>
    </section>
 
    <section class="page panel" id="page-products">
@@ -565,7 +585,7 @@ function openPage(name){
  );
  const loaders={
   categories:loadCategories,elements:loadElements,ads:loadAds,
-  vendors:loadVendors,products:loadProducts,orders:loadOrders,
+  vendors:loadVendors,verification:loadVerificationRequests,products:loadProducts,orders:loadOrders,
   banner:loadBanner,appearance:loadAppearance,finance:loadFinance,
   shipping:loadShipping,templates:loadTemplates,features:loadFeatures
  };
@@ -830,6 +850,7 @@ async function loadVendors(){
  <button onclick="setVendor('${r.id}','rejected')">رفض</button>
  <button class="danger" onclick="setVendor('${r.id}','suspended')">إيقاف</button>
  <button onclick="featureVendor('${r.id}',${!r.is_featured})">${r.is_featured?'إلغاء التمييز':'تمييز'}</button>
+ <button onclick="openVendorCenterDetails('${r.id}')">ملف التاجر</button>
  </div></td></tr>`).join('')||'<tr><td colspan="5" class="empty">لا توجد متاجر</td></tr>';
 }
 window.setVendor=async(id,status)=>{
@@ -842,6 +863,64 @@ window.featureVendor=async(id,value)=>{
  msg('vendorsMsg',error?.message||'تم تحديث تمييز المتجر');
  loadVendors();
 };
+
+const verificationLabels={pending:'قيد الانتظار',under_review:'قيد المراجعة',verified:'موثق',rejected:'مرفوض',needs_more_info:'يتطلب استكمالاً'};
+let verificationCache=[];
+async function loadVerificationRequests(){
+ const {data,error}=await db.from('vendor_verification_requests')
+  .select('id,user_id,merchant_type,legal_name,registration_number,city,status,submitted_at,rejection_reason,reviewer_note')
+  .order('submitted_at',{ascending:false}).limit(300);
+ if(error){msg('verificationMsg','تعذر تحميل طلبات التوثيق: '+error.message);return;}
+ verificationCache=data||[];renderVerificationRequests();
+ msg('verificationMsg','تم تحميل '+verificationCache.length+' طلب توثيق من بوابة التاجر.');
+}
+function renderVerificationRequests(){
+ const status=$('verificationFilter')?.value||'',q=($('verificationSearch')?.value||'').trim().toLowerCase();
+ const rows=verificationCache.filter(r=>(!status||r.status===status)&&(!q||[r.legal_name,r.registration_number,r.user_id,r.id,r.city].some(v=>String(v||'').toLowerCase().includes(q))));
+ $('verificationRows').innerHTML=rows.map(r=>`<tr><td>${esc(r.legal_name)}</td><td>${r.merchant_type==='establishment'?'منشأة / سجل تجاري':'فرد / وثيقة عمل حر'}</td><td>${esc(r.city||'—')}</td><td>${esc(verificationLabels[r.status]||r.status)}</td><td>${r.submitted_at?new Date(r.submitted_at).toLocaleDateString('ar-SA'):'—'}</td><td><button onclick="openVerificationRequest('${r.id}')">عرض ومراجعة</button></td></tr>`).join('')||'<tr><td colspan="6" class="empty">لا توجد طلبات مطابقة</td></tr>';
+}
+window.openVerificationRequest=async id=>{
+ const r=verificationCache.find(x=>String(x.id)===String(id));if(!r)return;
+ $('verificationRequestId').value=r.id;$('verificationDecision').value=['pending','under_review','verified','rejected','needs_more_info'].includes(r.status)?r.status:'under_review';
+ $('verificationReviewerNote').value=r.reviewer_note||r.rejection_reason||'';
+ $('verificationDetailMeta').textContent='رقم الطلب: '+r.id+' · حساب التاجر: '+r.user_id;
+ const {data:docs,error}=await db.from('vendor_verification_documents').select('id,request_id,user_id,document_type,storage_path,mime_type,file_size').eq('request_id',r.id);
+ let docHtml='';
+ if(error)docHtml='<div class="notice">تعذر قراءة المستندات: '+esc(error.message)+'</div>';
+ else if(!docs?.length)docHtml='<div class="notice">لا يوجد مستند مرفق لهذا الطلب.</div>';
+ else {
+  const links=await Promise.all(docs.map(async d=>{const signed=await db.storage.from('vendor-verification-private').createSignedUrl(d.storage_path,600);return {d,url:signed.data?.signedUrl,error:signed.error};}));
+  docHtml=links.map(({d,url,error})=>`<div class="row" style="justify-content:space-between;padding:10px;border-bottom:1px solid var(--line)"><span>${esc(d.document_type)} · ${esc(d.mime_type)} · ${Math.round((d.file_size||0)/1024)} KB</span>${url?`<a href="${esc(url)}" target="_blank" rel="noopener" style="color:#70d9f0">فتح المستند</a>`:`<span class="muted">تعذر إنشاء رابط آمن: ${esc(error?.message||'')}</span>`}</div>`).join('');
+ }
+ $('verificationDetailBody').innerHTML=`<div class="grid"><div class="stat"><small>الاسم النظامي</small><strong style="font-size:15px">${esc(r.legal_name)}</strong></div><div class="stat"><small>رقم الوثيقة / السجل</small><strong style="font-size:15px">${esc(r.registration_number||'—')}</strong></div><div class="stat"><small>المدينة</small><strong style="font-size:15px">${esc(r.city||'—')}</strong></div></div><p class="muted">الحالة الحالية: ${esc(verificationLabels[r.status]||r.status)} · تاريخ التقديم: ${r.submitted_at?new Date(r.submitted_at).toLocaleString('ar-SA'):'—'}</p><h4>المستندات المرفقة</h4>${docHtml}`;
+ $('verificationDetail').classList.remove('hidden');$('verificationDetail').scrollIntoView({behavior:'smooth',block:'start'});
+};
+$('verificationReviewForm').onsubmit=async e=>{
+ e.preventDefault();const id=$('verificationRequestId').value,status=$('verificationDecision').value,note=$('verificationReviewerNote').value.trim();
+ const row={status,reviewer_note:note,rejection_reason:status==='rejected'?note:null};
+ const {error}=await db.from('vendor_verification_requests').update(row).eq('id',id);
+ msg('verificationReviewMsg',error?'تعذر حفظ القرار: '+error.message:'تم حفظ قرار المراجعة. ستظهر الحالة والملاحظة للتاجر في بوابته.');
+ if(!error){await loadVerificationRequests();const current=verificationCache.find(x=>String(x.id)===String(id));if(current)openVerificationRequest(id);}
+};
+$('reloadVerification').onclick=loadVerificationRequests;
+$('verificationFilter').onchange=renderVerificationRequests;$('verificationSearch').oninput=renderVerificationRequests;
+$('closeVerificationDetail').onclick=()=>$('verificationDetail').classList.add('hidden');
+
+window.openVendorCenterDetails=async id=>{
+ const box=$('vendorCenterDetails'),body=$('vendorCenterDetailsBody');box.classList.remove('hidden');body.innerHTML='<div class="empty">جارٍ تحميل ملف التاجر وإعداداته...</div>';
+ const {data:store,error}=await db.from('vendor_stores').select('id,store_name,owner_id,slug,description,city,category,status,logo_url,contact_whatsapp,is_featured,created_at').eq('id',id).single();
+ if(error){body.innerHTML='<div class="notice">تعذر تحميل بيانات المتجر: '+esc(error.message)+'</div>';return;}
+ const [pub,priv,products,orders]=await Promise.all([
+  db.from('vendor_store_public_preferences').select('public_settings').eq('store_id',id).maybeSingle(),
+  db.from('vendor_store_private_preferences').select('private_settings').eq('store_id',id).maybeSingle(),
+  db.from('vendor_store_products').select('id',{count:'exact',head:true}).eq('store_id',id),
+  db.from('vendor_orders').select('id',{count:'exact',head:true}).eq('vendor_owner_id',store.owner_id)
+ ]);
+ const publicSettings=pub.data?.public_settings||{},privateSettings=priv.data?.private_settings||{},modules=privateSettings.modules?.requested||[],shipping=privateSettings.shipping?.providers||[],channels=privateSettings.channels?.enabled||[],payments=privateSettings.payments?.gateway_requests||[];
+ const tags=(a)=>a.length?a.map(x=>`<span class="pill" style="display:inline-block;margin:3px">${esc(x)}</span>`).join(''):'<span class="muted">لا توجد اختيارات محفوظة</span>';
+ body.innerHTML=`<div class="grid"><div class="stat"><small>اسم المتجر</small><strong style="font-size:15px">${esc(store.store_name)}</strong></div><div class="stat"><small>حالة المتجر</small><strong style="font-size:15px">${esc(store.status)}</strong></div><div class="stat"><small>المالك</small><strong style="font-size:12px;overflow-wrap:anywhere">${esc(store.owner_id)}</strong></div><div class="stat"><small>المنتجات</small><strong>${products.count??'—'}</strong></div><div class="stat"><small>الطلبات</small><strong>${orders.count??'—'}</strong></div><div class="stat"><small>المدينة</small><strong style="font-size:15px">${esc(store.city||'—')}</strong></div></div><p>${esc(store.description||'لا يوجد وصف للمتجر')}</p><h4>إعدادات واجهة المتجر من بوابة التاجر</h4><p>عنوان الواجهة: ${esc(publicSettings.storefront?.hero_title||'—')}</p><p>الإعلان / التنبيه: ${esc(publicSettings.storefront?.announcement||'—')}</p><p>رابط واتساب: ${esc(publicSettings.storefront?.whatsapp||store.contact_whatsapp||'—')}</p><h4>طلبات التاجر وإعداداته الخاصة</h4><p>المزايا المطلوبة: ${tags(modules)}</p><p>شركات الشحن المختارة: ${tags(shipping)}</p><p>قنوات البيع: ${tags(channels)}</p><p>طلبات بوابات الدفع: ${tags(payments)}</p><p class="muted">${pub.error||priv.error?'تعذر قراءة بعض إعدادات التاجر بسبب صلاحيات قاعدة البيانات أو عدم تجهيز الجدول.':''}</p>`;
+};
+$('closeVendorCenterDetails').onclick=()=>$('vendorCenterDetails').classList.add('hidden');
 
 async function loadProducts(){
  const {data,error}=await db.from('vendor_store_products')
