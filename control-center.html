@@ -25,7 +25,6 @@
 
 
 .hidden{display:none!important}
-[hidden]{display:none!important}
 
 .admin-workspace{display:none;min-height:70vh}.admin-workspace.active{display:block}
 .admin-workspace .workspace-toolbar{display:flex;gap:9px;flex-wrap:wrap;margin:14px 0}
@@ -88,12 +87,7 @@ body.admin-menu-open #adminMenuBackdrop{display:block}
 #adminSideMenu{background:#061326!important;opacity:1!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;box-shadow:-22px 0 45px rgba(0,0,0,.55);z-index:1100}
 body.admin-menu-open #adminSideMenu{right:0!important;visibility:visible}
 .layout.section-open{grid-template-columns:minmax(0,1fr)!important}
-.layout.section-open>main{grid-column:1/-1;width:100%;max-width:1500px;margin:0 auto;padding:18px clamp(12px,2vw,28px)}
-/* Hard isolation: while a workspace is open, only the selected workspace (or vendor verification view) may render. */
-.layout.section-open>main>:not(#adminWorkspace):not(#vendorAdminView){display:none!important}
-.layout.section-open>main>#adminWorkspace.active{display:block!important}
-.layout.section-open>main>#vendorAdminView.active{display:block!important}
-.layout.section-open>main>#adminWorkspace:not(.active),.layout.section-open>main>#vendorAdminView:not(.active){display:none!important}
+.layout.section-open>main{grid-column:1/-1;width:100%;max-width:1500px;margin:0 auto;padding:18px clamp(12px,2vw,28px)}.layout.section-open main>.admin-workspace.active{display:block!important}.layout.section-open main>.admin-workspace.active~*{display:none!important}
 .layout.section-open>#adminSideMenu{display:none}
 .layout.section-open>#adminSideMenu.open{display:block}
 .admin-workspace.active{display:block!important;width:100%;max-width:100%;min-height:calc(100dvh - 100px);margin:0 auto;padding:4px 0 36px}
@@ -382,13 +376,13 @@ const workspaceConfigs={
  'إدارة صفحات المتاجر':{desc:'إدارة صفحات المتاجر وحالة ظهورها في دليل المتاجر.',table:'vendor_stores',select:'id,store_name,slug,description,city,category,logo_url,is_featured,status,created_at',order:'created_at',actions:['approve','suspend','feature']},
  'تصنيفات البحث للأفراد':{desc:'التصنيفات التي تقرؤها واجهة إعلانات الأفراد.',table:'platform_control_categories',select:'id,name,icon,section,sort_order,is_active',order:'sort_order',filter:{section:'ads'},actions:['edit','toggle','delete'],create:true},
  'تصنيفات المتاجر':{desc:'إدارة تصنيفات كل متجر على حدة: إضافة وتعديل وحذف.',table:'vendor_store_categories',select:'id,store_id,name,sort_order',order:'sort_order',actions:[],create:true},
- 'منتجات متاجر التجار':{desc:'منتجات متاجر التجار المسجلة في vendor_store_products.',table:'vendor_store_products',select:'id,store_id,title,category,price,stock_quantity,reserved_quantity,product_type,is_active,created_at',order:'created_at',actions:['toggleProduct']},
+ 'منتجات متاجر التجار':{desc:'استعراض منتجات التجار وربط كل منتج بمتجره. هذه الصفحة للقراءة فقط إلى حين اكتمال التحقق من صلاحيات التعديل.',table:'vendor_store_products',select:'id,store_id,title,category,price,stock_quantity,reserved_quantity,product_type,is_active,created_at',order:'created_at',actions:[]},
  'بلاغات الإعلانات':{desc:'البلاغات المرسلة على إعلانات الأفراد.',table:'ad_reports',select:'id,ad_id,reporter_id,reason,details'},
  'التقييمات والمراجعات':{desc:'تقييمات البائعين المسجلة على الإعلانات.',table:'seller_reviews',select:'id,ad_id,seller_id,reviewer_id,rating,comment,created_at',order:'created_at'},
- 'المجتمع والمنشورات':{desc:'منشورات المجتمع العامة.',table:'community_posts',select:'id,author_id,body,created_at',order:'created_at',actions:[]},
- 'منشورات القناة':{desc:'التحديثات المنشورة في قناة المنصة.',table:'channel_posts',select:'id,body,media_url,media_type,author_id,created_at',order:'created_at',actions:['deletePost']},
+ 'المجتمع والمنشورات':{desc:'منشورات المجتمع العامة من جدول community_posts.',table:'community_posts',select:'id,author_id,body,created_at',order:'created_at',actions:[]},
+ 'منشورات القناة':{desc:'التحديثات المنشورة في قناة المنصة.',table:'channel_posts',select:'id,body,media_url,media_type,author_id,created_at',order:'created_at',actions:[]},
  'الإشعارات':{desc:'سجل الإشعارات المرسلة إلى حسابات المستخدمين.',table:'notifications',select:'id,user_id,title,body,kind,target_url,read_at,created_at',order:'created_at'},
- 'الرسائل':{desc:'قائمة المحادثات الخاصة المرتبطة بإعلانات المنصة.',table:'conversations',select:'id,ad_id,buyer_id,seller_id,created_at',order:'created_at'}
+ 'الرسائل':{desc:'قائمة سجلات المحادثات. لا تعرض هذه الصفحة نصوص الرسائل الخاصة.',table:'conversations',select:'id,created_by,title,created_at',order:'created_at'}
 };
 const wsEsc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function wsMsg(s){$('workspaceMessage').textContent=s;$('workspaceMessage').hidden=false;}
@@ -414,6 +408,8 @@ async function showAdminSection(name){
   if(name==='إدارة لوحة التجار'){await loadWorkspaceTraderControls();return;}
   if(name==='إعدادات المنصة'){await loadPlatformSettings();return;}
   if(name==='الطلبات'){await loadAdminOrdersWorkspace();return;}
+  if(name==='إدارة صفحات المتاجر'){await loadMerchantStoresWorkspace();return;}
+  if(name==='منتجات متاجر التجار'){await loadVendorProductsWorkspace();return;}
   if(name==='المدفوعات والمحافظ'){await loadPaymentsWorkspace();return;}
   if(name==='العمولات والتسويات'){await loadCommissionsWorkspace();return;}
   if(name==='البلاغات والمخالفات'){await loadReportsWorkspace();return;}
@@ -477,14 +473,33 @@ async function workspaceAction(cfg,row,action){
  if(cfg.table==='ads'){if(action==='publish')patch={status:'published'};if(action==='review')patch={status:'pending'};if(action==='archive')patch={status:'archived'};}
  if(cfg.table==='vendor_stores'){if(action==='approve')patch={status:'approved'};if(action==='suspend')patch={status:'suspended'};if(action==='feature')patch={is_featured:!row.is_featured};}
  if(action==='toggle'&&cfg.table==='platform_control_categories')patch={is_active:!row.is_active};
- if(action==='toggleProduct'&&cfg.table==='vendor_store_products')patch={is_active:!row.is_active,updated_at:new Date().toISOString()};
  if(action==='edit'){workspaceEditForm(cfg,row);return;}
  if(action==='deleteAd'&&cfg.table==='ads'){if(!confirm('حذف الإعلان نهائياً؟'))return;const {error}=await db.from('ads').delete().eq('id',row.id);if(error)wsMsg('تعذر حذف الإعلان: '+error.message);else await loadWorkspaceTable(cfg);return;}
- if(action==='delete'&&cfg.table==='platform_control_categories'||action==='delete'&&cfg.table==='vendor_store_categories'||action==='deletePost'&&cfg.table==='channel_posts'){
+ if(action==='delete'&&cfg.table==='platform_control_categories'||action==='delete'&&cfg.table==='vendor_store_categories'||action==='deletePost'&&(cfg.table==='community_posts'||cfg.table==='channel_posts')){
   if(!confirm('هل تريد حذف هذا السجل نهائياً؟'))return;const {error}=await db.from(cfg.table).delete().eq('id',row.id);if(error)wsMsg('تعذر الحذف: '+error.message);else await loadWorkspaceTable(cfg);return;
  }
  if(!patch){window.toast('هذا الإجراء غير معرف لهذا النوع من السجلات.');return;}
  const {error}=await db.from(cfg.table).update(patch).eq('id',row.id);if(error)wsMsg('تعذر تنفيذ الإجراء: '+error.message);else await loadWorkspaceTable(cfg);
+}
+
+async function loadVendorProductsWorkspace(){
+ const [productsResult,storesResult]=await Promise.all([
+  db.from('vendor_store_products').select('id,store_id,title,category,price,stock_quantity,reserved_quantity,product_type,is_active,created_at').order('created_at',{ascending:false}).limit(1000),
+  db.from('vendor_stores').select('id,store_name').order('store_name').limit(1000)
+ ]);
+ if(productsResult.error||storesResult.error){wsMsg('تعذر تحميل منتجات المتاجر: '+[productsResult.error,storesResult.error].filter(Boolean).map(x=>x.message).join(' | ')+' — لم يتم إجراء أي تعديل.');return;}
+ const products=productsResult.data||[],stores=storesResult.data||[],storeNames=new Map(stores.map(x=>[String(x.id),x.store_name]));
+ $('workspaceToolbar').innerHTML=`<label style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">المتجر <select id="vendorProductStoreFilter" class="select"><option value="">كل المتاجر</option>${stores.map(x=>`<option value="${wsEsc(x.id)}">${wsEsc(x.store_name||x.id)}</option>`).join('')}</select></label><input id="vendorProductSearch" class="select" type="search" placeholder="ابحث باسم المنتج أو التصنيف" style="max-width:260px"><button id="workspaceRefresh">تحديث ↻</button>`;
+ const storeFilter=$('vendorProductStoreFilter'),search=$('vendorProductSearch');
+ function render(){
+  const term=search.value.trim().toLocaleLowerCase('ar'),sid=storeFilter.value;
+  const rows=products.filter(p=>(!sid||String(p.store_id)===sid)&&(!term||[p.title,p.category,p.product_type,storeNames.get(String(p.store_id))].some(v=>String(v??'').toLocaleLowerCase('ar').includes(term))));
+  $('workspaceList').innerHTML=rows.map(p=>`<article class="workspace-row"><div><div class="record-title">${wsEsc(p.title||'منتج بلا عنوان')}</div><div class="record-meta"><span class="record-chip">المتجر: ${wsEsc(storeNames.get(String(p.store_id))||p.store_id||'—')}</span><span class="record-chip">التصنيف: ${wsEsc(p.category||'—')}</span><span class="record-chip">السعر: ${wsEsc(p.price??'—')}</span><span class="record-chip">المخزون: ${wsEsc(p.stock_quantity??'—')}</span><span class="record-chip">المحجوز: ${wsEsc(p.reserved_quantity??'—')}</span><span class="record-chip">النوع: ${wsEsc(p.product_type||'—')}</span><span class="record-chip">الحالة: ${p.is_active?'مفعل':'غير مفعل'}</span></div></div><div class="workspace-actions"><button data-vendor-product-detail="${wsEsc(p.id)}">تفاصيل المنتج</button></div></article>`).join('')||'<div class="workspace-message">لا توجد منتجات مطابقة.</div>';
+  wsMsg(`تم تحميل ${products.length} منتج من قاعدة البيانات. المعروض بعد التصفية: ${rows.length}. الصفحة للقراءة فقط.`);
+ }
+ storeFilter.addEventListener('change',render);search.addEventListener('input',render);$('workspaceRefresh').onclick=()=>showAdminSection('منتجات متاجر التجار');
+ $('workspaceList').onclick=e=>{const b=e.target.closest('[data-vendor-product-detail]');if(!b)return;const p=products.find(x=>String(x.id)===b.dataset.vendorProductDetail);if(!p)return;const labels={id:'معرّف المنتج',store_id:'معرّف المتجر',title:'اسم المنتج',category:'التصنيف',price:'السعر',stock_quantity:'المخزون',reserved_quantity:'الكمية المحجوزة',product_type:'نوع المنتج',is_active:'مفعل',created_at:'تاريخ الإضافة'};const fields=Object.entries(p).map(([k,v])=>`<div class="workspace-detail-field"><small>${wsEsc(labels[k]||k)}</small><b>${wsEsc(v===null?'—':k==='created_at'?dateLabel(v):k==='is_active'?(v?'نعم':'لا'):String(v))}</b></div>`).join('');const form=$('workspaceForm');form.hidden=false;form.className='workspace-detail-overlay';form.innerHTML=`<div class="workspace-detail-card" role="dialog" aria-modal="true"><div class="head"><h3>تفاصيل المنتج</h3><button id="vendorProductClose">إغلاق ×</button></div><p>المتجر: ${wsEsc(storeNames.get(String(p.store_id))||p.store_id||'—')}</p><div class="workspace-detail-grid">${fields}</div></div>`;const close=()=>{form.hidden=true;form.className='panel';};$('vendorProductClose').onclick=close;form.onclick=ev=>{if(ev.target===form)close();};};
+ render();
 }
 
 async function loadVendorStoreCategories(){
@@ -626,25 +641,85 @@ async function loadPlatformSettings(){
  };
  wsMsg('تم تحميل إعدادات المنصة.');
 }
-async function loadAdminOrdersWorkspace(){
- const [store,vendor,vendorStore]=await Promise.all([
-  db.from('store_orders').select('id,product_title,total_amount,customer_name,phone,city,payment_status,order_status,created_at').order('created_at',{ascending:false}).limit(150),
-  db.from('vendor_orders').select('id,vendor_owner_id,subtotal_amount,commission_amount,vendor_net_amount,order_status,payment_status,created_at').order('created_at',{ascending:false}).limit(150),
-  db.from('vendor_store_orders').select('id,store_id,product_id,buyer_id,seller_id,product_title,unit_price,quantity,total_amount,commission_rate,commission_amount,net_amount,payment_status,order_status,created_at,paid_at,delivered_at').order('created_at',{ascending:false}).limit(150)
- ]);
- if(store.error||vendor.error||vendorStore.error){wsMsg('تعذر تحميل نوع من الطلبات: '+[store.error,vendor.error,vendorStore.error].filter(Boolean).map(x=>x.message).join(' | '));return;}
- const statuses=['awaiting_payment','paid','processing','shipped','delivered','cancelled'];
- $('workspaceList').innerHTML=workspaceTable('طلبات المتجر الرئيسي',store.data||[],[
-  {key:'id',label:'رقم الطلب'}, {key:'customer_name',label:'العميل'}, {key:'product_title',label:'المنتج'}, {key:'total_amount',label:'الإجمالي',render:r=>money(r.total_amount)}, {key:'payment_status',label:'الدفع'}, {key:'order_status',label:'الحالة'},
-  {key:'id',label:'تحديث الحالة',render:r=>`<select data-order-status="${wsEsc(r.id)}">${statuses.map(x=>`<option value="${x}" ${r.order_status===x?'selected':''}>${x}</option>`).join('')}</select> <button data-order-save="${wsEsc(r.id)}">حفظ</button>`}
- ])+workspaceTable('طلبات متاجر التجار (النظام السابق)',vendor.data||[],[
-  {key:'id',label:'رقم الطلب'},{key:'vendor_owner_id',label:'معرّف التاجر'},{key:'subtotal_amount',label:'الإجمالي',render:r=>money(r.subtotal_amount)},{key:'commission_amount',label:'العمولة',render:r=>money(r.commission_amount)},{key:'vendor_net_amount',label:'صافي التاجر',render:r=>money(r.vendor_net_amount)},{key:'payment_status',label:'الدفع'},{key:'order_status',label:'الحالة'},{key:'created_at',label:'التاريخ',render:r=>wsEsc(dateLabel(r.created_at))}
- ])+workspaceTable('طلبات متاجر التجار (النظام الحالي)',vendorStore.data||[],[
-  {key:'id',label:'رقم الطلب'},{key:'store_id',label:'المتجر'},{key:'product_title',label:'المنتج'},{key:'buyer_id',label:'المشتري'},{key:'seller_id',label:'البائع'},{key:'quantity',label:'الكمية'},{key:'total_amount',label:'الإجمالي',render:r=>money(r.total_amount)},{key:'commission_amount',label:'العمولة',render:r=>money(r.commission_amount)},{key:'net_amount',label:'صافي البائع',render:r=>money(r.net_amount)},{key:'payment_status',label:'الدفع'},{key:'order_status',label:'الحالة'},{key:'created_at',label:'التاريخ',render:r=>wsEsc(dateLabel(r.created_at))}
- ]);
- $('workspaceList').onclick=async ev=>{const b=ev.target.closest('[data-order-save]');if(!b)return;const id=b.dataset.orderSave,select=$('workspaceList').querySelector('[data-order-status="'+id.replace(/\"/g,'')+'"]');const status=select?.value;if(!status)return;const rec=(store.data||[]).find(x=>String(x.id)===String(id));if(!rec)return;if(!['awaiting_payment','cancelled'].includes(status)&&rec.payment_status!=='paid'){wsMsg('لا يمكن نقل الطلب إلى التجهيز أو الشحن أو التسليم قبل تأكيد الدفع.');return;}b.disabled=true;const {error}=await db.from('store_orders').update({order_status:status}).eq('id',id);b.disabled=false;if(error)wsMsg('تعذر تحديث الطلب: '+error.message);else await loadAdminOrdersWorkspace();};
- wsMsg(`طلبات المتجر الرئيسي: ${(store.data||[]).length} · النظام السابق: ${(vendor.data||[]).length} · النظام الحالي: ${(vendorStore.data||[]).length}. لا يتم تغيير حالة الدفع من هذه اللوحة.`);
+async function loadMerchantStoresWorkspace(){
+ // قائمة المتاجر وملفها؛ نستخدم أعمدة المتجر المؤكدة وعلاقة الطلبات المؤكدة فقط.
+ const {data:stores,error}=await db.from('vendor_stores')
+  .select('id,store_name,slug,description,city,category,logo_url,is_featured,created_at')
+  .order('created_at',{ascending:false}).limit(250);
+ if(error){wsMsg('تعذر تحميل المتاجر: '+error.message+' — تحقق من صلاحيات RLS.');return;}
+ const rows=stores||[];
+ $('workspaceToolbar').innerHTML='<button class="primary" id="workspaceRefresh">تحديث المتاجر ↻</button><span class="muted">المصدر: vendor_stores · عرض فقط</span>';
+ $('workspaceRefresh').onclick=loadMerchantStoresWorkspace;
+ $('workspaceList').innerHTML=rows.map(r=>`<article class="workspace-row"><div><div class="record-title">${wsEsc(r.store_name||'متجر بدون اسم')}</div><div class="record-meta"><span class="record-chip">المدينة: ${wsEsc(r.city||'—')}</span><span class="record-chip">التصنيف: ${wsEsc(r.category||'—')}</span><span class="record-chip">الرابط المختصر: ${wsEsc(r.slug||'—')}</span><span class="record-chip">مميز: ${r.is_featured?'نعم':'لا'}</span><span class="record-chip">تاريخ الإضافة: ${wsEsc(dateLabel(r.created_at))}</span></div>${r.description?`<p>${wsEsc(String(r.description).slice(0,240))}</p>`:''}</div><div class="workspace-actions"><button type="button" data-merchant-detail="${wsEsc(r.id)}">ملف المتجر والطلبات</button></div></article>`).join('')||'<div class="workspace-message">لا توجد متاجر ظاهرة حسب صلاحيات الحساب.</div>';
+ $('workspaceList').onclick=async ev=>{
+  const b=ev.target.closest('[data-merchant-detail]');if(!b)return;
+  const store=rows.find(x=>String(x.id)===b.dataset.merchantDetail);if(!store)return;
+  b.disabled=true;
+  try{
+   const {data:orders,error:ordersError}=await db.from('vendor_orders')
+    .select('id,vendor_store_id,vendor_owner_id,subtotal_amount,commission_amount,vendor_net_amount,order_status,payment_status,created_at')
+    .eq('vendor_store_id',store.id).order('created_at',{ascending:false}).limit(100);
+   if(ordersError)throw ordersError;
+   const summary=`<div class="panel"><h3>بيانات المتجر</h3><div class="workspace-detail-grid">${Object.entries(store).map(([k,v])=>`<div class="workspace-detail-field"><small>${wsEsc(({store_name:'اسم المتجر',slug:'الرابط المختصر',description:'الوصف',city:'المدينة',category:'التصنيف',logo_url:'رابط الشعار',is_featured:'متجر مميز',created_at:'تاريخ الإنشاء'})[k]||k)}</small><b>${wsEsc(v===null?'—':k==='created_at'?dateLabel(v):typeof v==='boolean'?(v?'نعم':'لا'):String(v))}</b></div>`).join('')}</div></div>`;
+   const orderTable=workspaceTable('طلبات هذا المتجر',orders||[],[
+    {key:'id',label:'رقم الطلب'},
+    {key:'vendor_owner_id',label:'معرّف التاجر'},
+    {key:'subtotal_amount',label:'الإجمالي',render:r=>money(r.subtotal_amount)},
+    {key:'commission_amount',label:'العمولة',render:r=>money(r.commission_amount)},
+    {key:'vendor_net_amount',label:'صافي التاجر',render:r=>money(r.vendor_net_amount)},
+    {key:'payment_status',label:'الدفع'},
+    {key:'order_status',label:'حالة الطلب'},
+    {key:'created_at',label:'التاريخ',render:r=>wsEsc(dateLabel(r.created_at))}
+   ]);
+   $('workspaceForm').hidden=false;$('workspaceForm').className='panel';
+   $('workspaceForm').innerHTML=`<div class="head"><h3>ملف المتجر: ${wsEsc(store.store_name||store.id)}</h3><button type="button" id="merchantDetailClose">إغلاق</button></div>${summary}<div class="panel"><p class="muted">عدد الطلبات الظاهرة: ${(orders||[]).length} · آخر 100 طلب كحد أقصى · البيانات للقراءة فقط.</p>${orderTable}</div>`;
+   $('merchantDetailClose').onclick=()=>{$('workspaceForm').hidden=true;$('workspaceForm').innerHTML='';};
+  }catch(e){wsMsg('تعذر تحميل ملف المتجر: '+(e?.message||String(e)));}
+  finally{b.disabled=false;}
+ };
+ wsMsg(`تم تحميل ${rows.length} متجر. افتح ملف أي متجر لعرض بياناته وطلباته المرتبطة به.`);
 }
+
+async function loadAdminOrdersWorkspace(){
+ // يعتمد هذا القسم على مخطط طلبات التجار المؤكد فقط؛ لا يستدعي vendor_store_orders غير المثبت.
+ const {data:orders,error}=await db.from('vendor_orders')
+  .select('id,checkout_group_id,vendor_store_id,vendor_owner_id,subtotal_amount,commission_amount,vendor_net_amount,order_status,payment_status,created_at')
+  .order('created_at',{ascending:false}).limit(250);
+ if(error){wsMsg('تعذر تحميل طلبات التجار: '+error.message+' — تحقق من صلاحيات RLS.');return;}
+ const rows=orders||[];
+ $('workspaceToolbar').innerHTML='<button class="primary" id="workspaceRefresh">تحديث الطلبات ↻</button><span class="muted">المصدر: vendor_orders</span>';
+ $('workspaceRefresh').onclick=loadAdminOrdersWorkspace;
+ $('workspaceList').innerHTML=workspaceTable('طلبات متاجر التجار',rows,[
+  {key:'id',label:'رقم الطلب'},
+  {key:'vendor_owner_id',label:'معرّف التاجر'},
+  {key:'vendor_store_id',label:'المتجر'},
+  {key:'subtotal_amount',label:'الإجمالي',render:r=>money(r.subtotal_amount)},
+  {key:'commission_amount',label:'العمولة',render:r=>money(r.commission_amount)},
+  {key:'vendor_net_amount',label:'صافي التاجر',render:r=>money(r.vendor_net_amount)},
+  {key:'payment_status',label:'الدفع'},
+  {key:'order_status',label:'حالة الطلب'},
+  {key:'created_at',label:'التاريخ',render:r=>wsEsc(dateLabel(r.created_at))},
+  {key:'id',label:'التفاصيل',render:r=>`<button type="button" data-vendor-order-detail="${wsEsc(r.id)}">عرض التفاصيل</button>`}
+ ]);
+ $('workspaceList').onclick=async ev=>{
+  const b=ev.target.closest('[data-vendor-order-detail]');if(!b)return;
+  const row=rows.find(x=>String(x.id)===b.dataset.vendorOrderDetail);if(!row)return;
+  b.disabled=true;
+  try{
+   const [group,items]=await Promise.all([
+    row.checkout_group_id?db.from('vendor_checkout_groups').select('id,buyer_id').eq('id',row.checkout_group_id).maybeSingle():Promise.resolve({data:null,error:null}),
+    db.from('vendor_order_items').select('vendor_order_id,product_id').eq('vendor_order_id',row.id)
+   ]);
+   if(group.error||items.error)throw new Error([group.error,items.error].filter(Boolean).map(x=>x.message).join(' | '));
+   const fields={...row,buyer_id:group.data?.buyer_id||null,items:items.data||[]};
+   $('workspaceForm').hidden=false;$('workspaceForm').className='panel';
+   $('workspaceForm').innerHTML=`<div class="head"><h3>تفاصيل الطلب ${wsEsc(row.id)}</h3><button type="button" id="vendorOrderDetailClose">إغلاق</button></div><div class="workspace-detail-grid">${Object.entries(fields).map(([k,v])=>`<div class="workspace-detail-field"><small>${wsEsc(({buyer_id:'المشتري',vendor_owner_id:'التاجر',vendor_store_id:'المتجر',subtotal_amount:'الإجمالي',commission_amount:'العمولة',vendor_net_amount:'صافي التاجر',payment_status:'حالة الدفع',order_status:'حالة الطلب',created_at:'تاريخ الطلب',checkout_group_id:'مجموعة الطلب',items:'معرّفات المنتجات'})[k]||k)}</small><b>${wsEsc(v===null?'غير متاح':typeof v==='object'?JSON.stringify(v):k==='created_at'?dateLabel(v):String(v))}</b></div>`).join('')}</div><p class="muted">عرض فقط. لم يتم تغيير حالة الطلب أو الدفع.</p>`;
+   $('vendorOrderDetailClose').onclick=()=>{$('workspaceForm').hidden=true;$('workspaceForm').innerHTML='';};
+  }catch(e){wsMsg('تعذر تحميل تفاصيل الطلب: '+e.message);}finally{b.disabled=false;}
+ };
+ wsMsg(`تم تحميل ${rows.length} طلب من vendor_orders. التفاصيل تقرأ مجموعة الشراء وعناصر الطلب عند فتح السجل. هذه الصفحة للقراءة فقط حتى تثبت صلاحيات تحديث الحالات.`);
+}
+
 async function loadPaymentsWorkspace(){
  const [l,p]=await Promise.all([
   db.from('vendor_financial_ledger').select('id,owner_id,entry_type,description,amount_sar,created_at,reference_code').order('created_at',{ascending:false}).limit(500),
@@ -684,7 +759,7 @@ async function loadReportsWorkspace(){
  wsMsg('تم تحميل البلاغات. مراجعة البلاغات وحفظ نتائجها تتم من شاشة دكتور القيمنق عند توفر حالة البلاغ.');
 }
 async function loadAnalyticsWorkspace(){
- const tables=['profiles','ads','vendor_stores','vendor_store_products','store_orders','vendor_orders','ad_reports','seller_reviews','community_posts'];
+ const tables=['profiles','ads','vendor_stores','vendor_store_products','vendor_orders','vendor_order_items','ad_reports','seller_reviews','community_posts'];
  const counts=await Promise.all(tables.map(async t=>{try{return {table:t,count:await countRows(t)};}catch(e){return {table:t,error:e.message};}}));
  $('workspaceList').innerHTML=`<div class="grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px">${counts.map(x=>`<div class="panel"><small>${wsEsc(x.table)}</small><h2>${x.error?'—':Number(x.count).toLocaleString('ar-SA')}</h2><small>${x.error?wsEsc(x.error):'سجل متاح وفق صلاحيات الحساب'}</small></div>`).join('')}</div>`;
  wsMsg('هذه أعداد السجلات التي أمكن قراءتها من قاعدة البيانات في وقت التحديث.');
