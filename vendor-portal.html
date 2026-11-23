@@ -1372,12 +1372,18 @@ body.vendor-portal-mode .vendor-table{min-width:680px}
   <section id="vendorVerificationPanel" class="vendor-dashboard-card full" style="margin-bottom:16px">
    <div class="row space"><div><h3>توثيق التاجر</h3><p class="vendor-muted-note">هذه الخطوة مطلوبة قبل إنشاء المتجر. رفع المستند لا يعني اعتماده تلقائياً.</p></div><span class="vendor-pill">مطلوب</span></div>
    <div id="vendorVerificationStatus" class="vendor-state" role="status">جارٍ تحميل حالة التوثيق...</div>
+   <div id="vendorVerificationChecks" class="vendor-state" aria-live="polite">حالات التحقق التفصيلية ستظهر هنا.</div>
    <form id="vendorVerificationForm" class="formgrid">
     <div><label for="vendorVerifyType">صفة التاجر *</label><select id="vendorVerifyType" class="field" required><option value="freelancer">فرد — وثيقة عمل حر</option><option value="establishment">مؤسسة أو شركة — سجل تجاري</option></select></div>
     <div><label for="vendorVerifyLegalName">الاسم النظامي *</label><input id="vendorVerifyLegalName" class="field" required maxlength="160"></div>
     <div><label for="vendorVerifyRegNumber" id="vendorVerifyRegLabel">رقم وثيقة العمل الحر *</label><input id="vendorVerifyRegNumber" class="field" required maxlength="80"></div>
     <div><label for="vendorVerifyCity">المدينة</label><input id="vendorVerifyCity" class="field" maxlength="80"></div>
-    <div class="full"><label for="vendorVerifyDocument">المستند الداعم * (PDF أو JPG أو PNG أو WEBP — حتى 10MB)</label><input id="vendorVerifyDocument" class="field" type="file" accept=".pdf,.jpg,.jpeg,.png,.webp,application/pdf,image/jpeg,image/png,image/webp" required></div>
+    <div><label for="vendorEcommerceCertificateNumber">رقم شهادة توثيق التجارة الإلكترونية (إن وجدت)</label><input id="vendorEcommerceCertificateNumber" class="field" maxlength="100" autocomplete="off"></div>
+    <div class="full"><label for="vendorEcommerceStoreUrl">رابط المتجر الإلكتروني (إن وجد)</label><input id="vendorEcommerceStoreUrl" class="field" type="url" maxlength="500" placeholder="https://example.com"></div>
+    <div class="full"><label for="vendorBusinessDomain">النطاق المملوك للمتجر (إن وجد)</label><input id="vendorBusinessDomain" class="field" maxlength="255" placeholder="example.com"></div>
+    <div class="full"><label for="vendorVerifyDocument">مستند السجل التجاري أو وثيقة العمل الحر * (PDF أو JPG أو PNG أو WEBP — حتى 10MB)</label><input id="vendorVerifyDocument" class="field" type="file" accept=".pdf,.jpg,.jpeg,.png,.webp,application/pdf,image/jpeg,image/png,image/webp" required></div>
+    <div class="full"><label for="vendorEcommerceCertificateDocument">ملف شهادة توثيق التجارة الإلكترونية (اختياري)</label><input id="vendorEcommerceCertificateDocument" class="field" type="file" accept=".pdf,.jpg,.jpeg,.png,.webp,application/pdf,image/jpeg,image/png,image/webp"></div>
+    <div class="full vendor-muted-note">إدخال رقم الشهادة أو رفعها لا يعني اعتمادها. سيظهر التحقق الرسمي بعد ربط مزود أو قناة تحقق معتمدة.</div>
     <div class="full"><label class="pledge-check"><input id="vendorVerifyConsent" type="checkbox" required> أوافق على معالجة بياناتي ومستنداتي لغرض التحقق من أهلية فتح متجر، وأقر بصحة المعلومات.</label></div>
     <div class="full"><button class="primary" type="submit" id="vendorVerifySubmit">إرسال طلب التوثيق</button><div id="vendorVerifyMsg" class="muted" role="status"></div></div>
    </form>
@@ -2749,12 +2755,47 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
  });
 
 
+ const vendorCheckLabels={
+  identity:'الهوية الوطنية / الإقامة',
+  commercial_registration:'السجل التجاري',
+  freelance_document:'وثيقة العمل الحر',
+  ecommerce_certificate:'شهادة توثيق التجارة الإلكترونية',
+  bank_account:'ملكية الحساب البنكي'
+ };
+ const vendorCheckStatusLabels={
+  not_started:'لم يبدأ',
+  pending:'بانتظار التحقق',
+  verified:'تم التحقق من المصدر',
+  rejected:'لم يجتز التحقق',
+  needs_action:'يتطلب إجراء',
+  provider_unavailable:'مزود التحقق غير مربوط',
+  expired:'منتهي الصلاحية',
+  manual_review:'يتطلب مراجعة استثنائية'
+ };
+ async function loadVendorVerificationChecks(requestId){
+  const box=v$('vendorVerificationChecks');if(!box)return;
+  if(!requestId){box.innerHTML='ستظهر هنا نتائج التحقق بعد إرسال الطلب.';return;}
+  const {data,error}=await sb.from('vendor_verification_checks')
+   .select('check_type,status,provider_key,checked_at,expires_at,safe_summary')
+   .eq('request_id',requestId).order('created_at',{ascending:false});
+  if(error){
+   box.textContent='تم استلام الطلب. يلزم تطبيق تحديث قاعدة البيانات لعرض فحوص التحقق التفصيلية.';
+   return;
+  }
+  const latest={};(data||[]).forEach(x=>{if(!latest[x.check_type])latest[x.check_type]=x;});
+  const types=['identity','commercial_registration','freelance_document','ecommerce_certificate','bank_account'];
+  box.innerHTML='<strong>حالة فحوص التوثيق</strong><div class="formgrid" style="margin-top:10px">'+types.map(type=>{
+   const item=latest[type],status=item?.status||'not_started';
+   const note=item?.safe_summary?.message||'';
+   return `<div class="vendor-state" style="margin:0"><b>${vendorCheckLabels[type]}</b><div>${vendorCheckStatusLabels[status]||status}</div>${note?`<small>${String(note).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}</small>`:''}</div>`;
+  }).join('')+'</div><small>النتيجة لا تصبح «تم التحقق» إلا عند وصول إثبات من مزود معتمد أو جهة رسمية.</small>';
+ }
  async function loadVendorVerification(){
   const statusBox=v$('vendorVerificationStatus'),form=v$('vendorVerificationForm'),gate=v$('vendorStoreApplicationGate');
   if(!statusBox||!form||!currentUser)return null;
   statusBox.textContent='جارٍ تحميل حالة التوثيق...';
   const {data,error}=await sb.from('vendor_verification_requests')
-   .select('id,merchant_type,legal_name,status,submitted_at,rejection_reason,reviewer_note')
+   .select('id,merchant_type,legal_name,status,submitted_at,rejection_reason,reviewer_note,ecommerce_certificate_number,ecommerce_store_url,business_domain')
    .eq('user_id',currentUser.id).order('submitted_at',{ascending:false}).limit(1).maybeSingle();
   if(error){
    statusBox.textContent='تعذر تحميل حالة التوثيق: '+error.message;
@@ -2762,12 +2803,14 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   }
   if(!data){
    statusBox.textContent='لم ترسل طلب توثيق بعد. اختر صفتك وارفع المستند الداعم.';
+   await loadVendorVerificationChecks(null);
    form.classList.remove('hidden');if(gate)gate.hidden=true;return null;
   }
   const labels={pending:'قيد الانتظار',under_review:'قيد المراجعة',verified:'موثق',rejected:'مرفوض',needs_more_info:'يتطلب استكمالاً'};
   statusBox.textContent='حالة طلب التوثيق: '+(labels[data.status]||data.status)+
    (data.rejection_reason?' — السبب: '+data.rejection_reason:'')+
    (data.reviewer_note?' — ملاحظة: '+data.reviewer_note:'');
+  await loadVendorVerificationChecks(data.id);
   if(data.status==='verified'){
    form.classList.add('hidden');if(gate)gate.hidden=false;
   }else if(data.status==='rejected'||data.status==='needs_more_info'){
@@ -2775,6 +2818,9 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
    v$('vendorVerifyType').value=data.merchant_type||'freelancer';
    v$('vendorVerifyRegLabel').textContent=data.merchant_type==='establishment'?'رقم السجل التجاري *':'رقم وثيقة العمل الحر *';
    v$('vendorVerifyLegalName').value=data.legal_name||'';
+   if(v$('vendorEcommerceCertificateNumber'))v$('vendorEcommerceCertificateNumber').value=data.ecommerce_certificate_number||'';
+   if(v$('vendorEcommerceStoreUrl'))v$('vendorEcommerceStoreUrl').value=data.ecommerce_store_url||'';
+   if(v$('vendorBusinessDomain'))v$('vendorBusinessDomain').value=data.business_domain||'';
   }else{
    form.classList.add('hidden');if(gate)gate.hidden=true;
   }
@@ -2797,6 +2843,9 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
     legal_name:v$('vendorVerifyLegalName').value.trim(),
     registration_number:v$('vendorVerifyRegNumber').value.trim(),
     city:v$('vendorVerifyCity').value.trim()||null,
+    ecommerce_certificate_number:v$('vendorEcommerceCertificateNumber')?.value.trim()||null,
+    ecommerce_store_url:v$('vendorEcommerceStoreUrl')?.value.trim()||null,
+    business_domain:v$('vendorBusinessDomain')?.value.trim()||null,
     status:'pending'
    };
    const created=await sb.from('vendor_verification_requests').insert(payload).select('id').single();
@@ -2812,9 +2861,22 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
     storage_path:path,mime_type:file.type,file_size:file.size
    });
    if(saved.error)throw saved.error;
+   const certificateFile=v$('vendorEcommerceCertificateDocument')?.files?.[0];
+   if(certificateFile){
+    if(!validTypes.includes(certificateFile.type)||certificateFile.size>10*1024*1024)throw Error('ملف شهادة التجارة الإلكترونية غير مدعوم أو يتجاوز 10 ميجابايت.');
+    const certExt=(certificateFile.name.split('.').pop()||'bin').toLowerCase().replace(/[^a-z0-9]/g,'')||'bin';
+    const certPath=currentUser.id+'/'+requestId+'/ecommerce-'+crypto.randomUUID()+'.'+certExt;
+    const certUpload=await sb.storage.from('vendor-verification-private').upload(certPath,certificateFile,{upsert:false,contentType:certificateFile.type});
+    if(certUpload.error)throw certUpload.error;
+    const certSaved=await sb.from('vendor_verification_evidence').insert({
+     request_id:requestId,user_id:currentUser.id,evidence_type:'ecommerce_certificate',
+     storage_path:certPath,mime_type:certificateFile.type,file_size:certificateFile.size
+    });
+    if(certSaved.error)throw certSaved.error;
+   }
    v$('vendorVerificationForm').reset();
    v$('vendorVerifyRegLabel').textContent='رقم وثيقة العمل الحر *';
-   vMsg('vendorVerifyMsg','تم استلام طلب التوثيق والمستند. ستظهر الحالة بعد المراجعة.');
+   vMsg('vendorVerifyMsg','تم استلام طلب التوثيق. لم يتم اعتماد أي مستند تلقائياً؛ ستظهر نتائج الفحوص عند توفر الربط الرسمي.');
    await loadVendorVerification();
   }catch(err){
    vMsg('vendorVerifyMsg','تعذر إرسال الطلب: '+(err.message||String(err)));
