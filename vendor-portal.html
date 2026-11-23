@@ -2772,7 +2772,7 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   expired:'منتهي الصلاحية',
   manual_review:'يتطلب مراجعة استثنائية'
  };
- async function loadVendorVerificationChecks(requestId){
+ async function loadVendorVerificationChecks(requestId,merchantType){
   const box=v$('vendorVerificationChecks');if(!box)return;
   if(!requestId){box.innerHTML='ستظهر هنا نتائج التحقق بعد إرسال الطلب.';return;}
   const {data,error}=await sb.from('vendor_verification_checks')
@@ -2783,7 +2783,7 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
    return;
   }
   const latest={};(data||[]).forEach(x=>{if(!latest[x.check_type])latest[x.check_type]=x;});
-  const types=['identity','commercial_registration','freelance_document','ecommerce_certificate','bank_account'];
+  const types=(merchantType==='establishment'?['identity','commercial_registration','ecommerce_certificate','bank_account']:['identity','freelance_document','ecommerce_certificate','bank_account']);
   box.innerHTML='<strong>حالة فحوص التوثيق</strong><div class="formgrid" style="margin-top:10px">'+types.map(type=>{
    const item=latest[type],status=item?.status||'not_started';
    const note=item?.safe_summary?.message||'';
@@ -2810,7 +2810,7 @@ $('storeOrderForm')?.addEventListener('submit',e=>{e.preventDefault();const ad=(
   statusBox.textContent='حالة طلب التوثيق: '+(labels[data.status]||data.status)+
    (data.rejection_reason?' — السبب: '+data.rejection_reason:'')+
    (data.reviewer_note?' — ملاحظة: '+data.reviewer_note:'');
-  await loadVendorVerificationChecks(data.id);
+  await loadVendorVerificationChecks(data.id,data.merchant_type);
   if(data.status==='verified'){
    form.classList.add('hidden');if(gate)gate.hidden=false;
   }else if(data.status==='rejected'||data.status==='needs_more_info'){
