@@ -613,14 +613,39 @@ async function loadVendorStoreCategories(){
 }
 
 async function loadWorkspaceBanner(){
- const {data,error}=await db.from('marketplace_home_banner').select('id,title,subtitle,button_text,target_page,image_url').eq('id',1).maybeSingle();if(error){wsMsg('تعذر قراءة البنر: '+error.message);return;}
- const r=data||{};const form=$('workspaceForm');form.hidden=false;
- form.innerHTML=`<h3>إدارة البنر الرئيسي للسوق</h3><p class="muted">العنوان والوصف والزر والصورة نفسها التي تظهر للزوار في واجهة السوق.</p><div class="workspace-form"><label>العنوان<input id="wsBannerTitle" value="${wsEsc(r.title||'')}"></label><label>النص أسفل العنوان<input id="wsBannerSubtitle" value="${wsEsc(r.subtitle||'')}"></label><label>نص زر البنر<input id="wsBannerButton" value="${wsEsc(r.button_text||'')}"></label><label>وجهة الزر<input id="wsBannerTarget" value="${wsEsc(r.target_page||'vendors')}"></label><label class="wide">رابط صورة البنر<input id="wsBannerImage" value="${wsEsc(r.image_url||'')}" placeholder="سيُملأ تلقائياً بعد رفع الصورة"></label><label class="wide">رفع صورة البنر (PNG / JPG / WebP)<input id="wsBannerFile" type="file" accept="image/png,image/jpeg,image/webp"></label></div><div id="wsBannerPreview" class="panel" style="min-height:100px;display:grid;place-items:center">${r.image_url?`<img src="${wsEsc(r.image_url)}" alt="معاينة البنر" style="width:100%;max-height:220px;object-fit:cover;border-radius:12px">`:'اختر صورة لمعاينتها'}</div><button class="primary" id="wsBannerSave">حفظ وتفعيل البنر</button><span id="wsBannerMsg" role="status"></span>`;
- let bannerFile=null;
- $('wsBannerFile').onchange=e=>{bannerFile=e.target.files?.[0]||null;const preview=$('wsBannerPreview');if(!bannerFile){preview.textContent='اختر صورة لمعاينتها';return;}if(!/^image\/(png|jpeg|webp)$/.test(bannerFile.type)||bannerFile.size>5*1024*1024){bannerFile=null;e.target.value='';preview.textContent='الصورة يجب أن تكون PNG أو JPG أو WebP وبحجم لا يتجاوز 5 ميجابايت.';return;}const reader=new FileReader();reader.onload=()=>preview.innerHTML=`<img src="${reader.result}" alt="معاينة البنر" style="width:100%;max-height:220px;object-fit:cover;border-radius:12px">`;reader.readAsDataURL(bannerFile);};
- $('wsBannerSave').onclick=async()=>{const btn=$('wsBannerSave'),msg=$('wsBannerMsg');btn.disabled=true;btn.textContent='جارٍ الحفظ...';try{let imageUrl=$('wsBannerImage').value.trim();if(bannerFile){const ext=(bannerFile.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'');const path='home-banner/'+Date.now()+'-'+Math.random().toString(36).slice(2,8)+'.'+ext;const {error:upErr}=await db.storage.from('marketplace-assets').upload(path,bannerFile,{upsert:false,contentType:bannerFile.type});if(upErr)throw upErr;const {data:publicData}=db.storage.from('marketplace-assets').getPublicUrl(path);imageUrl=publicData?.publicUrl||'';if(!imageUrl)throw new Error('تعذر الحصول على رابط الصورة');}
- const row={id:1,title:$('wsBannerTitle').value.trim(),subtitle:$('wsBannerSubtitle').value.trim(),button_text:$('wsBannerButton').value.trim(),target_page:$('wsBannerTarget').value.trim(),image_url:imageUrl};const {error}=await db.from('marketplace_home_banner').upsert(row,{onConflict:'id'});if(error)throw error;$('wsBannerImage').value=imageUrl;msg.textContent='تم حفظ البنر وتفعيله. حدّث واجهة السوق لمعاينة التغيير.';window.toast?.('تم حفظ البنر');}catch(err){msg.textContent='تعذر الحفظ: '+err.message;}finally{btn.disabled=false;btn.textContent='حفظ وتفعيل البنر';}};
- wsMsg('تم تحميل إعدادات البنر.');
+ const fields='id,title,subtitle,button_text,target_page,image_url,image_url_1,image_url_2,image_url_3';
+ const {data,error}=await db.from('marketplace_home_banner').select(fields).eq('id',1).maybeSingle();
+ if(error){wsMsg('تعذر قراءة البنر: '+error.message);return;}
+ const r=data||{},form=$('workspaceForm');form.hidden=false;
+ const slots=[1,2,3].map(n=>r['image_url_'+n]||(n===1?r.image_url||'':''));
+ form.innerHTML=`<h3>إدارة البنر الرئيسي – ثلاث صور متحركة</h3><p class="muted">اختر الصور مباشرة من ألبوم الصور في جهازك. كل صورة لها معاينة مستقلة، وتظهر الصور الثلاث بالتتابع في واجهة السوق.</p><div class="workspace-form"><label>العنوان<input id="wsBannerTitle" value="${wsEsc(r.title||'')}"></label><label>النص أسفل العنوان<input id="wsBannerSubtitle" value="${wsEsc(r.subtitle||'')}"></label><label>نص الزر<input id="wsBannerButton" value="${wsEsc(r.button_text||'')}"></label><label>وجهة الزر<input id="wsBannerTarget" value="${wsEsc(r.target_page||'vendors')}"></label></div><div class="banner-three-grid">${[1,2,3].map(n=>`<section class="panel"><h4>صورة البنر ${n}</h4><label class="banner-upload-label">اختيار من ألبوم الصور<input type="file" id="wsBannerFile${n}" accept="image/png,image/jpeg,image/webp,image/*"></label><div class="banner-slot-preview" id="wsBannerPreview${n}">${slots[n-1]?`<img src="${wsEsc(slots[n-1])}" alt="معاينة الصورة ${n}">`:'لم يتم اختيار صورة'}</div><button type="button" data-clear-banner="${n}">إزالة الصورة</button></section>`).join('')}</div><button class="primary" id="wsBannerSave">حفظ وتفعيل الصور الثلاث</button><span id="wsBannerMsg" role="status"></span><style>.banner-three-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}.banner-upload-label{display:block;padding:12px;border:1px solid var(--line);border-radius:12px;margin:8px 0}.banner-upload-label input{display:block;width:100%;margin-top:8px}.banner-slot-preview{height:120px;border:1px dashed var(--line);border-radius:12px;display:grid;place-items:center;overflow:hidden;color:var(--muted);margin:8px 0}.banner-slot-preview img{width:100%;height:100%;object-fit:cover}</style>`;
+ const files={1:null,2:null,3:null},cleared={1:false,2:false,3:false};
+ [1,2,3].forEach(n=>{
+  $('wsBannerFile'+n).onchange=e=>{const f=e.target.files?.[0]||null;if(!f)return;if(!/^image\/(png|jpeg|webp|avif)$/.test(f.type)||f.size>8*1024*1024){e.target.value='';$('wsBannerMsg').textContent='اختر صورة PNG أو JPG أو WebP بحجم لا يتجاوز 8 ميجابايت.';return;}files[n]=f;cleared[n]=false;const reader=new FileReader();reader.onload=()=>{$('wsBannerPreview'+n).innerHTML=`<img src="${reader.result}" alt="معاينة الصورة ${n}">`;};reader.readAsDataURL(f);};
+ });
+ form.querySelectorAll('[data-clear-banner]').forEach(btn=>btn.onclick=()=>{const n=Number(btn.dataset.clearBanner);files[n]=null;cleared[n]=true;$('wsBannerFile'+n).value='';$('wsBannerPreview'+n).textContent='سيتم إزالة هذه الصورة عند الحفظ';});
+ $('wsBannerSave').onclick=async()=>{
+  const btn=$('wsBannerSave'),msg=$('wsBannerMsg');btn.disabled=true;msg.textContent='جارٍ رفع الصور وحفظ البنر...';
+  try{
+   const row={id:1,title:$('wsBannerTitle').value.trim(),subtitle:$('wsBannerSubtitle').value.trim(),button_text:$('wsBannerButton').value.trim(),target_page:$('wsBannerTarget').value.trim(),updated_at:new Date().toISOString()};
+   for(const n of [1,2,3]){
+    let url=slots[n-1]||'';
+    if(cleared[n])url='';
+    if(files[n]){
+     const f=files[n],ext=(f.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'');
+     const path='home-banner/'+Date.now()+'-'+n+'-'+Math.random().toString(36).slice(2,8)+'.'+ext;
+     const {error:upErr}=await db.storage.from('marketplace-assets').upload(path,f,{upsert:false,contentType:f.type});if(upErr)throw new Error('تعذر رفع الصورة '+n+': '+upErr.message);
+     const {data:pub}=db.storage.from('marketplace-assets').getPublicUrl(path);url=pub?.publicUrl||'';if(!url)throw new Error('تعذر إنشاء رابط الصورة '+n);
+    }
+    row['image_url_'+n]=url;
+   }
+   row.image_url=row.image_url_1;
+   const {error:saveErr}=await db.from('marketplace_home_banner').upsert(row,{onConflict:'id'});if(saveErr)throw saveErr;
+   msg.textContent='تم حفظ البنر وتفعيل الصور الثلاث. حدّث الصفحة الرئيسية لمشاهدة العرض.';window.toast?.('تم حفظ البنر');
+  }catch(err){msg.textContent='تعذر الحفظ: '+err.message;}
+  finally{btn.disabled=false;}
+ };
+ wsMsg('تم تحميل إعدادات البنر والصور الثلاث.');
 }
 async function loadWorkspaceDoctor(){
  let activeTab='requests',cache={specialists:[],questions:[],reports:[]};
