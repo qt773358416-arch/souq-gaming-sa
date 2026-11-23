@@ -116,6 +116,8 @@ body.admin-menu-open #adminSideMenu{right:0!important;visibility:visible}
 .layout.section-open>main>.vendor-admin-view.active{display:block!important}
 .layout.section-open>main>.admin-workspace.active[hidden],
 .layout.section-open>main>.vendor-admin-view.active[hidden]{display:none!important}
+
+.dashboard-custom-range{display:inline-flex;align-items:center;gap:5px;flex-wrap:wrap}.dashboard-custom-range input{width:122px;background:#10213b;color:#fff;border:1px solid #34577e;border-radius:8px;padding:8px}.stat-link,.dashboard-click{cursor:pointer}.stat-link:focus-visible,.dashboard-click:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}.dashboard-click:hover{background-color:#173456}.legend button{display:flex;align-items:center;gap:4px;color:inherit;border:0;background:transparent;text-align:right;font:inherit;cursor:pointer;padding:2px 4px;border-radius:6px}.event.dashboard-click{border-radius:10px;padding:5px}.ad.dashboard-click{width:100%;background:transparent;color:inherit;border:0;border-bottom:1px solid #1c3857;border-radius:8px;padding:9px 5px;font:inherit;text-align:right}.dashboard-detail-backdrop{position:fixed;inset:0;background:#020813d9;z-index:80;display:grid;place-items:center;padding:16px}.dashboard-detail{width:min(680px,100%);max-height:85vh;overflow:auto;background:#0b1b33;border:1px solid #3280b8;border-radius:18px;padding:18px;box-shadow:0 20px 80px #000b}.dashboard-detail h3{margin:0 0 14px}.dashboard-detail-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.dashboard-detail-item{padding:10px;border:1px solid #24496f;border-radius:10px;overflow-wrap:anywhere}.dashboard-detail-item small{display:block;color:var(--muted);margin-bottom:5px}.dashboard-detail-actions{display:flex;justify-content:flex-start;margin-top:14px}.dashboard-detail-actions button{background:#17395e;color:white;border:1px solid #3b78aa;border-radius:9px;padding:9px 16px}
 </style></head>
 <body>
 <header class="top"><div class="brand"><div class="logo">👑</div><div><h1>سوق القيمنق السعودي</h1><small>لوحة التحكم الرئيسية للمنصة · V6.1</small></div></div><div class="search"><input aria-label="البحث في المنصة" id="search" placeholder="ابحث في المنصة (مستخدم، إعلان، متجر، طلب...)"/><button aria-label="تنفيذ البحث" id="searchSubmit" type="button">⌕</button></div><div class="actions"><button class="ib" data-go="إعدادات المنصة">⚙</button><button class="ib" data-go="الإشعارات" title="الإشعارات">♧</button><button class="ib" data-go="الرسائل" title="الرسائل">✉</button><button class="ib" data-action="theme">☾</button></div><div class="admin"><div class="avatar">♛</div><div><b id="adminEmail">مدير المنصة</b><small id="adminState">● بانتظار تسجيل الدخول</small></div></div><button class="ib" id="logoutButton" title="تسجيل الخروج">↪</button><button aria-controls="adminSideMenu" aria-expanded="false" class="ib" data-action="menu">☰</button></header>
@@ -132,7 +134,7 @@ body.admin-menu-open #adminSideMenu{right:0!important;visibility:visible}
 <div class="vendor-admin-list" id="vendorAdminList"></div>
 <div class="vendor-admin-detail" hidden="" id="vendorAdminDetail"></div>
 </section>
-<div class="head"><div><h2 id="title">نظرة عامة على المنصة</h2><p>بيانات مباشرة من قاعدة بيانات سوق القيمنق السعودي</p></div><div style="display:flex;gap:8px;align-items:center"><select class="select" data-range-filter="true" id="dashboardRange"><option>آخر 30 يوم</option><option>آخر 7 أيام</option><option>اليوم</option><option>هذا العام</option></select><button class="vendor-admin-btn" id="dashboardRefresh" type="button">تحديث ↻</button></div></div>
+<div class="head"><div><h2 id="title">نظرة عامة على المنصة</h2><p>بيانات مباشرة من قاعدة بيانات سوق القيمنق السعودي</p></div><div style="display:flex;gap:8px;align-items:center"><select class="select" data-range-filter="true" id="dashboardRange"><option value="اليوم">اليوم</option><option value="أمس">أمس</option><option value="هذا الشهر" selected>هذا الشهر</option><option value="الشهر الماضي">الشهر الماضي</option><option value="آخر 7 أيام">آخر 7 أيام</option><option value="آخر 30 يوم">آخر 30 يوم</option><option value="custom">تخصيص المدة</option></select><span id="dashboardCustomRange" class="dashboard-custom-range" hidden><input aria-label="من تاريخ" id="dashboardFrom" type="date"><span>إلى</span><input aria-label="إلى تاريخ" id="dashboardTo" type="date"><button class="vendor-admin-btn" id="applyDashboardRange" type="button">تطبيق</button></span><button class="vendor-admin-btn" id="dashboardRefresh" type="button">تحديث ↻</button></div></div>
 <section class="stats">
 <div class="stat stat-link" role="button" tabindex="0" data-go="المستخدمون" aria-label="فتح صفحة المستخدمين" style="--c:#00d9e8;--t:#073d4b"><div class="ico">♙</div><div><label>إجمالي المستخدمين</label><strong id="metricUsers">—</strong><span class="up">إجمالي مسجل</span></div></div>
 <div class="stat stat-link" role="button" tabindex="0" data-go="إعلانات الأفراد" aria-label="فتح صفحة الإعلانات" style="--c:#ed3ca8;--t:#48163d"><div class="ico">⚑</div><div><label>إجمالي الإعلانات</label><strong id="metricAds">—</strong><span class="up">إجمالي مسجل</span></div></div>
@@ -142,9 +144,9 @@ body.admin-menu-open #adminSideMenu{right:0!important;visibility:visible}
 <section class="row2"><div class="panel"><h3>إحصائيات المنصة <span>▥</span></h3><div class="chart" id="dashboardChart"><p class="muted">جارٍ تحميل الطلبات خلال آخر 7 أيام...</p></div></div>
 <div class="panel"><h3>النشاط المباشر <span style="color:var(--green)">●</span></h3><div class="live" id="dashboardActivity"><p class="muted">جارٍ تحميل آخر أنشطة المنصة...</p></div></div></section>
 <section class="panel quick"><h3>إدارة سريعة <span>ϟ</span></h3><div class="quickgrid"><button data-go="إعلانات الأفراد" style="--c:#b45cff;--t:#291448"><i>＋</i>إدارة الإعلانات</button><button data-go="إدارة صفحات المتاجر" style="--c:#19bfff;--t:#0d3150"><i>▣</i>إدارة المتاجر</button><button data-go="إدارة المستخدمين" style="--c:#ffbd3c;--t:#3b2a13"><i>♙</i>إدارة المستخدمين</button><button data-go="مراجعة البلاغات" style="--c:#ff476f;--t:#401629"><i>⬡</i>مراجعة البلاغات</button><button data-go="اعتماد التجار" style="--c:#00d99a;--t:#073a32"><i>✓</i>اعتماد التجار</button><button data-go="إدارة الطلبات" style="--c:#12c9e8;--t:#073846"><i>🛒</i>إدارة الطلبات</button><button data-go="المدفوعات" style="--c:#f5a623;--t:#3b2b15"><i>◉</i>المدفوعات</button><button data-go="التقارير" style="--c:#a855f7;--t:#291448"><i>▥</i>التقارير</button><button data-go="دكتور القيمنق" style="--c:#00d9a0;--t:#073a32"><i>🎧</i>طلبات المختصين</button><button data-go="إعدادات المالك" style="--c:#ffbd3c;--t:#3b2a13"><i>👑</i>إعدادات المالك</button></div></section>
-<section class="bottom"><div class="panel"><h3>آخر الإعلانات <span>♢</span></h3><div id="adsData"><div class="ad"><div class="thumb">🎮</div><div><b>جهاز سوني PS5 Slim</b><small>2,299 ر.س</small></div><span class="status wait">معلق للمراجعة</span></div><div class="ad"><div class="thumb">🖥️</div><div><b>كرت شاشة RTX 4060</b><small>1,799 ر.س</small></div><span class="status ok">معتمد</span></div><div class="ad"><div class="thumb">🎮</div><div><b>حساب ستيم رسمي</b><small>199 ر.س</small></div><span class="status ok">معتمد</span></div><div class="ad"><div class="thumb">🪑</div><div><b>كرسي قيمنق احترافي</b><small>699 ر.س</small></div><span class="status wait">مراجعة</span></div><a class="link" data-go="جميع الإعلانات" data-nav-link="true" href="#">عرض جميع الإعلانات ←</a></div></div>
+<section class="bottom"><div class="panel"><h3>آخر الإعلانات <span>♢</span></h3><div id="adsData"><p class="muted">جارٍ تحميل أحدث الإعلانات...</p></div></div>
 <div class="panel"><h3>آخر الطلبات <span>🛒</span></h3><div class="tablewrap"><table><thead><tr><th>رقم الطلب</th><th>المشتري</th><th>المتجر</th><th>القيمة</th><th>الحالة</th></tr></thead><tbody id="ordersData"><tr><td colspan="5">بانتظار تحميل الطلبات…</td></tr></tbody></table></div><a class="link" data-go="جميع الطلبات" data-nav-link="true" href="#">عرض جميع الطلبات ←</a></div>
-<div class="panel distribution"><h3>توزيع النشاط <span>◉</span></h3><div class="donutbox"><div class="donut"><strong id="dashboardUserCount">—<small>المستخدمون</small></strong></div><div class="legend"><div><span style="background:#13a9ff"></span>المتاجر</div><div><span style="background:#963ef4"></span>الإعلانات</div><div><span style="background:#ff9c36"></span>الطلبات</div><div><span style="background:#00d9a0"></span>المبيعات المدفوعة</div></div></div></div></section>
+<div class="panel distribution"><h3>توزيع النشاط <span>◉</span></h3><div class="donutbox"><div class="donut"><strong id="dashboardUserCount">—<small>المستخدمون</small></strong></div><div class="legend"><button class="dashboard-click" data-go="إدارة صفحات المتاجر"><span style="background:#13a9ff"></span>المتاجر</button><button class="dashboard-click" data-go="إعلانات الأفراد"><span style="background:#963ef4"></span>الإعلانات</button><button class="dashboard-click" data-go="الطلبات"><span style="background:#ff9c36"></span>الطلبات</button><button class="dashboard-click" data-go="المدفوعات والمحافظ"><span style="background:#00d9a0"></span>المبيعات المدفوعة</button></div></div></div></section>
 <section class="admin-workspace" id="adminWorkspace">
 <div class="head"><div><h2 id="workspaceTitle">إدارة القسم</h2><p id="workspaceDescription">إدارة مباشرة لبيانات المنصة.</p></div><button class="vendor-admin-btn" id="workspaceBack">العودة للرئيسية</button></div>
 <div class="workspace-toolbar" id="workspaceToolbar"></div>
@@ -240,19 +242,29 @@ async function runGlobalSearch(term){
 function note(s,k=''){const e=$('loginMessage');e.textContent=s;e.className=k;}
 async function owner(u){if(!u?.id)throw Error('يلزم تسجيل الدخول أولاً.');const {data,error}=await db.rpc('is_platform_control_owner');if(error)throw Error('تعذر التحقق من صلاحية المدير: '+error.message);if(data!==true)throw Error('الحساب غير معتمد كمالك للمنصة (role=owner).');}
 async function countRows(table,since){let q=db.from(table).select('*',{count:'exact',head:true});if(since)q=q.gte('created_at',since);const {count,error}=await q;if(error)throw Error('تعذر قراءة '+table+': '+error.message);return count||0;}
-function rangeStart(label){
- const now=new Date(),start=new Date(now);start.setHours(0,0,0,0);
- if(label==='اليوم')return start;
- if(label==='آخر 7 أيام'){start.setDate(start.getDate()-6);return start;}
- if(label==='هذا العام')return new Date(now.getFullYear(),0,1);
- start.setDate(start.getDate()-29);return start;
+function dashboardBounds(label){
+ const now=new Date();now.setHours(0,0,0,0);let from=new Date(now),to=new Date(now);to.setHours(23,59,59,999);
+ if(label==='أمس'){from.setDate(from.getDate()-1);to=new Date(from);to.setHours(23,59,59,999);}
+ else if(label==='هذا الشهر'){from=new Date(now.getFullYear(),now.getMonth(),1);to=new Date(now.getFullYear(),now.getMonth()+1,0,23,59,59,999);}
+ else if(label==='الشهر الماضي'){from=new Date(now.getFullYear(),now.getMonth()-1,1);to=new Date(now.getFullYear(),now.getMonth(),0,23,59,59,999);}
+ else if(label==='آخر 7 أيام'){from.setDate(from.getDate()-6);}
+ else if(label==='آخر 30 يوم'){from.setDate(from.getDate()-29);}
+ else if(label==='custom'){
+  const a=$('dashboardFrom')?.value,b=$('dashboardTo')?.value;
+  if(!a||!b||a>b)throw Error('حدد تاريخ بداية ونهاية صحيحين.');
+  from=new Date(a+'T00:00:00');to=new Date(b+'T23:59:59.999');
+ }
+ return {from,to};
 }
+function dashboardRangeLabel(){const v=$('dashboardRange')?.value||'هذا الشهر';if(v!=='custom')return v;return ($('dashboardFrom')?.value||'—')+' إلى '+($('dashboardTo')?.value||'—');}
 window.setDashboardRange=async function(label){
+ const custom=$('dashboardCustomRange');if(custom)custom.hidden=label!=='custom';
+ if(label==='custom')return;
  $('metricRangeOrders').textContent=label;$('metricRangeSales').textContent=label;
  await loadData(label);
 };
 window.refreshDashboardData=async function(){
- const label=$('dashboardRange')?.value||'آخر 30 يوم';
+ const label=$('dashboardRange')?.value||'هذا الشهر';
  const b=$('dashboardRefresh');if(b)b.disabled=true;
  try{await loadData(label);window.toast('تم تحديث بيانات لوحة التحكم.');}
  catch(e){window.toast('تعذر التحديث: '+(e?.message||String(e)));}
@@ -261,56 +273,54 @@ window.refreshDashboardData=async function(){
 async function loadDashboardActivity(){
  const box=$('dashboardActivity');if(!box)return;
  const sources=[
-  db.from('ads').select('id,title,created_at,status').order('created_at',{ascending:false}).limit(5).then(r=>({...r,kind:'ad'})),
-  db.from('vendor_stores').select('id,store_name,created_at,status').order('created_at',{ascending:false}).limit(5).then(r=>({...r,kind:'store'})),
-  db.from('store_orders').select('id,customer_name,created_at,order_status').order('created_at',{ascending:false}).limit(5).then(r=>({...r,kind:'store_order'})),
-  db.from('vendor_orders').select('id,created_at,order_status').order('created_at',{ascending:false}).limit(5).then(r=>({...r,kind:'vendor_order'}))
+  db.from('ads').select('id,title,created_at,status').order('created_at',{ascending:false}).limit(6).then(r=>({...r,kind:'ad'})),
+  db.from('vendor_stores').select('id,store_name,created_at,status').order('created_at',{ascending:false}).limit(6).then(r=>({...r,kind:'store'})),
+  db.from('store_orders').select('id,customer_name,created_at,order_status').order('created_at',{ascending:false}).limit(6).then(r=>({...r,kind:'store_order'})),
+  db.from('vendor_orders').select('id,created_at,order_status').order('created_at',{ascending:false}).limit(6).then(r=>({...r,kind:'vendor_order'}))
  ];
- const results=await Promise.all(sources);let events=[];
- results.forEach(res=>{if(res.error)return;(res.data||[]).forEach(r=>events.push({...r,kind:res.kind}));});
- events.sort((a,b)=>new Date(b.created_at||0)-new Date(a.created_at||0));events=events.slice(0,6);
+ const results=await Promise.all(sources);let events=[];results.forEach(res=>{if(!res.error)(res.data||[]).forEach(r=>events.push({...r,kind:res.kind}));});
+ events.sort((a,b)=>new Date(b.created_at||0)-new Date(a.created_at||0));events=events.slice(0,7);
  const labels={ad:['⚑','إعلان جديد',r=>r.title||('إعلان #'+r.id)],store:['▣','متجر مسجل',r=>r.store_name||('متجر #'+r.id)],store_order:['🛒','طلب متجر رئيسي',r=>'طلب #'+r.id+' · '+(r.customer_name||'عميل')],vendor_order:['🛍','طلب متجر تاجر',r=>'طلب #'+r.id]};
- box.innerHTML=events.map(r=>{const x=labels[r.kind],age=r.created_at?new Date(r.created_at).toLocaleString('ar-SA'):'—';return `<div class="event"><div class="eico">${x[0]}</div><div><b>${x[1]}</b><small>${wsEsc(x[2](r))}</small></div><time>${wsEsc(age)}</time></div>`;}).join('')||'<p class="muted">لا توجد أنشطة حديثة أو لا تسمح الصلاحيات بقراءتها.</p>';
+ box.innerHTML=events.map(r=>{const x=labels[r.kind],age=r.created_at?new Date(r.created_at).toLocaleString('ar-SA'):'—';return `<div class="event dashboard-click" role="button" tabindex="0" data-dashboard-open="${r.kind}" data-record-id="${esc(r.id)}"><div class="eico">${x[0]}</div><div><b>${x[1]}</b><small>${wsEsc(x[2](r))}</small></div><time>${wsEsc(age)}</time></div>`;}).join('')||'<p class="muted">لا توجد أنشطة حديثة أو لا تسمح الصلاحيات بقراءتها.</p>';
 }
 async function loadDashboardChart(){
- const box=$('dashboardChart');if(!box)return;
- const from=new Date();from.setDate(from.getDate()-6);from.setHours(0,0,0,0);
+ const box=$('dashboardChart');if(!box)return;const {from,to}=dashboardBounds($('dashboardRange')?.value||'هذا الشهر');
  const [a,b]=await Promise.all([
-  db.from('store_orders').select('created_at').gte('created_at',from.toISOString()).limit(1000),
-  db.from('vendor_orders').select('created_at').gte('created_at',from.toISOString()).limit(1000)
+  db.from('store_orders').select('created_at').gte('created_at',from.toISOString()).lte('created_at',to.toISOString()).limit(5000),
+  db.from('vendor_orders').select('created_at').gte('created_at',from.toISOString()).lte('created_at',to.toISOString()).limit(5000)
  ]);
  if(a.error&&b.error){box.textContent='تعذر قراءة بيانات الرسم: '+a.error.message;return;}
- const data=[...(a.data||[]),...(b.data||[])],days=[];
- for(let i=6;i>=0;i--){const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-i);days.push({date:d,count:0});}
- data.forEach(r=>{const d=new Date(r.created_at);d.setHours(0,0,0,0);const x=days.find(z=>z.date.getTime()===d.getTime());if(x)x.count++;});
+ const all=[...(a.data||[]),...(b.data||[])],span=Math.max(1,Math.ceil((to-from)/86400000)+1),step=span>31?Math.ceil(span/31):1,days=[];
+ for(let i=0;i<span;i+=step){const d=new Date(from);d.setDate(d.getDate()+i);days.push({date:d,count:0});}
+ all.forEach(r=>{const d=new Date(r.created_at);d.setHours(0,0,0,0);const bucket=days.find((x,i)=>{const next=days[i+1]?.date||new Date(to.getTime()+86400000);return d>=x.date&&d<next;});if(bucket)bucket.count++;});
  const max=Math.max(1,...days.map(x=>x.count));
- box.innerHTML=`<div style="height:100%;display:flex;align-items:end;gap:10px;padding:14px 4px 4px">${days.map(x=>`<div title="${x.date.toLocaleDateString('ar-SA')}: ${x.count} طلب" style="flex:1;min-width:0;height:100%;display:flex;flex-direction:column;justify-content:end;align-items:center;gap:7px"><b style="font-size:10px">${x.count}</b><div style="width:70%;height:${Math.max(5,x.count/max*72)}%;min-height:5px;border-radius:7px 7px 2px 2px;background:linear-gradient(180deg,#00e5ff,#8847ed)"></div><small style="font-size:9px;color:var(--muted)">${x.date.toLocaleDateString('ar-SA',{weekday:'short'})}</small></div>`).join('')}</div><p class="muted" style="font-size:10px;margin:2px 0 0">عدد الطلبات المسجلة يومياً خلال آخر 7 أيام (المتجر الرئيسي ومتاجر التجار).</p>`;
+ box.innerHTML=`<div style="height:100%;display:flex;align-items:end;gap:7px;padding:14px 4px 4px">${days.map(x=>`<button type="button" class="dashboard-chart-bar" data-chart-date="${x.date.toISOString().slice(0,10)}" title="${x.date.toLocaleDateString('ar-SA')}: ${x.count} طلب" style="flex:1;min-width:0;height:100%;display:flex;flex-direction:column;justify-content:end;align-items:center;gap:7px;background:none;border:0;color:inherit;cursor:pointer"><b style="font-size:10px">${x.count}</b><span style="display:block;width:70%;height:${Math.max(5,x.count/max*72)}%;min-height:5px;border-radius:7px 7px 2px 2px;background:linear-gradient(180deg,#00e5ff,#8847ed)"></span><small style="font-size:9px;color:var(--muted)">${span>31?x.date.toLocaleDateString('ar-SA',{day:'numeric',month:'numeric'}):x.date.toLocaleDateString('ar-SA',{weekday:'short'})}</small></button>`).join('')}</div><p class="muted" style="font-size:10px;margin:2px 0 0">عدد الطلبات خلال ${wsEsc(dashboardRangeLabel())}. اضغط على أي يوم لعرض طلباته.</p>`;
 }
-async function loadData(label=$('dashboardRange')?.value||'آخر 30 يوم'){
- const start=rangeStart(label).toISOString();
- const safeCount=async(table,since)=>{try{return {value:await countRows(table,since),error:''};}catch(e){return {value:null,error:e.message||String(e)};}};
- const [u,a,s,vn,sn]=await Promise.all([safeCount('profiles'),safeCount('ads'),safeCount('vendor_stores'),safeCount('vendor_orders',start),safeCount('store_orders',start)]);
+async function loadData(label=$('dashboardRange')?.value||'هذا الشهر'){
+ const {from,to}=dashboardBounds(label),start=from.toISOString(),finish=to.toISOString();
+ const safeCount=async(table,since,until)=>{try{let q=db.from(table).select('*',{count:'exact',head:true});if(since)q=q.gte('created_at',since);if(until)q=q.lte('created_at',until);const {count,error}=await q;if(error)throw error;return {value:count||0,error:''};}catch(e){return {value:null,error:e.message||String(e)};}};
+ const [u,a,s,vn,sn]=await Promise.all([safeCount('profiles'),safeCount('ads'),safeCount('vendor_stores'),safeCount('vendor_orders',start,finish),safeCount('store_orders',start,finish)]);
  const showCount=x=>x.value===null?'—':Number(x.value).toLocaleString('ar-SA');
- $('metricUsers').textContent=showCount(u);$('dashboardUserCount').innerHTML=showCount(u)+'<small>المستخدمون</small>';
- $('metricAds').textContent=showCount(a);$('metricStores').textContent=showCount(s);$('metricOrders').textContent=vn.value===null||sn.value===null?'—':(vn.value+sn.value).toLocaleString('ar-SA');
- $('metricRangeOrders').textContent=label;$('metricRangeSales').textContent=label;
+ $('metricUsers').textContent=showCount(u);$('dashboardUserCount').innerHTML=showCount(u)+'<small>المستخدمون</small>';$('metricAds').textContent=showCount(a);$('metricStores').textContent=showCount(s);
+ $('metricOrders').textContent=vn.value===null||sn.value===null?'—':(vn.value+sn.value).toLocaleString('ar-SA');
+ const rangeText=dashboardRangeLabel();$('metricRangeOrders').textContent=rangeText;$('metricRangeSales').textContent=rangeText;
  const [vSales,sSales]=await Promise.all([
-  db.from('vendor_orders').select('subtotal_amount').gte('created_at',start).eq('payment_status','paid').limit(2000),
-  db.from('store_orders').select('total_amount').gte('created_at',start).eq('payment_status','paid').limit(2000)
+  db.from('vendor_orders').select('subtotal_amount').gte('created_at',start).lte('created_at',finish).eq('payment_status','paid').limit(5000),
+  db.from('store_orders').select('total_amount').gte('created_at',start).lte('created_at',finish).eq('payment_status','paid').limit(5000)
  ]);
- if(!vSales.error&&!sSales.error){const total=[...(vSales.data||[]).map(x=>x.subtotal_amount),...(sSales.data||[]).map(x=>x.total_amount)].reduce((n,x)=>n+Number(x||0),0);$('metricSales').textContent=money(total);}
- else $('metricSales').textContent='—';
- const [adsResult,ordersResult]=await Promise.all([
-  db.from('ads').select('id,title,price,status').order('created_at',{ascending:false}).limit(4),
-  db.from('store_orders').select('id,customer_name,total_amount,payment_status,order_status').order('created_at',{ascending:false}).limit(5)
+ if(!vSales.error&&!sSales.error){const total=[...(vSales.data||[]).map(x=>x.subtotal_amount),...(sSales.data||[]).map(x=>x.total_amount)].reduce((n,x)=>n+Number(x||0),0);$('metricSales').textContent=money(total);}else $('metricSales').textContent='—';
+ const [adsResult,storeOrders,vendorOrders]=await Promise.all([
+  db.from('ads').select('id,title,price,status,created_at').order('created_at',{ascending:false}).limit(5),
+  db.from('store_orders').select('id,customer_name,total_amount,payment_status,order_status,created_at').order('created_at',{ascending:false}).limit(5),
+  db.from('vendor_orders').select('id,subtotal_amount,payment_status,order_status,created_at,vendor_store_id,vendor_owner_id').order('created_at',{ascending:false}).limit(5)
  ]);
- $('adsData').innerHTML=adsResult.error?'<div class="empty">تعذر تحميل الإعلانات: '+esc(adsResult.error.message)+'</div>':(adsResult.data||[]).map(r=>'<div class="ad"><div class="thumb">🎮</div><div><b>'+esc(r.title||'إعلان بدون عنوان')+'</b><small>'+money(r.price)+'</small></div><span class="status">'+esc(r.status||'—')+'</span></div>').join('')||'<div class="empty">لا توجد إعلانات</div>';
- $('ordersData').innerHTML=ordersResult.error?'<tr><td colspan="5">تعذر تحميل الطلبات: '+esc(ordersResult.error.message)+'</td></tr>':(ordersResult.data||[]).map(r=>'<tr><td>#'+esc(r.id)+'</td><td>'+esc(r.customer_name||'—')+'</td><td>—</td><td>'+money(r.total_amount)+'</td><td><span class="status">'+esc(r.order_status||r.payment_status||'—')+'</span></td></tr>').join('')||'<tr><td colspan="5" class="empty">لا توجد طلبات</td></tr>';
+ $('adsData').innerHTML=adsResult.error?'<div class="empty">تعذر تحميل الإعلانات: '+esc(adsResult.error.message)+'</div>':(adsResult.data||[]).map(r=>`<button type="button" class="ad dashboard-click" data-dashboard-open="ad" data-record-id="${esc(r.id)}"><span class="thumb">🎮</span><span><b>${esc(r.title||'إعلان بدون عنوان')}</b><small>${money(r.price)}</small></span><span class="status">${esc(r.status||'—')}</span></button>`).join('')||'<div class="empty">لا توجد إعلانات</div>';
+ const combined=[...(storeOrders.data||[]).map(r=>({...r,_kind:'store_order',_amount:r.total_amount,_buyer:r.customer_name})),...(vendorOrders.data||[]).map(r=>({...r,_kind:'vendor_order',_amount:r.subtotal_amount,_buyer:'—'}))].sort((x,y)=>new Date(y.created_at||0)-new Date(x.created_at||0)).slice(0,7);
+ const orderError=storeOrders.error&&vendorOrders.error;
+ $('ordersData').innerHTML=orderError?'<tr><td colspan="5">تعذر تحميل الطلبات: '+esc(storeOrders.error.message)+' / '+esc(vendorOrders.error.message)+'</td></tr>':combined.map(r=>`<tr class="dashboard-click" role="button" tabindex="0" data-dashboard-open="${r._kind}" data-record-id="${esc(r.id)}"><td>#${esc(r.id)}</td><td>${esc(r._buyer||'—')}</td><td>${r._kind==='vendor_order'?'متجر تاجر':'المتجر الرئيسي'}</td><td>${money(r._amount)}</td><td><span class="status">${esc(r.order_status||r.payment_status||'—')}</span></td></tr>`).join('')||'<tr><td colspan="5" class="empty">لا توجد طلبات</td></tr>';
  await Promise.all([loadDashboardActivity(),loadDashboardChart()]);
- const failures=[u,a,s,vn,sn].filter(x=>x.error).map(x=>x.error);if(vSales.error||sSales.error)failures.push('قراءة المبيعات المدفوعة');
- if(failures.length)window.toast('تم فتح اللوحة؛ بعض المؤشرات غير متاحة بسبب صلاحيات القراءة أو إعداد الجدول.');
+ const failures=[u,a,s,vn,sn].filter(x=>x.error).map(x=>x.error);if(vSales.error||sSales.error)failures.push('قراءة المبيعات المدفوعة');if(failures.length)window.toast('بعض المؤشرات غير متاحة بسبب صلاحيات القراءة أو إعداد الجدول.');
 }
-
 async function show(u){await owner(u);$('loginGate').classList.add('hidden');$('dashboard').classList.remove('hidden');$('adminEmail').textContent=u.email||'مدير المنصة';$('adminState').textContent='● متصل الآن';await loadData();}
 // إدارة طلبات توثيق التجار — تستخدم أسماء الجداول والحقول الموجودة في بوابة التاجر.
 let vendorRequestsCache=[];
@@ -824,6 +834,29 @@ async function loadAnalyticsWorkspace(){
  $('workspaceList').innerHTML=`<div class="grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px">${counts.map(x=>`<div class="panel"><small>${wsEsc(x.table)}</small><h2>${x.error?'—':Number(x.count).toLocaleString('ar-SA')}</h2><small>${x.error?wsEsc(x.error):'سجل متاح وفق صلاحيات الحساب'}</small></div>`).join('')}</div>`;
  wsMsg('هذه أعداد السجلات التي أمكن قراءتها من قاعدة البيانات في وقت التحديث.');
 }
+// تفاعلات لوحة الرئيسية: تفاصيل الإعلانات والطلبات والأنشطة، دون أي عمليات كتابة.
+function closeDashboardDetail(){document.getElementById('dashboardDetailBackdrop')?.remove();}
+function showDashboardDetail(title,record){
+ closeDashboardDetail();const entries=Object.entries(record||{}).filter(([k,v])=>!k.startsWith('_')&&v!==null&&v!==undefined&&typeof v!=='object');
+ const backdrop=document.createElement('div');backdrop.id='dashboardDetailBackdrop';backdrop.className='dashboard-detail-backdrop';
+ backdrop.innerHTML=`<section class="dashboard-detail" role="dialog" aria-modal="true"><h3>${esc(title)}</h3><div class="dashboard-detail-grid">${entries.map(([k,v])=>`<div class="dashboard-detail-item"><small>${esc(({id:'المعرّف',title:'العنوان',description:'الوصف',price:'السعر',status:'الحالة',created_at:'تاريخ الإنشاء',customer_name:'المشتري',total_amount:'القيمة',subtotal_amount:'قيمة الطلب',payment_status:'حالة الدفع',order_status:'حالة الطلب',vendor_store_id:'معرّف المتجر',vendor_owner_id:'معرّف التاجر',city:'المدينة',category:'التصنيف',seller_name:'البائع',seller_phone:'هاتف البائع',item_condition:'حالة المنتج',condition:'الحالة'}[k]||k))}</small>${esc(String(v))}</div>`).join('')}</div><div class="dashboard-detail-actions"><button type="button" id="closeDashboardDetail">إغلاق</button></div></section>`;
+ backdrop.addEventListener('click',e=>{if(e.target===backdrop)closeDashboardDetail();});document.body.appendChild(backdrop);document.getElementById('closeDashboardDetail').addEventListener('click',closeDashboardDetail);
+}
+async function openDashboardRecord(kind,id){
+ if(!id)return;window.toast('جارٍ تحميل التفاصيل...');let result,title='تفاصيل السجل';
+ if(kind==='ad'){title='تفاصيل الإعلان';result=await db.from('ads').select('id,title,description,price,category,status,created_at,city,seller_name,seller_phone,item_condition,condition,ad_type,model_year,moderation_reason').eq('id',id).maybeSingle();}
+ else if(kind==='vendor_order'){title='تفاصيل طلب متجر تاجر';result=await db.from('vendor_orders').select('id,checkout_group_id,vendor_store_id,vendor_owner_id,subtotal_amount,commission_amount,vendor_net_amount,order_status,payment_status,created_at').eq('id',id).maybeSingle();}
+ else if(kind==='store_order'){title='تفاصيل طلب المتجر الرئيسي';result=await db.from('store_orders').select('id,customer_name,total_amount,payment_status,order_status,created_at').eq('id',id).maybeSingle();}
+ else if(kind==='store'){title='تفاصيل المتجر';result=await db.from('vendor_stores').select('id,store_name,slug,description,city,category,logo_url,is_featured,created_at').eq('id',id).maybeSingle();}
+ if(!result||result.error){window.toast('تعذر تحميل التفاصيل: '+(result?.error?.message||'نوع السجل غير مدعوم'));return;}
+ if(!result.data){window.toast('لم يعد السجل متاحاً أو لا تسمح صلاحيات القراءة بعرضه.');return;}showDashboardDetail(title,result.data);
+}
+document.addEventListener('click',e=>{
+ const rec=e.target.closest('[data-dashboard-open]');if(rec){e.preventDefault();openDashboardRecord(rec.dataset.dashboardOpen,rec.dataset.recordId);return;}
+ const bar=e.target.closest('[data-chart-date]');if(bar){const d=bar.dataset.chartDate;const next=new Date(d+'T00:00:00');next.setDate(next.getDate()+1);const from=new Date(d+'T00:00:00').toISOString(),to=new Date(next.getTime()-1).toISOString();(async()=>{const [x,y]=await Promise.all([db.from('store_orders').select('id,customer_name,total_amount,order_status,created_at').gte('created_at',from).lte('created_at',to).limit(100),db.from('vendor_orders').select('id,subtotal_amount,order_status,created_at').gte('created_at',from).lte('created_at',to).limit(100)]);const rows=[...(x.data||[]).map(r=>({...r,kind:'طلب متجر رئيسي',amount:r.total_amount})),...(y.data||[]).map(r=>({...r,kind:'طلب متجر تاجر',amount:r.subtotal_amount}))];showDashboardDetail('طلبات يوم '+new Date(d+'T00:00:00').toLocaleDateString('ar-SA'),{التاريخ:d,عدد_الطلبات:rows.length,الطلبات:rows.map(r=>`${r.kind} #${r.id} · ${r.amount??'—'} ر.س · ${r.order_status||'—'}`).join(' | ')||'لا توجد طلبات'});})();}
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDashboardDetail();const row=e.target.closest('[data-dashboard-open]');if(row&&(e.key==='Enter'||e.key===' ')){e.preventDefault();openDashboardRecord(row.dataset.dashboardOpen,row.dataset.recordId);}});
+$('applyDashboardRange')?.addEventListener('click',()=>{const label='custom';try{dashboardBounds(label);$('metricRangeOrders').textContent=dashboardRangeLabel();$('metricRangeSales').textContent=dashboardRangeLabel();loadData(label).catch(err=>window.toast(err.message||String(err)));}catch(err){window.toast(err.message||String(err));}});
 $('dashboardRefresh')?.addEventListener('click',window.refreshDashboardData);
 $('workspaceBack').addEventListener('click',()=>window.go('الرئيسية'));
 
