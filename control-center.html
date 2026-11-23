@@ -110,6 +110,12 @@ body.admin-menu-open #adminSideMenu{right:0!important;visibility:visible}
  #adminMenuBackdrop{inset:66px 0 0}
 }
 
+/* V6.2: enforce true single-screen section isolation */
+.layout.section-open>main>*{display:none!important}
+.layout.section-open>main>.admin-workspace.active{display:block!important}
+.layout.section-open>main>.vendor-admin-view.active{display:block!important}
+.layout.section-open>main>.admin-workspace.active[hidden],
+.layout.section-open>main>.vendor-admin-view.active[hidden]{display:none!important}
 </style></head>
 <body>
 <header class="top"><div class="brand"><div class="logo">👑</div><div><h1>سوق القيمنق السعودي</h1><small>لوحة التحكم الرئيسية للمنصة · V6.1</small></div></div><div class="search"><input aria-label="البحث في المنصة" id="search" placeholder="ابحث في المنصة (مستخدم، إعلان، متجر، طلب...)"/><button aria-label="تنفيذ البحث" id="searchSubmit" type="button">⌕</button></div><div class="actions"><button class="ib" data-go="إعدادات المنصة">⚙</button><button class="ib" data-go="الإشعارات" title="الإشعارات">♧</button><button class="ib" data-go="الرسائل" title="الرسائل">✉</button><button class="ib" data-action="theme">☾</button></div><div class="admin"><div class="avatar">♛</div><div><b id="adminEmail">مدير المنصة</b><small id="adminState">● بانتظار تسجيل الدخول</small></div></div><button class="ib" id="logoutButton" title="تسجيل الخروج">↪</button><button aria-controls="adminSideMenu" aria-expanded="false" class="ib" data-action="menu">☰</button></header>
@@ -357,12 +363,18 @@ async function openVendorRequest(requestId){
  }catch(e){box.innerHTML='<div class="vendor-admin-empty">تعذر تحميل تفاصيل التاجر: '+esc(e.message)+'</div>';}
 }
 function showVendorAdmin(){
+ $('adminWorkspace').classList.remove('active');
  $('vendorAdminView').classList.add('active');
- [...$('dashboard').querySelector('main').children].forEach(el=>{if(el.id!=='vendorAdminView')el.hidden=true;});
+ [...$('dashboard').querySelector('main').children].forEach(el=>{el.hidden=el.id!=='vendorAdminView';});
  document.querySelectorAll('.nav').forEach(n=>n.classList.remove('active'));
  loadVendorRequests();
 }
-function hideVendorAdmin(){ $('vendorAdminView').classList.remove('active');[...$('dashboard').querySelector('main').children].forEach(el=>{el.hidden=false;});$('vendorAdminDetail').hidden=true; }
+function hideVendorAdmin(){
+ $('vendorAdminView').classList.remove('active');$('adminWorkspace').classList.remove('active');
+ $('dashboard').classList.remove('section-open');
+ [...$('dashboard').querySelector('main').children].forEach(el=>{el.hidden=false;});
+ $('vendorAdminDetail').hidden=true;
+}
 $('vendorAdminRefresh').addEventListener('click',loadVendorRequests);
 $('vendorAdminSearch').addEventListener('input',renderVendorRequests);
 $('vendorAdminStatus').addEventListener('change',renderVendorRequests);
@@ -387,7 +399,11 @@ const workspaceConfigs={
 };
 const wsEsc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function wsMsg(s){$('workspaceMessage').textContent=s;$('workspaceMessage').hidden=false;}
-function wsHomeHide(){[...$('dashboard').querySelector('main').children].forEach(el=>{if(el.id!=='adminWorkspace'&&el.id!=='vendorAdminView')el.hidden=true;});$('adminWorkspace').classList.add('active');$('vendorAdminView').classList.remove('active');}
+function wsHomeHide(){
+ $('vendorAdminView').classList.remove('active');
+ [...$('dashboard').querySelector('main').children].forEach(el=>{el.hidden=el.id!=='adminWorkspace';});
+ $('adminWorkspace').classList.add('active');
+}
 function workspaceTable(title,rows,columns){
  const head=columns.map(c=>`<th>${wsEsc(c.label)}</th>`).join('');
  const body=rows.map(r=>`<tr>${columns.map(c=>`<td>${c.render?c.render(r):wsEsc(r[c.key]??'—')}</td>`).join('')}</tr>`).join('');
