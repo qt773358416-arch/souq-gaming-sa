@@ -248,20 +248,36 @@ const search=$('search');
 if(search){search.addEventListener('keydown',async e=>{if(e.key!=='Enter')return;const term=e.target.value.trim();if(!term)return;await runGlobalSearch(term);});$('searchSubmit')?.addEventListener('click',async()=>{const term=search.value.trim();if(term)await runGlobalSearch(term);else{search.focus();window.toast('اكتب كلمة البحث أولاً.');}});}
 async function runGlobalSearch(term){
  const host=$('adminWorkspace');hideVendorAdmin();setDashboardRoute('workspace');
- window.scrollTo({top:0,behavior:'instant'});$('workspaceTitle').textContent='نتائج البحث';$('workspaceDescription').textContent='بحث مباشر في الإعلانات والمتاجر والمستخدمين.';
+ window.scrollTo({top:0,behavior:'instant'});$('workspaceTitle').textContent='نتائج البحث';$('workspaceDescription').textContent='بحث شامل في سجلات لوحة التحكم المتاحة لحسابك.';
  $('workspaceForm').hidden=true;$('workspaceToolbar').innerHTML='<button class="primary" id="searchAgain">تحديث البحث</button>';$('searchAgain').onclick=()=>runGlobalSearch(term);
- wsMsg('جارٍ البحث...');$('workspaceList').innerHTML='';
+ wsMsg('جارٍ البحث في أقسام لوحة التحكم...');$('workspaceList').innerHTML='';
  const like='%'+term.replace(/[,%()]/g,'')+'%';
- const jobs=await Promise.all([
-  db.from('ads').select('id,title,price,status,city,created_at').ilike('title',like).limit(30),
-  db.from('vendor_stores').select('id,store_name,slug,city,status').ilike('store_name',like).limit(30),
-  db.from('profiles').select('id,display_name,phone,city').ilike('display_name',like).limit(30)
- ]);
- const labels=['الإعلانات','المتاجر','المستخدمون'];let html='';
- jobs.forEach((r,i)=>{if(r.error){html+=`<div class="panel"><h3>${labels[i]}</h3><p class="workspace-message">تعذر البحث: ${wsEsc(r.error.message)}</p></div>`;return;}
-  const rows=r.data||[];html+=`<div class="panel"><h3>${labels[i]} (${rows.length})</h3>${rows.map(x=>`<div class="workspace-row"><div><b>${wsEsc(x.title||x.store_name||x.display_name||x.id)}</b><small>${wsEsc(Object.entries(x).filter(([k])=>k!=='id').map(([k,v])=>k+': '+String(v??'—')).join(' · '))}</small></div></div>`).join('')||'<p class="muted">لا توجد نتائج.</p>'}</div>`;
+ const jobs=[
+  {label:'الإعلانات',table:'ads',id:'id',title:'title',q:db.from('ads').select('id,title,description,price,status,city,created_at').or(`title.ilike.${like},description.ilike.${like},category.ilike.${like},city.ilike.${like}`).limit(30)},
+  {label:'المتاجر',table:'vendor_stores',id:'id',title:'store_name',q:db.from('vendor_stores').select('id,store_name,slug,city,category,status').or(`store_name.ilike.${like},slug.ilike.${like},city.ilike.${like},category.ilike.${like}`).limit(30)},
+  {label:'المستخدمون',table:'profiles',id:'id',title:'display_name',q:db.from('profiles').select('id,display_name,phone,city').or(`display_name.ilike.${like},phone.ilike.${like},city.ilike.${like}`).limit(30)},
+  {label:'طلبات متاجر التجار',table:'vendor_orders',id:'id',title:'id',q:db.from('vendor_orders').select('id,checkout_group_id,vendor_store_id,vendor_owner_id,subtotal_amount,commission_amount,vendor_net_amount,order_status,payment_status,created_at').or(`order_status.ilike.${like},payment_status.ilike.${like}`).limit(30)},
+  {label:'منتجات المتاجر',table:'vendor_store_products',id:'id',title:'title',q:db.from('vendor_store_products').select('id,store_id,title,category,price,stock_quantity,is_active').or(`title.ilike.${like},category.ilike.${like}`).limit(30)},
+  {label:'تصنيفات المنصة',table:'platform_control_categories',id:'id',title:'name',q:db.from('platform_control_categories').select('id,name,icon,section,sort_order,is_active').ilike('name',like).limit(30)}
+ ];
+ const results=await Promise.all(jobs.map(async j=>({...j,result:await j.q})));
+ let html='';
+ results.forEach(j=>{
+  const r=j.result;
+  if(r.error){html+=`<section class="panel"><h3>${j.label}</h3><p class="workspace-message">تعذر البحث في هذا القسم: ${wsEsc(r.error.message)}</p></section>`;return;}
+  const rows=r.data||[];
+  html+=`<section class="panel"><h3>${j.label} (${rows.length})</h3>${rows.map(x=>`<button type="button" class="workspace-row" data-search-table="${j.table}" data-search-id="${wsEsc(x[j.id])}" style="width:100%;text-align:right;color:inherit;cursor:pointer"><div><b>${wsEsc(x[j.title]||x.id)}</b><small>${wsEsc(Object.entries(x).filter(([k])=>k!=='id').map(([k,v])=>k+': '+String(v??'—')).join(' · '))}</small></div><span class="muted">فتح السجل ←</span></button>`).join('')||'<p class="muted">لا توجد نتائج.</p>'}</section>`;
  });
- $('workspaceList').innerHTML=html;wsMsg('انتهى البحث.');
+ $('workspaceList').innerHTML=html||'<div class="workspace-message">لا توجد نتائج.</div>';
+ $('workspaceList').onclick=async ev=>{
+  const b=ev.target.closest('[data-search-table]');if(!b)return;
+  const j=results.find(x=>x.table===b.dataset.searchTable);if(!j)return;
+  const row=(j.result.data||[]).find(x=>String(x[j.id])===b.dataset.searchId);if(!row)return;
+  const form=$('workspaceForm');const fields=Object.entries(row).map(([k,v])=>`<div class="workspace-detail-field"><small>${wsEsc(k)}</small><b>${wsEsc(v===null?'—':typeof v==='object'?JSON.stringify(v):String(v))}</b></div>`).join('');
+  form.hidden=false;form.className='workspace-detail-overlay';form.innerHTML=`<div class="workspace-detail-card" role="dialog" aria-modal="true"><div class="head"><h3>تفاصيل ${wsEsc(j.label)}</h3><button id="searchCloseDetails">إغلاق ×</button></div><div class="workspace-detail-grid">${fields}</div></div>`;
+  const close=()=>{form.hidden=true;form.className='panel';};$('searchCloseDetails').onclick=close;form.onclick=e=>{if(e.target===form)close();};
+ };
+ wsMsg('اكتمل البحث في الأقسام المتاحة. النتائج قابلة للضغط لعرض التفاصيل.');
 }
 
 function note(s,k=''){const e=$('loginMessage');e.textContent=s;e.className=k;}
@@ -503,11 +519,11 @@ async function loadWorkspaceTable(cfg){
 }
 function workspaceEditForm(cfg,row){
  const isCategory=cfg.table==='platform_control_categories',isStoreCat=cfg.table==='vendor_store_categories';
- const fields=isCategory?[['name','اسم التصنيف'],['icon','الأيقونة'],['sort_order','ترتيب العرض'],['is_active','مفعل true/false']]:isStoreCat?[['name','اسم التصنيف'],['store_id','معرّف المتجر'],['sort_order','ترتيب العرض']]:[];
+ const fields=isCategory?[['name','اسم التصنيف'],['icon','الشعار (رابط صورة أو رمز تعبيري)'],['sort_order','ترتيب العرض'],['is_active','مفعل true/false']]:isStoreCat?[['name','اسم التصنيف'],['store_id','معرّف المتجر'],['sort_order','ترتيب العرض']]:[];
  if(!fields.length){window.toast('لا توجد حقول تحرير آمنة معروفة لهذا الجدول.');return;}
  const form=$('workspaceForm');form.hidden=false;form.innerHTML=`<h3>${row?'تعديل تصنيف':'إضافة تصنيف'}</h3><div class="workspace-form">${fields.map(([k,l])=>`<label>${l}<input id="wsf_${k}" value="${wsEsc(row?.[k]??(k==='is_active'?'true':k==='icon'?'🎮':''))}"></label>`).join('')}</div><button class="primary" id="wsSave">حفظ</button> <button id="wsCancel">إلغاء</button><span id="wsFormMsg"></span>`;
  $('wsCancel').onclick=()=>form.hidden=true;
- $('wsSave').onclick=async()=>{const payload={};for(const [k] of fields){let v=$('wsf_'+k).value.trim();if(k==='sort_order')v=Number(v||0);if(k==='is_active')v=v==='true';payload[k]=v;}if(isCategory)payload.section='ads';if(isStoreCat&&!payload.store_id){$('wsFormMsg').textContent='معرّف المتجر مطلوب.';return;}
+ $('wsSave').onclick=async()=>{const payload={};for(const [k] of fields){let v=$('wsf_'+k).value.trim();if(k==='sort_order')v=Number(v||0);if(k==='is_active')v=v==='true';payload[k]=v;}if(isCategory)payload.section=cfg.filter?.section||'ads';if(isStoreCat&&!payload.store_id){$('wsFormMsg').textContent='معرّف المتجر مطلوب.';return;}
   let result;
   if(isStoreCat){
    const {data:store,error:storeError}=await db.from('vendor_stores').select('owner_id').eq('id',payload.store_id).maybeSingle();
@@ -599,8 +615,11 @@ async function loadVendorStoreCategories(){
 async function loadWorkspaceBanner(){
  const {data,error}=await db.from('marketplace_home_banner').select('id,title,subtitle,button_text,target_page,image_url').eq('id',1).maybeSingle();if(error){wsMsg('تعذر قراءة البنر: '+error.message);return;}
  const r=data||{};const form=$('workspaceForm');form.hidden=false;
- form.innerHTML=`<h3>إعدادات البنر الرئيسي</h3><div class="workspace-form"><label>العنوان<input id="wsBannerTitle" value="${wsEsc(r.title||'')}"></label><label>العنوان الفرعي<input id="wsBannerSubtitle" value="${wsEsc(r.subtitle||'')}"></label><label>نص الزر<input id="wsBannerButton" value="${wsEsc(r.button_text||'')}"></label><label>وجهة الزر<input id="wsBannerTarget" value="${wsEsc(r.target_page||'vendors')}"></label><label class="wide">رابط صورة البنر<input id="wsBannerImage" value="${wsEsc(r.image_url||'')}"></label></div><button class="primary" id="wsBannerSave">حفظ وتحديث الواجهة</button><span id="wsBannerMsg"></span>`;
- $('wsBannerSave').onclick=async()=>{const row={id:1,title:$('wsBannerTitle').value.trim(),subtitle:$('wsBannerSubtitle').value.trim(),button_text:$('wsBannerButton').value.trim(),target_page:$('wsBannerTarget').value.trim(),image_url:$('wsBannerImage').value.trim()};const {error}=await db.from('marketplace_home_banner').upsert(row,{onConflict:'id'});$('wsBannerMsg').textContent=error?'تعذر الحفظ: '+error.message:'تم حفظ البنر في قاعدة البيانات.';};
+ form.innerHTML=`<h3>إدارة البنر الرئيسي للسوق</h3><p class="muted">العنوان والوصف والزر والصورة نفسها التي تظهر للزوار في واجهة السوق.</p><div class="workspace-form"><label>العنوان<input id="wsBannerTitle" value="${wsEsc(r.title||'')}"></label><label>النص أسفل العنوان<input id="wsBannerSubtitle" value="${wsEsc(r.subtitle||'')}"></label><label>نص زر البنر<input id="wsBannerButton" value="${wsEsc(r.button_text||'')}"></label><label>وجهة الزر<input id="wsBannerTarget" value="${wsEsc(r.target_page||'vendors')}"></label><label class="wide">رابط صورة البنر<input id="wsBannerImage" value="${wsEsc(r.image_url||'')}" placeholder="سيُملأ تلقائياً بعد رفع الصورة"></label><label class="wide">رفع صورة البنر (PNG / JPG / WebP)<input id="wsBannerFile" type="file" accept="image/png,image/jpeg,image/webp"></label></div><div id="wsBannerPreview" class="panel" style="min-height:100px;display:grid;place-items:center">${r.image_url?`<img src="${wsEsc(r.image_url)}" alt="معاينة البنر" style="width:100%;max-height:220px;object-fit:cover;border-radius:12px">`:'اختر صورة لمعاينتها'}</div><button class="primary" id="wsBannerSave">حفظ وتفعيل البنر</button><span id="wsBannerMsg" role="status"></span>`;
+ let bannerFile=null;
+ $('wsBannerFile').onchange=e=>{bannerFile=e.target.files?.[0]||null;const preview=$('wsBannerPreview');if(!bannerFile){preview.textContent='اختر صورة لمعاينتها';return;}if(!/^image\/(png|jpeg|webp)$/.test(bannerFile.type)||bannerFile.size>5*1024*1024){bannerFile=null;e.target.value='';preview.textContent='الصورة يجب أن تكون PNG أو JPG أو WebP وبحجم لا يتجاوز 5 ميجابايت.';return;}const reader=new FileReader();reader.onload=()=>preview.innerHTML=`<img src="${reader.result}" alt="معاينة البنر" style="width:100%;max-height:220px;object-fit:cover;border-radius:12px">`;reader.readAsDataURL(bannerFile);};
+ $('wsBannerSave').onclick=async()=>{const btn=$('wsBannerSave'),msg=$('wsBannerMsg');btn.disabled=true;btn.textContent='جارٍ الحفظ...';try{let imageUrl=$('wsBannerImage').value.trim();if(bannerFile){const ext=(bannerFile.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'');const path='home-banner/'+Date.now()+'-'+Math.random().toString(36).slice(2,8)+'.'+ext;const {error:upErr}=await db.storage.from('marketplace-assets').upload(path,bannerFile,{upsert:false,contentType:bannerFile.type});if(upErr)throw upErr;const {data:publicData}=db.storage.from('marketplace-assets').getPublicUrl(path);imageUrl=publicData?.publicUrl||'';if(!imageUrl)throw new Error('تعذر الحصول على رابط الصورة');}
+ const row={id:1,title:$('wsBannerTitle').value.trim(),subtitle:$('wsBannerSubtitle').value.trim(),button_text:$('wsBannerButton').value.trim(),target_page:$('wsBannerTarget').value.trim(),image_url:imageUrl};const {error}=await db.from('marketplace_home_banner').upsert(row,{onConflict:'id'});if(error)throw error;$('wsBannerImage').value=imageUrl;msg.textContent='تم حفظ البنر وتفعيله. حدّث واجهة السوق لمعاينة التغيير.';window.toast?.('تم حفظ البنر');}catch(err){msg.textContent='تعذر الحفظ: '+err.message;}finally{btn.disabled=false;btn.textContent='حفظ وتفعيل البنر';}};
  wsMsg('تم تحميل إعدادات البنر.');
 }
 async function loadWorkspaceDoctor(){
