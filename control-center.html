@@ -402,6 +402,11 @@ async function openVendorRequest(requestId){
   const docHtml=docs.length?docs.map((d,i)=>`<div class="vendor-admin-doc"><div><b>${d.document_type==='freelance_document'?'وثيقة العمل الحر':d.document_type==='commercial_registration'?'السجل التجاري':'مستند داعم'}</b><div class="vendor-admin-meta">${esc(d.mime_type||'ملف')} · ${Math.ceil(Number(d.file_size||0)/1024).toLocaleString('ar-SA')} كيلوبايت</div></div><button class="vendor-admin-btn" data-vendor-doc="${i}">فتح المستند</button></div>`).join(''):'<div class="vendor-admin-empty">لا توجد مستندات مسجلة لهذا الطلب.</div>';
   box.innerHTML=`<div class="head"><div><h3 style="margin:0">ملف التاجر: ${esc(r.legal_name||'—')}</h3><p class="vendor-admin-meta">${esc(vendorLabels[r.status]||r.status||'—')} · ${esc(r.id)}</p></div><button class="vendor-admin-btn" id="vendorAdminCloseDetail">إغلاق الملف</button></div>
   <div class="vendor-admin-detail-grid"><div class="vendor-admin-field"><small>الاسم النظامي</small>${esc(r.legal_name||'—')}</div><div class="vendor-admin-field"><small>نوع التاجر</small>${r.merchant_type==='establishment'?'مؤسسة / شركة':'فرد'}</div><div class="vendor-admin-field"><small>معرّف حساب التاجر</small>${esc(r.user_id)}</div><div class="vendor-admin-field"><small>المدينة</small>${esc(r.city||'—')}</div><div class="vendor-admin-field"><small>حالة الطلب</small>${esc(vendorLabels[r.status]||r.status||'—')}</div><div class="vendor-admin-field"><small>تاريخ التقديم</small>${esc(r.submitted_at||'—')}</div></div>
+  <h3 style="margin:18px 0 8px">مركز التحقق الآلي</h3>
+  <div class="vendor-admin-field" style="margin-bottom:12px">
+   <div style="display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap"><div><b>فحص جاهزية جهات التحقق</b><div class="vendor-admin-meta">يفحص حالة إعداد المزودين المسجلين في المنصة، ولا ينفذ تحققًا رسميًا ما لم يكن التكامل الفعلي مفعّلًا.</div></div><button class="vendor-admin-btn primary" id="vendorRunAutoCheck" type="button">بدء التحقق الآلي</button></div>
+   <div id="vendorAutoCheckResult" class="vendor-admin-meta" style="margin-top:12px" aria-live="polite">لم يبدأ فحص جاهزية الربط.</div>
+  </div>
   <h3 style="margin:18px 0 8px">نتائج التحقق الآلي</h3>${checksHtml}
   <div class="vendor-admin-detail-grid"><div class="vendor-admin-field"><small>رقم شهادة التجارة الإلكترونية</small>${esc(r.ecommerce_certificate_number||'—')}</div><div class="vendor-admin-field"><small>رابط المتجر الإلكتروني</small>${esc(r.ecommerce_store_url||'—')}</div><div class="vendor-admin-field"><small>نطاق المتجر</small>${esc(r.business_domain||'—')}</div></div>
   <h3 style="margin:18px 0 8px">المستندات المرفوعة</h3>${docHtml}${evidenceHtml}
@@ -409,6 +414,33 @@ async function openVendorRequest(requestId){
   <h3 style="margin:18px 0 8px">قرار المراجعة</h3><label for="vendorAdminDecision">الحالة الجديدة</label><select id="vendorAdminDecision" style="width:100%"><option value="under_review">قيد المراجعة</option><option value="verified">اعتماد التوثيق</option><option value="rejected">رفض الطلب</option><option value="needs_more_info">طلب استكمال المستندات</option></select><label for="vendorAdminReviewerNote" style="margin-top:10px">ملاحظة التاجر / سبب القرار</label><textarea id="vendorAdminReviewerNote" class="vendor-admin-note" placeholder="اكتب سبب الرفض أو المطلوب استكماله أو ملاحظة المراجعة...">${esc(r.reviewer_note||r.rejection_reason||'')}</textarea><div class="vendor-admin-actions"><button class="vendor-admin-btn primary" id="vendorAdminSaveDecision">حفظ قرار المراجعة</button><span id="vendorAdminDecisionMsg" class="vendor-admin-meta"></span></div>`;
   box.querySelector('#vendorAdminDecision').value=['under_review','verified','rejected','needs_more_info'].includes(r.status)?r.status:'under_review';
   box.querySelector('#vendorAdminCloseDetail').addEventListener('click',()=>box.hidden=true);
+  box.querySelector('#vendorRunAutoCheck').addEventListener('click',async ev=>{
+   const btn=ev.currentTarget,out=box.querySelector('#vendorAutoCheckResult');
+   btn.disabled=true;out.textContent='جارٍ فحص جاهزية مزودي التحقق...';
+   try{
+    const {data,error}=await db.from('verification_provider_registry').select('provider_key,provider_name,connection_status,capabilities,last_tested_at').order('provider_name');
+    if(error)throw error;
+    const providers=data||[];
+    const providerFor={
+     identity:['nafath'],
+     commercial_registration:['commerce'],
+     freelance_document:['commerce'],
+     ecommerce_certificate:['commerce'],
+     bank_account:['lean','tarabut','spare']
+    };
+    const relevant=r.merchant_type==='establishment'?['identity','commercial_registration','ecommerce_certificate','bank_account']:['identity','freelance_document','ecommerce_certificate','bank_account'];
+    const labels={identity:'الهوية الوطنية / الإقامة',commercial_registration:'السجل التجاري',freelance_document:'وثيقة العمل الحر',ecommerce_certificate:'شهادة توثيق التجارة الإلكترونية',bank_account:'الحساب البنكي'};
+    const rows=relevant.map(type=>{
+     const matches=providers.filter(p=>providerFor[type].includes(p.provider_key));
+     const connected=matches.filter(p=>p.connection_status==='connected');
+     const sandbox=matches.filter(p=>p.connection_status==='sandbox');
+     const state=connected.length?'المزود معلن كمتصل — يلزم اختبار موصل API قبل التحقق':sandbox.length?'بيئة تجريبية — لا تعتمد نتائجها':'غير مربوط';
+     return `<div style="padding:8px 0;border-bottom:1px solid #294c73"><b>${labels[type]}</b><div>${state}</div><small>${matches.length?matches.map(p=>esc(p.provider_name)+' ('+esc(p.connection_status)+')').join('، '):'لا يوجد مزود مسجل لهذا الفحص'}</small></div>`;
+    }).join('');
+    out.innerHTML=`<div><b>اكتمل فحص الجاهزية.</b><div style="margin-top:8px">${rows}</div><p style="margin:10px 0 0;color:#ffc86b">تنبيه: هذا فحص إعداد واتصال مسجل فقط، وليس تحققًا من هوية التاجر أو مستنداته. لم يتم تغيير أي حالة إلى «تم التحقق» ولم يتم تعديل قرار الطلب.</p></div>`;
+   }catch(err){out.textContent='تعذر فحص جاهزية المزودين: '+(err?.message||String(err));}
+   finally{btn.disabled=false;}
+  });
   box.querySelectorAll('[data-vendor-doc]').forEach(btn=>btn.addEventListener('click',async()=>{
    const d=docs[Number(btn.dataset.vendorDoc)];btn.disabled=true;
    try{const {data,error}=await db.storage.from('vendor-verification-private').createSignedUrl(d.storage_path,300);if(error)throw error;if(!data?.signedUrl)throw Error('لم يتم إنشاء رابط آمن للمستند.');window.open(data.signedUrl,'_blank','noopener,noreferrer');}
