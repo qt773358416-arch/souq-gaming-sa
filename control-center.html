@@ -110,6 +110,12 @@ body.admin-menu-open #adminSideMenu{right:0!important;visibility:visible}
  #adminMenuBackdrop{inset:66px 0 0}
 }
 
+/* V6.3: strict route isolation — homepage content is never appended below a section */
+#dashboard.section-open>main> :not(#adminWorkspace):not(#vendorAdminView){display:none!important;visibility:hidden!important;}
+#dashboard.section-open>main>#adminWorkspace.active{display:block!important;visibility:visible!important;}
+#dashboard.section-open>main>#vendorAdminView.active{display:block!important;visibility:visible!important;}
+#dashboard.section-open>main>#adminWorkspace:not(.active),
+#dashboard.section-open>main>#vendorAdminView:not(.active){display:none!important;}
 /* V6.2: enforce true single-screen section isolation */
 .layout.section-open>main>*{display:none!important}
 .layout.section-open>main>.admin-workspace.active{display:block!important}
@@ -380,9 +386,9 @@ function showVendorAdmin(){
  loadVendorRequests();
 }
 function hideVendorAdmin(){
- $('vendorAdminView').classList.remove('active');$('adminWorkspace').classList.remove('active');
- $('dashboard').classList.remove('section-open');
- [...$('dashboard').querySelector('main').children].forEach(el=>{el.hidden=false;});
+ // إخفاء شاشة التوثيق فقط؛ لا تلمس وضع عزل القسم الحالي.
+ // إزالة section-open هنا كانت تلغي عزل الصفحة عند كل انتقال إلى قسم عادي.
+ $('vendorAdminView').classList.remove('active');
  $('vendorAdminDetail').hidden=true;
 }
 $('vendorAdminRefresh').addEventListener('click',loadVendorRequests);
