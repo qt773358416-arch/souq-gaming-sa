@@ -25,6 +25,7 @@
 
 
 .hidden{display:none!important}
+[hidden]{display:none!important}
 
 .admin-workspace{display:none;min-height:70vh}.admin-workspace.active{display:block}
 .admin-workspace .workspace-toolbar{display:flex;gap:9px;flex-wrap:wrap;margin:14px 0}
@@ -87,7 +88,12 @@ body.admin-menu-open #adminMenuBackdrop{display:block}
 #adminSideMenu{background:#061326!important;opacity:1!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;box-shadow:-22px 0 45px rgba(0,0,0,.55);z-index:1100}
 body.admin-menu-open #adminSideMenu{right:0!important;visibility:visible}
 .layout.section-open{grid-template-columns:minmax(0,1fr)!important}
-.layout.section-open>main{grid-column:1/-1;width:100%;max-width:1500px;margin:0 auto;padding:18px clamp(12px,2vw,28px)}.layout.section-open main>.admin-workspace.active{display:block!important}.layout.section-open main>.admin-workspace.active~*{display:none!important}
+.layout.section-open>main{grid-column:1/-1;width:100%;max-width:1500px;margin:0 auto;padding:18px clamp(12px,2vw,28px)}
+/* Hard isolation: while a workspace is open, only the selected workspace (or vendor verification view) may render. */
+.layout.section-open>main>:not(#adminWorkspace):not(#vendorAdminView){display:none!important}
+.layout.section-open>main>#adminWorkspace.active{display:block!important}
+.layout.section-open>main>#vendorAdminView.active{display:block!important}
+.layout.section-open>main>#adminWorkspace:not(.active),.layout.section-open>main>#vendorAdminView:not(.active){display:none!important}
 .layout.section-open>#adminSideMenu{display:none}
 .layout.section-open>#adminSideMenu.open{display:block}
 .admin-workspace.active{display:block!important;width:100%;max-width:100%;min-height:calc(100dvh - 100px);margin:0 auto;padding:4px 0 36px}
@@ -379,7 +385,7 @@ const workspaceConfigs={
  'منتجات متاجر التجار':{desc:'منتجات متاجر التجار المسجلة في vendor_store_products.',table:'vendor_store_products',select:'id,store_id,title,category,price,stock_quantity,reserved_quantity,product_type,is_active,created_at',order:'created_at',actions:['toggleProduct']},
  'بلاغات الإعلانات':{desc:'البلاغات المرسلة على إعلانات الأفراد.',table:'ad_reports',select:'id,ad_id,reporter_id,reason,details'},
  'التقييمات والمراجعات':{desc:'تقييمات البائعين المسجلة على الإعلانات.',table:'seller_reviews',select:'id,ad_id,seller_id,reviewer_id,rating,comment,created_at',order:'created_at'},
- 'المجتمع والمنشورات':{desc:'منشورات المجتمع العامة.',table:'public_posts',select:'id,user_id,author_name,body,created_at',order:'created_at',actions:['deletePost']},
+ 'المجتمع والمنشورات':{desc:'منشورات المجتمع العامة.',table:'community_posts',select:'id,author_id,body,created_at',order:'created_at',actions:[]},
  'منشورات القناة':{desc:'التحديثات المنشورة في قناة المنصة.',table:'channel_posts',select:'id,body,media_url,media_type,author_id,created_at',order:'created_at',actions:['deletePost']},
  'الإشعارات':{desc:'سجل الإشعارات المرسلة إلى حسابات المستخدمين.',table:'notifications',select:'id,user_id,title,body,kind,target_url,read_at,created_at',order:'created_at'},
  'الرسائل':{desc:'قائمة المحادثات الخاصة المرتبطة بإعلانات المنصة.',table:'conversations',select:'id,ad_id,buyer_id,seller_id,created_at',order:'created_at'}
@@ -474,7 +480,7 @@ async function workspaceAction(cfg,row,action){
  if(action==='toggleProduct'&&cfg.table==='vendor_store_products')patch={is_active:!row.is_active,updated_at:new Date().toISOString()};
  if(action==='edit'){workspaceEditForm(cfg,row);return;}
  if(action==='deleteAd'&&cfg.table==='ads'){if(!confirm('حذف الإعلان نهائياً؟'))return;const {error}=await db.from('ads').delete().eq('id',row.id);if(error)wsMsg('تعذر حذف الإعلان: '+error.message);else await loadWorkspaceTable(cfg);return;}
- if(action==='delete'&&cfg.table==='platform_control_categories'||action==='delete'&&cfg.table==='vendor_store_categories'||action==='deletePost'&&(cfg.table==='public_posts'||cfg.table==='channel_posts')){
+ if(action==='delete'&&cfg.table==='platform_control_categories'||action==='delete'&&cfg.table==='vendor_store_categories'||action==='deletePost'&&cfg.table==='channel_posts'){
   if(!confirm('هل تريد حذف هذا السجل نهائياً؟'))return;const {error}=await db.from(cfg.table).delete().eq('id',row.id);if(error)wsMsg('تعذر الحذف: '+error.message);else await loadWorkspaceTable(cfg);return;
  }
  if(!patch){window.toast('هذا الإجراء غير معرف لهذا النوع من السجلات.');return;}
@@ -678,7 +684,7 @@ async function loadReportsWorkspace(){
  wsMsg('تم تحميل البلاغات. مراجعة البلاغات وحفظ نتائجها تتم من شاشة دكتور القيمنق عند توفر حالة البلاغ.');
 }
 async function loadAnalyticsWorkspace(){
- const tables=['profiles','ads','vendor_stores','vendor_store_products','vendor_store_orders','store_orders','vendor_orders','ad_reports','seller_reviews','public_posts'];
+ const tables=['profiles','ads','vendor_stores','vendor_store_products','store_orders','vendor_orders','ad_reports','seller_reviews','community_posts'];
  const counts=await Promise.all(tables.map(async t=>{try{return {table:t,count:await countRows(t)};}catch(e){return {table:t,error:e.message};}}));
  $('workspaceList').innerHTML=`<div class="grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px">${counts.map(x=>`<div class="panel"><small>${wsEsc(x.table)}</small><h2>${x.error?'—':Number(x.count).toLocaleString('ar-SA')}</h2><small>${x.error?wsEsc(x.error):'سجل متاح وفق صلاحيات الحساب'}</small></div>`).join('')}</div>`;
  wsMsg('هذه أعداد السجلات التي أمكن قراءتها من قاعدة البيانات في وقت التحديث.');
