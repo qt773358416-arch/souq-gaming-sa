@@ -434,7 +434,7 @@ $('vendorAdminBack').addEventListener('click',()=>window.go('الرئيسية'))
 // مركز إدارة المنصة — الأقسام مربوطة بالجداول المثبتة في ملف واجهة السوق الحالي.
 const workspaceConfigs={
  'المستخدمون':{desc:'ملفات المستخدمين العامة المسجلة في المنصة.',table:'profiles',select:'id,display_name,phone,city,created_at',order:'created_at'},
- 'إعلانات الأفراد':{desc:'إدارة الإعلانات: مراجعة ونشر وأرشفة وحذف.',table:'ads',select:'id,title,price,category,city,status,seller_id,created_at',order:'created_at',actions:['publish','review','archive','deleteAd']},
+ 'إعلانات الأفراد':{desc:'إدارة الإعلانات: مراجعة ونشر وأرشفة وحذف.',table:'ads',select:'id,title,description,price,category,city,status,seller_id,seller_name,seller_phone,image_urls,video_url,item_condition,created_at',order:'created_at',actions:['publish','review','archive','deleteAd']},
  'إدارة صفحات المتاجر':{desc:'إدارة صفحات المتاجر وحالة ظهورها في دليل المتاجر.',table:'vendor_stores',select:'id,store_name,slug,description,city,category,logo_url,is_featured,status,created_at',order:'created_at',actions:['approve','suspend','feature']},
  'تصنيفات البحث للأفراد':{desc:'التصنيفات التي تقرؤها واجهة إعلانات الأفراد.',table:'platform_control_categories',select:'id,name,icon,section,sort_order,is_active',order:'sort_order',filter:{section:'ads'},actions:['edit','toggle','delete'],create:true},
  'تصنيفات المتاجر':{desc:'إدارة تصنيفات كل متجر على حدة: إضافة وتعديل وحذف.',table:'vendor_store_categories',select:'id,store_id,name,sort_order',order:'sort_order',actions:[],create:true},
@@ -700,15 +700,43 @@ async function loadWorkspaceTraderControls(){
  wsMsg('هذه الإعدادات تقرؤها واجهة المنصة؛ تظهر التغييرات عند تحديث الواجهة.');
 }
 async function loadPlatformSettings(){
- const [p,e,t]=await Promise.all([db.from('platform_control_settings').select('setting_key,setting_value').order('setting_key'),db.from('platform_control_elements').select('element_key,element_value,is_visible').order('element_key'),db.from('site_settings').select('key,value').order('key')]);
- const errors=[p.error,e.error,t.error].filter(Boolean);if(errors.length){wsMsg('تعذر تحميل بعض الإعدادات: '+errors.map(x=>x.message).join(' | '));return;}
- $('workspaceList').innerHTML=`<div class="panel"><h3>إعدادات المنصة المشتركة</h3>${(p.data||[]).map(x=>`<div class="workspace-row"><div><b>${wsEsc(x.setting_key)}</b><small>${wsEsc(JSON.stringify(x.setting_value))}</small></div><button data-setting="${wsEsc(x.setting_key)}">تعديل JSON</button></div>`).join('')||'<p class="muted">لا توجد إعدادات.</p>'}</div><div class="panel"><h3>إعدادات الموقع العامة</h3>${(t.data||[]).map(x=>`<div class="workspace-row"><div><b>${wsEsc(x.key)}</b><small>${wsEsc(JSON.stringify(x.value))}</small></div><button data-site-key="${wsEsc(x.key)}">تعديل القيمة</button></div>`).join('')||'<p class="muted">لا توجد إعدادات عامة.</p>'}</div><div class="panel"><h3>عناصر الواجهة</h3>${(e.data||[]).map(x=>`<div class="workspace-row"><div><b>${wsEsc(x.element_key)}</b><small>${wsEsc(JSON.stringify(x.element_value))} · ${x.is_visible?'ظاهر':'مخفي'}</small></div><button data-element="${wsEsc(x.element_key)}" data-visible="${!x.is_visible}">${x.is_visible?'إخفاء':'إظهار'}</button></div>`).join('')||'<p class="muted">لا توجد عناصر.</p>'}</div>`;
- $('workspaceList').onclick=async ev=>{const b=ev.target.closest('button');if(!b)return;
-  if(b.dataset.setting){const r=(p.data||[]).find(x=>x.setting_key===b.dataset.setting);const raw=prompt('قيمة JSON الجديدة',JSON.stringify(r.setting_value));if(raw===null)return;let value;try{value=JSON.parse(raw);}catch{wsMsg('القيمة ليست JSON صالحاً.');return;}const {error}=await db.from('platform_control_settings').update({setting_value:value}).eq('setting_key',r.setting_key);wsMsg(error?'تعذر الحفظ: '+error.message:'تم حفظ الإعداد.');}
-  else if(b.dataset.siteKey){const r=(t.data||[]).find(x=>x.key===b.dataset.siteKey);const raw=prompt('قيمة JSON الجديدة',JSON.stringify(r.value));if(raw===null)return;let value;try{value=JSON.parse(raw);}catch{wsMsg('القيمة ليست JSON صالحاً.');return;}const {error}=await db.from('site_settings').update({value}).eq('key',r.key);wsMsg(error?'تعذر الحفظ: '+error.message:'تم حفظ إعداد الموقع.');}
-  else if(b.dataset.element){const {error}=await db.from('platform_control_elements').update({is_visible:b.dataset.visible==='true'}).eq('element_key',b.dataset.element);wsMsg(error?'تعذر التحديث: '+error.message:'تم تحديث ظهور العنصر.');}
+ const [p,e,t]=await Promise.all([
+  db.from('platform_control_settings').select('setting_key,setting_value').order('setting_key'),
+  db.from('platform_control_elements').select('element_key,element_value,is_visible').order('element_key'),
+  db.from('site_settings').select('key,value').order('key')
+ ]);
+ const errors=[p.error,e.error,t.error].filter(Boolean);
+ if(errors.length){wsMsg('تعذر تحميل بعض الإعدادات: '+errors.map(x=>x.message).join(' | '));return;}
+ const all=[...(t.data||[]).map(x=>({kind:'site',key:x.key,value:x.value})),...(p.data||[]).map(x=>({kind:'platform',key:x.setting_key,value:x.setting_value}))];
+ const label=k=>({site_name:'اسم المنصة',site_description:'وصف المنصة',about:'نبذة عنا',about_us:'نبذة عنا',support_email:'بريد الدعم',support_phone:'رقم الدعم',contact_phone:'رقم التواصل',whatsapp:'واتساب',footer_text:'نص أسفل الصفحة',footer_about:'نبذة أسفل الصفحة',terms_url:'رابط الشروط',privacy_url:'رابط الخصوصية',logo_url:'رابط الشعار'})[k]||k.replace(/[_-]/g,' ');
+ const groups=[
+  {title:'هوية المنصة ومعلوماتها الأساسية',match:/name|description|about|logo|brand|site_/i},
+  {title:'التواصل والمساعدة والدعم',match:/support|contact|phone|email|whatsapp|help/i},
+  {title:'أزرار وروابط أسفل الواجهة',match:/footer|terms|privacy|social|bottom|link/i},
+  {title:'إعدادات أخرى',match:/.*/}
+ ];
+ let html='';
+ groups.forEach(g=>{
+  const rows=all.filter(x=>g.title==='إعدادات أخرى'? !groups.slice(0,3).some(y=>y.match.test(x.key)):g.match.test(x.key));
+  if(!rows.length)return;
+  html+=`<section class="panel"><h3>${g.title}</h3>${rows.map((r,i)=>`<form class="workspace-setting-form" data-setting-kind="${r.kind}" data-setting-key="${wsEsc(r.key)}"><label>${wsEsc(label(r.key))}<small class="muted">${wsEsc(r.key)}</small><textarea name="value" rows="${typeof r.value==='object'&&r.value!==null?5:2}">${wsEsc(typeof r.value==='string'?r.value:JSON.stringify(r.value,null,2))}</textarea></label><button class="primary" type="submit">حفظ التعديل</button><span class="muted" data-save-status></span></form>`).join('')}</section>`;
+ });
+ html+=`<section class="panel"><h3>عناصر الواجهة السفلية والظهور</h3><p class="muted">تتحكم هذه القائمة في إظهار عناصر الواجهة التي سجلت مسبقاً في قاعدة البيانات.</p>${(e.data||[]).map(x=>`<div class="workspace-row"><div><b>${wsEsc(label(x.element_key))}</b><small>${wsEsc(x.element_key)} · ${x.is_visible?'ظاهر':'مخفي'}</small></div><button data-element="${wsEsc(x.element_key)}" data-visible="${!x.is_visible}">${x.is_visible?'إخفاء':'إظهار'}</button></div>`).join('')||'<p class="muted">لا توجد عناصر واجهة مسجلة.</p>'}</section>`;
+ $('workspaceList').innerHTML=html||'<div class="workspace-message">لا توجد إعدادات مسجلة.</div>';
+ $('workspaceList').onsubmit=async ev=>{
+  const form=ev.target.closest('.workspace-setting-form');if(!form)return;ev.preventDefault();
+  const btn=form.querySelector('button[type=submit]'),status=form.querySelector('[data-save-status]'),raw=form.elements.value.value;
+  btn.disabled=true;btn.textContent='جارٍ الحفظ...';
+  try{
+   let value=raw;try{value=JSON.parse(raw);}catch(e){/* keep ordinary text as text */}
+   const kind=form.dataset.settingKind,key=form.dataset.settingKey;
+   const query=kind==='site'?db.from('site_settings').update({value}).eq('key',key):db.from('platform_control_settings').update({setting_value:value}).eq('setting_key',key);
+   const {error}=await query;if(error)throw error;status.textContent='تم الحفظ';status.style.color='var(--success,#00c99a)';
+  }catch(err){status.textContent='تعذر الحفظ: '+err.message;status.style.color='var(--danger,#ff647c)';}
+  finally{btn.disabled=false;btn.textContent='حفظ التعديل';}
  };
- wsMsg('تم تحميل إعدادات المنصة.');
+ $('workspaceList').onclick=async ev=>{const b=ev.target.closest('[data-element]');if(!b)return;b.disabled=true;const {error}=await db.from('platform_control_elements').update({is_visible:b.dataset.visible==='true'}).eq('element_key',b.dataset.element);if(error)wsMsg('تعذر التحديث: '+error.message);else{b.textContent=b.dataset.visible==='true'?'إخفاء':'إظهار';b.dataset.visible=b.dataset.visible==='true'?'false':'true';wsMsg('تم تحديث ظهور العنصر.');}b.disabled=false;};
+ wsMsg('تم تحميل إعدادات المنصة. القيم تُحفظ في الجداول الموجودة فقط.');
 }
 async function loadMerchantStoresWorkspace(){
  // قائمة المتاجر وملفها؛ نستخدم أعمدة المتجر المؤكدة وعلاقة الطلبات المؤكدة فقط.
