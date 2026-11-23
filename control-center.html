@@ -151,6 +151,7 @@ body.admin-menu-open #adminSideMenu{right:0!important;visibility:visible}
 <button class="nav" data-go="تصنيفات البحث للأفراد"><i>⌕</i>تصنيفات البحث للأفراد</button>
 <button class="nav" data-go="تصنيفات المتاجر"><i>▦</i>تصنيفات المتاجر</button>
 <button class="nav" data-go="منتجات متاجر التجار"><i>🎮</i>منتجات متاجر التجار</button>
+<button class="nav" data-go="أعضاء المتاجر"><i>👥</i>أعضاء المتاجر وصلاحياتهم</button>
 <button class="nav" data-go="إدارة صفحات المتاجر"><i>🏬</i>إدارة صفحات المتاجر</button>
 <button class="nav" data-go="إدارة البنر"><i>🖼</i>إدارة البنر</button>
 <button class="nav" data-go="دكتور القيمنق"><i>🎧</i>دكتور القيمنق</button>
@@ -410,6 +411,7 @@ async function showAdminSection(name){
   if(name==='الطلبات'){await loadAdminOrdersWorkspace();return;}
   if(name==='إدارة صفحات المتاجر'){await loadMerchantStoresWorkspace();return;}
   if(name==='منتجات متاجر التجار'){await loadVendorProductsWorkspace();return;}
+  if(name==='أعضاء المتاجر'){await loadVendorStoreMembersWorkspace();return;}
   if(name==='المدفوعات والمحافظ'){await loadPaymentsWorkspace();return;}
   if(name==='العمولات والتسويات'){await loadCommissionsWorkspace();return;}
   if(name==='البلاغات والمخالفات'){await loadReportsWorkspace();return;}
@@ -678,6 +680,48 @@ async function loadMerchantStoresWorkspace(){
   finally{b.disabled=false;}
  };
  wsMsg(`تم تحميل ${rows.length} متجر. افتح ملف أي متجر لعرض بياناته وطلباته المرتبطة به.`);
+}
+
+async function loadVendorStoreMembersWorkspace(){
+ // يعرض أعضاء المتاجر وفق RLS. سياسة المالك هنا مشروطة بصلاحية employees.manage داخل المتجر.
+ const memberFields='id,store_id,user_id,email,display_name,role,permissions,status,invited_by,accepted_at,created_at,updated_at';
+ const [memberResult,storeResult]=await Promise.all([
+  db.from('vendor_store_members').select(memberFields).order('created_at',{ascending:false}).limit(500),
+  db.from('vendor_stores').select('id,store_name').limit(500)
+ ]);
+ if(memberResult.error){wsMsg('تعذر تحميل أعضاء المتاجر: '+memberResult.error.message+' — تعرض قاعدة البيانات فقط السجلات المسموح بها وفق RLS.');return;}
+ const members=memberResult.data||[];
+ const storeNames=new Map((storeResult.data||[]).map(s=>[String(s.id),s.store_name||s.id]));
+ const permissionLabels={
+  'orders.read':'قراءة الطلبات','finance.read':'قراءة المالية','reports.read':'قراءة التقارير',
+  'store.design':'تصميم المتجر','orders.update':'تحديث الطلبات','products.read':'قراءة المنتجات',
+  'customers.read':'قراءة العملاء','support.manage':'إدارة الدعم','products.manage':'إدارة المنتجات',
+  'shipping.manage':'إدارة الشحن','employees.manage':'إدارة الموظفين'
+ };
+ const statusLabel=v=>({invited:'بانتظار الدعوة',active:'نشط',accepted:'مقبول',suspended:'موقوف',revoked:'ملغي'}[String(v)]||String(v||'—'));
+ $('workspaceToolbar').innerHTML=`<label style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">المتجر <select id="vendorMemberStoreFilter" class="select"><option value="">كل المتاجر المسموح بها</option>${[...new Set(members.map(m=>String(m.store_id)))].map(id=>`<option value="${wsEsc(id)}">${wsEsc(storeNames.get(id)||id)}</option>`).join('')}</select></label><input id="vendorMemberSearch" class="select" type="search" placeholder="ابحث بالبريد أو الاسم أو الدور" style="max-width:290px"><button id="workspaceRefresh">تحديث ↻</button>`;
+ const render=()=>{
+  const storeId=$('vendorMemberStoreFilter').value, term=$('vendorMemberSearch').value.trim().toLowerCase();
+  const rows=members.filter(m=>(!storeId||String(m.store_id)===storeId)&&(!term||[m.email,m.display_name,m.role,m.status].some(v=>String(v||'').toLowerCase().includes(term))));
+  $('workspaceList').innerHTML=rows.map(m=>{
+   const active=Object.entries(m.permissions||{}).filter(([,v])=>v===true).map(([k])=>permissionLabels[k]||k);
+   return `<article class="workspace-row"><div><div class="record-title">${wsEsc(m.display_name||m.email||'عضو بدون اسم')}</div><div class="record-meta"><span class="record-chip">المتجر: ${wsEsc(storeNames.get(String(m.store_id))||m.store_id)}</span><span class="record-chip">البريد: ${wsEsc(m.email)}</span><span class="record-chip">الدور: ${wsEsc(m.role)}</span><span class="record-chip record-status">الحالة: ${wsEsc(statusLabel(m.status))}</span><span class="record-chip">الصلاحيات المفعلة: ${active.length}</span></div></div><div class="workspace-actions"><button type="button" data-vendor-member-detail="${wsEsc(m.id)}">عرض الصلاحيات والتفاصيل</button></div></article>`;
+  }).join('')||'<div class="workspace-message">لا توجد عضويات ظاهرة ضمن صلاحيات الحساب أو لا توجد نتائج مطابقة.</div>';
+  wsMsg(`السجلات الظاهرة وفق RLS: ${rows.length} من ${members.length}. هذه الصفحة للعرض فقط.`);
+ };
+ $('vendorMemberStoreFilter').addEventListener('change',render);$('vendorMemberSearch').addEventListener('input',render);
+ $('workspaceRefresh').onclick=()=>showAdminSection('أعضاء المتاجر');
+ $('workspaceList').onclick=ev=>{
+  const b=ev.target.closest('[data-vendor-member-detail]');if(!b)return;
+  const m=members.find(x=>String(x.id)===b.dataset.vendorMemberDetail);if(!m)return;
+  const permissionRows=Object.entries(m.permissions||{}).map(([key,value])=>`<div class="workspace-detail-field"><small>${wsEsc(permissionLabels[key]||key)}</small><b>${value===true?'مسموح':value===false?'غير مسموح':wsEsc(JSON.stringify(value))}</b></div>`).join('');
+  const labels={id:'معرّف العضوية',store_id:'معرّف المتجر',user_id:'معرّف المستخدم',email:'البريد الإلكتروني',display_name:'اسم العرض',role:'الدور',status:'الحالة',invited_by:'أرسل الدعوة',accepted_at:'تاريخ قبول الدعوة',created_at:'تاريخ الإنشاء',updated_at:'آخر تحديث'};
+  const details=Object.entries(m).filter(([k])=>k!=='permissions').map(([k,v])=>`<div class="workspace-detail-field"><small>${wsEsc(labels[k]||k)}</small><b>${wsEsc(v===null?'—':k.endsWith('_at')?dateLabel(v):String(v))}</b></div>`).join('');
+  const form=$('workspaceForm');form.hidden=false;form.className='panel';form.innerHTML=`<div class="head"><h3>عضو المتجر: ${wsEsc(m.display_name||m.email)}</h3><button type="button" id="vendorMemberClose">إغلاق</button></div><div class="workspace-detail-grid">${details}</div><h3>صلاحيات العضو</h3><div class="workspace-detail-grid">${permissionRows||'<p class="muted">لا توجد صلاحيات مسجلة.</p>'}</div><p class="muted">العرض فقط. تعديل العضوية يتطلب صلاحية employees.manage وسياسات كتابة مؤكدة في جلسة المستخدم.</p>`;
+  $('vendorMemberClose').onclick=()=>{form.hidden=true;form.innerHTML='';};
+ };
+ render();
+ if(storeResult.error)wsMsg(`تم تحميل ${members.length} عضوية. تعذر تحميل أسماء المتاجر (${storeResult.error.message})؛ تظهر معرّفات المتاجر بدلاً منها.`);
 }
 
 async function loadAdminOrdersWorkspace(){
