@@ -21,6 +21,14 @@
 
 /* إدارة التجار والتوثيق */
 .vendor-admin-view{display:none}.vendor-admin-view.active{display:block}.vendor-admin-toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:12px 0}.vendor-admin-toolbar input,.vendor-admin-view textarea,.vendor-admin-view select{background:#0a1a30;color:#edf7ff;border:1px solid #31577d;border-radius:10px;padding:11px;min-width:0}.vendor-admin-toolbar input{flex:1;min-width:180px}.vendor-admin-list{display:grid;gap:10px}.vendor-admin-item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;padding:14px;border:1px solid #28558a;border-radius:13px;background:linear-gradient(145deg,#102341,#07162c)}.vendor-admin-item h4{margin:0 0 6px}.vendor-admin-meta{color:var(--muted);font-size:11px;line-height:1.8}.vendor-admin-actions{display:flex;gap:7px;flex-wrap:wrap}.vendor-admin-btn{border:1px solid #3a6795;background:#132d4d;color:#edf7ff;border-radius:9px;padding:9px 12px;cursor:pointer}.vendor-admin-btn.primary{background:linear-gradient(100deg,#5520a5,#087a9e);border-color:#a855f7}.vendor-admin-btn:disabled{opacity:.5;cursor:wait}.vendor-admin-detail{margin-top:14px;padding:16px;border:1px solid #3572a5;border-radius:14px;background:#091a30}.vendor-admin-detail-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.vendor-admin-field{padding:10px;border:1px solid #23466b;border-radius:10px;background:#0d213b;overflow-wrap:anywhere}.vendor-admin-field small{display:block;color:var(--muted);margin-bottom:5px}.vendor-admin-doc{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid #23466b}.vendor-admin-empty{padding:22px;text-align:center;color:var(--muted);border:1px dashed #31577d;border-radius:12px}.vendor-admin-note{width:100%;min-height:85px;margin:8px 0;resize:vertical}.vendor-admin-status{display:inline-block;padding:4px 8px;border:1px solid #4b6f96;border-radius:20px;color:#b9d7f4;font-size:11px}
+.vendor-admin-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:12px 0}
+.vendor-admin-metric{padding:12px;border:1px solid #28558a;border-radius:12px;background:linear-gradient(145deg,#102341,#07162c)}
+.vendor-admin-metric small{display:block;color:#9bb2ca;font-size:11px}.vendor-admin-metric strong{display:block;font-size:22px;margin-top:5px;color:#edf7ff}
+.vendor-admin-check-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.vendor-admin-check{padding:11px;border:1px solid #294e75;border-radius:10px;background:#0c2039;min-width:0}
+.vendor-admin-check b{display:block;margin-bottom:5px}.vendor-admin-check small{display:block;color:#9bb2ca;line-height:1.7;overflow-wrap:anywhere}
+.vendor-admin-audit{display:grid;gap:7px}.vendor-admin-audit-item{padding:9px 11px;border:1px solid #27496d;border-radius:9px;background:#0d213b;font-size:12px}.vendor-admin-audit-item small{display:block;color:#9bb2ca;margin-top:4px}
+@media(max-width:650px){.vendor-admin-item{grid-template-columns:1fr}.vendor-admin-detail-grid{grid-template-columns:1fr}.vendor-admin-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.vendor-admin-check-grid{grid-template-columns:1fr}}
 @media(max-width:650px){.vendor-admin-item{grid-template-columns:1fr}.vendor-admin-detail-grid{grid-template-columns:1fr}}
 
 
@@ -146,8 +154,9 @@ body.admin-menu-open #adminSideMenu{right:0!important;visibility:visible}
 <button id="loginButton" type="submit">دخول مركز التحكم</button></form><div id="loginMessage" role="status">سجّل الدخول بحساب المدير المعتمد.</div></div></section>
 <div class="layout hidden" id="dashboard"><main>
 <section class="vendor-admin-view" id="vendorAdminView" hidden>
-<div class="head"><div><h2>إدارة التجار والتوثيق</h2><p>مراجعة طلبات التوثيق وفتح ملف كل تاجر ومشاهدة مستنداته.</p></div><button class="vendor-admin-btn" id="vendorAdminBack">العودة للرئيسية</button></div>
+<div class="head"><div><h2>مركز توثيق التجار</h2><p>إدارة طلبات التجار، جاهزية مزودي التحقق، نتائج الفحوص، المستندات، وسجل قرارات المراجعة.</p></div><button class="vendor-admin-btn" id="vendorAdminBack">العودة للرئيسية</button></div>
 <div class="vendor-admin-toolbar"><input id="vendorAdminSearch" placeholder="ابحث بالاسم النظامي أو رقم الطلب أو معرّف الحساب" type="search"/><select id="vendorAdminStatus"><option value="all">كل الطلبات</option><option value="pending">قيد الانتظار</option><option value="under_review">قيد المراجعة</option><option value="verified">موثق</option><option value="rejected">مرفوض</option><option value="needs_more_info">يتطلب استكمالاً</option></select><button class="vendor-admin-btn primary" id="vendorAdminRefresh">تحديث الطلبات</button></div>
+<div class="vendor-admin-metrics" id="vendorAdminMetrics" aria-live="polite"></div>
 <div class="vendor-admin-empty" id="vendorAdminMessage">اضغط «تحديث الطلبات» لعرض الطلبات.</div>
 <div class="vendor-admin-list" id="vendorAdminList"></div>
 <div class="vendor-admin-detail" hidden="" id="vendorAdminDetail"></div>
@@ -162,7 +171,7 @@ body.admin-menu-open #adminSideMenu{right:0!important;visibility:visible}
 <div class="stat stat-link" role="button" tabindex="0" data-go="المدفوعات والمحافظ" aria-label="فتح صفحة المبيعات والمحافظ" style="--c:#00d99a;--t:#064333"><div class="ico">◎</div><div><label>المبيعات المدفوعة خلال الفترة</label><strong id="metricSales">—</strong><span class="up" id="metricRangeSales">آخر 30 يوم</span></div></div></section>
 <section class="row2"><div class="panel"><h3>إحصائيات المنصة <span>▥</span></h3><div class="chart" id="dashboardChart"><p class="muted">جارٍ تحميل الطلبات خلال آخر 7 أيام...</p></div></div>
 <div class="panel"><h3>النشاط المباشر <span style="color:var(--green)">●</span></h3><div class="live" id="dashboardActivity"><p class="muted">جارٍ تحميل آخر أنشطة المنصة...</p></div></div></section>
-<section class="panel quick"><h3>إدارة سريعة <span>ϟ</span></h3><div class="quickgrid"><button data-go="إعلانات الأفراد" style="--c:#b45cff;--t:#291448"><i>＋</i>إدارة الإعلانات</button><button data-go="إدارة صفحات المتاجر" style="--c:#19bfff;--t:#0d3150"><i>▣</i>إدارة المتاجر</button><button data-go="إدارة المستخدمين" style="--c:#ffbd3c;--t:#3b2a13"><i>♙</i>إدارة المستخدمين</button><button data-go="مراجعة البلاغات" style="--c:#ff476f;--t:#401629"><i>⬡</i>مراجعة البلاغات</button><button data-go="اعتماد التجار" style="--c:#00d99a;--t:#073a32"><i>✓</i>اعتماد التجار</button><button data-go="إدارة الطلبات" style="--c:#12c9e8;--t:#073846"><i>🛒</i>إدارة الطلبات</button><button data-go="المدفوعات" style="--c:#f5a623;--t:#3b2b15"><i>◉</i>المدفوعات</button><button data-go="التقارير" style="--c:#a855f7;--t:#291448"><i>▥</i>التقارير</button><button data-go="دكتور القيمنق" style="--c:#00d9a0;--t:#073a32"><i>🎧</i>طلبات المختصين</button><button data-go="إعدادات المالك" style="--c:#ffbd3c;--t:#3b2a13"><i>👑</i>إعدادات المالك</button></div></section>
+<section class="panel quick"><h3>إدارة سريعة <span>ϟ</span></h3><div class="quickgrid"><button data-go="إعلانات الأفراد" style="--c:#b45cff;--t:#291448"><i>＋</i>إدارة الإعلانات</button><button data-go="إدارة صفحات المتاجر" style="--c:#19bfff;--t:#0d3150"><i>▣</i>إدارة المتاجر</button><button data-go="إدارة المستخدمين" style="--c:#ffbd3c;--t:#3b2a13"><i>♙</i>إدارة المستخدمين</button><button data-go="مراجعة البلاغات" style="--c:#ff476f;--t:#401629"><i>⬡</i>مراجعة البلاغات</button><button data-go="مركز توثيق التجار" style="--c:#00d99a;--t:#073a32"><i>✓</i>مركز توثيق التجار</button><button data-go="إدارة الطلبات" style="--c:#12c9e8;--t:#073846"><i>🛒</i>إدارة الطلبات</button><button data-go="المدفوعات" style="--c:#f5a623;--t:#3b2b15"><i>◉</i>المدفوعات</button><button data-go="التقارير" style="--c:#a855f7;--t:#291448"><i>▥</i>التقارير</button><button data-go="دكتور القيمنق" style="--c:#00d9a0;--t:#073a32"><i>🎧</i>طلبات المختصين</button><button data-go="إعدادات المالك" style="--c:#ffbd3c;--t:#3b2a13"><i>👑</i>إعدادات المالك</button></div></section>
 <section class="bottom"><div class="panel"><h3>آخر الإعلانات <span>♢</span></h3><div id="adsData"><p class="muted">جارٍ تحميل أحدث الإعلانات...</p></div></div>
 <div class="panel"><h3>آخر الطلبات <span>🛒</span></h3><div class="tablewrap"><table><thead><tr><th>رقم الطلب</th><th>المشتري</th><th>المتجر</th><th>القيمة</th><th>الحالة</th></tr></thead><tbody id="ordersData"><tr><td colspan="5">بانتظار تحميل الطلبات…</td></tr></tbody></table></div><a class="link" data-go="جميع الطلبات" data-nav-link="true" href="#">عرض جميع الطلبات ←</a></div>
 <div class="panel distribution"><h3>توزيع النشاط <span>◉</span></h3><div class="donutbox"><div class="donut"><strong id="dashboardUserCount">—<small>المستخدمون</small></strong></div><div class="legend"><button class="dashboard-click" data-go="إدارة صفحات المتاجر"><span style="background:#13a9ff"></span>المتاجر</button><button class="dashboard-click" data-go="إعلانات الأفراد"><span style="background:#963ef4"></span>الإعلانات</button><button class="dashboard-click" data-go="الطلبات"><span style="background:#ff9c36"></span>الطلبات</button><button class="dashboard-click" data-go="المدفوعات والمحافظ"><span style="background:#00d9a0"></span>المبيعات المدفوعة</button></div></div></div></section>
@@ -177,7 +186,7 @@ body.admin-menu-open #adminSideMenu{right:0!important;visibility:visible}
 </main><aside class="side" id="adminSideMenu">
 <div class="side-search"><label for="search">البحث في المنصة</label><div class="side-search-row"><input aria-label="البحث في المنصة" id="search" placeholder="مستخدم، إعلان، متجر، طلب..."/><button aria-label="تنفيذ البحث" id="searchSubmit" type="button">⌕</button></div></div>
 <div class="side-tools"><small>أدوات سريعة</small><div class="side-tools-grid"><button class="side-tool" data-go="إعدادات المنصة">⚙ <span>الإعدادات</span></button><button class="side-tool" data-go="الإشعارات">♧ <span>الإشعارات</span></button><button class="side-tool" data-go="الرسائل">✉ <span>الرسائل</span></button><button class="side-tool" data-action="theme">☾ <span>المظهر</span></button><button class="side-tool" id="logoutButton">↪ <span>تسجيل الخروج</span></button><button class="side-tool" data-action="preview">↗ <span>معاينة المنصة</span></button></div></div>
-<small>إدارة المنصة</small><button class="nav active" data-go="الرئيسية"><i>⌂</i>الرئيسية</button><button class="nav" data-go="المستخدمون"><i>♙</i>المستخدمون</button><button class="nav" data-go="التجار والمتاجر"><i>▣</i>طلبات توثيق التجار</button><button class="nav" data-go="الإعلانات"><i>⚑</i>الإعلانات</button>
+<small>إدارة المنصة</small><button class="nav active" data-go="الرئيسية"><i>⌂</i>الرئيسية</button><button class="nav" data-go="المستخدمون"><i>♙</i>المستخدمون</button><button class="nav" data-go="التجار والمتاجر"><i>▣</i>مركز توثيق التجار</button><button class="nav" data-go="الإعلانات"><i>⚑</i>الإعلانات</button>
 <button class="nav" data-go="إعلانات الأفراد"><i>📣</i>إعلانات الأفراد</button>
 <button class="nav" data-go="تصنيفات البحث للأفراد"><i>⌕</i>تصنيفات البحث للأفراد</button>
 <button class="nav" data-go="تصنيفات المتاجر"><i>▦</i>تصنيفات المتاجر</button>
@@ -210,7 +219,7 @@ window.go=function(s,e){
   'الإعلانات':'إعلانات الأفراد','جميع الإعلانات':'إعلانات الأفراد','إضافة إعلان':'إعلانات الأفراد','إدارة الإعلانات':'إعلانات الأفراد',
   'جميع الطلبات':'الطلبات','إدارة الطلبات':'الطلبات','إدارة الطلب':'الطلبات',
   'إضافة متجر':'إدارة صفحات المتاجر','إدارة المتاجر':'إدارة صفحات المتاجر','إدارة المستخدمين':'المستخدمون',
-  'طلبات توثيق التجار':'التجار والمتاجر','اعتماد التجار':'التجار والمتاجر','التجار':'التجار والمتاجر',
+  'طلبات توثيق التجار':'التجار والمتاجر','مركز توثيق التجار':'التجار والمتاجر','اعتماد التجار':'التجار والمتاجر','التجار':'التجار والمتاجر',
   'مراجعة البلاغات':'البلاغات والمخالفات','بلاغات الإعلانات':'البلاغات والمخالفات','البلاغات':'البلاغات والمخالفات',
   'المدفوعات':'المدفوعات والمحافظ','المحافظ':'المدفوعات والمحافظ','التقارير':'التقارير والإحصائيات',
   'المالك':'إعدادات المالك','إعدادات المالك':'إعدادات المالك','الإعدادات':'إعدادات المنصة',
@@ -370,6 +379,8 @@ function vendorAdminMessage(msg){$('vendorAdminMessage').textContent=msg;$('vend
 function renderVendorRequests(){
  const q=($('vendorAdminSearch').value||'').trim().toLowerCase(),st=$('vendorAdminStatus').value;
  const rows=vendorRequestsCache.filter(r=>(st==='all'||r.status===st)&&[r.legal_name,r.id,r.user_id,r.registration_number].some(v=>String(v||'').toLowerCase().includes(q)));
+ const count=status=>vendorRequestsCache.filter(r=>r.status===status).length;
+ const metrics=$('vendorAdminMetrics');if(metrics)metrics.innerHTML=[['إجمالي الطلبات',vendorRequestsCache.length],['بانتظار المراجعة',count('pending')+count('under_review')],['موثق',count('verified')],['مرفوض / استكمال',count('rejected')+count('needs_more_info')]].map(([label,value])=>`<div class="vendor-admin-metric"><small>${label}</small><strong>${Number(value).toLocaleString('ar-SA')}</strong></div>`).join('');
  $('vendorAdminList').innerHTML=rows.map(r=>`<article class="vendor-admin-item"><div><h4>${esc(r.legal_name||'طلب توثيق')} <span class="vendor-admin-status">${esc(vendorLabels[r.status]||r.status||'—')}</span></h4><div class="vendor-admin-meta">${r.merchant_type==='establishment'?'مؤسسة / شركة':'فرد'} · ${esc(r.city||'المدينة غير محددة')}<br>رقم الطلب: ${esc(r.id)}<br>معرّف الحساب: ${esc(r.user_id)}<br>تاريخ التقديم: ${esc(r.submitted_at||'—')}</div></div><div class="vendor-admin-actions"><button class="vendor-admin-btn primary" data-vendor-open="${esc(r.id)}">فتح ملف التاجر</button></div></article>`).join('')||'<div class="vendor-admin-empty">لا توجد طلبات مطابقة.</div>';
 }
 async function loadVendorRequests(){
@@ -382,24 +393,30 @@ async function openVendorRequest(requestId){
  const r=vendorRequestsCache.find(x=>String(x.id)===String(requestId));if(!r)return;
  const box=$('vendorAdminDetail');box.hidden=false;box.innerHTML='<div class="vendor-admin-empty">جارٍ تحميل ملف التاجر والمستندات...</div>';
  try{
-  const [docsRes,evidenceRes,checksRes,storeRes]=await Promise.all([
+  const [docsRes,evidenceRes,checksRes,storeRes,auditRes,providersRes]=await Promise.all([
    db.from('vendor_verification_documents').select('request_id,user_id,document_type,storage_path,mime_type,file_size').eq('request_id',r.id),
    db.from('vendor_verification_evidence').select('request_id,user_id,evidence_type,storage_path,mime_type,file_size').eq('request_id',r.id),
-   db.from('vendor_verification_checks').select('check_type,status,provider_key,provider_reference,checked_at,expires_at,safe_summary').eq('request_id',r.id).order('created_at',{ascending:false}),
-   db.from('vendor_stores').select('*').eq('owner_id',r.user_id).maybeSingle()
+   db.from('vendor_verification_checks').select('id,check_type,status,provider_key,provider_reference,checked_at,expires_at,safe_summary,created_at').eq('request_id',r.id).order('created_at',{ascending:false}),
+   db.from('vendor_stores').select('*').eq('owner_id',r.user_id).maybeSingle(),
+   db.from('vendor_verification_audit_log').select('action,old_status,new_status,detail,created_at,actor_user_id').eq('request_id',r.id).order('created_at',{ascending:false}).limit(30),
+   db.from('verification_provider_registry').select('provider_key,provider_name,connection_status,capabilities,last_tested_at').order('provider_name')
   ]);
   if(docsRes.error)throw docsRes.error;
   if(evidenceRes.error && !/does not exist|schema cache/i.test(evidenceRes.error.message))throw evidenceRes.error;
   if(checksRes.error && !/does not exist|schema cache/i.test(checksRes.error.message))throw checksRes.error;
   if(storeRes.error && !/0 rows|multiple/i.test(storeRes.error.message))throw storeRes.error;
-  const docs=docsRes.data||[],evidence=evidenceRes.data||[],checks=checksRes.data||[],store=storeRes.data||null;
+  if(auditRes.error && !/does not exist|schema cache/i.test(auditRes.error.message))throw auditRes.error;
+  if(providersRes.error)throw providersRes.error;
+  const docs=docsRes.data||[],evidence=evidenceRes.data||[],checks=checksRes.data||[],store=storeRes.data||null,audit=auditRes.data||[],providers=providersRes.data||[];
   const latestChecks={};checks.forEach(x=>{if(!latestChecks[x.check_type])latestChecks[x.check_type]=x;});
   const checkNames={identity:'الهوية الوطنية / الإقامة',commercial_registration:'السجل التجاري',freelance_document:'وثيقة العمل الحر',ecommerce_certificate:'شهادة توثيق التجارة الإلكترونية',bank_account:'الحساب البنكي'};
   const checkNamesStatus={not_started:'لم يبدأ',pending:'بانتظار التحقق',verified:'تم التحقق',rejected:'لم يجتز التحقق',needs_action:'يتطلب إجراء',provider_unavailable:'مزود غير مربوط',expired:'منتهي',manual_review:'مراجعة استثنائية'};
   const checkTypes=['identity','commercial_registration','freelance_document','ecommerce_certificate','bank_account'];
-  const checksHtml=`<div class="vendor-admin-detail-grid">${checkTypes.map(k=>{const x=latestChecks[k];return `<div class="vendor-admin-field"><small>${checkNames[k]}</small>${checkNamesStatus[x?.status||'not_started']||x?.status||'لم يبدأ'}${x?.checked_at?`<div class="vendor-admin-meta">آخر فحص: ${esc(x.checked_at)}</div>`:''}${x?.provider_key?`<div class="vendor-admin-meta">المزود: ${esc(x.provider_key)}</div>`:''}${x?.safe_summary?.message?`<div class="vendor-admin-meta">${esc(x.safe_summary.message)}</div>`:''}</div>`;}).join('')}</div>`;
-  const evidenceHtml=evidence.length?evidence.map(x=>`<div class="vendor-admin-doc"><div><b>${esc(x.evidence_type==='ecommerce_certificate'?'شهادة توثيق التجارة الإلكترونية':x.evidence_type)}</b><div class="vendor-admin-meta">${esc(x.mime_type||'ملف')} · ${Math.ceil(Number(x.file_size||0)/1024).toLocaleString('ar-SA')} كيلوبايت</div></div></div>`).join(''):'<div class="vendor-admin-empty">لا توجد مرفقات إضافية.</div>';
+  const checksHtml=`<div class="vendor-admin-check-grid">${checkTypes.filter(k=>r.merchant_type==='establishment'?k!=='freelance_document':k!=='commercial_registration').map(k=>{const x=latestChecks[k];return `<div class="vendor-admin-check"><b>${checkNames[k]}</b><div>${checkNamesStatus[x?.status||'not_started']||x?.status||'لم يبدأ'}</div><small>${x?.provider_key?'المزود: '+esc(x.provider_key):'لم يتم تعيين مزود'}${x?.checked_at?' · '+esc(new Date(x.checked_at).toLocaleString('ar-SA')):''}</small><small>${x?.safe_summary?.message?esc(x.safe_summary.message):'لا توجد نتيجة مسجلة بعد.'}</small></div>`;}).join('')}</div>`;
+  const evidenceHtml=evidence.length?evidence.map((x,i)=>`<div class="vendor-admin-doc"><div><b>${esc(x.evidence_type==='ecommerce_certificate'?'شهادة توثيق التجارة الإلكترونية':x.evidence_type)}</b><div class="vendor-admin-meta">${esc(x.mime_type||'ملف')} · ${Math.ceil(Number(x.file_size||0)/1024).toLocaleString('ar-SA')} كيلوبايت</div></div><button class="vendor-admin-btn" data-vendor-evidence="${i}">فتح المستند</button></div>`).join(''):'<div class="vendor-admin-empty">لا توجد مرفقات إضافية.</div>';
   const docHtml=docs.length?docs.map((d,i)=>`<div class="vendor-admin-doc"><div><b>${d.document_type==='freelance_document'?'وثيقة العمل الحر':d.document_type==='commercial_registration'?'السجل التجاري':'مستند داعم'}</b><div class="vendor-admin-meta">${esc(d.mime_type||'ملف')} · ${Math.ceil(Number(d.file_size||0)/1024).toLocaleString('ar-SA')} كيلوبايت</div></div><button class="vendor-admin-btn" data-vendor-doc="${i}">فتح المستند</button></div>`).join(''):'<div class="vendor-admin-empty">لا توجد مستندات مسجلة لهذا الطلب.</div>';
+  const providerHtml=providers.map(p=>`<div class="vendor-admin-field"><small>${esc(p.provider_name)}</small>${({not_configured:'غير مربوط',sandbox:'بيئة تجريبية',connected:'معلن كمتصل — يحتاج اختبار تكامل',suspended:'موقوف'})[p.connection_status]||esc(p.connection_status)}<div class="vendor-admin-meta">${esc(p.provider_key)} · ${Array.isArray(p.capabilities)?p.capabilities.map(esc).join('، '):'—'}</div></div>`).join('');
+  const auditHtml=audit.length?`<div class="vendor-admin-audit">${audit.map(a=>`<div class="vendor-admin-audit-item"><b>${a.action==='decision_changed'?'تغيير قرار الطلب':a.action==='review_note_updated'?'تحديث ملاحظة المراجعة':esc(a.action)}</b><small>${esc(a.old_status||'—')} ← ${esc(a.new_status||'—')} · ${esc(new Date(a.created_at).toLocaleString('ar-SA'))} · ${esc(a.actor_user_id||'النظام')}</small>${a.detail?.note?`<small>${esc(a.detail.note)}</small>`:''}</div>`).join('')}</div>`:'<div class="vendor-admin-empty">لا يوجد سجل مراجعة مسجل بعد.</div>';
   box.innerHTML=`<div class="head"><div><h3 style="margin:0">ملف التاجر: ${esc(r.legal_name||'—')}</h3><p class="vendor-admin-meta">${esc(vendorLabels[r.status]||r.status||'—')} · ${esc(r.id)}</p></div><button class="vendor-admin-btn" id="vendorAdminCloseDetail">إغلاق الملف</button></div>
   <div class="vendor-admin-detail-grid"><div class="vendor-admin-field"><small>الاسم النظامي</small>${esc(r.legal_name||'—')}</div><div class="vendor-admin-field"><small>نوع التاجر</small>${r.merchant_type==='establishment'?'مؤسسة / شركة':'فرد'}</div><div class="vendor-admin-field"><small>معرّف حساب التاجر</small>${esc(r.user_id)}</div><div class="vendor-admin-field"><small>المدينة</small>${esc(r.city||'—')}</div><div class="vendor-admin-field"><small>حالة الطلب</small>${esc(vendorLabels[r.status]||r.status||'—')}</div><div class="vendor-admin-field"><small>تاريخ التقديم</small>${esc(r.submitted_at||'—')}</div></div>
   <h3 style="margin:18px 0 8px">مركز التحقق الآلي</h3>
@@ -407,49 +424,41 @@ async function openVendorRequest(requestId){
    <div style="display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap"><div><b>فحص جاهزية جهات التحقق</b><div class="vendor-admin-meta">يفحص حالة إعداد المزودين المسجلين في المنصة، ولا ينفذ تحققًا رسميًا ما لم يكن التكامل الفعلي مفعّلًا.</div></div><button class="vendor-admin-btn primary" id="vendorRunAutoCheck" type="button">بدء التحقق الآلي</button></div>
    <div id="vendorAutoCheckResult" class="vendor-admin-meta" style="margin-top:12px" aria-live="polite">لم يبدأ فحص جاهزية الربط.</div>
   </div>
-  <h3 style="margin:18px 0 8px">نتائج التحقق الآلي</h3>${checksHtml}
+  <h3 style="margin:18px 0 8px">نتائج التحقق الآلي</h3>${checksHtml}<h3 style="margin:18px 0 8px">جاهزية مزودي الخدمة</h3><div class="vendor-admin-detail-grid">${providerHtml||'<div class="vendor-admin-empty">لا توجد سجلات مزودين.</div>'}</div>
   <div class="vendor-admin-detail-grid"><div class="vendor-admin-field"><small>رقم شهادة التجارة الإلكترونية</small>${esc(r.ecommerce_certificate_number||'—')}</div><div class="vendor-admin-field"><small>رابط المتجر الإلكتروني</small>${esc(r.ecommerce_store_url||'—')}</div><div class="vendor-admin-field"><small>نطاق المتجر</small>${esc(r.business_domain||'—')}</div></div>
   <h3 style="margin:18px 0 8px">المستندات المرفوعة</h3>${docHtml}${evidenceHtml}
+  <h3 style="margin:18px 0 8px">سجل قرارات ومراجعات الطلب</h3>${auditHtml}
   <h3 style="margin:18px 0 8px">بيانات المتجر</h3>${store?`<div class="vendor-admin-detail-grid"><div class="vendor-admin-field"><small>اسم المتجر</small>${esc(store.store_name||'—')}</div><div class="vendor-admin-field"><small>حالة المتجر</small>${esc(store.status||'—')}</div><div class="vendor-admin-field"><small>التصنيف</small>${esc(store.category||'—')}</div><div class="vendor-admin-field"><small>المدينة</small>${esc(store.city||'—')}</div><div class="vendor-admin-field"><small>رابط المتجر المختصر</small>${esc(store.slug||'—')}</div></div>`:'<div class="vendor-admin-empty">لا يوجد متجر مسجل لهذا الحساب حتى الآن.</div>'}
   <h3 style="margin:18px 0 8px">قرار المراجعة</h3><label for="vendorAdminDecision">الحالة الجديدة</label><select id="vendorAdminDecision" style="width:100%"><option value="under_review">قيد المراجعة</option><option value="verified">اعتماد التوثيق</option><option value="rejected">رفض الطلب</option><option value="needs_more_info">طلب استكمال المستندات</option></select><label for="vendorAdminReviewerNote" style="margin-top:10px">ملاحظة التاجر / سبب القرار</label><textarea id="vendorAdminReviewerNote" class="vendor-admin-note" placeholder="اكتب سبب الرفض أو المطلوب استكماله أو ملاحظة المراجعة...">${esc(r.reviewer_note||r.rejection_reason||'')}</textarea><div class="vendor-admin-actions"><button class="vendor-admin-btn primary" id="vendorAdminSaveDecision">حفظ قرار المراجعة</button><span id="vendorAdminDecisionMsg" class="vendor-admin-meta"></span></div>`;
   box.querySelector('#vendorAdminDecision').value=['under_review','verified','rejected','needs_more_info'].includes(r.status)?r.status:'under_review';
   box.querySelector('#vendorAdminCloseDetail').addEventListener('click',()=>box.hidden=true);
   box.querySelector('#vendorRunAutoCheck').addEventListener('click',async ev=>{
    const btn=ev.currentTarget,out=box.querySelector('#vendorAutoCheckResult');
-   btn.disabled=true;out.textContent='جارٍ فحص جاهزية مزودي التحقق...';
+   btn.disabled=true;out.textContent='جارٍ إرسال طلب تقييم الجاهزية إلى الخادم الآمن...';
    try{
-    const {data,error}=await db.from('verification_provider_registry').select('provider_key,provider_name,connection_status,capabilities,last_tested_at').order('provider_name');
-    if(error)throw error;
-    const providers=data||[];
-    const providerFor={
-     identity:['nafath'],
-     commercial_registration:['commerce'],
-     freelance_document:['commerce'],
-     ecommerce_certificate:['commerce'],
-     bank_account:['lean','tarabut','spare']
-    };
-    const relevant=r.merchant_type==='establishment'?['identity','commercial_registration','ecommerce_certificate','bank_account']:['identity','freelance_document','ecommerce_certificate','bank_account'];
-    const labels={identity:'الهوية الوطنية / الإقامة',commercial_registration:'السجل التجاري',freelance_document:'وثيقة العمل الحر',ecommerce_certificate:'شهادة توثيق التجارة الإلكترونية',bank_account:'الحساب البنكي'};
-    const rows=relevant.map(type=>{
-     const matches=providers.filter(p=>providerFor[type].includes(p.provider_key));
-     const connected=matches.filter(p=>p.connection_status==='connected');
-     const sandbox=matches.filter(p=>p.connection_status==='sandbox');
-     const state=connected.length?'المزود معلن كمتصل — يلزم اختبار موصل API قبل التحقق':sandbox.length?'بيئة تجريبية — لا تعتمد نتائجها':'غير مربوط';
-     return `<div style="padding:8px 0;border-bottom:1px solid #294c73"><b>${labels[type]}</b><div>${state}</div><small>${matches.length?matches.map(p=>esc(p.provider_name)+' ('+esc(p.connection_status)+')').join('، '):'لا يوجد مزود مسجل لهذا الفحص'}</small></div>`;
-    }).join('');
-    out.innerHTML=`<div><b>اكتمل فحص الجاهزية.</b><div style="margin-top:8px">${rows}</div><p style="margin:10px 0 0;color:#ffc86b">تنبيه: هذا فحص إعداد واتصال مسجل فقط، وليس تحققًا من هوية التاجر أو مستنداته. لم يتم تغيير أي حالة إلى «تم التحقق» ولم يتم تعديل قرار الطلب.</p></div>`;
-   }catch(err){out.textContent='تعذر فحص جاهزية المزودين: '+(err?.message||String(err));}
+    const {data:sessionData,error:sessionError}=await db.auth.getSession();if(sessionError)throw sessionError;
+    const token=sessionData?.session?.access_token;if(!token)throw Error('انتهت جلسة المدير. سجّل الدخول من جديد.');
+    const response=await fetch('/api/merchant-verification',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({action:'run_readiness',requestId:r.id})});
+    const result=await response.json().catch(()=>({}));if(!response.ok)throw Error(result.error||'تعذر تشغيل تقييم الجاهزية.');
+    const rows=(result.checks||[]).map(x=>`<div style="padding:8px 0;border-bottom:1px solid #294c73"><b>${esc(x.label)}</b><div>${esc(x.statusLabel)}</div><small>${esc(x.message||'')}</small></div>`).join('');
+    const summaryHtml=`<b>اكتمل تقييم الجاهزية — ليس تحققًا رسميًا.</b><div style="margin-top:8px">${rows}</div><p style="margin:10px 0 0;color:#ffc86b">${esc(result.notice||'لم يتم الاتصال بأي جهة حكومية أو مصرفية ولم تُعتمد هوية التاجر.')}</p>`;
+    await openVendorRequest(r.id);
+    const refreshedOut=$('vendorAdminDetail').querySelector('#vendorAutoCheckResult');if(refreshedOut)refreshedOut.innerHTML=summaryHtml;
+   }catch(err){out.textContent='تعذر تشغيل التقييم: '+(err?.message||String(err));}
    finally{btn.disabled=false;}
   });
-  box.querySelectorAll('[data-vendor-doc]').forEach(btn=>btn.addEventListener('click',async()=>{
-   const d=docs[Number(btn.dataset.vendorDoc)];btn.disabled=true;
-   try{const {data,error}=await db.storage.from('vendor-verification-private').createSignedUrl(d.storage_path,300);if(error)throw error;if(!data?.signedUrl)throw Error('لم يتم إنشاء رابط آمن للمستند.');window.open(data.signedUrl,'_blank','noopener,noreferrer');}
-   catch(e){$('vendorAdminDecisionMsg').textContent='تعذر فتح المستند: '+e.message;}
-   finally{btn.disabled=false;}
-  }));
+  const openPrivateDoc=async(btn,d)=>{const tab=window.open('about:blank','_blank');btn.disabled=true;try{const {data,error}=await db.storage.from('vendor-verification-private').createSignedUrl(d.storage_path,300);if(error)throw error;if(!data?.signedUrl)throw Error('لم يتم إنشاء رابط آمن للمستند.');if(tab)tab.location=data.signedUrl;else window.location.href=data.signedUrl;}catch(e){if(tab)tab.close();$('vendorAdminDecisionMsg').textContent='تعذر فتح المستند: '+e.message;}finally{btn.disabled=false;}};
+  box.querySelectorAll('[data-vendor-doc]').forEach(btn=>btn.addEventListener('click',()=>openPrivateDoc(btn,docs[Number(btn.dataset.vendorDoc)])));
+  box.querySelectorAll('[data-vendor-evidence]').forEach(btn=>btn.addEventListener('click',()=>openPrivateDoc(btn,evidence[Number(btn.dataset.vendorEvidence)])));
   box.querySelector('#vendorAdminSaveDecision').addEventListener('click',async ev=>{
    const btn=ev.currentTarget;btn.disabled=true;const msg=box.querySelector('#vendorAdminDecisionMsg');msg.textContent='جارٍ حفظ القرار...';
    const status=box.querySelector('#vendorAdminDecision').value,noteText=box.querySelector('#vendorAdminReviewerNote').value.trim();
+   if(status==='verified'){
+    const required=r.merchant_type==='establishment'?['identity','commercial_registration','ecommerce_certificate','bank_account']:['identity','freelance_document','ecommerce_certificate','bank_account'];
+    const latest={};checks.forEach(x=>{if(!latest[x.check_type])latest[x.check_type]=x;});
+    const missing=required.filter(k=>latest[k]?.status!=='verified');
+    if(missing.length){msg.textContent='لا يمكن اعتماد التاجر. يجب اجتياز جميع الفحوص الإلزامية أولاً: '+missing.map(k=>checkNames[k]).join('، ');btn.disabled=false;return;}
+   }
    const patch={status,reviewer_note:noteText,rejection_reason:status==='rejected'?noteText:null};
    try{const {error}=await db.from('vendor_verification_requests').update(patch).eq('id',r.id);if(error)throw error;r.status=status;r.reviewer_note=noteText;r.rejection_reason=patch.rejection_reason;msg.textContent='تم حفظ القرار في قاعدة البيانات.';renderVendorRequests();}
    catch(e){msg.textContent='تعذر حفظ القرار: '+e.message;}
