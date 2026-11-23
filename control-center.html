@@ -374,7 +374,7 @@ function renderVendorRequests(){
 }
 async function loadVendorRequests(){
  vendorAdminMessage('جارٍ تحميل طلبات التوثيق...');$('vendorAdminList').innerHTML='';$('vendorAdminDetail').hidden=true;
- const {data,error}=await db.from('vendor_verification_requests').select('id,user_id,merchant_type,legal_name,registration_number,city,status,submitted_at,rejection_reason,reviewer_note').order('submitted_at',{ascending:false}).limit(300);
+ const {data,error}=await db.from('vendor_verification_requests').select('id,user_id,merchant_type,legal_name,registration_number,city,status,submitted_at,rejection_reason,reviewer_note,ecommerce_certificate_number,ecommerce_store_url,business_domain').order('submitted_at',{ascending:false}).limit(300);
  if(error){vendorAdminMessage('تعذر تحميل الطلبات: '+error.message);return;}
  vendorRequestsCache=data||[];vendorAdminMessage(`تم تحميل ${vendorRequestsCache.length.toLocaleString('ar-SA')} طلب توثيق.`);renderVendorRequests();
 }
@@ -382,17 +382,29 @@ async function openVendorRequest(requestId){
  const r=vendorRequestsCache.find(x=>String(x.id)===String(requestId));if(!r)return;
  const box=$('vendorAdminDetail');box.hidden=false;box.innerHTML='<div class="vendor-admin-empty">جارٍ تحميل ملف التاجر والمستندات...</div>';
  try{
-  const [docsRes,storeRes]=await Promise.all([
+  const [docsRes,evidenceRes,checksRes,storeRes]=await Promise.all([
    db.from('vendor_verification_documents').select('request_id,user_id,document_type,storage_path,mime_type,file_size').eq('request_id',r.id),
+   db.from('vendor_verification_evidence').select('request_id,user_id,evidence_type,storage_path,mime_type,file_size').eq('request_id',r.id),
+   db.from('vendor_verification_checks').select('check_type,status,provider_key,provider_reference,checked_at,expires_at,safe_summary').eq('request_id',r.id).order('created_at',{ascending:false}),
    db.from('vendor_stores').select('*').eq('owner_id',r.user_id).maybeSingle()
   ]);
   if(docsRes.error)throw docsRes.error;
+  if(evidenceRes.error && !/does not exist|schema cache/i.test(evidenceRes.error.message))throw evidenceRes.error;
+  if(checksRes.error && !/does not exist|schema cache/i.test(checksRes.error.message))throw checksRes.error;
   if(storeRes.error && !/0 rows|multiple/i.test(storeRes.error.message))throw storeRes.error;
-  const docs=docsRes.data||[],store=storeRes.data||null;
+  const docs=docsRes.data||[],evidence=evidenceRes.data||[],checks=checksRes.data||[],store=storeRes.data||null;
+  const latestChecks={};checks.forEach(x=>{if(!latestChecks[x.check_type])latestChecks[x.check_type]=x;});
+  const checkNames={identity:'الهوية الوطنية / الإقامة',commercial_registration:'السجل التجاري',freelance_document:'وثيقة العمل الحر',ecommerce_certificate:'شهادة توثيق التجارة الإلكترونية',bank_account:'الحساب البنكي'};
+  const checkNamesStatus={not_started:'لم يبدأ',pending:'بانتظار التحقق',verified:'تم التحقق',rejected:'لم يجتز التحقق',needs_action:'يتطلب إجراء',provider_unavailable:'مزود غير مربوط',expired:'منتهي',manual_review:'مراجعة استثنائية'};
+  const checkTypes=['identity','commercial_registration','freelance_document','ecommerce_certificate','bank_account'];
+  const checksHtml=`<div class="vendor-admin-detail-grid">${checkTypes.map(k=>{const x=latestChecks[k];return `<div class="vendor-admin-field"><small>${checkNames[k]}</small>${checkNamesStatus[x?.status||'not_started']||x?.status||'لم يبدأ'}${x?.checked_at?`<div class="vendor-admin-meta">آخر فحص: ${esc(x.checked_at)}</div>`:''}${x?.provider_key?`<div class="vendor-admin-meta">المزود: ${esc(x.provider_key)}</div>`:''}${x?.safe_summary?.message?`<div class="vendor-admin-meta">${esc(x.safe_summary.message)}</div>`:''}</div>`;}).join('')}</div>`;
+  const evidenceHtml=evidence.length?evidence.map(x=>`<div class="vendor-admin-doc"><div><b>${esc(x.evidence_type==='ecommerce_certificate'?'شهادة توثيق التجارة الإلكترونية':x.evidence_type)}</b><div class="vendor-admin-meta">${esc(x.mime_type||'ملف')} · ${Math.ceil(Number(x.file_size||0)/1024).toLocaleString('ar-SA')} كيلوبايت</div></div></div>`).join(''):'<div class="vendor-admin-empty">لا توجد مرفقات إضافية.</div>';
   const docHtml=docs.length?docs.map((d,i)=>`<div class="vendor-admin-doc"><div><b>${d.document_type==='freelance_document'?'وثيقة العمل الحر':d.document_type==='commercial_registration'?'السجل التجاري':'مستند داعم'}</b><div class="vendor-admin-meta">${esc(d.mime_type||'ملف')} · ${Math.ceil(Number(d.file_size||0)/1024).toLocaleString('ar-SA')} كيلوبايت</div></div><button class="vendor-admin-btn" data-vendor-doc="${i}">فتح المستند</button></div>`).join(''):'<div class="vendor-admin-empty">لا توجد مستندات مسجلة لهذا الطلب.</div>';
   box.innerHTML=`<div class="head"><div><h3 style="margin:0">ملف التاجر: ${esc(r.legal_name||'—')}</h3><p class="vendor-admin-meta">${esc(vendorLabels[r.status]||r.status||'—')} · ${esc(r.id)}</p></div><button class="vendor-admin-btn" id="vendorAdminCloseDetail">إغلاق الملف</button></div>
   <div class="vendor-admin-detail-grid"><div class="vendor-admin-field"><small>الاسم النظامي</small>${esc(r.legal_name||'—')}</div><div class="vendor-admin-field"><small>نوع التاجر</small>${r.merchant_type==='establishment'?'مؤسسة / شركة':'فرد'}</div><div class="vendor-admin-field"><small>معرّف حساب التاجر</small>${esc(r.user_id)}</div><div class="vendor-admin-field"><small>المدينة</small>${esc(r.city||'—')}</div><div class="vendor-admin-field"><small>حالة الطلب</small>${esc(vendorLabels[r.status]||r.status||'—')}</div><div class="vendor-admin-field"><small>تاريخ التقديم</small>${esc(r.submitted_at||'—')}</div></div>
-  <h3 style="margin:18px 0 8px">المستندات المرفوعة</h3>${docHtml}
+  <h3 style="margin:18px 0 8px">نتائج التحقق الآلي</h3>${checksHtml}
+  <div class="vendor-admin-detail-grid"><div class="vendor-admin-field"><small>رقم شهادة التجارة الإلكترونية</small>${esc(r.ecommerce_certificate_number||'—')}</div><div class="vendor-admin-field"><small>رابط المتجر الإلكتروني</small>${esc(r.ecommerce_store_url||'—')}</div><div class="vendor-admin-field"><small>نطاق المتجر</small>${esc(r.business_domain||'—')}</div></div>
+  <h3 style="margin:18px 0 8px">المستندات المرفوعة</h3>${docHtml}${evidenceHtml}
   <h3 style="margin:18px 0 8px">بيانات المتجر</h3>${store?`<div class="vendor-admin-detail-grid"><div class="vendor-admin-field"><small>اسم المتجر</small>${esc(store.store_name||'—')}</div><div class="vendor-admin-field"><small>حالة المتجر</small>${esc(store.status||'—')}</div><div class="vendor-admin-field"><small>التصنيف</small>${esc(store.category||'—')}</div><div class="vendor-admin-field"><small>المدينة</small>${esc(store.city||'—')}</div><div class="vendor-admin-field"><small>رابط المتجر المختصر</small>${esc(store.slug||'—')}</div></div>`:'<div class="vendor-admin-empty">لا يوجد متجر مسجل لهذا الحساب حتى الآن.</div>'}
   <h3 style="margin:18px 0 8px">قرار المراجعة</h3><label for="vendorAdminDecision">الحالة الجديدة</label><select id="vendorAdminDecision" style="width:100%"><option value="under_review">قيد المراجعة</option><option value="verified">اعتماد التوثيق</option><option value="rejected">رفض الطلب</option><option value="needs_more_info">طلب استكمال المستندات</option></select><label for="vendorAdminReviewerNote" style="margin-top:10px">ملاحظة التاجر / سبب القرار</label><textarea id="vendorAdminReviewerNote" class="vendor-admin-note" placeholder="اكتب سبب الرفض أو المطلوب استكماله أو ملاحظة المراجعة...">${esc(r.reviewer_note||r.rejection_reason||'')}</textarea><div class="vendor-admin-actions"><button class="vendor-admin-btn primary" id="vendorAdminSaveDecision">حفظ قرار المراجعة</button><span id="vendorAdminDecisionMsg" class="vendor-admin-meta"></span></div>`;
   box.querySelector('#vendorAdminDecision').value=['under_review','verified','rejected','needs_more_info'].includes(r.status)?r.status:'under_review';
