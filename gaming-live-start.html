@@ -1,12 +1,28 @@
 <!doctype html>
 <html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#090d18"><title>بدء البث | Gaming Live</title>
 <style>
-:root{color-scheme:dark;--bg:#090d18;--panel:#111a2b;--panel2:#172238;--line:#263650;--text:#f4f7ff;--muted:#9aa9c2;--cyan:#35d8e8}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 80% -15%,#18365a 0,transparent 40%),var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Tahoma,Arial,sans-serif}.wrap{width:min(760px,94%);margin:auto}.top{height:68px;border-bottom:1px solid #ffffff14}.topin{height:100%;display:flex;align-items:center;justify-content:space-between}.btn{border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:12px;padding:10px 14px;font:inherit;font-weight:750;cursor:pointer;text-decoration:none}.primary{background:linear-gradient(110deg,#2dc9dc,#697cf6);color:#06101b;border:0}.panel{margin:24px 0;background:linear-gradient(180deg,#131e31,#0f1726);border:1px solid var(--line);border-radius:20px;padding:22px}.muted{color:var(--muted);line-height:1.8}.field{display:grid;gap:7px;margin:15px 0}.field input,.field select,.field textarea{width:100%;background:#0b1322;color:var(--text);border:1px solid var(--line);border-radius:12px;padding:13px;font:inherit}.field textarea{min-height:100px;resize:vertical}.notice{padding:15px;border:1px dashed #40516c;border-radius:14px;color:var(--muted);line-height:1.8}.success{border-color:#267e68;color:#9cebd0}.hidden{display:none!important}.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#18263b;border:1px solid #3a5577;border-radius:12px;padding:12px 16px;display:none;max-width:90%}
+:root{color-scheme:dark;--bg:#090d18;--panel:#111a2b;--panel2:#172238;--line:#263650;--text:#f4f7ff;--muted:#9aa9c2;--cyan:#35d8e8}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 80% -15%,#18365a 0,transparent 40%),var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Tahoma,Arial,sans-serif}.wrap{width:min(760px,94%);margin:auto}.top{height:68px;border-bottom:1px solid #ffffff14}.topin{height:100%;display:flex;align-items:center;justify-content:space-between}.btn{border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:12px;padding:10px 14px;font:inherit;font-weight:750;cursor:pointer;text-decoration:none}.primary{background:linear-gradient(110deg,#2dc9dc,#697cf6);color:#06101b;border:0}.panel{margin:24px 0;background:linear-gradient(180deg,#131e31,#0f1726);border:1px solid var(--line);border-radius:20px;padding:22px}.muted{color:var(--muted);line-height:1.8}.field{display:grid;gap:7px;margin:15px 0}.field input,.field select,.field textarea{width:100%;background:#0b1322;color:var(--text);border:1px solid var(--line);border-radius:12px;padding:13px;font:inherit}.field textarea{min-height:100px;resize:vertical}.notice{padding:15px;border:1px dashed #40516c;border-radius:14px;color:var(--muted);line-height:1.8}.success{border-color:#267e68;color:#9cebd0}.hidden{display:none!important}#hostVideo video{width:100%!important;height:100%!important;object-fit:cover!important}#broadcastStage:fullscreen,#broadcastStage.force-fullscreen{position:fixed;inset:0;z-index:99999;width:100vw;height:100dvh;margin:0;border:0;border-radius:0;display:flex;flex-direction:column;justify-content:center;background:#050912;padding:12px}#broadcastStage:fullscreen #hostVideoBox{height:calc(100vh - 120px);max-height:none;aspect-ratio:auto}#broadcastStage:fullscreen #hostVideo{height:100%}.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#18263b;border:1px solid #3a5577;border-radius:12px;padding:12px 16px;display:none;max-width:90%}
 </style></head><body><header class="top"><div class="wrap topin"><strong>🎮 Gaming Live — بدء البث</strong><a class="btn" href="gaming-live.html">العودة للمجتمع</a></div></header>
 <main class="wrap"><section class="panel"><div style="color:var(--cyan);font-weight:900">CREATOR STUDIO</div><h1>جهّز حساب اللاعب</h1><p class="muted">استخدم حسابك الحالي في سوق القيمنق. إعداد ملف اللاعب لا يمنح صلاحية البث تلقائيًا؛ اعتماد البث يتم من إدارة المنصة.</p><div id="authState" class="notice">جارٍ التحقق من تسجيل الدخول…</div>
 <form id="profileForm" class="hidden"><div class="field"><label for="displayName">اسم العرض</label><input id="displayName" maxlength="60" required placeholder="اسمك داخل مجتمع القيمنق"></div><div class="field"><label for="username">اسم المستخدم (إنجليزي وأرقام وشرطة سفلية)</label><input id="username" minlength="3" maxlength="24" pattern="[A-Za-z0-9_]{3,24}" required placeholder="gamer_123"></div><div class="field"><label for="bio">نبذة عنك</label><textarea id="bio" maxlength="500" placeholder="الألعاب التي تحبها…"></textarea></div><button class="btn primary" type="submit">حفظ ملف اللاعب</button></form>
 <div id="profileStatus" class="hidden"></div></section>
-<section class="panel"><h2>بدء البث عبر الكاميرا والميكروفون</h2><div class="notice">المرحلة الأولى تستخدم Agora RTC من المتصفح. اسمح باستخدام الكاميرا والميكروفون عند الضغط على بدء البث. دعم OBS وأجهزة الألعاب سيضاف في مرحلة إدخال منفصلة.</div><form id="streamForm" class="hidden"><div class="field"><label for="streamTitle">عنوان البث</label><input id="streamTitle" maxlength="120" minlength="3" required placeholder="مثال: تحديات رانكد"></div><div class="field"><label for="streamCategory">اللعبة</label><select id="streamCategory"><option value="">اختر اللعبة (اختياري)</option></select></div><div class="field"><label for="streamDescription">وصف البث</label><textarea id="streamDescription" maxlength="1000" placeholder="اكتب وصفًا مختصرًا للبث"></textarea></div><button class="btn primary" id="createStreamBtn" type="submit">إنشاء بيانات البث</button></form><div id="streamResult" class="hidden" style="margin-top:16px"></div><div id="eligibility" class="muted" style="margin-top:14px">يتم التحقق من صلاحية البث بعد تحميل ملف اللاعب.</div><div class="field"><label>طريقة البث</label><select disabled><option>المتصفح — كاميرا وميكروفون (مرحلة الاختبار)</option></select></div><div id="localPreview" class="notice hidden" style="margin-top:12px">معاينة البث المحلي</div><button type="button" id="stopBroadcast" class="btn hidden" style="margin-top:12px">إنهاء البث</button></section></main><div class="toast" id="toast"></div>
+<section class="panel"><h2>بدء البث عبر الكاميرا والميكروفون</h2><div class="notice">المرحلة الأولى تستخدم Agora RTC من المتصفح. اسمح باستخدام الكاميرا والميكروفون عند الضغط على بدء البث. دعم OBS وأجهزة الألعاب سيضاف في مرحلة إدخال منفصلة.</div><form id="streamForm" class="hidden"><div class="field"><label for="streamTitle">عنوان البث</label><input id="streamTitle" maxlength="120" minlength="3" required placeholder="مثال: تحديات رانكد"></div><div class="field"><label for="streamCategory">اللعبة</label><select id="streamCategory"><option value="">اختر اللعبة (اختياري)</option></select></div><div class="field"><label for="streamDescription">وصف البث</label><textarea id="streamDescription" maxlength="1000" placeholder="اكتب وصفًا مختصرًا للبث"></textarea></div><button class="btn primary" id="createStreamBtn" type="submit">إنشاء بيانات البث</button></form><div id="streamResult" class="hidden" style="margin-top:16px"></div><div id="eligibility" class="muted" style="margin-top:14px">يتم التحقق من صلاحية البث بعد تحميل ملف اللاعب.</div><div class="field"><label>طريقة البث</label><select disabled><option>المتصفح — كاميرا وميكروفون (مرحلة الاختبار)</option></select></div><div id="localPreview" class="notice hidden" style="margin-top:12px">معاينة البث المحلي</div><button type="button" id="stopBroadcast" class="btn hidden" style="margin-top:12px">إنهاء البث</button>
+<div id="broadcastStage" class="panel hidden" style="margin-top:18px;padding:12px">
+  <div class="row" style="justify-content:space-between;margin-bottom:10px">
+    <strong id="broadcastStageTitle">أنت الآن مباشر</strong>
+    <span id="broadcastConnection" class="notice success" style="padding:6px 10px">جارٍ الاتصال…</span>
+  </div>
+  <div id="hostVideoBox" style="position:relative;background:#000;border-radius:16px;overflow:hidden;aspect-ratio:9/16;max-height:72vh;margin:auto">
+    <div id="hostVideo" style="width:100%;height:100%;"></div>
+    <div id="hostVideoFallback" class="notice" style="position:absolute;inset:0;display:grid;place-items:center;background:#080d18;text-align:center">جارٍ تشغيل الكاميرا…</div>
+    <button type="button" id="hostFullscreen" class="btn" style="position:absolute;top:12px;left:12px;z-index:3">ملء الشاشة ⛶</button>
+  </div>
+  <div class="row" style="justify-content:space-between;margin-top:12px">
+    <span id="hostAudioState" class="muted">الميكروفون: جارٍ التحقق</span>
+    <button type="button" id="hostStopStage" class="btn">إنهاء البث</button>
+  </div>
+</div>
+</section></main><div class="toast" id="toast"></div>
 <script src="https://download.agora.io/sdk/release/AgoraRTC_N-4.24.0.js" onerror="this.dataset.failed='1'"></script>
 <script>/* Fallback loader for browsers where the primary Agora CDN is unavailable */
 if (!window.AgoraRTC) { document.write('<script src="https://cdn.jsdelivr.net/npm/agora-rtc-sdk-ng@4.24.0/AgoraRTC_N-4.24.0.js"><\/script>'); }
@@ -18,9 +34,89 @@ async function loadCategories(){const r=await db.from('game_categories').select(
 function showProfile(p){player=p;$('profileForm').classList.add('hidden');$('profileStatus').classList.remove('hidden');const approved=p.can_stream===true&&p.state==='active'&&p.stream_access_status==='approved';$('profileStatus').className='notice '+(approved?'success':'');$('profileStatus').textContent='ملف اللاعب: '+p.display_name+' (@'+p.username+') — الحالة: '+p.state+' — '+(approved?'صلاحية البث معتمدة':'لم تُعتمد صلاحية البث بعد.');$('eligibility').textContent=approved?'تم اعتماد صلاحية البث لحسابك. يمكنك تجهيز بث OBS.':'حسابك غير معتمد للبث حاليًا. يمكن للإدارة اعتماد صلاحية البث بعد مراجعة الحساب.';if(approved)$('streamForm').classList.remove('hidden');else $('streamForm').classList.add('hidden')}
 async function init(){const r=await db.auth.getSession();user=r.data.session?.user;if(!user){$('authState').textContent='لم يتم العثور على جلسة دخول. سجّل الدخول إلى سوق القيمنق أولًا ثم ارجع إلى هذه الصفحة.';return}$('authState').textContent='تم التعرف على حسابك الحالي. لا تحتاج إلى إنشاء حساب جديد.';const p=await db.from('player_profiles').select('user_id,username,display_name,bio,state,can_stream,stream_access_status').eq('user_id',user.id).maybeSingle();if(p.error){$('authState').textContent='تعذر قراءة ملف اللاعب: '+p.error.message;return}if(!p.data){$('profileForm').classList.remove('hidden');$('profileStatus').classList.add('hidden');$('eligibility').textContent='أنشئ ملف اللاعب أولًا. سيتم حفظه بحالة غير معتمدة للبث.';return}showProfile(p.data);await loadCategories()}
 $('profileForm').addEventListener('submit',async e=>{e.preventDefault();if(!user){toast('سجّل الدخول أولًا.');return}const payload={user_id:user.id,display_name:$('displayName').value.trim(),username:$('username').value.trim(),bio:$('bio').value.trim(),state:'active',can_stream:false};const r=await db.from('player_profiles').insert(payload).select('user_id,username,display_name,bio,state,can_stream,stream_access_status').single();if(r.error){toast(r.error.message);return}showProfile(r.data);await loadCategories();toast('تم حفظ ملف اللاعب. صلاحية البث تحتاج اعتماد الإدارة.')});
-let rtcClient=null,localTracks=[] ,activeSessionId=null;
+let rtcClient=null,localTracks=[],activeSessionId=null,streamAccessToken=null,isStopping=false;
 async function authToken(){const ss=await db.auth.getSession();const t=ss.data.session?.access_token;if(!t)throw new Error('انتهت جلسة الدخول. سجّل الدخول مجددًا.');return t}
-$('streamForm').addEventListener('submit',async e=>{e.preventDefault();const btn=$('createStreamBtn');btn.disabled=true;btn.textContent='جارٍ تجهيز جلسة Agora…';$('streamResult').classList.add('hidden');try{const Agora=window.AgoraRTC;if(!Agora||typeof Agora.createClient!=='function')throw new Error('تعذر تحميل مكتبة Agora. حدّث الصفحة أو جرّب فتحها من Chrome، ثم أعد المحاولة.');const token=await authToken();const payload={title:$('streamTitle').value.trim(),description:$('streamDescription').value.trim(),category_id:$('streamCategory').value||null};const response=await fetch('/api/gaming-live-start',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token},body:JSON.stringify(payload)});const data=await response.json();if(!response.ok)throw new Error(data.error||'تعذر إنشاء جلسة البث.');activeSessionId=data.session_id;rtcClient=Agora.createClient({mode:'live',codec:'vp8'});await rtcClient.setClientRole('host');await rtcClient.join(data.app_id,data.channel,data.token,data.uid);localTracks=await Agora.createMicrophoneAndCameraTracks();await rtcClient.publish(localTracks);const status=await fetch('/api/gaming-live-status',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token},body:JSON.stringify({session_id:activeSessionId,action:'live'})});const statusData=await status.json();if(!status.ok)throw new Error(statusData.error||'تعذر تحديث حالة البث.');$('streamResult').className='notice success';$('streamResult').innerHTML='<h3>أنت الآن مباشر 🎮</h3><p>تم الاتصال بـ Agora ونشر الصوت والفيديو. افتح صفحة المجتمع من جهاز آخر لاختبار المشاهدة.</p><p>معرّف البث: <code>'+esc(activeSessionId)+'</code></p><a class="btn" href="gaming-live.html">العودة إلى مجتمع Gaming Live</a>';$('streamResult').classList.remove('hidden');$('localPreview').classList.remove('hidden');localTracks[1].play('localPreview');$('stopBroadcast').classList.remove('hidden');$('eligibility').textContent='البث مباشر الآن عبر Agora RTC.';}catch(err){console.error(err);toast(err.message);$('streamResult').className='notice';$('streamResult').textContent=err.message;$('streamResult').classList.remove('hidden');if(rtcClient){try{await rtcClient.leave()}catch{}rtcClient=null}localTracks.forEach(t=>{try{t.stop();t.close()}catch{}});localTracks=[];}finally{btn.disabled=false;btn.textContent='بدء البث الآن'}});
-$('stopBroadcast').addEventListener('click',async()=>{try{const token=await authToken();if(rtcClient)await rtcClient.leave();localTracks.forEach(t=>{try{t.stop();t.close()}catch{}});await fetch('/api/gaming-live-stop',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token},body:JSON.stringify({session_id:activeSessionId})});$('stopBroadcast').classList.add('hidden');$('eligibility').textContent='تم إنهاء البث.';toast('تم إنهاء البث.');}catch(e){toast(e.message)}});
+function setHostState(message,ok=false){$('broadcastConnection').textContent=message;$('broadcastConnection').className='notice '+(ok?'success':'');}
+function cleanupTracks(){localTracks.forEach(t=>{try{t.stop();t.close()}catch{}});localTracks=[];}
+async function stopBroadcast(showMessage=true){
+ if(isStopping)return;isStopping=true;
+ try{
+  if(rtcClient){try{await rtcClient.unpublish(localTracks)}catch{}try{await rtcClient.leave()}catch{}rtcClient=null;}
+  cleanupTracks();
+  if(activeSessionId&&streamAccessToken){
+   const r=await fetch('/api/gaming-live-stop',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+streamAccessToken},body:JSON.stringify({session_id:activeSessionId})});
+   const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||'تعذر إنهاء البث في الخادم.');
+  }
+  $('broadcastStage').classList.add('hidden');$('stopBroadcast').classList.add('hidden');
+  $('streamForm').classList.remove('hidden');$('localPreview').classList.add('hidden');
+  $('hostVideo').innerHTML='';$('hostVideoFallback').classList.remove('hidden');
+  $('eligibility').textContent='تم إنهاء البث.';
+  if(showMessage)toast('تم إنهاء البث.');
+  activeSessionId=null;
+ }catch(e){toast(e.message||'تعذر إنهاء البث.');}
+ finally{isStopping=false;}
+}
+$('streamForm').addEventListener('submit',async e=>{
+ e.preventDefault();
+ const btn=$('createStreamBtn');btn.disabled=true;btn.textContent='جارٍ تجهيز البث…';
+ $('streamResult').classList.add('hidden');
+ try{
+  const Agora=window.AgoraRTC;
+  if(!Agora||typeof Agora.createClient!=='function')throw new Error('لم يتم تحميل مكتبة Agora. حدّث الصفحة ثم أعد المحاولة.');
+  if(!navigator.mediaDevices?.getUserMedia)throw new Error('المتصفح لا يدعم الكاميرا والميكروفون أو أن الصفحة ليست عبر HTTPS.');
+  streamAccessToken=await authToken();
+  // Request camera/microphone before joining Agora, then report the exact browser permission error.
+  setHostState('جارٍ طلب إذن الكاميرا والميكروفون…');
+  try{
+   const devices=await navigator.mediaDevices.enumerateDevices();
+   const hasCamera=devices.some(d=>d.kind==='videoinput');
+   const hasMic=devices.some(d=>d.kind==='audioinput');
+   if(!hasCamera)throw new Error('لم يتم العثور على كاميرا في هذا الجهاز.');
+   if(!hasMic)throw new Error('لم يتم العثور على ميكروفون في هذا الجهاز.');
+  }catch(deviceErr){if(deviceErr.name==='NotAllowedError')throw deviceErr;}
+  const cameraTrack=await Agora.createCameraVideoTrack({encoderConfig:'720p_2'});
+  localTracks.push(cameraTrack);
+  let micTrack;
+  try{micTrack=await Agora.createMicrophoneAudioTrack({encoderConfig:'music_standard'});localTracks.unshift(micTrack);}
+  catch(micErr){throw new Error('تعذر تشغيل الميكروفون: '+(micErr.message||micErr.name));}
+  // Show local camera preview immediately so a black preview is not mistaken for a live stream.
+  $('hostVideo').innerHTML='';cameraTrack.play('hostVideo');
+  $('hostVideoFallback').classList.add('hidden');
+  $('hostAudioState').textContent='الميكروفون: يعمل محليًا';
+  const payload={title:$('streamTitle').value.trim(),description:$('streamDescription').value.trim(),category_id:$('streamCategory').value||null};
+  const response=await fetch('/api/gaming-live-start',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+streamAccessToken},body:JSON.stringify(payload)});
+  const data=await response.json().catch(()=>({}));
+  if(!response.ok)throw new Error(data.error||'تعذر إنشاء جلسة البث.');
+  activeSessionId=data.session_id;
+  rtcClient=Agora.createClient({mode:'live',codec:'vp8'});
+  rtcClient.on('connection-state-change',(cur,prev,reason)=>setHostState('اتصال Agora: '+cur+(reason?' — '+reason:''),cur==='CONNECTED'));
+  rtcClient.on('exception',e=>{console.error('Agora exception',e);setHostState('تنبيه Agora: '+(e.msg||e.code||'خطأ اتصال'));});
+  await rtcClient.setClientRole('host');
+  await rtcClient.join(data.app_id,data.channel,data.token,Number(data.uid));
+  await rtcClient.publish(localTracks);
+  const status=await fetch('/api/gaming-live-status',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+streamAccessToken},body:JSON.stringify({session_id:activeSessionId,action:'live'})});
+  const statusData=await status.json().catch(()=>({}));
+  if(!status.ok)throw new Error(statusData.error||'تم الاتصال لكن تعذر تحديث حالة البث.');
+  // Transition immediately from setup form into the live studio, without navigating away and killing tracks.
+  $('streamForm').classList.add('hidden');$('streamResult').classList.add('hidden');
+  $('broadcastStageTitle').textContent=$('streamTitle').value.trim()||'بث مباشر';
+  $('broadcastStage').classList.remove('hidden');$('stopBroadcast').classList.remove('hidden');
+  $('eligibility').textContent='أنت مباشر الآن. ستبقى الكاميرا والميكروفون يعملان ما دمت في هذه الصفحة.';
+  setHostState('متصل بـ Agora — تم نشر الصوت والصورة',true);
+  $('hostVideoFallback').classList.add('hidden');
+  $('hostFullscreen').onclick=async()=>{const el=$('broadcastStage');try{if(document.fullscreenElement){await document.exitFullscreen();el.classList.remove('force-fullscreen');}else if(el.requestFullscreen){await el.requestFullscreen();}else{el.classList.toggle('force-fullscreen');}}catch(err){el.classList.toggle('force-fullscreen');}};
+  $('hostStopStage').onclick=()=>stopBroadcast(true);
+  toast('بدأ البث. أنت الآن في استوديو البث المباشر.');
+ }catch(err){
+  console.error('Gaming Live broadcaster error:',err);
+  setHostState('تعذر بدء البث');
+  $('streamResult').className='notice';$('streamResult').textContent='فشل بدء البث: '+(err.message||'خطأ غير معروف');$('streamResult').classList.remove('hidden');
+  if(rtcClient){try{await rtcClient.leave()}catch{}rtcClient=null;}
+  cleanupTracks();
+  if(activeSessionId&&streamAccessToken){try{await fetch('/api/gaming-live-stop',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+streamAccessToken},body:JSON.stringify({session_id:activeSessionId})})}catch{}}
+  activeSessionId=null;
+ }finally{btn.disabled=false;btn.textContent='إنشاء بيانات البث';}
+});
+$('stopBroadcast').addEventListener('click',()=>stopBroadcast(true));
 init().catch(e=>{console.error(e);$('authState').textContent='حدث خطأ أثناء التحقق: '+e.message});})();
 </script></body></html>
