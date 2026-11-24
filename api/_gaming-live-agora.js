@@ -22,15 +22,22 @@ async function db(path, method = 'GET', body) {
 function issueRtcToken(channelName, uid, publisher) {
   const appId = env('AGORA_APP_ID');
   const certificate = env('AGORA_APP_CERTIFICATE');
-  if (!appId || !certificate) throw new Error('Ø¥Ø¹Ø¯Ø§Ø¯Ø§Øª Agora ØºÙØ± ÙÙØªÙÙØ© Ø¹ÙÙ Ø§ÙØ®Ø§Ø¯Ù.');
+  if (!appId || !certificate) throw new Error('إعدادات Agora غير مكتملة على الخادم.');
   // Agora AccessToken2 builder. The certificate is only read in this server-side module.
-  const mod = require('agora-token/src/RtcTokenBuilder2');
-  const Builder = mod.RtcTokenBuilder2;
-  const Role = mod.Role || Builder.Role;
-  if (!Builder || !Role) throw new Error('ØªØ¹Ø°Ø± ØªØ­ÙÙÙ ÙÙÙÙØ¯ Agora AccessToken2.');
+  // Official agora-token Node.js API exports RtcTokenBuilder and Role.
+  const { RtcTokenBuilder, Role } = require('agora-token/src/RtcTokenBuilder2');
+  if (!RtcTokenBuilder || !Role) throw new Error('تعذر تحميل مولّد Agora AccessToken2.');
   const expiration = 3600;
-  const token = Builder.buildTokenWithUid(appId, certificate, channelName, uid, publisher ? Role.ROLE_PUBLISHER : Role.ROLE_SUBSCRIBER, expiration, expiration);
-  if (!token) throw new Error('ØªØ¹Ø°Ø± Ø¥ÙØ´Ø§Ø¡ Ø±ÙØ² Agora.');
+  const token = RtcTokenBuilder.buildTokenWithUid(
+    appId,
+    certificate,
+    channelName,
+    uid,
+    publisher ? Role.PUBLISHER : Role.SUBSCRIBER,
+    expiration,
+    expiration
+  );
+  if (!token) throw new Error('تعذر إنشاء رمز Agora.');
   return { appId, token, expiresIn: expiration };
 }
 module.exports = { env, json, authUser, db, issueRtcToken };
