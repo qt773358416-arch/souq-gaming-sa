@@ -194,7 +194,7 @@ body.admin-menu-open #adminSideMenu{right:0!important;visibility:visible}
 <button class="nav" data-go="أعضاء المتاجر"><i>👥</i>أعضاء المتاجر وصلاحياتهم</button>
 <button class="nav" data-go="إدارة صفحات المتاجر"><i>🏬</i>إدارة صفحات المتاجر</button>
 <button class="nav" data-go="إدارة البنر"><i>🖼</i>إدارة البنر</button>
-<button class="nav" data-go="دكتور القيمنق"><i>🎧</i>دكتور القيمنق</button>
+<button class="nav" data-go="دكتور القيمنق"><i>🎧</i>دكتور القيمنق</button><button class="nav" data-go="Gaming Live"><i>🎮</i>إدارة Gaming Live</button>
 <button class="nav" data-go="إدارة لوحة التجار"><i>🧩</i>إدارة لوحة التجار</button>
 <button class="nav" data-go="الطلبات"><i>🛒</i>الطلبات</button><button class="nav" data-go="المدفوعات والمحافظ"><i>▤</i>المدفوعات والمحافظ</button><button class="nav" data-go="العمولات والتسويات"><i>％</i>العمولات والتسويات</button><button class="nav" data-go="البلاغات والمخالفات"><i>⬡</i>البلاغات والمخالفات</button><button class="nav" data-go="التقييمات والمراجعات"><i>☆</i>التقييمات والمراجعات</button><button class="nav" data-go="المجتمع والمنشورات"><i>♧</i>المجتمع والمنشورات</button><button class="nav" data-go="الإشعارات"><i>♧</i>الإشعارات</button><button class="nav" data-go="التقارير والإحصائيات"><i>▥</i>التقارير والإحصائيات</button><button class="nav" data-go="إعدادات المنصة"><i>⚙</i>إعدادات المنصة</button><button class="nav" data-go="إعدادات المالك"><i>👑</i>إعدادات المالك</button></aside></div><div class="toast" id="toast"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -512,6 +512,29 @@ function workspaceTable(title,rows,columns){
 }
 function dateLabel(v){return v?new Date(v).toLocaleString('ar-SA'):'—';}
 function jsonValue(v){return JSON.stringify(v??null,null,2);}
+async function loadGamingLiveAdmin(){
+ const schema=db.schema('gaming_live');
+ $('workspaceDescription').textContent='مراجعة ملفات اللاعبين واعتماد صلاحية البث ومتابعة البثوث والبلاغات. الدفع والتسويات غير مفعّلة في هذه المرحلة.';
+ $('workspaceToolbar').innerHTML='<input id="glAdminSearch" type="search" placeholder="ابحث باسم اللاعب أو اسم المستخدم أو UUID" style="min-width:220px;flex:1"><select id="glAdminFilter" class="select"><option value="all">كل اللاعبين</option><option value="pending">بانتظار الاعتماد</option><option value="approved">معتمدون للبث</option><option value="rejected">مرفوضون</option><option value="suspended">موقوفون</option></select><button class="primary" id="glAdminRefresh">تحديث ↻</button>';
+ $('workspaceForm').hidden=true;$('workspaceForm').className='panel';
+ wsMsg('جارٍ تحميل ملفات اللاعبين...');$('workspaceList').innerHTML='';
+ const [players,streams,reports]=await Promise.all([
+  schema.from('player_profiles').select('user_id,username,display_name,bio,avatar_url,preferred_games,state,can_stream,stream_access_status,stream_review_note,stream_reviewed_at,created_at').order('created_at',{ascending:false}).limit(300),
+  schema.from('stream_sessions').select('id,host_user_id,title,status,viewer_count,created_at,started_at').order('created_at',{ascending:false}).limit(100),
+  schema.from('content_reports').select('id,reported_user_id,session_id,reason,state,created_at').eq('state','open').order('created_at',{ascending:false}).limit(100)
+ ]);
+ if(players.error){wsMsg('تعذر تحميل اللاعبين: '+players.error.message+' — تحقق من صلاحية القراءة ومخطط gaming_live.');return;}
+ const playerRows=players.data||[],streamRows=streams.error?[]:(streams.data||[]),reportRows=reports.error?[]:(reports.data||[]);
+ const stats=[['ملفات اللاعبين',playerRows.length],['بانتظار الاعتماد',playerRows.filter(p=>(p.stream_access_status||'pending')==='pending'&&!p.can_stream).length],['معتمدون للبث',playerRows.filter(p=>p.can_stream).length],['بثوث مسجلة',streamRows.length],['بلاغات مفتوحة',reportRows.length]];
+ $('workspaceList').innerHTML=`<div class="vendor-admin-metrics">${stats.map(([a,b])=>`<div class="vendor-admin-metric"><small>${wsEsc(a)}</small><strong>${Number(b).toLocaleString('ar-SA')}</strong></div>`).join('')}</div><div id="glAdminPlayers" class="workspace-list"></div><div class="panel" style="margin-top:16px"><h3>آخر البثوث</h3><div class="tablewrap"><table><thead><tr><th>عنوان البث</th><th>الحالة</th><th>المشاهدون</th><th>تاريخ الإنشاء</th></tr></thead><tbody>${streamRows.slice(0,20).map(x=>`<tr><td>${wsEsc(x.title)}</td><td>${wsEsc(x.status)}</td><td>${Number(x.viewer_count||0)}</td><td>${x.created_at?new Date(x.created_at).toLocaleString('ar-SA'):'—'}</td></tr>`).join('')||'<tr><td colspan="4">لا توجد بثوث مسجلة.</td></tr>'}</tbody></table></div></div><div class="panel" style="margin-top:16px"><h3>البلاغات المفتوحة</h3><div class="tablewrap"><table><thead><tr><th>السبب</th><th>معرّف اللاعب</th><th>البث</th><th>التاريخ</th></tr></thead><tbody>${reportRows.slice(0,20).map(x=>`<tr><td>${wsEsc(x.reason)}</td><td>${wsEsc(x.reported_user_id||'—')}</td><td>${wsEsc(x.session_id||'—')}</td><td>${x.created_at?new Date(x.created_at).toLocaleString('ar-SA'):'—'}</td></tr>`).join('')||'<tr><td colspan="4">لا توجد بلاغات مفتوحة.</td></tr>'}</tbody></table></div></div>`;
+ const list=$('glAdminPlayers');
+ const statusLabel={pending:'بانتظار الاعتماد',approved:'معتمد للبث',rejected:'مرفوض',suspended:'موقوف',revoked:'سُحبت الصلاحية'};
+ function render(){const term=($('glAdminSearch')?.value||'').trim().toLowerCase(),filter=$('glAdminFilter')?.value||'all';const filtered=playerRows.filter(p=>{const st=p.stream_access_status|| (p.can_stream?'approved':'pending');const hay=[p.display_name,p.username,p.user_id].join(' ').toLowerCase();return (!term||hay.includes(term))&&(filter==='all'||(filter==='approved'?p.can_stream:st===filter));});list.innerHTML=filtered.map(p=>{const st=p.stream_access_status||(p.can_stream?'approved':'pending');return `<article class="workspace-row"><div><div class="record-title">${wsEsc(p.display_name||p.username||'لاعب')} <span class="record-chip">${wsEsc(statusLabel[st]||st)}</span></div><div class="record-meta"><span class="record-chip">@${wsEsc(p.username)}</span><span class="record-chip">${p.can_stream?'صلاحية البث: مفعّلة':'صلاحية البث: غير مفعّلة'}</span><span class="record-chip">${p.created_at?new Date(p.created_at).toLocaleDateString('ar-SA'):'—'}</span></div><p class="muted" style="font-size:12px;overflow-wrap:anywhere">${wsEsc(p.user_id)}</p>${p.stream_review_note?`<p class="muted">ملاحظة المراجعة: ${wsEsc(p.stream_review_note)}</p>`:''}</div><div class="workspace-actions"><button data-gl-review="approved" data-gl-user="${wsEsc(p.user_id)}">اعتماد البث</button><button data-gl-review="rejected" data-gl-user="${wsEsc(p.user_id)}">رفض الطلب</button><button data-gl-review="suspended" data-gl-user="${wsEsc(p.user_id)}">إيقاف الصلاحية</button><button data-gl-review="revoked" data-gl-user="${wsEsc(p.user_id)}">سحب الصلاحية</button></div></article>`}).join('')||'<div class="workspace-message">لا توجد ملفات مطابقة للبحث أو التصفية.</div>';}
+ render();$('glAdminSearch').addEventListener('input',render);$('glAdminFilter').addEventListener('change',render);$('glAdminRefresh').onclick=()=>showAdminSection('Gaming Live');
+ list.addEventListener('click',async ev=>{const b=ev.target.closest('[data-gl-review]');if(!b)return;const userId=b.dataset.glUser,decision=b.dataset.glReview;const labels={approved:'اعتماد صلاحية البث',rejected:'رفض طلب البث',suspended:'إيقاف صلاحية البث',revoked:'سحب صلاحية البث'};const reason=prompt(labels[decision]+' — اكتب ملاحظة القرار (مطلوبة):');if(reason===null)return;if(reason.trim().length<3){window.toast('اكتب سببًا لا يقل عن 3 أحرف.');return;}b.disabled=true;try{const {data,error}=await schema.rpc('admin_set_player_stream_access',{p_user_id:userId,p_decision:decision,p_note:reason.trim()});if(error)throw error;window.toast('تم حفظ القرار وتسجيله.');await showAdminSection('Gaming Live');}catch(e){window.toast('تعذر حفظ القرار: '+(e.message||String(e)));b.disabled=false;}});
+ wsMsg(`تم تحميل ${playerRows.length} ملف لاعب. اعتماد البث متاح لمالك المنصة أو مدير Gaming Live المصرح له. الدفع غير مفعّل.`);
+}
+
 async function showAdminSection(name){
  const cfg=workspaceConfigs[name];
  wsHomeHide();window.scrollTo({top:0,behavior:'instant'});$('workspaceTitle').textContent=name;$('workspaceDescription').textContent=cfg?.desc||'إدارة بيانات المنصة مباشرة من قاعدة البيانات.';
@@ -519,6 +542,7 @@ async function showAdminSection(name){
  $('workspaceToolbar').innerHTML='<button class="primary" id="workspaceRefresh">تحديث البيانات ↻</button>';
  $('workspaceRefresh').onclick=()=>showAdminSection(name);wsMsg('جارٍ تحميل البيانات...');
  try{
+  if(name==='Gaming Live'){await loadGamingLiveAdmin();return;}
   if(name==='إدارة البنر'){await loadWorkspaceBanner();return;}
   if(name==='إعدادات المالك'){await loadOwnerSettings();return;}
   if(name==='دكتور القيمنق'){await loadWorkspaceDoctor();return;}
