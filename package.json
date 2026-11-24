@@ -1,0 +1,8 @@
+
+  "name": "souq-gaming-sa",
+  "private": true,
+  "version": "1.0.0",
+  "dependencies": {
+    "agora-token": "2.0.7"
+  }
+}
