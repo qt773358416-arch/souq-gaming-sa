@@ -55,6 +55,28 @@
  #agoraRemoteVideo video{object-fit:cover!important}
  .chat{position:sticky;top:82px}
 }
+
+.live-actions{position:absolute;right:14px;bottom:24%;z-index:18;display:flex;flex-direction:column;gap:16px;align-items:center}
+.live-action{width:54px;min-height:58px;border:0;background:transparent;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-shadow:0 2px 5px #000;cursor:pointer}
+.live-action span{font-size:34px;line-height:1.1;font-weight:900}
+.live-action small{font-size:11px;font-weight:800}
+.live-action.liked span{color:#ff426b;transform:scale(1.12)}
+@keyframes heartPop{0%{transform:scale(.5);opacity:.4}55%{transform:scale(1.35);opacity:1}100%{transform:scale(1)}}
+.live-action.pop span{animation:heartPop .28s ease}
+@media(min-width:761px){.live-actions{right:16px;bottom:24%}}
+
+.gift-tray{position:fixed;z-index:70;left:12px;right:12px;bottom:12px;max-width:520px;margin:auto;background:#111b2d;border:1px solid #52698b;border-radius:22px;padding:16px;box-shadow:0 15px 60px #000b}
+.gift-tray-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.gift-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;max-height:35vh;overflow:auto}
+.gift-card{background:#1a2940;border:1px solid #344b6b;border-radius:14px;padding:12px 6px;text-align:center;color:#fff;min-width:0}
+.gift-card .gift-emoji{font-size:30px;display:block;margin-bottom:5px}
+.gift-card strong{font-size:12px;display:block}
+.gift-card small{font-size:11px;color:#aebbd0}
+.gift-payment-note{font-size:11px;color:#ffdc9b;line-height:1.6;margin-top:12px}
+.gift-burst{position:fixed;z-index:65;left:50%;top:40%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:6px;padding:18px 24px;border-radius:22px;background:#111c;color:#fff;border:1px solid #ffffff55;animation:giftPop 1.6s ease both;pointer-events:none}
+.gift-burst span{font-size:66px}.gift-burst strong{font-size:20px;text-shadow:0 2px 8px #000}
+@keyframes giftPop{0%{opacity:0;transform:translate(-50%,-35%) scale(.5)}20%{opacity:1;transform:translate(-50%,-50%) scale(1.12)}75%{opacity:1}100%{opacity:0;transform:translate(-50%,-60%) scale(1)}}
+@media(max-width:760px){.gift-tray{bottom:max(10px,env(safe-area-inset-bottom));}.gift-grid{max-height:32vh}}
 </style></head>
 <body>
 <header class="top"><div class="wrap topin"><a class="brand" href="gaming-live.html"><span class="logo">🎮</span><span>Gaming Live</span></a><a class="btn" href="gaming-live.html">العودة للمجتمع</a></div></header>
@@ -62,7 +84,12 @@
 <section>
 <div class="player" id="player"><video id="liveVideo" controls playsinline webkit-playsinline style="width:100%;height:100%;max-height:100%;display:none;background:#000;border-radius:14px"></video><div id="agoraRemoteVideo" style="position:absolute;inset:0;width:100%;height:100%;display:none"></div><div id="liveBadge" style="position:absolute;top:14px;right:14px;z-index:4;background:#e53955;color:white;border-radius:6px;padding:5px 9px;font-size:12px;font-weight:900">● مباشر</div>
 <button type="button" id="viewerShare" class="btn" style="position:absolute;top:14px;left:14px;z-index:4;background:#1119;border-color:#ffffff55">مشاركة ↗</button>
-<button type="button" id="viewerFullscreen" class="btn hidden" style="position:absolute;top:58px;left:14px;z-index:4">ملء الشاشة ⛶</button><div id="playerPlaceholder"><div class="big">🎮</div><h2>مشغل البث</h2><p id="playerState">جارٍ تحميل بيانات البث…</p></div></div>
+<button type="button" id="viewerFullscreen" class="btn hidden" style="position:absolute;top:58px;left:14px;z-index:4">ملء الشاشة ⛶</button>
+<div class="live-actions" id="liveActions">
+ <button type="button" id="likeStreamBtn" class="live-action" aria-label="إعجاب بالبث"><span id="likeHeart">♡</span><small id="likeCount">0</small></button>
+ <button type="button" id="viewerFollowQuick" class="live-action" aria-label="متابعة المذيع"><span>＋</span><small>متابعة</small></button>
+ <button type="button" id="openGiftTray" class="live-action" aria-label="الهدايا"><span>🎁</span><small>الهدايا</small></button>
+</div><div id="playerPlaceholder"><div class="big">🎮</div><h2>مشغل البث</h2><p id="playerState">جارٍ تحميل بيانات البث…</p></div></div>
 <h1 class="title" id="streamTitle">مشاهدة البث</h1>
 <div class="row muted"><span id="gameName">اللعبة</span><span>•</span><span id="viewerCount">— مشاهد</span><span>•</span><span id="streamState">الحالة</span></div>
 <div class="panel host"><div class="avatar" id="hostAvatar">؟</div><div style="flex:1"><strong id="hostName">اللاعب</strong><div class="muted" id="hostHandle"></div></div><button class="btn primary" id="followBtn">متابعة اللاعب</button></div>
@@ -108,6 +135,81 @@ async function joinAgoraViewer(){
  $('viewerFullscreen').onclick=async()=>{const el=$('player');try{if(document.fullscreenElement){await document.exitFullscreen();el.classList.remove('force-fullscreen');}else if(el.requestFullscreen){await el.requestFullscreen();}else{el.classList.toggle('force-fullscreen');}}catch(e){el.classList.toggle('force-fullscreen');}};
  setTimeout(()=>{if(!gotVideo&&session?.status==='live')$('playerState').textContent='القناة متصلة لكن لم يصل فيديو من المذيع. تأكد أن المذيع ينشر مسار الكاميرا في صفحة بدء البث.';},12000);
 }
+
+let likedByMe=false,likesChannel=null;
+async function loadLikeState(){
+ if(!session)return;
+ const q=await db.from('stream_likes').select('user_id').eq('session_id',streamId);
+ if(q.error){console.warn('likes load:',q.error.message);return;}
+ $('likeCount').textContent=(q.data||[]).length.toLocaleString('ar-SA');
+ likedByMe=!!(user&&q.data?.some(x=>x.user_id===user.id));
+ $('likeStreamBtn').classList.toggle('liked',likedByMe);
+ $('likeHeart').textContent=likedByMe?'♥':'♡';
+}
+async function toggleStreamLike(){
+ if(!user){toast('سجّل الدخول للتفاعل مع البث.');return;}
+ if(!session||session.status!=='live'){toast('الإعجاب متاح أثناء البث المباشر فقط.');return;}
+ const btn=$('likeStreamBtn');btn.disabled=true;
+ try{
+  let result;
+  if(likedByMe)result=await db.from('stream_likes').delete().eq('session_id',streamId).eq('user_id',user.id);
+  else result=await db.from('stream_likes').insert({session_id:streamId,user_id:user.id});
+  if(result.error)throw result.error;
+  likedByMe=!likedByMe;
+  $('likeStreamBtn').classList.toggle('liked',likedByMe);
+  $('likeStreamBtn').classList.add('pop');setTimeout(()=>$('likeStreamBtn').classList.remove('pop'),320);
+  $('likeHeart').textContent=likedByMe?'♥':'♡';
+  const c=Number(($('likeCount').textContent||'0').replace(/[^\d]/g,''))+(likedByMe?1:-1);
+  $('likeCount').textContent=Math.max(0,c).toLocaleString('ar-SA');
+ }catch(e){toast('تعذر تسجيل الإعجاب: '+e.message);}
+ finally{btn.disabled=false;}
+}
+$('likeStreamBtn').addEventListener('click',toggleStreamLike);
+$('viewerFollowQuick').addEventListener('click',()=>$('followBtn').click());
+
+
+let giftCatalog=[];
+const giftEmojiFor=name=>{
+ const n=(name||'').toLowerCase();
+ if(n.includes('rose')||n.includes('ورد'))return '🌹';
+ if(n.includes('heart')||n.includes('قلب'))return '❤️';
+ if(n.includes('star')||n.includes('نجمة'))return '⭐';
+ if(n.includes('crown')||n.includes('تاج'))return '👑';
+ if(n.includes('car')||n.includes('سيارة'))return '🏎️';
+ if(n.includes('rocket')||n.includes('صاروخ'))return '🚀';
+ if(n.includes('diamond')||n.includes('ألماس'))return '💎';
+ return '🎁';
+};
+async function loadGiftCatalog(){
+ const grid=$('giftGrid');
+ const r=await db.from('gift_catalog').select('id,name,description,price_sar,image_url,sort_order').eq('is_active',true).order('sort_order',{ascending:true}).limit(30);
+ if(r.error){grid.innerHTML='<div class="empty">تعذر تحميل قائمة الهدايا.</div>';console.warn('gift catalog:',r.error.message);return;}
+ giftCatalog=r.data||[];
+ if(!giftCatalog.length){grid.innerHTML='<div class="empty">لا توجد هدايا مفعّلة حالياً. يمكن لمدير المنصة إضافتها من مركز التحكم.</div>';return;}
+ grid.innerHTML='';
+ giftCatalog.forEach(g=>{
+  const card=document.createElement('div');card.className='gift-card';
+  const emoji=giftEmojiFor(g.name);
+  const name=document.createElement('strong');name.textContent=g.name;
+  const price=document.createElement('small');price.textContent=Number(g.price_sar).toLocaleString('ar-SA')+' ر.س';
+  const icon=document.createElement('span');icon.className='gift-emoji';icon.textContent=emoji;
+  card.append(icon,name,price);
+  card.addEventListener('click',()=>previewGift(g,emoji));
+  grid.append(card);
+ });
+}
+function previewGift(g,emoji){
+ $('giftBurstEmoji').textContent=emoji;
+ $('giftBurstName').textContent='معاينة: '+g.name;
+ $('giftBurst').classList.remove('hidden');
+ $('giftBurst').style.animation='none';void $('giftBurst').offsetWidth;$('giftBurst').style.animation='';
+ setTimeout(()=>$('giftBurst').classList.add('hidden'),1650);
+ $('giftTray').classList.add('hidden');
+ toast('هذه معاينة فقط؛ إرسال الهدايا والدفع غير مفعّلين بعد.');
+}
+$('openGiftTray').addEventListener('click',async()=>{$('giftTray').classList.remove('hidden');if(!giftCatalog.length)await loadGiftCatalog();});
+$('closeGiftTray').addEventListener('click',()=>$('giftTray').classList.add('hidden'));
+
 function toast(t){$('toast').textContent=t;$('toast').style.display='block';setTimeout(()=>$('toast').style.display='none',2600)}
 $('viewerShare').addEventListener('click',async()=>{const shareData={title:session?.title||'Gaming Live',text:'شاهد هذا البث المباشر على سوق القيمنق السعودي',url:location.href};try{if(navigator.share)await navigator.share(shareData);else if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(location.href);toast('تم نسخ رابط البث.');}else toast('انسخ رابط الصفحة لمشاركة البث.');}catch(e){if(e.name!=='AbortError')toast('تعذرت مشاركة الرابط.');}});
 function err(t){$('pageError').textContent=t;$('pageError').classList.remove('hidden')}
@@ -119,13 +221,13 @@ $('streamTitle').textContent=session.title;$('streamDescription').textContent=se
 const cat=await db.from('game_categories').select('name').eq('id',session.category_id).maybeSingle();$('gameName').textContent=cat.data?.name||'ألعاب';
 const pr=await db.from('player_profiles').select('user_id,username,display_name,avatar_url').eq('user_id',session.host_user_id).maybeSingle();profile=pr.data;$('hostName').textContent=profile?.display_name||profile?.username||'لاعب';$('hostHandle').textContent=profile?.username?'@'+profile.username:'';$('hostAvatar').textContent=(profile?.display_name||profile?.username||'ل').slice(0,1);
 if(user&&profile){const f=await db.from('player_follows').select('follower_user_id').eq('follower_user_id',user.id).eq('followed_user_id',profile.user_id).maybeSingle();$('followBtn').textContent=f.data?'إلغاء المتابعة':'متابعة اللاعب';}else{$('followBtn').textContent='سجّل الدخول للمتابعة'}
-await loadMessages();if(session.status==='live'){channel=db.channel('gl-chat-'+streamId).on('postgres_changes',{event:'INSERT',schema:'gaming_live',table:'stream_messages',filter:'session_id=eq.'+streamId},async payload=>{const msg=payload.new;const p=await db.from('player_profiles').select('username,display_name').eq('user_id',msg.user_id).maybeSingle();addMessage(msg,p.data);}).subscribe();}
+await loadMessages();await loadLikeState();await loadGiftCatalog();if(session.status==='live'){likesChannel=db.channel('gl-likes-'+streamId).on('postgres_changes',{event:'*',schema:'gaming_live',table:'stream_likes',filter:'session_id=eq.'+streamId},()=>loadLikeState()).subscribe();channel=db.channel('gl-chat-'+streamId).on('postgres_changes',{event:'INSERT',schema:'gaming_live',table:'stream_messages',filter:'session_id=eq.'+streamId},async payload=>{const msg=payload.new;const p=await db.from('player_profiles').select('username,display_name').eq('user_id',msg.user_id).maybeSingle();addMessage(msg,p.data);}).subscribe();}
 $('chatHint').textContent=user?'التعليقات تخضع لإشراف مجتمع القيمنق.':'سجّل الدخول من سوق القيمنق لإرسال تعليق.';
 }
 async function loadMessages(){const r=await db.from('stream_messages').select('id,user_id,message,created_at').eq('session_id',streamId).eq('state','visible').order('created_at',{ascending:true}).limit(100);if(r.error)throw r.error;$('chatMessages').innerHTML='';if(!r.data.length){$('chatMessages').innerHTML='<div class="empty">لا توجد تعليقات بعد. ابدأ المحادثة باحترام.</div>';return}const ids=[...new Set(r.data.map(x=>x.user_id))];const ps=await db.from('player_profiles').select('user_id,username,display_name').in('user_id',ids);const map=new Map((ps.data||[]).map(p=>[p.user_id,p]));r.data.forEach(m=>addMessage(m,map.get(m.user_id)));}
 $('followBtn').addEventListener('click',async()=>{if(!user){toast('سجّل الدخول أولًا من سوق القيمنق.');return}if(!profile||profile.user_id===user.id){toast('لا يمكنك متابعة نفسك.');return}const q=await db.from('player_follows').select('follower_user_id').eq('follower_user_id',user.id).eq('followed_user_id',profile.user_id).maybeSingle();let res;if(q.data)res=await db.from('player_follows').delete().eq('follower_user_id',user.id).eq('followed_user_id',profile.user_id);else res=await db.from('player_follows').insert({follower_user_id:user.id,followed_user_id:profile.user_id});if(res.error){toast(res.error.message);return}$('followBtn').textContent=q.data?'متابعة اللاعب':'إلغاء المتابعة';});
 $('chatForm').addEventListener('submit',async e=>{e.preventDefault();const text=$('chatInput').value.trim();if(!text)return;if(!user){toast('سجّل الدخول لإرسال تعليق.');return}if(!session||session.status!=='live'){toast('التعليقات متاحة أثناء البث المباشر فقط.');return}const r=await db.from('stream_messages').insert({session_id:streamId,user_id:user.id,message:text});if(r.error){toast(r.error.message);return}$('chatInput').value='';});
 load().catch(e=>{console.error(e);err(e.message||'تعذر تحميل البث.');$('playerState').textContent='تعذر تحميل بيانات البث.';});
-window.addEventListener('beforeunload',()=>{if(channel)db.removeChannel(channel);if(rtcClient)rtcClient.leave().catch(()=>{})});
+window.addEventListener('beforeunload',()=>{if(channel)db.removeChannel(channel);if(likesChannel)db.removeChannel(likesChannel);if(rtcClient)rtcClient.leave().catch(()=>{})});
 })();
 </script></body></html>
