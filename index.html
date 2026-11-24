@@ -1022,6 +1022,27 @@ body.vendor-store-open #vendorSelectedStore .vendor-detail-head,body.vendor-stor
 @media(max-width:650px){body.vendor-store-open #vendorSelectedStore{padding:0!important}body.vendor-store-open #vendorSelectedStore #souqMerchantTemplateHost{border-radius:0}body.vendor-store-open #vendorSelectedStore #souqMerchantTemplateFrame{height:calc(100dvh - 52px);min-height:600px}}
 </style>
 
+
+<style id="gaming-live-community-home-shortcut">
+/* اختصار مجتمع Gaming Live في موضع دائرة الكل ضمن شريط المتاجر */
+.vendor-category-circle.gaming-community-shortcut{
+  text-decoration:none!important;cursor:pointer!important;
+}
+.vendor-category-circle.gaming-community-shortcut:focus-visible{
+  outline:2px solid #55c9df!important;outline-offset:4px!important;border-radius:12px!important;
+}
+.vendor-category-circle.gaming-community-icon{
+  position:relative;background:linear-gradient(145deg,#16485a,#101d30)!important;
+  border:2px solid #35c8df!important;box-shadow:0 0 0 3px #35c8df25,0 4px 13px #0005!important;
+}
+.gaming-community-gamepad{font-size:29px;line-height:1}
+.gaming-community-live-dot{
+  position:absolute;top:3px;right:3px;padding:2px 4px;border-radius:5px;
+  background:#e53954;color:#fff;font-size:7px;font-weight:900;line-height:1.2;
+}
+.vendor-category-circle.gaming-community-shortcut b{color:#7ce9f5!important;font-size:10px!important}
+</style>
+
 </head>
 <body class="theme-dark">
 <div id="souqSplash" role="status" aria-label="جاري تجهيز سوق القيمنق السعودي">
@@ -1070,7 +1091,10 @@ body.vendor-store-open #vendorSelectedStore .vendor-detail-head,body.vendor-stor
 <div class="vendor-circle-section" id="vendorCircleSection">
  <div class="vendor-circle-head"><strong>👑 المتاجر</strong><button class="linkbtn" type="button" data-go="vendors">عرض جميع المتاجر ←</button></div>
  <div class="vendor-category-circle-rail" id="vendorCategoryCircleRail" aria-label="تصنيفات المتاجر">
-  <button class="vendor-category-circle selected" type="button" data-vendor-category=""><span class="vendor-category-circle-icon">🏬</span><b>الكل</b></button>
+  <a class="vendor-category-circle gaming-community-shortcut" href="gaming-live.html" aria-label="افتح مجتمع القيمنق والبث المباشر">
+   <span class="vendor-category-circle-icon gaming-community-icon"><span class="gaming-community-live-dot">LIVE</span><span class="gaming-community-gamepad">🎮</span></span>
+   <b>مجتمع القيمنق</b>
+  </a>
   <button class="vendor-category-circle" type="button" data-vendor-category="بلايستيشن"><span class="vendor-category-circle-icon"><img src="https://cdn.simpleicons.org/playstation/ffffff" alt="PlayStation" loading="lazy"></span><b>بلايستيشن</b></button>
   <button class="vendor-category-circle" type="button" data-vendor-category="إكس بوكس"><span class="vendor-category-circle-icon"><img src="https://cdn.simpleicons.org/xbox/ffffff" alt="Xbox" loading="lazy"></span><b>إكس بوكس</b></button>
   <button class="vendor-category-circle" type="button" data-vendor-category="أجهزة الألعاب"><span class="vendor-category-circle-icon">🎮</span><b>أجهزة الألعاب</b></button>
