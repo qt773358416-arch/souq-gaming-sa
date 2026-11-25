@@ -22,6 +22,8 @@ const validId=v=>/^[0-9a-f-]{36}$/i.test(String(v||''));
 async function getStream(session_id){return (await db(`stream_sessions?id=eq.${encodeURIComponent(session_id)}&select=id,host_user_id&limit=1`))?.[0]||null;}
 async function isModerator(userId,stream){
  if(stream.host_user_id===userId)return true;
+ const scoped=await db(`stream_moderators?session_id=eq.${encodeURIComponent(stream.id)}&user_id=eq.${encodeURIComponent(userId)}&revoked_at=is.null&select=user_id&limit=1`);
+ if(scoped?.length)return true;
  const roles=await db(`staff_roles?user_id=eq.${encodeURIComponent(userId)}&is_active=eq.true&role=in.(owner,admin,moderator)&select=role&limit=1`);
  return !!roles?.length;
 }
@@ -42,10 +44,20 @@ module.exports=async(req,res)=>{
    const stream=await getStream(sid);
    if(!stream)return send(res,404,{error:'البث غير موجود.'});
    const canModerate=await isModerator(user.id,stream);
+   if(req.headers['x-moderation-list']==='1'){
+    if(!canModerate)return send(res,403,{error:'لا تملك صلاحية عرض قائمة القيود.'});
+    const rows=await db(`moderation_actions?session_id=eq.${encodeURIComponent(sid)}&action=in.(mute_user,block_user)&select=id,target_user_id,action,reason,expires_at,created_at&order=created_at.desc&limit=500`);
+    const now=Date.now();const seen=new Set();const restrictions=[];
+    for(const row of (rows||[])){
+     if(row.expires_at&&new Date(row.expires_at).getTime()<=now)continue;
+     const key=row.target_user_id+':'+row.action;if(seen.has(key))continue;seen.add(key);restrictions.push(row);
+    }
+    return send(res,200,{can_moderate:true,restrictions});
+   }
    const restrictions=await activeRestrictions(sid,user.id);
    const block=restrictions.find(x=>x.action==='block_user');
    const mute=restrictions.find(x=>x.action==='mute_user');
-   return send(res,200,{can_moderate:canModerate,role:stream.host_user_id===user.id?'host':(canModerate?'moderator':'viewer'),my_restriction:block?{blocked:true,muted:false,expires_at:block.expires_at}:mute?{blocked:false,muted:true,expires_at:mute.expires_at}:null});
+   return send(res,200,{can_moderate:canModerate,is_host:stream.host_user_id===user.id,role:stream.host_user_id===user.id?'host':(canModerate?'moderator':'viewer'),my_restriction:block?{blocked:true,muted:false,expires_at:block.expires_at}:mute?{blocked:false,muted:true,expires_at:mute.expires_at}:null});
   }
   const {action,session_id,message_id,target_user_id,reason='مخالفة إرشادات البث',duration_minutes}=req.body||{};
   if(!validId(session_id))return send(res,400,{error:'معرف البث غير صالح.'});
@@ -79,6 +91,8 @@ module.exports=async(req,res)=>{
     expires_at=new Date(Date.now()+mins*60000).toISOString();
    }
    const kind=action==='mute_user'?'الكتم':'الحظر';
+   const prior=`moderation_actions?session_id=eq.${encodeURIComponent(session_id)}&target_user_id=eq.${encodeURIComponent(target_user_id)}&action=eq.${action}&or=(expires_at.is.null,expires_at.gt.${encodeURIComponent(now)})`;
+   await db(prior,'PATCH',{expires_at:now});
    await db('moderation_actions','POST',{moderator_user_id:user.id,target_user_id,session_id,action,reason:why,expires_at});
    return send(res,200,{success:true,message:expires_at?`تم ${kind} اللاعب حتى ${new Date(expires_at).toLocaleString('ar-SA')}.`:`تم حظر اللاعب من التعليق في هذا البث حتى إلغاء الحظر.`});
   }
