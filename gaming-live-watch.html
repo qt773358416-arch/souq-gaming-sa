@@ -77,6 +77,10 @@
 .gift-burst span{font-size:66px}.gift-burst strong{font-size:20px;text-shadow:0 2px 8px #000}
 @keyframes giftPop{0%{opacity:0;transform:translate(-50%,-35%) scale(.5)}20%{opacity:1;transform:translate(-50%,-50%) scale(1.12)}75%{opacity:1}100%{opacity:0;transform:translate(-50%,-60%) scale(1)}}
 @media(max-width:760px){.gift-tray{bottom:max(10px,env(safe-area-inset-bottom));}.gift-grid{max-height:32vh}}
+
+.restriction-item{background:#0b1423;border:1px solid var(--line);border-radius:10px;padding:9px;font-size:12px;display:grid;gap:5px}.restriction-item button{justify-self:start;border:1px solid #5b8d72;background:#163526;color:#d9ffdf;border-radius:8px;padding:5px 9px;font-size:11px}.mod-hide-message,.mod-user-action{border:1px solid #a34b5b;background:#401b2a;color:#fff;border-radius:8px;padding:3px 7px;font-size:10px;margin-inline-start:6px}.mod-user-action{border-color:#826b3c;background:#332a18}.mod-user-action.block{border-color:#a34b5b;background:#401b2a}
+.msg{position:relative}
+#moderatorBadge{font-size:10px;color:#ffd17a;border:1px solid #795f36;border-radius:99px;padding:4px 7px}
 </style></head>
 <body>
 <header class="top"><div class="wrap topin"><a class="brand" href="gaming-live.html"><span class="logo">🎮</span><span>Gaming Live</span></a><a class="btn" href="gaming-live.html">العودة للمجتمع</a></div></header>
@@ -95,7 +99,7 @@
 <div class="panel host"><div class="avatar" id="hostAvatar">؟</div><div style="flex:1"><strong id="hostName">اللاعب</strong><div class="muted" id="hostHandle"></div></div><button class="btn primary" id="followBtn">متابعة اللاعب</button></div>
 <div class="panel" style="margin-top:14px"><h3>عن البث</h3><p class="muted" id="streamDescription">لا يوجد وصف.</p></div>
 </section>
-<aside class="panel chat"><div class="chathead">💬 محادثة البث</div><div id="chatMessages" class="messages"><div class="empty">جارٍ تحميل التعليقات…</div></div><form id="chatForm" class="composer"><input id="chatInput" maxlength="500" placeholder="اكتب تعليقك…" autocomplete="off"><button class="btn primary" type="submit">إرسال</button></form><p class="muted" id="chatHint" style="font-size:12px;margin-bottom:0">يجب تسجيل الدخول لإرسال تعليق.</p></aside>
+<aside class="panel chat"><div class="chathead" style="display:flex;align-items:center;justify-content:space-between;gap:8px">💬 محادثة البث <span style="display:flex;align-items:center;gap:7px"><span id="moderatorBadge" class="hidden">أدوات إشراف</span><button type="button" id="openModerators" class="btn hidden" style="font-size:11px;padding:6px 9px">إدارة المشرفين</button><button type="button" id="openRestrictions" class="btn hidden" style="font-size:11px;padding:6px 9px">إدارة القيود</button></span></div><section id="moderatorsPanel" class="panel hidden" style="margin:10px 0;padding:12px;max-height:300px;overflow:auto"><div class="row" style="justify-content:space-between"><strong>مشرفو هذا البث</strong><button type="button" id="refreshModerators" class="btn" style="font-size:11px;padding:5px 8px">تحديث</button></div><form id="addModeratorForm" style="display:grid;gap:8px;margin:10px 0"><input id="moderatorUserId" placeholder="معرّف حساب المشرف UUID" autocomplete="off" required><button class="btn primary" type="submit">إضافة مشرف لهذا البث</button></form><div id="moderatorList" style="display:grid;gap:8px"><div class="empty">لا يوجد مشرفون مضافون لهذا البث.</div></div></section><section id="restrictionsPanel" class="panel hidden" style="margin:10px 0;padding:12px;max-height:260px;overflow:auto"><div class="row" style="justify-content:space-between"><strong>المكتومون والمحظورون</strong><button type="button" id="refreshRestrictions" class="btn" style="font-size:11px;padding:5px 8px">تحديث</button></div><div id="restrictionList" style="display:grid;gap:8px;margin-top:10px"><div class="empty">اضغط تحديث لعرض القيود النشطة.</div></div></section><div id="chatMessages" class="messages"><div class="empty">جارٍ تحميل التعليقات…</div></div><form id="chatForm" class="composer"><input id="chatInput" maxlength="500" placeholder="اكتب تعليقك…" autocomplete="off"><button class="btn primary" type="submit">إرسال</button></form><p class="muted" id="chatHint" style="font-size:12px;margin-bottom:0">يجب تسجيل الدخول لإرسال تعليق.</p></aside>
 </main><div class="wrap"><div id="pageError" class="notice hidden"></div></div><div class="toast" id="toast"></div>
 <script src="https://download.agora.io/sdk/release/AgoraRTC_N-4.24.0.js" onerror="this.dataset.failed='1'"></script>
 <script>if(!window.AgoraRTC){document.write('<script src="https://cdn.jsdelivr.net/npm/agora-rtc-sdk-ng@4.24.0/AgoraRTC_N-4.24.0.js"><\\/script>');}</script>
@@ -104,7 +108,7 @@
 (()=>{'use strict';
 const URL='https://hmcsgkavqdsfwqomxakw.supabase.co';const KEY='sb_publishable_I2FLI3drU7_xB8tWWGjnOg_b6Sm2j2m';
 const db=window.supabase.createClient(URL,KEY,{db:{schema:'gaming_live'},auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
-const $=id=>document.getElementById(id);const params=new URLSearchParams(location.search);const streamId=params.get('id');let session=null,profile=null,user=null,channel=null,rtcClient=null;
+const $=id=>document.getElementById(id);const params=new URLSearchParams(location.search);const streamId=params.get('id');let session=null,profile=null,user=null,channel=null,rtcClient=null,viewerKey=null,viewerHeartbeatTimer=null,viewerCountTimer=null,canModerate=false;
 
 async function playLive(src){const video=$('liveVideo');$('playerPlaceholder').classList.add('hidden');video.style.display='block';if(video.canPlayType('application/vnd.apple.mpegurl')){video.src=src;video.play().catch(()=>{});return;}await new Promise((resolve,reject)=>{const script=document.createElement('script');script.src='https://cdn.jsdelivr.net/npm/hls.js@latest';script.onload=resolve;script.onerror=()=>reject(new Error('تعذر تحميل مشغل HLS.'));document.head.appendChild(script);});if(window.Hls&&Hls.isSupported()){const hls=new Hls({enableWorker:true,lowLatencyMode:false});hls.loadSource(src);hls.attachMedia(video);hls.on(Hls.Events.MANIFEST_PARSED,()=>video.play().catch(()=>{}));hls.on(Hls.Events.ERROR,(_,data)=>{if(data.fatal){$('playerPlaceholder').classList.remove('hidden');video.style.display='none';$('playerState').textContent='تعذر تشغيل الفيديو. أعد المحاولة لاحقًا.';}});}else{throw new Error('المتصفح لا يدعم تشغيل HLS.');}}
 async function joinAgoraViewer(){
@@ -168,7 +172,7 @@ $('likeStreamBtn').addEventListener('click',toggleStreamLike);
 $('viewerFollowQuick').addEventListener('click',()=>$('followBtn').click());
 
 
-let giftCatalog=[];
+let giftCatalog=[],giftEventsChannel=null;
 const giftEmojiFor=name=>{
  const n=(name||'').toLowerCase();
  if(n.includes('rose')||n.includes('ورد'))return '🌹';
@@ -198,14 +202,41 @@ async function loadGiftCatalog(){
   grid.append(card);
  });
 }
-function previewGift(g,emoji){
+async function previewGift(g,emoji){
+ if(!user){toast('سجّل الدخول لإرسال هدية تجريبية.');return;}
+ if(!session||session.status!=='live'){toast('يمكن إرسال الهدايا أثناء البث المباشر فقط.');return;}
+ try{
+  const result=await db.from('stream_gift_events').insert({
+   session_id:streamId,
+   sender_user_id:user.id,
+   recipient_user_id:session.host_user_id,
+   gift_id:g.id
+  }).select('id').single();
+  if(result.error)throw result.error;
+  // The sender sees the same event through realtime; fallback local rendering if realtime is delayed.
+  showGiftBurst(g.name,emoji,'أنت أرسلت هدية تجريبية');
+  $('giftTray').classList.add('hidden');
+ }catch(e){toast('تعذر إرسال الهدية التجريبية: '+e.message);}
+}
+function showGiftBurst(name,emoji,sender){
  $('giftBurstEmoji').textContent=emoji;
- $('giftBurstName').textContent='معاينة: '+g.name;
+ $('giftBurstName').textContent=(sender?sender+' · ':'')+name;
  $('giftBurst').classList.remove('hidden');
  $('giftBurst').style.animation='none';void $('giftBurst').offsetWidth;$('giftBurst').style.animation='';
- setTimeout(()=>$('giftBurst').classList.add('hidden'),1650);
- $('giftTray').classList.add('hidden');
- toast('هذه معاينة فقط؛ إرسال الهدايا والدفع غير مفعّلين بعد.');
+ clearTimeout(window.giftBurstTimer);
+ window.giftBurstTimer=setTimeout(()=>$('giftBurst').classList.add('hidden'),1900);
+}
+async function subscribeGiftEvents(){
+ giftEventsChannel=db.channel('gl-gifts-'+streamId)
+  .on('postgres_changes',{event:'INSERT',schema:'gaming_live',table:'stream_gift_events',filter:'session_id=eq.'+streamId},async payload=>{
+   const ev=payload.new;
+   if(ev.sender_user_id===user?.id)return;
+   const gift=giftCatalog.find(x=>x.id===ev.gift_id);
+   let sender='مشاهد';
+   const profile=await db.from('player_profiles').select('display_name,username').eq('user_id',ev.sender_user_id).maybeSingle();
+   if(profile.data)sender=profile.data.display_name||profile.data.username||sender;
+   showGiftBurst(gift?.name||'هدية',gift?giftEmojiFor(gift.name):'🎁',sender+' أرسل');
+  }).subscribe();
 }
 $('openGiftTray').addEventListener('click',async()=>{$('giftTray').classList.remove('hidden');if(!giftCatalog.length)await loadGiftCatalog();});
 $('closeGiftTray').addEventListener('click',()=>$('giftTray').classList.add('hidden'));
@@ -213,21 +244,115 @@ $('closeGiftTray').addEventListener('click',()=>$('giftTray').classList.add('hid
 function toast(t){$('toast').textContent=t;$('toast').style.display='block';setTimeout(()=>$('toast').style.display='none',2600)}
 $('viewerShare').addEventListener('click',async()=>{const shareData={title:session?.title||'Gaming Live',text:'شاهد هذا البث المباشر على سوق القيمنق السعودي',url:location.href};try{if(navigator.share)await navigator.share(shareData);else if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(location.href);toast('تم نسخ رابط البث.');}else toast('انسخ رابط الصفحة لمشاركة البث.');}catch(e){if(e.name!=='AbortError')toast('تعذرت مشاركة الرابط.');}});
 function err(t){$('pageError').textContent=t;$('pageError').classList.remove('hidden')}
-function addMessage(m,p){const d=document.createElement('div');d.className='msg';const n=document.createElement('strong');n.textContent=(p?.display_name||p?.username||'لاعب')+':';const s=document.createElement('span');s.textContent=m.message;d.append(n,s);$('chatMessages').append(d);$('chatMessages').scrollTop=$('chatMessages').scrollHeight}
+function addMessage(m,p){if(document.querySelector('[data-message-id="'+m.id+'"]'))return;const d=document.createElement('div');d.className='msg';d.dataset.messageId=m.id;const n=document.createElement('strong');n.textContent=(p?.display_name||p?.username||'لاعب')+':';const s=document.createElement('span');s.textContent=m.message;d.append(n,s);if(canModerate&&m.user_id!==user?.id&&m.user_id!==session?.host_user_id){const hide=document.createElement('button');hide.type='button';hide.className='mod-hide-message';hide.textContent='إخفاء';hide.addEventListener('click',()=>hideStreamMessage(m.id,hide));d.append(hide);const mute=document.createElement('button');mute.type='button';mute.className='mod-user-action';mute.textContent='كتم';mute.addEventListener('click',()=>moderateViewer('mute_user',m.user_id,mute));d.append(mute);const block=document.createElement('button');block.type='button';block.className='mod-user-action block';block.textContent='حظر';block.addEventListener('click',()=>moderateViewer('block_user',m.user_id,block));d.append(block);const clear=document.createElement('button');clear.type='button';clear.className='mod-user-action';clear.textContent='رفع قيد';clear.addEventListener('click',()=>{const choice=prompt('اكتب 1 لرفع الكتم أو 2 لرفع الحظر:','1');if(choice==='1')clearViewerRestriction('unmute_user',m.user_id,clear);else if(choice==='2')clearViewerRestriction('unblock_user',m.user_id,clear);else if(choice!==null)toast('اختر 1 أو 2.');});d.append(clear);}$('chatMessages').append(d);$('chatMessages').scrollTop=$('chatMessages').scrollHeight}
+async function refreshViewerCount(){
+ if(!session||session.status!=='live')return;
+ const q=await db.rpc('viewer_count_live',{p_session_id:streamId});
+ if(q.error){console.warn('viewer count:',q.error.message);return;}
+ const count=Number(q.data||0);
+ $('viewerCount').textContent=count.toLocaleString('ar-SA')+' مشاهد';
+}
+async function startViewerPresence(){
+ if(!user||!session||session.status!=='live'||user.id===session.host_user_id)return;
+ try{
+  viewerKey=sessionStorage.getItem('gl_viewer_key_'+streamId);
+  if(!viewerKey){viewerKey=crypto.randomUUID();sessionStorage.setItem('gl_viewer_key_'+streamId,viewerKey);}
+  const joined=await db.rpc('viewer_join',{p_session_id:streamId,p_viewer_key:viewerKey});
+  if(joined.error)throw joined.error;
+  await refreshViewerCount();
+  if(viewerHeartbeatTimer)clearInterval(viewerHeartbeatTimer);
+  if(viewerCountTimer)clearInterval(viewerCountTimer);
+  viewerHeartbeatTimer=setInterval(async()=>{
+   const beat=await db.rpc('viewer_heartbeat',{p_session_id:streamId,p_viewer_key:viewerKey});
+   if(beat.error)console.warn('viewer heartbeat:',beat.error.message);
+  },20000);
+  viewerCountTimer=setInterval(refreshViewerCount,15000);
+ }catch(e){console.warn('viewer presence unavailable:',e.message);}
+}
+async function leaveViewerPresence(){
+ if(viewerHeartbeatTimer)clearInterval(viewerHeartbeatTimer);
+ if(viewerCountTimer)clearInterval(viewerCountTimer);
+ if(viewerKey&&streamId){try{await db.rpc('viewer_leave',{p_session_id:streamId,p_viewer_key:viewerKey});}catch(e){console.warn(e);}}
+}
+let isStreamHost=false;
+async function moderatorRequest(method,body){const auth=await db.auth.getSession();const access=auth.data.session?.access_token;if(!access)throw new Error('سجّل الدخول أولاً.');const r=await fetch('/api/gaming-live-moderators',{method,headers:{'Content-Type':'application/json',Authorization:'Bearer '+access,'X-Stream-Id':streamId},body:body?JSON.stringify(body):undefined});const data=await r.json().catch(()=>({}));if(!r.ok)throw new Error(data.error||'تعذر إدارة المشرفين.');return data;}
+async function loadStreamModerators(){const box=$('moderatorList');box.innerHTML='<div class="empty">جارٍ تحميل المشرفين…</div>';try{const data=await moderatorRequest('GET');box.innerHTML='';const rows=data.moderators||[];if(!rows.length){box.innerHTML='<div class="empty">لا يوجد مشرفون مضافون لهذا البث.</div>';return;}for(const item of rows){const card=document.createElement('div');card.className='restriction-item';const id=document.createElement('span');id.textContent='معرّف المشرف: '+item.user_id;const date=document.createElement('span');date.textContent='تاريخ التعيين: '+new Date(item.created_at).toLocaleString('ar-SA');const revoke=document.createElement('button');revoke.type='button';revoke.textContent='سحب صلاحية الإشراف';revoke.addEventListener('click',async()=>{if(!confirm('هل تريد سحب صلاحية هذا المشرف من البث الحالي؟'))return;revoke.disabled=true;try{await moderatorRequest('POST',{action:'revoke',user_id:item.user_id});toast('تم سحب صلاحية المشرف.');await loadStreamModerators();}catch(e){toast(e.message);revoke.disabled=false;}});card.append(id,date,revoke);box.append(card);}}catch(e){box.innerHTML='';const err=document.createElement('div');err.className='empty';err.textContent=e.message;box.append(err);}}
+$('openModerators').addEventListener('click',()=>{const panel=$('moderatorsPanel');panel.classList.toggle('hidden');if(!panel.classList.contains('hidden'))loadStreamModerators();});
+$('refreshModerators').addEventListener('click',loadStreamModerators);
+$('addModeratorForm').addEventListener('submit',async e=>{e.preventDefault();const id=$('moderatorUserId').value.trim();if(!/^[0-9a-f-]{36}$/i.test(id)){toast('أدخل UUID صحيحاً لحساب المشرف.');return;}const btn=e.currentTarget.querySelector('button[type=submit]');btn.disabled=true;try{const data=await moderatorRequest('POST',{action:'assign',user_id:id});toast(data.message||'تمت إضافة المشرف.');$('moderatorUserId').value='';await loadStreamModerators();}catch(err){toast(err.message);}finally{btn.disabled=false;}});
+async function checkModerationAccess(){
+ const auth=await db.auth.getSession();const access=auth.data.session?.access_token;
+ if(!access||!session)return;
+ try{
+  const r=await fetch('/api/gaming-live-moderation',{method:'GET',headers:{Authorization:'Bearer '+access,'X-Stream-Id':streamId}});
+  const data=await r.json().catch(()=>({}));
+  canModerate=!!(r.ok&&data.can_moderate);
+  isStreamHost=!!(r.ok&&data.is_host);
+  $('openModerators').classList.toggle('hidden',!isStreamHost);
+  $('moderatorBadge').classList.toggle('hidden',!canModerate);
+  $('openRestrictions').classList.toggle('hidden',!canModerate);
+  applyChatRestriction(data.my_restriction||null);
+ }catch(e){console.warn('moderation access:',e.message);}
+}
+function applyChatRestriction(restriction){const blocked=!!restriction?.blocked;const muted=!!restriction?.muted;const disabled=blocked||muted;$('chatInput').disabled=disabled;$('chatForm').querySelector('button[type=submit]').disabled=disabled;if(blocked){$('chatHint').textContent='تم منعك من التعليق في هذا البث.';}else if(muted){const until=restriction.expires_at?new Date(restriction.expires_at).toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'}):'حتى إشعار آخر';$('chatHint').textContent='أنت مكتوم في هذا البث حتى '+until+'.';}else if(user){$('chatHint').textContent='التعليقات تخضع لإشراف مجتمع القيمنق.';}}
+async function moderateViewer(action,targetUserId,button){if(!canModerate)return;let duration=null,reason='مخالفة إرشادات البث';if(action==='mute_user'){const raw=prompt('مدة الكتم بالدقائق (من 1 إلى 1440):','10');if(raw===null)return;duration=Number(raw);if(!Number.isInteger(duration)||duration<1||duration>1440){toast('أدخل مدة صحيحة بين 1 و1440 دقيقة.');return;}}else{const raw=prompt('مدة الحظر بالأيام، أو اكتب 0 للحظر حتى إلغاءه:','1');if(raw===null)return;const days=Number(raw);if(!Number.isInteger(days)||days<0||days>30){toast('أدخل 0 أو عدد أيام من 1 إلى 30.');return;}duration=days===0?null:days*1440;}const why=prompt('سبب الإجراء؟',reason);if(why===null)return;if(why.trim().length<3){toast('اكتب سبباً من 3 أحرف على الأقل.');return;}const auth=await db.auth.getSession();const access=auth.data.session?.access_token;button.disabled=true;try{const r=await fetch('/api/gaming-live-moderation',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+access},body:JSON.stringify({action,target_user_id:targetUserId,duration_minutes:duration,reason:why.trim(),session_id:streamId})});const data=await r.json().catch(()=>({}));if(!r.ok)throw new Error(data.error||'تعذر تنفيذ الإجراء.');toast(data.message||'تم تنفيذ الإجراء.');}catch(e){toast(e.message);button.disabled=false;}}
+async function clearViewerRestriction(action,targetUserId,button){if(!canModerate)return;const reason=prompt('سبب رفع الإجراء؟','انتهاء سبب الإجراء');if(reason===null)return;const auth=await db.auth.getSession();const access=auth.data.session?.access_token;button.disabled=true;try{const r=await fetch('/api/gaming-live-moderation',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+access},body:JSON.stringify({action,target_user_id:targetUserId,reason:reason.trim()||'رفع الإجراء',session_id:streamId})});const data=await r.json().catch(()=>({}));if(!r.ok)throw new Error(data.error||'تعذر رفع الإجراء.');toast(data.message||'تم رفع الإجراء.');}catch(e){toast(e.message);button.disabled=false;}}
+async function loadRestrictionList(){
+ if(!canModerate)return;
+ const box=$('restrictionList');box.innerHTML='<div class="empty">جارٍ تحميل القيود…</div>';
+ const auth=await db.auth.getSession();const access=auth.data.session?.access_token;
+ try{
+  const r=await fetch('/api/gaming-live-moderation',{method:'GET',headers:{Authorization:'Bearer '+access,'X-Stream-Id':streamId,'X-Moderation-List':'1'}});
+  const data=await r.json().catch(()=>({}));if(!r.ok)throw new Error(data.error||'تعذر تحميل قائمة القيود.');
+  const items=data.restrictions||[];box.innerHTML='';
+  if(!items.length){box.innerHTML='<div class="empty">لا توجد قيود نشطة حالياً.</div>';return;}
+  for(const item of items){
+   const card=document.createElement('div');card.className='restriction-item';
+   const heading=document.createElement('strong');heading.textContent=item.action==='mute_user'?'🔇 مكتوم':'⛔ محظور';
+   const uid=document.createElement('span');uid.textContent='معرّف اللاعب: '+item.target_user_id;
+   const reason=document.createElement('span');reason.textContent='السبب: '+(item.reason||'—');
+   const expiry=document.createElement('span');expiry.textContent=item.expires_at?'ينتهي: '+new Date(item.expires_at).toLocaleString('ar-SA'):'المدة: حتى رفع القيد';
+   const btn=document.createElement('button');btn.type='button';btn.textContent=item.action==='mute_user'?'رفع الكتم':'رفع الحظر';
+   btn.addEventListener('click',async()=>{const why=prompt('سبب رفع القيد؟','مراجعة المشرف');if(why===null)return;btn.disabled=true;try{const rr=await fetch('/api/gaming-live-moderation',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+access},body:JSON.stringify({action:item.action==='mute_user'?'unmute_user':'unblock_user',target_user_id:item.target_user_id,reason:why.trim()||'رفع القيد',session_id:streamId})});const result=await rr.json().catch(()=>({}));if(!rr.ok)throw new Error(result.error||'تعذر رفع القيد.');toast(result.message||'تم رفع القيد.');await loadRestrictionList();}catch(e){toast(e.message);btn.disabled=false;}});
+   card.append(heading,uid,reason,expiry,btn);box.append(card);
+  }
+ }catch(e){box.innerHTML='';const err=document.createElement('div');err.className='empty';err.textContent=e.message;box.append(err);}
+}
+$('openRestrictions').addEventListener('click',()=>{const panel=$('restrictionsPanel');panel.classList.toggle('hidden');if(!panel.classList.contains('hidden'))loadRestrictionList();});
+$('refreshRestrictions').addEventListener('click',loadRestrictionList);
+async function hideStreamMessage(messageId,button){
+ if(!canModerate)return;
+ const reason=prompt('سبب إخفاء التعليق؟','مخالفة إرشادات المحادثة');
+ if(reason===null)return;
+ if(reason.trim().length<3){toast('اكتب سبباً من 3 أحرف على الأقل.');return;}
+ const auth=await db.auth.getSession();const access=auth.data.session?.access_token;
+ button.disabled=true;
+ try{
+  const r=await fetch('/api/gaming-live-moderation',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+access},body:JSON.stringify({action:'hide_message',message_id:messageId,reason:reason.trim(),session_id:streamId})});
+  const data=await r.json().catch(()=>({}));
+  if(!r.ok)throw new Error(data.error||'تعذر إخفاء التعليق.');
+  const el=document.querySelector('[data-message-id="'+messageId+'"]');
+  if(el)el.remove();
+  toast('تم إخفاء التعليق وتسجيل إجراء الإشراف.');
+ }catch(e){toast(e.message);button.disabled=false;}
+}
 async function load(){if(!streamId){err('رابط البث غير مكتمل. افتح البث من قائمة مجتمع Gaming Live.');$('playerState').textContent='لم يتم تحديد بث.';return}
 const auth=await db.auth.getSession();user=auth.data.session?.user||null;
 const r=await db.from('stream_sessions').select('id,host_user_id,category_id,title,description,status,provider,playback_uid,playback_url,thumbnail_url,viewer_count,started_at').eq('id',streamId).maybeSingle();if(r.error)throw r.error;if(!r.data)throw new Error('البث غير موجود أو غير متاح للمشاهدة.');session=r.data;
+await checkModerationAccess();
+if(session.status==='live')await startViewerPresence();
 $('streamTitle').textContent=session.title;$('streamDescription').textContent=session.description||'لا يوجد وصف.';$('viewerCount').textContent=Number(session.viewer_count||0).toLocaleString('ar-SA')+' مشاهد';$('streamState').textContent=session.status==='live'?'مباشر':session.status;if(session.status==='live'&&session.provider==='agora_rtc'){await joinAgoraViewer();}else if(session.status==='live'&&session.playback_url){await playLive(session.playback_url);}else{$('playerState').textContent=session.status==='live'?'رابط المشاهدة غير متاح.':'هذا البث ليس مباشرًا حاليًا.';}
 const cat=await db.from('game_categories').select('name').eq('id',session.category_id).maybeSingle();$('gameName').textContent=cat.data?.name||'ألعاب';
 const pr=await db.from('player_profiles').select('user_id,username,display_name,avatar_url').eq('user_id',session.host_user_id).maybeSingle();profile=pr.data;$('hostName').textContent=profile?.display_name||profile?.username||'لاعب';$('hostHandle').textContent=profile?.username?'@'+profile.username:'';$('hostAvatar').textContent=(profile?.display_name||profile?.username||'ل').slice(0,1);
 if(user&&profile){const f=await db.from('player_follows').select('follower_user_id').eq('follower_user_id',user.id).eq('followed_user_id',profile.user_id).maybeSingle();$('followBtn').textContent=f.data?'إلغاء المتابعة':'متابعة اللاعب';}else{$('followBtn').textContent='سجّل الدخول للمتابعة'}
-await loadMessages();await loadLikeState();await loadGiftCatalog();if(session.status==='live'){likesChannel=db.channel('gl-likes-'+streamId).on('postgres_changes',{event:'*',schema:'gaming_live',table:'stream_likes',filter:'session_id=eq.'+streamId},()=>loadLikeState()).subscribe();channel=db.channel('gl-chat-'+streamId).on('postgres_changes',{event:'INSERT',schema:'gaming_live',table:'stream_messages',filter:'session_id=eq.'+streamId},async payload=>{const msg=payload.new;const p=await db.from('player_profiles').select('username,display_name').eq('user_id',msg.user_id).maybeSingle();addMessage(msg,p.data);}).subscribe();}
+await loadMessages();await loadLikeState();await loadGiftCatalog();await subscribeGiftEvents();if(session.status==='live'){likesChannel=db.channel('gl-likes-'+streamId).on('postgres_changes',{event:'*',schema:'gaming_live',table:'stream_likes',filter:'session_id=eq.'+streamId},()=>loadLikeState()).subscribe();channel=db.channel('gl-chat-'+streamId).on('postgres_changes',{event:'INSERT',schema:'gaming_live',table:'stream_messages',filter:'session_id=eq.'+streamId},async payload=>{const msg=payload.new;const p=await db.from('player_profiles').select('username,display_name').eq('user_id',msg.user_id).maybeSingle();addMessage(msg,p.data);}).subscribe();}
 $('chatHint').textContent=user?'التعليقات تخضع لإشراف مجتمع القيمنق.':'سجّل الدخول من سوق القيمنق لإرسال تعليق.';
 }
 async function loadMessages(){const r=await db.from('stream_messages').select('id,user_id,message,created_at').eq('session_id',streamId).eq('state','visible').order('created_at',{ascending:true}).limit(100);if(r.error)throw r.error;$('chatMessages').innerHTML='';if(!r.data.length){$('chatMessages').innerHTML='<div class="empty">لا توجد تعليقات بعد. ابدأ المحادثة باحترام.</div>';return}const ids=[...new Set(r.data.map(x=>x.user_id))];const ps=await db.from('player_profiles').select('user_id,username,display_name').in('user_id',ids);const map=new Map((ps.data||[]).map(p=>[p.user_id,p]));r.data.forEach(m=>addMessage(m,map.get(m.user_id)));}
 $('followBtn').addEventListener('click',async()=>{if(!user){toast('سجّل الدخول أولًا من سوق القيمنق.');return}if(!profile||profile.user_id===user.id){toast('لا يمكنك متابعة نفسك.');return}const q=await db.from('player_follows').select('follower_user_id').eq('follower_user_id',user.id).eq('followed_user_id',profile.user_id).maybeSingle();let res;if(q.data)res=await db.from('player_follows').delete().eq('follower_user_id',user.id).eq('followed_user_id',profile.user_id);else res=await db.from('player_follows').insert({follower_user_id:user.id,followed_user_id:profile.user_id});if(res.error){toast(res.error.message);return}$('followBtn').textContent=q.data?'متابعة اللاعب':'إلغاء المتابعة';});
-$('chatForm').addEventListener('submit',async e=>{e.preventDefault();const text=$('chatInput').value.trim();if(!text)return;if(!user){toast('سجّل الدخول لإرسال تعليق.');return}if(!session||session.status!=='live'){toast('التعليقات متاحة أثناء البث المباشر فقط.');return}const r=await db.from('stream_messages').insert({session_id:streamId,user_id:user.id,message:text});if(r.error){toast(r.error.message);return}$('chatInput').value='';});
+$('chatForm').addEventListener('submit',async e=>{e.preventDefault();const text=$('chatInput').value.trim();if(!text)return;if(!user){toast('سجّل الدخول لإرسال تعليق.');return}if(!session||session.status!=='live'){toast('التعليقات متاحة أثناء البث المباشر فقط.');return}const r=await db.from('stream_messages').insert({session_id:streamId,user_id:user.id,message:text});if(r.error){const msg=(r.error.message||'').toLowerCase();if(msg.includes('row-level security')||msg.includes('permission'))toast('لا يمكنك التعليق في هذا البث بسبب كتم أو حظر نشط.');else toast(r.error.message);return}$('chatInput').value='';});
 load().catch(e=>{console.error(e);err(e.message||'تعذر تحميل البث.');$('playerState').textContent='تعذر تحميل بيانات البث.';});
-window.addEventListener('beforeunload',()=>{if(channel)db.removeChannel(channel);if(likesChannel)db.removeChannel(likesChannel);if(rtcClient)rtcClient.leave().catch(()=>{})});
+window.addEventListener('pagehide',()=>{leaveViewerPresence();});
+window.addEventListener('beforeunload',()=>{if(channel)db.removeChannel(channel);if(likesChannel)db.removeChannel(likesChannel);if(giftEventsChannel)db.removeChannel(giftEventsChannel);if(rtcClient)rtcClient.leave().catch(()=>{})});
 })();
 </script></body></html>
