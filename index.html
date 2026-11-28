@@ -1076,6 +1076,11 @@ body.vendor-store-open #vendorSelectedStore .vendor-detail-head,body.vendor-stor
 <section id="page-profile" class="hidden"><div class="panel"><div class="pagehead"><div><h2>الملف الشخصي</h2><p>تعديل بيانات الملف من صفحة مستقلة.</p></div><button class="secondary" data-go="account">العودة للحساب</button></div><div id="profilePageContent" class="page-note">سجّل الدخول أولًا لعرض بياناتك.</div><button class="primary" id="profilePageEdit" type="button">فتح إعدادات الملف الشخصي</button></div></section>
 
 <section id="page-home">
+ <div class="panel" style="border-color:#347c9a;background:linear-gradient(115deg,#102b3b,#172638);display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap">
+  <div><strong style="font-size:18px;color:#70d9f0">🏆 كأس القيمنق السعودي</strong><div class="muted" style="font-size:12px;margin-top:4px">بطولات ومنافسات للألعاب الفردية والفرق — تابع المواعيد وشروط المشاركة</div></div>
+  <button class="primary" type="button" data-go="tournament">استكشف الكأس</button>
+ </div>
+
 
 <div class="vendor-home-hero souq-three-slide-hero" id="vendorHomeHero" data-carousel-ready="true">
  <div class="souq-hero-slides" aria-label="عروض سوق القيمنق">
@@ -1192,6 +1197,22 @@ body.vendor-store-open #vendorSelectedStore .vendor-detail-head,body.vendor-stor
   <div id="storeAdminBanner" class="hidden"><h3>إعدادات البنر الرئيسي</h3><p class="vendor-muted-note">غيّر محتوى البنر وصورته ورابط زر التسوق. التعديلات تظهر للزوار بعد الحفظ.</p><form id="homeBannerForm" class="formgrid"><div><label>عنوان البنر</label><input id="homeBannerTitle" class="field" maxlength="100" value="اكتشف عالم القيمنق"></div><div><label>نص توضيحي</label><input id="homeBannerSubtitle" class="field" maxlength="220" value="أحدث أجهزة الألعاب من أفضل المتاجر الموثوقة"></div><div><label>نص الزر</label><input id="homeBannerButton" class="field" maxlength="35" value="تسوّق الآن"></div><div><label>وجهة الزر</label><select id="homeBannerTarget" class="field"><option value="vendors">جميع المتاجر</option><option value="store">المتجر الرسمي</option><option value="searchpage">البحث</option></select></div><div class="full"><label>رابط صورة البنر (اختياري)</label><input id="homeBannerImageUrl" class="field" type="url" placeholder="https://..."></div><div class="full"><label>أو ارفع صورة من جهازك</label><input id="homeBannerImageFile" class="field" type="file" accept="image/png,image/jpeg,image/webp"><div id="homeBannerPreview" class="home-banner-preview">معاينة صورة البنر</div></div><div class="full row"><button class="primary" type="submit" id="saveHomeBanner">حفظ إعدادات البنر</button><span id="homeBannerMsg" class="muted" role="status"></span></div></form></div>
  </div>
 </div>
+</section>
+
+
+<section id="page-tournament" class="hidden">
+ <div class="panel" style="border-color:#347c9a;background:linear-gradient(125deg,#102b3b,#172638)">
+  <div class="pagehead"><div><span class="ad-tag">بطولات ومنافسات</span><h1 style="margin:8px 0;color:#70d9f0">🏆 كأس القيمنق السعودي</h1><p>من التصفيات الأسبوعية إلى البطولات الشهرية والنهائيات الموسمية.</p></div><button class="secondary" data-go="home">العودة للسوق</button></div>
+  <div id="cupPublicStatus" class="notice">جارٍ تحميل تفاصيل الكأس...</div>
+  <div class="home-actions" id="cupPublicCards"></div><div class="panel"><h2>البطولات المعلنة</h2><div id="cupPublicEvents" class="stack"><div class="empty">لا توجد بطولات معلنة حاليًا.</div></div></div>
+  <div class="panel" style="margin:12px 0">
+   <h2>الألعاب والفئات</h2>
+   <div class="categories" id="cupGames"><span class="chip">EA SPORTS FC</span><span class="chip">VALORANT</span><span class="chip">PUBG MOBILE</span><span class="chip">Call of Duty</span><span class="chip">Fortnite</span><span class="chip">TEKKEN 8</span><span class="chip">Rocket League</span></div>
+   <p class="muted">تختلف الفئات بحسب اللعبة: فردي أو فرق، ومستوى الهواة أو المحترفين وفق شروط كل بطولة.</p>
+  </div>
+  <div class="panel"><h2>التسجيل الداخلي في البطولة</h2><p class="muted">اختر بطولة مفتوح التسجيل ثم أرسل بياناتك. يلزم تسجيل الدخول، وتظهر حالة الطلب في إدارة كأس القيمنق.</p><div id="cupRegistrationForm" class="hidden" style="display:grid;gap:10px"><input type="hidden" id="cupRegTournamentId"><div id="cupRegTournamentName" class="notice"></div><div class="workspace-form"><label>نوع المشاركة<select id="cupRegType"><option value="individual">فردي</option><option value="team">فريق</option></select></label><label>اسم اللاعب<input id="cupRegPlayer" maxlength="100" required placeholder="الاسم الكامل"></label><label>رقم التواصل<input id="cupRegPhone" type="tel" maxlength="25" required placeholder="05xxxxxxxx"></label><label>معرّف الحساب داخل اللعبة<input id="cupRegGameId" maxlength="100" required placeholder="Game ID"></label><label id="cupRegTeamWrap" class="hidden">اسم الفريق<input id="cupRegTeam" maxlength="100" placeholder="اسم الفريق"></label><label id="cupRegMembersWrap" class="wide hidden">أعضاء الفريق<textarea id="cupRegMembers" rows="3" maxlength="1500" placeholder="اكتب اسم كل عضو في سطر مستقل"></textarea></label></div><label style="display:flex;gap:8px;align-items:center"><input id="cupRegRules" type="checkbox"> أوافق على شروط وأحكام البطولة</label><div class="row"><button class="primary" id="cupRegSubmit" type="button">إرسال طلب التسجيل</button><button class="secondary" id="cupRegCancel" type="button">إلغاء</button><span id="cupRegMessage" class="muted" aria-live="polite"></span></div></div><div id="cupRegChooser" class="muted">اختر بطولة يظهر فيها زر «التسجيل الداخلي» لبدء الطلب.</div><div id="cupMyRegistrations" class="stack" style="margin-top:12px"></div></div>
+  <div class="panel"><h2>طريقة المشاركة</h2><ol><li>راجع تفاصيل البطولة وشروط الأهلية.</li><li>جهّز معرّف حسابك داخل اللعبة، وبيانات الفريق عند التسجيل الجماعي.</li><li>أرسل طلب التسجيل الداخلي وانتظر مراجعة الإدارة.</li><li>تابع حالة طلبك من هذه الصفحة.</li></ol><div class="row"><a id="cupRegisterLink" class="primary" href="#" target="_blank" rel="noopener" style="display:none;text-decoration:none">التسجيل الخارجي</a><span id="cupRegisterNote" class="muted">قد يتوفر رابط تسجيل خارجي لبعض البطولات.</span></div></div>
+ </div>
 </section>
 
 <section id="page-vendors" class="hidden">
@@ -1470,6 +1491,49 @@ let currentUser=null, profile=null, selectedCategory="", searchTerm="", activeCo
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const msg=(id,t)=>$(id).textContent=t;
+
+async function loadPublicGamingCup(){
+ const status=$('cupPublicStatus'),cards=$('cupPublicCards'),link=$('cupRegisterLink'),note=$('cupRegisterNote'),eventsBox=$('cupPublicEvents');
+ if(!status||!cards)return;
+ status.textContent='جارٍ تحميل معلومات الكأس...';
+ try{
+  const {data,error}=await sb.from('platform_control_settings').select('setting_value').eq('setting_key','gaming_cup').maybeSingle();
+  if(error)throw error;
+  const c=data?.setting_value||{};
+  if(c.enabled===false){status.textContent=c.announcement||'التسجيل في كأس القيمنق غير متاح حاليًا. تابع الإعلانات لمعرفة موعد فتح البطولات.';cards.innerHTML='';if(eventsBox)eventsBox.innerHTML='<div class="empty">الكأس متوقف مؤقتًا ولا توجد بطولات متاحة للتسجيل.</div>';link.style.display='none';note.textContent='سيتم الإعلان عن موعد البطولة القادمة.';return;}
+  status.textContent=c.announcement||'مرحبًا بك في كأس القيمنق السعودي. تابع البطولات القادمة وشروط المشاركة.';
+  const rows=[['البطولة الحالية',c.currentTournament||'سيتم الإعلان قريبًا'],['نوع المنافسات',c.formats||'فردي وفرق'],['مستوى المشاركة',c.levels||'هواة ومحترفون'],['الجوائز',c.prizes||'تُعلن جوائز كل بطولة بشكل مستقل'],['المواعيد',c.schedule||'تُحدّث المواعيد عند اعتماد الجدول']];
+  cards.innerHTML=rows.map(([a,b])=>`<div class="home-action"><span class="home-action-icon">🏆</span><div><strong>${esc(a)}</strong><small>${esc(b)}</small></div></div>`).join('');
+  const events=Array.isArray(c.tournaments)?c.tournaments.filter(e=>e&&e.status!=='hidden'):[];
+  window.__cupEvents=events;
+   if(eventsBox)eventsBox.innerHTML=events.length?events.map(e=>`<article class="listitem"><div class="row space"><strong>${esc(e.name||'بطولة بدون اسم')}</strong><span class="ad-tag">${esc(e.status==='open'?'التسجيل مفتوح':e.status==='soon'?'قريبًا':'معلنة')}</span></div><div class="meta">${esc(e.game||'—')} · ${esc(e.format||'—')} · ${esc(e.level||'—')}</div><div class="meta">الموعد: ${esc(e.date||'يُعلن لاحقًا')} · الجائزة: ${esc(e.prize||'تُعلن لاحقًا')}</div>${e.status==='open'?`<button type="button" class="primary" data-cup-register="${esc(e.id||e.name||'')}" style="margin-top:8px">التسجيل الداخلي</button>`:''}${e.registrationUrl&&/^https:\/\//i.test(e.registrationUrl)?`<a class="secondary" href="${esc(e.registrationUrl)}" target="_blank" rel="noopener" style="display:inline-block;text-decoration:none;margin:8px 6px 0">التسجيل الخارجي</a>`:''}</article>`).join(''):'<div class="empty">لا توجد بطولات منشورة حاليًا. تابع الصفحة للإعلانات القادمة.</div>';
+   const games=Array.isArray(c.games)&&c.games.length?c.games:['EA SPORTS FC','VALORANT','PUBG MOBILE','Call of Duty','Fortnite','TEKKEN 8','Rocket League'];
+  $('cupGames').innerHTML=games.map(g=>`<span class="chip">${esc(g)}</span>`).join('');
+  if(c.registrationUrl&&/^https:\/\//i.test(c.registrationUrl)){link.href=c.registrationUrl;link.style.display='inline-block';note.textContent=c.registrationNote||'يفتح رابط التسجيل الرسمي في نافذة جديدة.';}else{link.style.display='none';note.textContent='سيظهر رابط التسجيل عند اعتماده من إدارة المنصة.';}
+  setupCupRegistration();
+ }catch(e){status.textContent='تعذر تحميل معلومات الكأس. قد تكون إعدادات العرض غير متاحة أو تحتاج صلاحيات قراءة.';cards.innerHTML='';console.warn('Gaming Cup public settings:',e);}
+}
+async function loadMyCupRegistrations(){
+ const box=$('cupMyRegistrations');if(!box)return;if(!currentUser){box.innerHTML='<div class="muted">سجّل الدخول لعرض طلباتك السابقة.</div>';return;}
+ const {data,error}=await sb.from('gaming_cup_registrations').select('id,tournament_name,game,participation_type,status,created_at,admin_note').eq('user_id',currentUser.id).order('created_at',{ascending:false}).limit(30);
+ if(error){box.innerHTML='<div class="muted">تعذر تحميل طلباتك. تأكد من تنفيذ تحديث قاعدة البيانات.</div>';return;}
+ const labels={pending:'قيد المراجعة',approved:'مقبول',rejected:'مرفوض',needs_info:'مطلوب استكمال بيانات'};
+ box.innerHTML=(data||[]).length?'<h3>طلباتي</h3>'+data.map(r=>`<article class="listitem"><div class="row space"><b>${esc(r.tournament_name)}</b><span class="ad-tag">${labels[r.status]||esc(r.status)}</span></div><div class="meta">${esc(r.game)} · ${r.participation_type==='team'?'فريق':'فردي'} · ${new Date(r.created_at).toLocaleDateString('ar-SA')}</div>${r.admin_note?`<p class="muted">ملاحظة الإدارة: ${esc(r.admin_note)}</p>`:''}</article>`).join(''):'<div class="muted">لا توجد طلبات تسجيل سابقة.</div>';
+}
+function setupCupRegistration(){
+ const type=$('cupRegType'),team=$('cupRegTeamWrap'),members=$('cupRegMembersWrap');
+ const sync=()=>{const isTeam=type.value==='team';team.classList.toggle('hidden',!isTeam);members.classList.toggle('hidden',!isTeam);};type.onchange=sync;sync();
+ $('cupPublicEvents').onclick=ev=>{const b=ev.target.closest('[data-cup-register]');if(!b)return;if(!needAuth())return;const row=(window.__cupEvents||[]).find(e=>String(e.id||e.name||'')===b.dataset.cupRegister);if(!row||row.status!=='open'){msg('cupRegMessage','التسجيل غير مفتوح لهذه البطولة.');return;}$('cupRegTournamentId').value=String(row.id||row.name);$('cupRegTournamentName').textContent=(row.name||'بطولة')+' — '+(row.game||'');$('cupRegistrationForm').classList.remove('hidden');$('cupRegChooser').classList.add('hidden');$('cupRegMessage').textContent='';$('cupRegistrationForm').scrollIntoView({behavior:'smooth',block:'center'});};
+ $('cupRegCancel').onclick=()=>{$('cupRegistrationForm').classList.add('hidden');$('cupRegChooser').classList.remove('hidden');};
+ $('cupRegSubmit').onclick=async()=>{if(!currentUser){if(!needAuth())return;}const player=$('cupRegPlayer').value.trim(),phone=$('cupRegPhone').value.trim(),gameId=$('cupRegGameId').value.trim(),teamName=$('cupRegTeam').value.trim(),isTeam=type.value==='team',accepted=$('cupRegRules').checked;if(!player||!phone||!gameId||!accepted||(isTeam&&!teamName)){msg('cupRegMessage','أكمل البيانات المطلوبة ووافق على الشروط.');return;}const event=(window.__cupEvents||[]).find(e=>String(e.id||e.name||'')===$('cupRegTournamentId').value);if(!event||event.status!=='open'){msg('cupRegMessage','لم يعد التسجيل مفتوحًا لهذه البطولة. حدّث الصفحة.');return;}const btn=$('cupRegSubmit');btn.disabled=true;msg('cupRegMessage','جارٍ إرسال الطلب...');try{const teamMembers=isTeam?$('cupRegMembers').value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean).slice(0,20):[];if(isTeam&&teamMembers.length<1){msg('cupRegMessage','أضف أسماء أعضاء الفريق، كل عضو في سطر مستقل.');return;}if(isTeam&&teamMembers.length>20){msg('cupRegMessage','الحد الأعلى لأعضاء الفريق 20 عضوًا.');return;}const tournamentId=String(event.id||event.name);
+const duplicate=await sb.from('gaming_cup_registrations').select('id').eq('user_id',currentUser.id).eq('tournament_id',tournamentId).limit(1);
+if(duplicate.error)throw duplicate.error;
+if((duplicate.data||[]).length){msg('cupRegMessage','لديك طلب تسجيل سابق في هذه البطولة. يمكنك متابعة حالته من قسم «طلباتي».');return;}
+const {error}=await sb.from('gaming_cup_registrations').insert({user_id:currentUser.id,tournament_id:tournamentId,tournament_name:event.name,game:event.game||'',participation_type:type.value,player_name:player,contact_phone:phone,game_account_id:gameId,team_name:isTeam?teamName:null,team_members:teamMembers,accepted_rules:true});
+if(error){if(error.code==='23505')throw new Error('لديك طلب تسجيل سابق في هذه البطولة.');throw error;}msg('cupRegMessage','تم إرسال طلبك بنجاح، وحالته الآن قيد المراجعة.');$('cupRegPlayer').value='';$('cupRegPhone').value='';$('cupRegGameId').value='';$('cupRegTeam').value='';$('cupRegMembers').value='';$('cupRegRules').checked=false;await loadMyCupRegistrations();}catch(e){msg('cupRegMessage','تعذر إرسال الطلب: '+(e.message||'تحقق من تنفيذ SQL وسياسات الأمان.'));}finally{btn.disabled=false;}};
+ loadMyCupRegistrations();
+}
+
 function showPage(page){
  if(page!=='vendors' && document.body.classList.contains('vendor-store-open'))document.body.classList.remove('vendor-store-open');
  document.body.classList.toggle('vendors-page-active',page==='vendors');
@@ -1483,6 +1547,7 @@ function showPage(page){
  if(page==='community')loadPublicPosts();
  if(page==='myads')loadMyAds('myAdsPage');
  if(page==='home')loadAds();
+ if(page==='tournament')loadPublicGamingCup();
  if(page==='store'){if(!adsCache.length)loadAds().then(renderStoreProducts);else renderStoreProducts();}
  if(page==='favorites')loadFavorites();
  if(page==='profile')loadProfilePage();
@@ -1980,6 +2045,10 @@ sb.auth.onAuthStateChange((_event,session)=>{
  currentUser=session?.user||null;
  if(currentUser){void loadProfile().catch(err=>console.error('Profile refresh failed:',err));}
  else{profile=null;}
+ // Keep the Cup registration history synchronized after sign-in/sign-out.
+ if(typeof loadMyCupRegistrations==='function'){
+  setTimeout(()=>{void loadMyCupRegistrations();},0);
+ }
 });
 
 /* تحديث الإعلانات عند تغيّرها من مستخدم آخر، إذا كانت Realtime مفعّلة في Supabase. */
